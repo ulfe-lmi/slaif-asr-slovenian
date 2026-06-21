@@ -1,0 +1,85 @@
+{
+  "engine": {
+    "repository": "https://github.com/OHF-Voice/piper1-gpl.git",
+    "repository_name": "OHF-Voice/piper1-gpl",
+    "revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6",
+    "license": "GPL-3.0-or-later",
+    "install_root": ".external/piper1-gpl",
+    "environment": ".venv-piper",
+    "invocation": "argv subprocess, no shell"
+  },
+  "voice": {
+    "repository": "rhasspy/piper-voices",
+    "repository_url": "https://huggingface.co/rhasspy/piper-voices",
+    "revision": "217ddc79818708b078d0d14a8fae9608b9d77141",
+    "name": "sl_SI-artur-medium",
+    "language": "sl_SI",
+    "speaker_count": 1,
+    "quality": "medium",
+    "native_sample_rate": 22050,
+    "final_asr_sample_rate": 16000,
+    "local_storage_dir": ".external/piper-voices",
+    "files": [
+      {
+        "role": "model",
+        "path": "sl/sl_SI/artur/medium/sl_SI-artur-medium.onnx",
+        "byte_size": 63200492,
+        "sha256": "9222ed93ef425524ad4be0b083369af8ea8db18455576a6016b154192f4ed38c",
+        "hf_lfs_sha256": "9222ed93ef425524ad4be0b083369af8ea8db18455576a6016b154192f4ed38c"
+      },
+      {
+        "role": "config",
+        "path": "sl/sl_SI/artur/medium/sl_SI-artur-medium.onnx.json",
+        "byte_size": 4970,
+        "sha256": "741283430f1fa2be5c61717c6f1fe795a7b9f537491927340dd12f90f3b3cc04",
+        "hf_git_oid": "e6ab9bfffd36b70375437db8b353d575a4d60c3c"
+      },
+      {
+        "role": "model_card",
+        "path": "sl/sl_SI/artur/medium/MODEL_CARD",
+        "byte_size": 329,
+        "sha256": "fe8431d0830a41260379ba7f8813e3dfb515c02684a0663702f45e047e31bba9",
+        "hf_git_oid": "146d8f03677932e901e5335a3289e2a196e523d6"
+      }
+    ]
+  },
+  "license": {
+    "voice_repository_metadata": "MIT",
+    "voice_model_card_dataset_license": "CC BY 4.0",
+    "artur_authoritative_license": "CC BY-SA 4.0",
+    "metadata_discrepancy": "The Hugging Face repository metadata declares MIT, the voice model card references a CC BY 4.0 dataset, and the authoritative CLARIN.SI ARTUR audio record declares CC BY-SA 4.0. This project applies the conservative ARTUR CC BY-SA 4.0 attribution and publication policy.",
+    "generated_audio_public_release_permitted_by_this_pr": false,
+    "links": {
+      "piper": "https://github.com/OHF-Voice/piper1-gpl",
+      "voice_repository": "https://huggingface.co/rhasspy/piper-voices",
+      "voice_model_card": "https://huggingface.co/rhasspy/piper-voices/blob/217ddc79818708b078d0d14a8fae9608b9d77141/sl/sl_SI/artur/medium/MODEL_CARD",
+      "artur_audio": "http://hdl.handle.net/11356/1776",
+      "artur_license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "model_card_dataset": "https://huggingface.co/datasets/ppisljar/artur_studio_tts/",
+      "model_card_dataset_license": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "attribution": [
+      "Open Home Foundation Piper project",
+      "rhasspy/piper-voices",
+      "Piper voice sl_SI-artur-medium",
+      "voice trainer ppisljar",
+      "ARTUR 1.0 authors, CLARIN.SI handle 11356/1776",
+      "generated audio is resampled and used as synthetic ASR training material only under later approved workflows"
+    ]
+  },
+  "runtime": {
+    "onnxruntime_gpu": "1.22.0",
+    "required_execution_provider": "CUDAExecutionProvider",
+    "physical_gpu": 0,
+    "visible_devices": "CUDA_VISIBLE_DEVICES=0"
+  },
+  "local_artifacts": {
+    "native_audio_dir": "runs/tts/piper/native-22050",
+    "final_audio_dir": "runs/tts/piper/final-16000",
+    "log_dir": "runs/tts/piper/logs",
+    "provenance_jsonl": "runs/tts/piper/rendered-records.jsonl",
+    "manifest_jsonl": "runs/tts/piper/nemo-manifest.jsonl",
+    "manifest_sidecar_json": "runs/tts/piper/nemo-manifest.provenance.json",
+    "smoke_results_dir": "runs/tts/piper/asr-smoke"
+  }
+}

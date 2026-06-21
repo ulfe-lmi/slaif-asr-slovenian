@@ -93,6 +93,16 @@ Raw and normalized metrics must be reported separately when normalization materi
 
 The TTS system's license and output rights must permit the intended training and publication use.
 
+The selected initial TTS path is external Piper `OHF-Voice/piper1-gpl` with the
+`sl_SI-artur-medium` voice from `rhasspy/piper-voices`. Piper is
+GPL-3.0-or-later and the voice/source licensing metadata is inconsistent across
+the voice repository, model card, and ARTUR source record. Until later legal
+review, generated audio follows the conservative ARTUR CC BY-SA 4.0 attribution
+and publication policy.
+
+Generated Piper audio is local/internal synthetic material in M2. It must not
+be committed, published, or labeled as real speech or Apache-2.0 content.
+
 The first adaptation phase uses:
 
 ```text

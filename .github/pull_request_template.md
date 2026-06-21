@@ -47,6 +47,8 @@
 - [ ] No credentials or private storage locations are committed.
 - [ ] Skipped, blocked, and not-run tests are not described as passed.
 - [ ] Base-model attribution and license boundaries remain clear.
+- [ ] External TTS, voice, and synthetic-audio license boundaries remain clear when relevant.
+- [ ] No generated audio, voice artifact, or local manifest is committed.
 - [ ] Performance claims name their protocol and evidence.
 - [ ] This PR does not publish or merge model artifacts.
 - [ ] I did not merge my own PR.

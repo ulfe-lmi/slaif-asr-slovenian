@@ -32,6 +32,7 @@ Planned units include:
 
 Planned integrations include:
 
+- validated candidate text -> Piper synthesis -> 16 kHz WAV -> NeMo manifest;
 - checkpoint restoration;
 - tokenizer round trip;
 - manifest -> NeMo dataloader;
@@ -115,3 +116,9 @@ does not install NeMo, download checkpoints or audio, use Hugging Face access,
 detect GPUs, or validate model restoration and streaming inference. M1 GPU
 evidence remains the RTX 2080 Ti verification recorded by the runtime repair
 work order.
+
+M2 Piper verification is a manual GPU evidence path, not CPU CI. It must record
+Piper ONNX Runtime provider status, physical GPU 0 selection, GPU 1 non-use,
+voice checksum verification, native and resampled WAV validation, provenance
+output, NeMo manifest hash, and Nemotron smoke output. It does not prove ASR
+quality and must not be represented as training.

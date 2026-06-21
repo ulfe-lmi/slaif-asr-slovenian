@@ -3,7 +3,7 @@
 - **Base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`
 - **Target locale:** `sl-SI`
 - **Hardware:** M1 and M2 use one NVIDIA RTX 2080 Ti with `CUDA_VISIBLE_DEVICES=0`; the first prompt-specific M3 proof should attempt one RTX 2080 Ti before requesting stronger hardware.
-- **Training loop:** GaMS generates Slovenian text → existing Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update
+- **Training loop:** GaMS generates Slovenian text → external Piper Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update
 - **Prepared:** 2026-06-21
 
 ---
@@ -32,7 +32,7 @@ Consequently, this project no longer needs:
 - forced alignment;
 - a custom decoder-only audio/text sequence merger.
 
-The old Slovenian TTS only has to produce:
+The selected initial Piper Slovenian TTS path only has to produce:
 
 ```text
 audio waveform + exact Slovenian transcript
@@ -620,6 +620,14 @@ Render to mono 16 kHz PCM WAV before training. Reject:
 - silence-only output;
 - synthesis failures;
 - text/audio mismatches found by the current recognizer or a secondary check.
+
+The M2 ingestion slice uses `OHF-Voice/piper1-gpl` revision
+`b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6` and `rhasspy/piper-voices`
+`sl_SI-artur-medium` revision `217ddc79818708b078d0d14a8fae9608b9d77141`.
+Piper remains an external GPL executable in `.venv-piper`; voice artifacts,
+native 22,050 Hz WAVs, resampled 16 kHz WAVs, logs, provenance, and manifests
+remain ignored local artifacts. Future 2080 Ti training should use FP16 AMP
+rather than BF16 unless a later work order changes that policy.
 
 ---
 

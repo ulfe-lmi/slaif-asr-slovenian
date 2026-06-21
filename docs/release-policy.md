@@ -71,6 +71,18 @@ Avoid:
 - reproduction commands;
 - hashes.
 
+When synthetic Piper audio has influenced a released artifact, the model card
+must disclose:
+
+- `OHF-Voice/piper1-gpl` as the external TTS engine;
+- `rhasspy/piper-voices` `sl_SI-artur-medium` as the voice;
+- Piper GPL-3.0-or-later boundary;
+- ARTUR CC BY-SA 4.0 conservative attribution and publication policy;
+- that generated audio was resampled and used as synthetic ASR training
+  material;
+- that no endorsement by the speaker, ARTUR authors, Rhasspy, Piper, or Open
+  Home Foundation is implied.
+
 ## Versioning
 
 Suggested progression:
@@ -100,3 +112,7 @@ Before public model publication:
 - human release authority approves.
 
 Execution agents may prepare artifacts but may not publish them without explicit human approval.
+
+This M2 ingestion PR does not authorize public synthetic-audio, dataset, or
+model publication. Final public or commercial model publication requires later
+license and speaker-rights review.
