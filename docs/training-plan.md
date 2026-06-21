@@ -2,7 +2,7 @@
 
 - **Base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`
 - **Target locale:** `sl-SI`
-- **Hardware:** 1–4 × NVIDIA A100 80 GB
+- **Hardware:** M1 and M2 use one NVIDIA RTX 2080 Ti with `CUDA_VISIBLE_DEVICES=0`; the first prompt-specific M3 proof should attempt one RTX 2080 Ti before requesting stronger hardware.
 - **Training loop:** GaMS generates Slovenian text → existing Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update
 - **Prepared:** 2026-06-21
 
@@ -183,9 +183,9 @@ sl-nemotron/
 
 ---
 
-## 5. System setup on A100
+## 5. System setup on current development hardware
 
-The inspected NeMo Speech revision requires Python 3.12 or newer and PyTorch 2.7 or newer. Its source installation is the safest route because Nemotron 3.5 support is newer than the older stable container mentioned in the repository.
+The inspected NeMo Speech revision requires Python 3.12 or newer and PyTorch 2.7 or newer. The repository baseline uses a local `.venv` with CUDA 12.6 PyTorch wheels on one RTX 2080 Ti. A100 is not a default prerequisite.
 
 ### 5.1 System packages
 
@@ -218,17 +218,11 @@ git checkout 8044a3924bfcfe8ef71d792bb73bf274fe853575
 
 ### 5.3 Install the inspected stack
 
-For an A100 with a CUDA 12-compatible driver:
+For the repository M1/M2 runtime:
 
 ```bash
-uv sync --extra all --extra cu12 --locked --python 3.13
-source .venv/bin/activate
-```
-
-For a CUDA 13-capable system, use:
-
-```bash
-uv sync --extra all --extra cu13 --locked --python 3.13
+export CUDA_VISIBLE_DEVICES=0
+scripts/setup_runtime_env.sh --recreate
 source .venv/bin/activate
 ```
 
@@ -449,7 +443,7 @@ Use `[56,0]` for the most demanding low-latency evaluation and `[56,3]` as the i
 The public inference script currently requires `compute_dtype=float32` for cache-aware inference. AMP may be tested separately:
 
 ```bash
-amp=true amp_dtype=bfloat16 compute_dtype=float32
+amp=true amp_dtype=float16 compute_dtype=float32
 ```
 
 First establish a correct FP32 baseline.
@@ -1539,7 +1533,7 @@ The official notebook uses:
 train_ds.batch_duration=200
 ```
 
-Start there on one A100 80 GB.
+Start there on one RTX 2080 Ti. Escalate to A100 only through a later work order backed by measured memory, throughput, or authoritative benchmarking requirements.
 
 If out of memory:
 

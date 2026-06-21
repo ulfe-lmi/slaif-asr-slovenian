@@ -36,7 +36,7 @@ Positive:
 - ordinary audio/transcript manifests;
 - official cache-aware inference;
 - direct Slovenian prompt pathway;
-- feasible experimentation on 1–4 A100 80 GB GPUs.
+- feasible M1/M2 experimentation on one RTX 2080 Ti, with larger GPUs requested only when measured evidence requires escalation.
 
 Risks:
 

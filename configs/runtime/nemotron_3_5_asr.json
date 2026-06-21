@@ -3,7 +3,9 @@
     "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
     "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
     "filename": "nemotron-3.5-asr-streaming-0.6b.nemo",
-    "sha256": "79766c070eed987b43ee595fff7bd21fe49aae6ee26e881f51b86d8e662e713d",
+    "sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "hf_lfs_etag": "79766c070eed987b43ee595fff7bd21fe49aae6ee26e881f51b86d8e662e713d",
+    "byte_size": 2368284501,
     "license": "OpenMDW-1.1"
   },
   "nemo": {
@@ -14,9 +16,12 @@
     "interface_note": "NeMo release v2.7.3 was inspected and does not expose target_lang or strip_lang_tags in the cache-aware streaming example. This work order pins a later verified commit from main instead of a floating branch."
   },
   "runtime": {
-    "python": ">=3.10,<3.13",
-    "target_gpu": "NVIDIA A100",
-    "cuda": "Use the CUDA/PyTorch stack supplied by the pinned NeMo 26.06 runtime or the pinned NeMo source checkout; record exact CUDA, PyTorch, and NeMo versions in each generated contract."
+    "python": "3.12",
+    "target_gpu": "NVIDIA RTX 2080 Ti",
+    "visible_devices": "CUDA_VISIBLE_DEVICES=0",
+    "pytorch": "torch==2.7.1+cu126",
+    "torchaudio": "torchaudio==2.7.1+cu126",
+    "cuda": "Use the repository-local .venv with CUDA 12.6 PyTorch wheels. Record exact CUDA, PyTorch, and NeMo versions in each generated contract."
   },
   "streaming_contexts": [
     {

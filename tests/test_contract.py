@@ -54,7 +54,11 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(contract.encoder_width, 1024)
         self.assertEqual(contract.sample_rate, 16000)
         self.assertEqual(contract.prompt_indices["sl-SI"], 37)
-        self.assertEqual(contract.available_streaming_contexts, [[56, 0], [56, 1]])
+        self.assertEqual(contract.checkpoint_detected_streaming_contexts, [[56, 0], [56, 1]])
+        self.assertEqual(
+            contract.configured_supported_streaming_contexts,
+            [[56, 0], [56, 1], [56, 3], [56, 6], [56, 13]],
+        )
         self.assertEqual(contract.prompt_kernel_structure[0]["parameters"], 131072)
 
         payload = json.loads(contract.to_json())
@@ -70,7 +74,8 @@ class RuntimeContractTests(unittest.TestCase):
             sample_rate=None,
             prompt_indices={"sl-SI": None, "sl": None},
             prompt_kernel_structure=[],
-            available_streaming_contexts=[[56, 13]],
+            checkpoint_detected_streaming_contexts=[[56, 13]],
+            configured_supported_streaming_contexts=[[56, 0], [56, 1], [56, 3], [56, 6], [56, 13]],
             default_streaming_context=[56, 13],
             checkpoint={},
             environment={},

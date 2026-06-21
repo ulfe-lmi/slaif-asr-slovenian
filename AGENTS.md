@@ -12,7 +12,7 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Control loop:** generate -> synthesize -> evaluate -> select failures -> train bounded update -> run gates -> accept or roll back.
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
-- **Current milestone:** M0 strategic scaffold. No production implementation exists yet.
+- **Current milestone:** M1 runtime repair and single-GPU baseline verification. No production ASR implementation exists yet.
 
 ## Mission
 
@@ -120,7 +120,16 @@ Agents may:
 - download the official base checkpoint into ignored storage;
 - create disposable caches and test outputs;
 - start local services needed for tests;
-- use 1–4 A100 GPUs according to the work order.
+- use only the GPUs and visibility settings authorized by the active work order.
+
+Current development hardware policy:
+
+- M1 and M2 use one NVIDIA RTX 2080 Ti process-visible GPU.
+- The default physical device is GPU 0, selected with `CUDA_VISIBLE_DEVICES=0`.
+- The second RTX 2080 Ti remains unused unless a later work order explicitly permits it.
+- A100 is not a default prerequisite. It becomes mandatory only through a later work order backed by measured memory, throughput, or authoritative benchmarking requirements.
+- Cache-aware inference uses FP32 under the pinned NeMo implementation.
+- Future 2080 Ti training should use FP16 AMP rather than BF16 unless a later work order changes the policy.
 
 Agents must not:
 
