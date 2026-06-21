@@ -81,7 +81,8 @@ Run and report:
 - `bash -n scripts/*.sh`;
 - JSON and TOML syntax validation;
 - Markdown relative-link validation;
-- forbidden artifact, large-file, secret, `/mnt/data`, and local-path scans;
+- forbidden artifact, large-file, secret, temporary container path, and
+  local-path scans;
 - ignored-artifact verification;
 - actual five-context GPU smoke on one RTX 2080 Ti in the order:
   `[56,0]`, `[56,3]`, `[56,13]`, `[56,1]`, `[56,6]`;

@@ -101,10 +101,17 @@ Do not summarize partial verification as “all tests passed.”
 
 The intended CI progression is:
 
-1. docs and repository hygiene;
-2. CPU unit tests;
+1. docs and repository hygiene: **implemented by the CPU CI baseline**;
+2. CPU unit tests: **implemented by the CPU CI baseline**;
 3. optional containerized NeMo smoke tests;
 4. scheduled or manually approved GPU verification;
 5. release-only full evaluation.
 
 GPU and external-download jobs should be explicit to control cost and supply-chain risk.
+
+The CPU CI baseline runs only tracked-file checks, repository unit tests, Python
+compilation, shell syntax checks, and Git whitespace checks. It deliberately
+does not install NeMo, download checkpoints or audio, use Hugging Face access,
+detect GPUs, or validate model restoration and streaming inference. M1 GPU
+evidence remains the RTX 2080 Ti verification recorded by the runtime repair
+work order.
