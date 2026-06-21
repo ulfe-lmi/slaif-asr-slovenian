@@ -8,6 +8,7 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.venv-piper/
 venv/
 .env
 .env.*
@@ -69,6 +70,12 @@ runs/*
 .huggingface/
 hf-cache/
 nemo-cache/
+
+# Local Piper TTS artifacts
+piper-cache/
+piper-voices/
+tts-audio/
+tts-runs/
 
 # Generated secrets or credentials
 *.pem

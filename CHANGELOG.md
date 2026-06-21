@@ -22,6 +22,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Tracked-file repository validation command for JSON/TOML syntax, Markdown
   links, forbidden artifacts, oversized files, local paths, secrets, and
   trailing whitespace.
+- Piper Slovenian TTS ingestion configuration, external environment setup,
+  pinned `sl_SI-artur-medium` voice downloader, smoke candidates, rendering
+  wrapper, provenance and NeMo manifest generation.
+- ADR and third-party attribution documentation for the Piper GPL boundary and
+  ARTUR voice license discrepancy.
 
 ### Changed
 
@@ -29,3 +34,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Runtime contract now separates checkpoint-detected contexts from configured supported contexts.
 - Tokenizer audit now distinguishes required Slovenian samples from extended-symbol warnings.
 - Single-file inference now resolves relative audio paths and persists per-context `result.json` plus logs.
+- M2 status is now in progress for the Piper-to-Nemotron vertical slice; no
+  training, GaMS integration, or public audio/model publication is included.

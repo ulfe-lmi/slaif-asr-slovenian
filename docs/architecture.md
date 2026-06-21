@@ -188,6 +188,13 @@ Must include:
 
 Word timing is not required for RNNT training.
 
+The initial M2 TTS implementation uses `OHF-Voice/piper1-gpl` as an external
+GPL-3.0-or-later executable and `rhasspy/piper-voices` `sl_SI-artur-medium` as
+the selected Slovenian voice. Piper source, voice artifacts, generated native
+22,050 Hz WAVs, resampled 16 kHz WAVs, logs, and local manifests stay in ignored
+runtime storage. The Apache-licensed `slaif_asr` package must not import Piper
+or vendor its source.
+
 ### NeMo manifest
 
 Minimum:
@@ -225,7 +232,7 @@ The first release will not provide:
 - a hosted transcription API;
 - speaker diarization;
 - translation;
-- TTS;
+- bundled TTS;
 - a data-labeling platform;
 - automatic public model publication;
 - autonomous architecture escalation;

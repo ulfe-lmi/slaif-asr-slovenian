@@ -2,7 +2,7 @@
 
 Read and obey [`AGENTS.md`](AGENTS.md) as the authoritative project constitution.
 
-The following rules are repeated because they are critical:
+The following rules are repeated because they are critical for any agent reading this companion instruction file:
 
 - This is a standalone SLAIF adaptation repository, not a NeMo fork.
 - Work only from a bounded PR-sized work order.

@@ -60,14 +60,14 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **not started**
+Status: **in progress**
 
 Execution hardware policy: use one RTX 2080 Ti process-visible GPU unless a later work order explicitly permits different hardware.
 
 Deliverables:
 
 - candidate schema;
-- TTS adapter interface;
+- TTS adapter interface: **Piper vertical slice in progress**;
 - audio and manifest validator;
 - provenance records;
 - partition and leakage checks;
@@ -78,6 +78,14 @@ Exit gate:
 - a small generated batch passes validation;
 - no word alignment requirement;
 - no immutable-gate leakage.
+
+Current work order:
+[`work-orders/0004-piper-slovenian-tts-ingestion.md`](work-orders/0004-piper-slovenian-tts-ingestion.md)
+
+The current M2 slice proves real Piper `sl_SI-artur-medium` synthesis to a
+Nemotron smoke manifest on one RTX 2080 Ti. It does not implement GaMS
+generation, failure-directed selection, large-batch synthesis, leakage controls,
+replay, or production training manifests.
 
 ## M3 — Selective adaptation proof
 
@@ -154,12 +162,12 @@ Exit gate:
 1. Repository strategic scaffold.
 2. Runtime contract and baseline inference.
 3. CPU-only CI baseline.
-4. Manifest and audio validation.
-5. Evaluation normalization and metrics.
-6. Selective prompt-specific adaptation.
-7. Checkpoint-diff integrity tests.
-8. GaMS candidate schema and text validation.
-9. TTS adapter and provenance.
+4. Piper Slovenian TTS ingestion.
+5. Manifest and audio validation.
+6. Evaluation normalization and metrics.
+7. Selective prompt-specific adaptation.
+8. Checkpoint-diff integrity tests.
+9. GaMS candidate schema and text validation.
 10. Active candidate selector.
 11. Bounded training-round runner.
 12. Acceptance/rollback gates.

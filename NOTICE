@@ -14,5 +14,13 @@ NVIDIA NeMo is an external Apache-2.0 dependency. When source derived from NeMo
 is copied or modified, its original copyright and license header must be kept,
 and the source path and revision must be recorded.
 
+Piper TTS is an external GPL-3.0-or-later executable dependency and is not
+included in this repository. The selected initial Slovenian voice is
+`sl_SI-artur-medium` from `rhasspy/piper-voices`. Its repository metadata,
+model card, and ARTUR source record use inconsistent license labels; this
+project applies the conservative ARTUR CC BY-SA 4.0 attribution and publication
+policy until later legal review. Generated synthetic audio is not Apache-2.0
+merely because the orchestration code is Apache-2.0.
+
 We acknowledge the support of the EC/EuroHPC JU and the Slovenian Ministry of
 HESI via the project SLAIF (grant number 101254461).

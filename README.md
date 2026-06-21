@@ -8,7 +8,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/code%20license-Apache--2.0-blue.svg)](LICENSE)
 [![CPU CI](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml/badge.svg)](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml)
-[![Project status](https://img.shields.io/badge/status-runtime%20baseline-yellow.svg)](docs/roadmap.md)
+[![Project status](https://img.shields.io/badge/status-M2%20TTS%20ingestion-yellow.svg)](docs/roadmap.md)
 
 SLAIF Slovenian Streaming ASR is a reproducible research and engineering project for adapting, evaluating, and releasing open-weight streaming automatic speech recognition models for Slovenian.
 
@@ -26,7 +26,7 @@ GaMS generates a small Slovenian candidate batch
 
 ## Status
 
-This repository is currently at **M1 complete: runtime contract and baseline inference smoke verified**.
+This repository is currently at **M2 in progress: Piper Slovenian TTS ingestion**.
 
 Present:
 
@@ -40,6 +40,10 @@ Present:
 - official checkpoint download and checksum helper;
 - runtime contract and Slovenian tokenizer-audit commands;
 - forced `sl-SI` cache-aware streaming inference wrappers.
+- a pinned external Piper TTS configuration for the `sl_SI-artur-medium`
+  Slovenian voice;
+- a small synthetic-smoke candidate fixture and local TTS-to-ASR vertical-slice
+  helpers.
 
 Current M1/M2 development hardware is one physical NVIDIA RTX 2080 Ti selected
 with `CUDA_VISIBLE_DEVICES=0`. A second RTX 2080 Ti may be present in the
@@ -59,6 +63,8 @@ The M1 smoke evidence proves functional restoration and single-GPU inference onl
 it is not a Slovenian quality benchmark.
 CPU CI does not install NeMo, download checkpoints or audio, use either GPU, or
 prove model restoration or GPU inference.
+The M2 TTS slice renders only ignored local synthetic-smoke audio and does not
+authorize publishing synthetic audio or model artifacts.
 
 ## Repository role
 
@@ -73,6 +79,9 @@ It is deliberately not:
 - the primary distribution channel for trained model weights.
 
 NeMo remains an external, pinned dependency. Model artifacts will be released separately through Hugging Face with clear base-model attribution and the applicable model license.
+Piper remains an external GPL-3.0-or-later executable dependency installed into
+`.venv-piper`; it is not imported into the Apache-licensed package and is not
+vendored into this repository.
 
 ## Documentation
 
@@ -83,12 +92,13 @@ NeMo remains an external, pinned dependency. Model artifacts will be released se
 - [Testing strategy](docs/testing-strategy.md)
 - [Evaluation protocol](docs/evaluation-protocol.md)
 - [Release policy](docs/release-policy.md)
+- [Third-party licenses and attribution](docs/third-party-licenses.md)
 - [Baseline inference quickstart](docs/baseline-inference.md)
 - [Current project handoff](docs/project-handoff.md)
 - [Architecture decisions](docs/adr/)
 - [Execution work orders](docs/work-orders/)
 
-Coding agents must read [`AGENTS.md`](AGENTS.md) before changing the repository. Claude Code must also read [`CLAUDE.md`](CLAUDE.md).
+Coding agents must read [`AGENTS.md`](AGENTS.md) before changing the repository. Agents that use the companion instruction file must also read [`CLAUDE.md`](CLAUDE.md).
 
 ## Planned artifact names
 
@@ -114,7 +124,9 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
-The current CPU CI baseline task is defined by
+The current Piper Slovenian TTS ingestion task is defined by
+[`docs/work-orders/0004-piper-slovenian-tts-ingestion.md`](docs/work-orders/0004-piper-slovenian-tts-ingestion.md).
+The CPU CI baseline task is defined by
 [`docs/work-orders/0003-cpu-ci-baseline.md`](docs/work-orders/0003-cpu-ci-baseline.md).
 The runtime repair-and-verification task is defined by
 [`docs/work-orders/0002-m1-runtime-repair-and-2080ti-verification.md`](docs/work-orders/0002-m1-runtime-repair-and-2080ti-verification.md).
@@ -126,6 +138,13 @@ The original runtime baseline work order is
 Code and original documentation in this repository are licensed under the [Apache License 2.0](LICENSE).
 
 The NVIDIA base checkpoint is **not included** and is licensed separately under NVIDIA Open Model Development and Weight License 1.1 (OpenMDW 1.1). Users must obtain the base model from its official distribution point and comply with its license.
+
+The selected Piper TTS engine is **not included** and is licensed separately
+under GPL-3.0-or-later. The selected `sl_SI-artur-medium` voice is downloaded
+from `rhasspy/piper-voices`; its repository, model-card, and ARTUR source
+license metadata disagree, so this project applies the conservative ARTUR
+CC BY-SA 4.0 attribution and publication policy. See
+[third-party licenses](docs/third-party-licenses.md).
 
 A future adapter or merged checkpoint is a derived model artifact and must carry the applicable base-model license, attribution, model card, training disclosure, and evaluation disclosure. See [release policy](docs/release-policy.md).
 

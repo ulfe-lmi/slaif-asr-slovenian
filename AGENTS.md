@@ -8,11 +8,11 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Product shape:** a reproducible adaptation, evaluation, and release pipeline around an open-weight streaming ASR base model.
 - **Initial base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`.
 - **Training framework:** NVIDIA NeMo, pinned by commit or release in executable work.
-- **Adaptation source:** small, failure-directed batches of GaMS-generated Slovenian text rendered by an existing Slovenian TTS system.
+- **Adaptation source:** small, failure-directed batches of GaMS-generated Slovenian text rendered by the selected external Piper Slovenian TTS path.
 - **Control loop:** generate -> synthesize -> evaluate -> select failures -> train bounded update -> run gates -> accept or roll back.
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
-- **Current milestone:** M1 runtime repair and single-GPU baseline verification. No production ASR implementation exists yet.
+- **Current milestone:** M2 data and TTS ingestion is in progress. No production ASR implementation exists yet.
 
 ## Mission
 
@@ -55,6 +55,8 @@ The repository will not own:
 
 - the NeMo framework source tree;
 - the NVIDIA base checkpoint;
+- the Piper TTS source tree or binary;
+- the `sl_SI-artur-medium` voice artifact;
 - GaMS model weights;
 - the Slovenian TTS implementation unless separately imported under an approved license;
 - private or third-party speech corpora;
@@ -140,6 +142,27 @@ Agents must not:
 - create a Hugging Face release;
 - change organization or repository security settings;
 - ask the human to perform routine dependency installation that the execution VM permits.
+
+## TTS boundary
+
+The selected initial Slovenian TTS engine is `OHF-Voice/piper1-gpl` with voice
+`rhasspy/piper-voices` `sl_SI-artur-medium`.
+
+Piper is GPL-3.0-or-later and remains an external executable dependency:
+
+- install it only into repository-local `.venv-piper`;
+- keep source under ignored `.external/piper1-gpl`;
+- invoke it through argv subprocess calls with `shell=True` forbidden;
+- do not import Piper from the Apache-licensed `slaif_asr` package;
+- do not commit Piper source, binaries, voice files, generated WAVs, logs, or
+  local manifests;
+- do not represent generated audio as Apache-2.0 merely because repository
+  orchestration code is Apache-2.0.
+
+The `sl_SI-artur-medium` voice metadata is inconsistent across repository,
+model-card, and ARTUR source records. Apply the conservative ARTUR CC BY-SA 4.0
+attribution and publication policy until later legal review. Public synthetic
+audio release is not authorized by M2 ingestion work.
 
 ## Workflow
 

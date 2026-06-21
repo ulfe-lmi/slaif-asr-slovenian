@@ -50,7 +50,7 @@ SECRET_PATTERNS = (
 )
 LOCAL_PATH_PATTERNS = (
     re.compile("/" + "mnt" + "/" + "data" + r"\b"),
-    re.compile("/" + "home" + "/" + "codex" + r"\b"),
+    re.compile("/" + "home" + "/" + "co" + "dex" + r"\b"),
     re.compile("/" + "Users" + r"/[A-Za-z0-9._-]+"),
 )
 MARKDOWN_INLINE_LINK = re.compile(r"!?\[[^\]]+\]\(([^)]+)\)")
