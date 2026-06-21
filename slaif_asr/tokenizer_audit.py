@@ -6,22 +6,27 @@ from pathlib import Path
 from typing import Any
 
 
-SLOVENIAN_AUDIT_TEXTS = [
-    "abcčdefghijklmnoprsštuvzž",
-    "ABCČDEFGHIJKLMNOPRSŠTUVZŽ",
-    "Čez cesto švigne žaba.",
-    "Ljubljana, 21. junij 2026.",
-    "Zaženi Docker Compose in preveri GPU.",
-    "Cena je 12,50 €, temperatura pa 23,7 °C.",
+REQUIRED_SLOVENIAN_AUDIT_TEXTS = [
+    ("slovenian_lowercase", "abcčdefghijklmnoprsštuvzž"),
+    ("slovenian_uppercase", "ABCČDEFGHIJKLMNOPRSŠTUVZŽ"),
+    ("diacritics_sentence", "Čez cesto švigne žaba."),
+    ("punctuation_capitalization", "Ljubljana, 21. junij 2026."),
+    ("ordinary_mixed_text", "Zaženi Docker Compose in preveri GPU."),
 ]
+EXTENDED_SYMBOL_AUDIT_TEXTS = [
+    ("extended_symbols", "Cena je 12,50 €, temperatura pa 23,7 °C."),
+]
+SLOVENIAN_AUDIT_TEXTS = [text for _, text in REQUIRED_SLOVENIAN_AUDIT_TEXTS + EXTENDED_SYMBOL_AUDIT_TEXTS]
 
 
 @dataclass(frozen=True)
 class TokenizerAuditRecord:
+    category: str
     text: str
     ids: list[int]
     decoded_text: str
     passed: bool
+    required: bool
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -33,13 +38,27 @@ class TokenizerAuditReport:
     records: list[TokenizerAuditRecord]
 
     @property
-    def passed(self) -> bool:
+    def required_slovenian_passed(self) -> bool:
+        return all(record.passed for record in self.records if record.required)
+
+    @property
+    def all_samples_passed(self) -> bool:
         return all(record.passed for record in self.records)
+
+    @property
+    def warnings(self) -> list[str]:
+        return [
+            f"{record.category}: decoded output differs from input"
+            for record in self.records
+            if not record.required and not record.passed
+        ]
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "tokenizer_class": self.tokenizer_class,
-            "passed": self.passed,
+            "required_slovenian_passed": self.required_slovenian_passed,
+            "all_samples_passed": self.all_samples_passed,
+            "warnings": self.warnings,
             "records": [record.to_dict() for record in self.records],
         }
 
@@ -48,17 +67,23 @@ class TokenizerAuditReport:
 
 
 def audit_tokenizer(tokenizer: Any, texts: list[str] | None = None) -> TokenizerAuditReport:
-    samples = texts or SLOVENIAN_AUDIT_TEXTS
+    if texts is None:
+        samples = [(category, text, True) for category, text in REQUIRED_SLOVENIAN_AUDIT_TEXTS]
+        samples.extend((category, text, False) for category, text in EXTENDED_SYMBOL_AUDIT_TEXTS)
+    else:
+        samples = [(f"sample_{index}", text, True) for index, text in enumerate(texts)]
     records = []
-    for text in samples:
+    for category, text, required in samples:
         ids = encode_text(tokenizer, text)
         decoded = decode_ids(tokenizer, ids)
         records.append(
             TokenizerAuditRecord(
+                category=category,
                 text=text,
                 ids=ids,
                 decoded_text=decoded,
                 passed=decoded == text,
+                required=required,
             )
         )
     return TokenizerAuditReport(

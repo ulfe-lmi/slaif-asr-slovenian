@@ -25,7 +25,7 @@ GaMS generates a small Slovenian candidate batch
 
 ## Status
 
-This repository is currently at **M1: runtime contract and baseline inference tooling**.
+This repository is currently at **M1 complete: runtime contract and baseline inference smoke verified**.
 
 Present:
 
@@ -39,6 +39,11 @@ Present:
 - runtime contract and Slovenian tokenizer-audit commands;
 - forced `sl-SI` cache-aware streaming inference wrappers.
 
+Current M1/M2 development hardware is one physical NVIDIA RTX 2080 Ti selected
+with `CUDA_VISIBLE_DEVICES=0`. A second RTX 2080 Ti may be present in the
+development host but remains unused unless a later work order explicitly permits
+it. A100 hardware is not a default prerequisite.
+
 Not yet present:
 
 - training code;
@@ -48,6 +53,8 @@ Not yet present:
 - a released Slovenian checkpoint.
 
 No accuracy or readiness claim should be inferred from the baseline runtime tooling.
+The M1 smoke evidence proves functional restoration and single-GPU inference only;
+it is not a Slovenian quality benchmark.
 
 ## Repository role
 
@@ -103,7 +110,9 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current runtime task
 
-The current runtime baseline is defined by
+The current runtime repair-and-verification task is defined by
+[`docs/work-orders/0002-m1-runtime-repair-and-2080ti-verification.md`](docs/work-orders/0002-m1-runtime-repair-and-2080ti-verification.md).
+The original runtime baseline work order is
 [`docs/work-orders/0001-runtime-contract-and-baseline-inference.md`](docs/work-orders/0001-runtime-contract-and-baseline-inference.md).
 
 ## Licensing

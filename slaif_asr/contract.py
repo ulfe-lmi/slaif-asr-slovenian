@@ -25,7 +25,8 @@ class RuntimeContract:
     sample_rate: int | None
     prompt_indices: dict[str, int | None]
     prompt_kernel_structure: list[dict[str, Any]]
-    available_streaming_contexts: list[list[int]]
+    checkpoint_detected_streaming_contexts: list[list[int]]
+    configured_supported_streaming_contexts: list[list[int]]
     default_streaming_context: list[int] | None
     checkpoint: dict[str, Any]
     environment: dict[str, Any]
@@ -49,7 +50,8 @@ def build_runtime_contract(model: Any, checkpoint_path: str | None = None) -> Ru
         "sl-SI": find_prompt_index(model, "sl-SI"),
         "sl": find_prompt_index(model, "sl"),
     }
-    contexts = extract_streaming_contexts(model)
+    detected_contexts = extract_streaming_contexts(model)
+    configured_contexts = configured_streaming_contexts()
     return RuntimeContract(
         loaded_class=f"{model.__class__.__module__}.{model.__class__.__name__}",
         total_parameters=count_parameters(model),
@@ -59,13 +61,16 @@ def build_runtime_contract(model: Any, checkpoint_path: str | None = None) -> Ru
         sample_rate=sample_rate(model),
         prompt_indices=prompt_indices,
         prompt_kernel_structure=prompt_kernel_structure(model),
-        available_streaming_contexts=contexts,
-        default_streaming_context=contexts[0] if contexts else None,
+        checkpoint_detected_streaming_contexts=detected_contexts,
+        configured_supported_streaming_contexts=configured_contexts,
+        default_streaming_context=detected_contexts[0] if detected_contexts else [56, 3],
         checkpoint={
             "repository": cfg["base_model"]["repository"],
             "revision": cfg["base_model"]["revision"],
             "filename": cfg["base_model"]["filename"],
             "sha256": cfg["base_model"]["sha256"],
+            "hf_lfs_etag": cfg["base_model"].get("hf_lfs_etag"),
+            "byte_size": cfg["base_model"].get("byte_size"),
             "local_path": checkpoint_path,
         },
         environment=environment_details(),
@@ -157,6 +162,10 @@ def extract_streaming_contexts(model: Any) -> list[list[int]]:
     contexts = normalize_contexts(values)
     if contexts:
         return contexts
+    return []
+
+
+def configured_streaming_contexts() -> list[list[int]]:
     return [item["att_context_size"] for item in load_runtime_config()["streaming_contexts"]]
 
 

@@ -22,16 +22,16 @@ Exit gate:
 
 ## M1 — Runtime contract and baseline inference
 
-Status: **in progress**
+Status: **complete**
 
 Deliverables:
 
-- pinned NeMo environment: **implemented as pinned setup path**;
+- pinned NeMo environment: **implemented as `.venv` CUDA 12.6 setup path**;
 - pinned base checkpoint downloader: **implemented**;
 - runtime contract inspector: **implemented**;
 - tokenizer audit: **implemented**;
-- forced `sl-SI` baseline: **implemented as wrappers, pending GPU evidence**;
-- streaming evaluation at all released context settings: **wrappers implemented, pending GPU evidence**;
+- forced `sl-SI` baseline: **implemented and smoke-verified on one RTX 2080 Ti**;
+- streaming evaluation at all released context settings: **implemented and smoke-verified on one RTX 2080 Ti**;
 - small public fixture manifest without sensitive audio: **schema and text-only example implemented**.
 
 Exit gate:
@@ -41,10 +41,18 @@ Exit gate:
 - baseline outputs archived;
 - no training yet.
 
+M1 completion means the runtime contract and one short single-GPU smoke path work.
+It does not establish Slovenian ASR quality.
+
 Work order:
 [`work-orders/0001-runtime-contract-and-baseline-inference.md`](work-orders/0001-runtime-contract-and-baseline-inference.md)
 
+Repair and verification work order:
+[`work-orders/0002-m1-runtime-repair-and-2080ti-verification.md`](work-orders/0002-m1-runtime-repair-and-2080ti-verification.md)
+
 ## M2 — Data and TTS ingestion
+
+Execution hardware policy: use one RTX 2080 Ti process-visible GPU unless a later work order explicitly permits different hardware.
 
 Deliverables:
 
@@ -62,6 +70,8 @@ Exit gate:
 - no immutable-gate leakage.
 
 ## M3 — Selective adaptation proof
+
+The first prompt-specific proof is expected to attempt one RTX 2080 Ti with FP16 AMP. A100 is requested only after measured memory, throughput, or authoritative benchmark evidence supports escalation.
 
 Deliverables:
 

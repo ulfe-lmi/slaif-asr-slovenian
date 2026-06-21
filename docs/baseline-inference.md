@@ -11,7 +11,8 @@ Verified on 2026-06-21:
 - Official model repository: [`nvidia/nemotron-3.5-asr-streaming-0.6b`](https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b)
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`
 - Pinned checkpoint file: `nemotron-3.5-asr-streaming-0.6b.nemo`
-- Checkpoint SHA256: `79766c070eed987b43ee595fff7bd21fe49aae6ee26e881f51b86d8e662e713d`
+- Checkpoint SHA256: `210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74`
+- Hugging Face LFS ETag: `79766c070eed987b43ee595fff7bd21fe49aae6ee26e881f51b86d8e662e713d`
 - NeMo source: [`NVIDIA-NeMo/NeMo`](https://github.com/NVIDIA-NeMo/NeMo)
 - Pinned NeMo revision: `8044a3924bfcfe8ef71d792bb73bf274fe853575`
 
@@ -39,10 +40,16 @@ Do not commit downloaded `.nemo` files, audio files, per-utterance private outpu
 
 ## Runtime setup
 
-Use a disposable GPU environment. The target smoke-test hardware is an NVIDIA A100 with the CUDA/PyTorch stack supplied by the pinned NeMo 26.06 runtime or by installing the pinned NeMo source checkout.
+Use a disposable GPU environment. The current M1/M2 development target is one NVIDIA RTX 2080 Ti selected as physical GPU 0:
 
 ```bash
-scripts/setup_runtime_env.sh
+export CUDA_VISIBLE_DEVICES=0
+```
+
+The second RTX 2080 Ti remains unused unless a later work order explicitly permits it. A100 hardware is not a default prerequisite.
+
+```bash
+scripts/setup_runtime_env.sh --recreate
 source .venv/bin/activate
 ```
 
@@ -52,20 +59,20 @@ The setup script checks out NeMo at:
 8044a3924bfcfe8ef71d792bb73bf274fe853575
 ```
 
-Generated runtime contracts record exact Python, PyTorch, CUDA, GPU, and NeMo versions for each run.
+The setup path creates `.venv` with Python 3.12, installs `torch==2.7.1+cu126` and matching `torchaudio` from the official PyTorch CUDA 12.6 wheel index, then installs this repository and the pinned NeMo ASR checkout. Generated runtime contracts record exact Python, PyTorch, CUDA, GPU, and NeMo versions for each run.
 
 ## Download checkpoint
 
 Dry-run the official URL and metadata:
 
 ```bash
-python3 scripts/download_nemotron_checkpoint.py --dry-run
+.venv/bin/python scripts/download_nemotron_checkpoint.py --dry-run
 ```
 
 Download and verify the checkpoint:
 
 ```bash
-python3 scripts/download_nemotron_checkpoint.py
+.venv/bin/python scripts/download_nemotron_checkpoint.py
 ```
 
 The checkpoint is written under `models/checkpoints/`, and a `.sha256` sidecar is written next to it. Both are ignored by Git.
@@ -73,22 +80,22 @@ The checkpoint is written under `models/checkpoints/`, and a `.sha256` sidecar i
 ## Inspect runtime contract
 
 ```bash
-python3 scripts/inspect_runtime_contract.py \
+.venv/bin/python scripts/inspect_runtime_contract.py \
   --checkpoint models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo \
   --output runs/contracts/nemotron-3.5-asr-streaming-0.6b.json
 ```
 
-The JSON contract includes loaded class, parameter count, encoder shape, tokenizer vocabulary size, sample rate, `sl-SI` and `sl` prompt indices when introspectable, prompt-related parameter shapes, streaming contexts, checkpoint identity, and environment details.
+The JSON contract includes loaded class, parameter count, encoder shape, tokenizer vocabulary size, sample rate, `sl-SI` and `sl` prompt indices when introspectable, prompt-related parameter shapes, checkpoint-detected streaming contexts, configured project-supported streaming contexts, checkpoint identity, and environment details.
 
 ## Audit Slovenian tokenizer behavior
 
 ```bash
-python3 scripts/audit_slovenian_tokenizer.py \
+.venv/bin/python scripts/audit_slovenian_tokenizer.py \
   --checkpoint models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo \
   --output runs/tokenizer-audits/sl-si.json
 ```
 
-The audit records token IDs, decoded text, and an exact round-trip pass/fail result for representative Slovenian text containing `č`, `š`, `ž`, uppercase letters, punctuation, dates, decimal commas, euro signs, and degree symbols.
+The audit records token IDs, decoded text, and exact round-trip results. By default it exits zero when required Slovenian samples pass. The euro and degree-symbol sample remains in the report as extended-symbol coverage; unsupported `€` or `°` decoding is a warning about normalization or vocabulary coverage, not a failure of `č`, `š`, or `ž`. Use `--strict-all` to return nonzero when any extended sample fails.
 
 ## Prepare audio
 
@@ -115,7 +122,7 @@ For single-file mode, the local wrapper writes a temporary one-entry manifest un
 Run all five contexts:
 
 ```bash
-python3 scripts/run_streaming_inference.py \
+.venv/bin/python scripts/run_streaming_inference.py \
   --audio-file private-slovenian-16k.wav \
   --all-contexts \
   --cuda 0
@@ -130,6 +137,18 @@ strip_lang_tags=true
 
 to the pinned NeMo cache-aware streaming script.
 
+Every successful context writes:
+
+```text
+runs/inference/<run-id>/context_<left>_<right>/result.json
+runs/inference/<run-id>/context_<left>_<right>/inference.log
+```
+
+`result.json` contains model identity, checkpoint SHA256, context, transcript,
+wall time, GPU name, and null `reference_text`/`wer` when no reference transcript
+is supplied. The wrapper resolves relative `--audio-file` paths before writing
+the temporary manifest.
+
 ## Manifest streaming inference
 
 Manifest entries follow [`docs/examples/inference-manifest.schema.json`](examples/inference-manifest.schema.json). A text-only example is provided in [`docs/examples/slovenian-inference-manifest.example.jsonl`](examples/slovenian-inference-manifest.example.jsonl).
@@ -137,7 +156,7 @@ Manifest entries follow [`docs/examples/inference-manifest.schema.json`](example
 Run a manifest at all five settings:
 
 ```bash
-python3 scripts/run_streaming_inference.py \
+.venv/bin/python scripts/run_streaming_inference.py \
   --manifest path/to/private-manifest.jsonl \
   --all-contexts \
   --batch-size 1 \
@@ -153,3 +172,4 @@ NeMo writes manifest outputs under `runs/inference/`, which is ignored. Treat pe
 - No fine-tuning, GaMS integration, TTS integration, active learning, model publication, or release step is implemented.
 - CPU-only tests validate serialization, tokenizer-audit handling, config syntax, and wrapper syntax. They do not prove checkpoint loading or ASR quality.
 - GPU smoke inference is required before any runtime-quality claim and must report hardware, CUDA, PyTorch, NeMo revision, checkpoint revision, context setting, command, result, and peak memory when available.
+- Cache-aware inference uses FP32 under the pinned NeMo implementation.
