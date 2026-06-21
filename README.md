@@ -97,21 +97,7 @@ ulfe-lmi/slaif-asr-slovenian-nemotron-3.5
 
 Names are project decisions, not claims of ownership over NVIDIA technology.
 
-## Quick repository bootstrap
-
-After creating an empty GitHub repository:
-
-```bash
-unzip slaif-asr-slovenian-skeleton.zip
-cd slaif-asr-slovenian
-
-git init
-git branch -M main
-git add .
-git commit -m "chore: bootstrap SLAIF Slovenian ASR project"
-git remote add origin git@github.com:ulfe-lmi/slaif-asr-slovenian.git
-git push -u origin main
-```
+## Next task
 
 The next implementation task is defined in
 [`docs/work-orders/0001-runtime-contract-and-baseline-inference.md`](docs/work-orders/0001-runtime-contract-and-baseline-inference.md).
