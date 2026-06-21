@@ -7,7 +7,7 @@
 # SLAIF Slovenian Streaming ASR
 
 [![License: Apache-2.0](https://img.shields.io/badge/code%20license-Apache--2.0-blue.svg)](LICENSE)
-[![Project status](https://img.shields.io/badge/status-strategic%20scaffold-orange.svg)](docs/roadmap.md)
+[![Project status](https://img.shields.io/badge/status-runtime%20baseline-yellow.svg)](docs/roadmap.md)
 
 SLAIF Slovenian Streaming ASR is a reproducible research and engineering project for adapting, evaluating, and releasing open-weight streaming automatic speech recognition models for Slovenian.
 
@@ -25,7 +25,7 @@ GaMS generates a small Slovenian candidate batch
 
 ## Status
 
-This repository is currently at **M0: strategic scaffold**.
+This repository is currently at **M1: runtime contract and baseline inference tooling**.
 
 Present:
 
@@ -33,18 +33,21 @@ Present:
 - architecture and trust-boundary decisions;
 - data, testing, evaluation, and release policies;
 - a detailed Nemotron/NeMo adaptation plan;
-- PR, issue, review, and work-order templates.
+- PR, issue, review, and work-order templates;
+- pinned baseline runtime configuration;
+- official checkpoint download and checksum helper;
+- runtime contract and Slovenian tokenizer-audit commands;
+- forced `sl-SI` cache-aware streaming inference wrappers.
 
 Not yet present:
 
-- executable inference scripts;
 - training code;
 - datasets;
 - model weights;
 - benchmark results;
 - a released Slovenian checkpoint.
 
-No accuracy or readiness claim should be inferred from the repository scaffold.
+No accuracy or readiness claim should be inferred from the baseline runtime tooling.
 
 ## Repository role
 
@@ -69,6 +72,7 @@ NeMo remains an external, pinned dependency. Model artifacts will be released se
 - [Testing strategy](docs/testing-strategy.md)
 - [Evaluation protocol](docs/evaluation-protocol.md)
 - [Release policy](docs/release-policy.md)
+- [Baseline inference quickstart](docs/baseline-inference.md)
 - [Current project handoff](docs/project-handoff.md)
 - [Architecture decisions](docs/adr/)
 - [Execution work orders](docs/work-orders/)
@@ -97,9 +101,9 @@ ulfe-lmi/slaif-asr-slovenian-nemotron-3.5
 
 Names are project decisions, not claims of ownership over NVIDIA technology.
 
-## Next task
+## Current runtime task
 
-The next implementation task is defined in
+The current runtime baseline is defined by
 [`docs/work-orders/0001-runtime-contract-and-baseline-inference.md`](docs/work-orders/0001-runtime-contract-and-baseline-inference.md).
 
 ## Licensing

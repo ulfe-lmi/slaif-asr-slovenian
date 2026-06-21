@@ -4,7 +4,7 @@ The roadmap is organized as evidence-bearing milestones, not calendar promises.
 
 ## M0 — Strategic scaffold
 
-Status: **current**
+Status: **complete**
 
 Deliverables:
 
@@ -22,15 +22,17 @@ Exit gate:
 
 ## M1 — Runtime contract and baseline inference
 
+Status: **in progress**
+
 Deliverables:
 
-- pinned NeMo environment;
-- pinned base checkpoint downloader;
-- runtime contract inspector;
-- tokenizer audit;
-- forced `sl-SI` baseline;
-- streaming evaluation at all released context settings;
-- small public fixture manifest without sensitive audio.
+- pinned NeMo environment: **implemented as pinned setup path**;
+- pinned base checkpoint downloader: **implemented**;
+- runtime contract inspector: **implemented**;
+- tokenizer audit: **implemented**;
+- forced `sl-SI` baseline: **implemented as wrappers, pending GPU evidence**;
+- streaming evaluation at all released context settings: **wrappers implemented, pending GPU evidence**;
+- small public fixture manifest without sensitive audio: **schema and text-only example implemented**.
 
 Exit gate:
 
@@ -39,7 +41,7 @@ Exit gate:
 - baseline outputs archived;
 - no training yet.
 
-Planned work order:
+Work order:
 [`work-orders/0001-runtime-contract-and-baseline-inference.md`](work-orders/0001-runtime-contract-and-baseline-inference.md)
 
 ## M2 — Data and TTS ingestion
