@@ -1,0 +1,110 @@
+# Testing Strategy
+
+## Principle
+
+Tests are evidence only when they cover the claim being made.
+
+## Test layers
+
+### Repository hygiene
+
+- no forbidden large files;
+- no secrets;
+- no private/local paths;
+- valid configuration syntax;
+- documentation links resolve.
+
+### Unit tests
+
+Planned units include:
+
+- text normalization;
+- candidate schema validation;
+- deduplication;
+- manifest construction;
+- prompt-index selection;
+- trainable-parameter filtering;
+- checkpoint-diff verification;
+- metric calculation;
+- acceptance-rule evaluation.
+
+### Integration tests
+
+Planned integrations include:
+
+- checkpoint restoration;
+- tokenizer round trip;
+- manifest -> NeMo dataloader;
+- one forward and RNNT-loss step;
+- save and restore challenger checkpoint;
+- offline and cache-aware streaming inference;
+- adapter extraction and reapplication.
+
+### GPU tests
+
+GPU tests must record environment details. They should be tagged so CPU-only CI can skip them explicitly while a GPU runner executes them separately.
+
+### End-to-end experiment tests
+
+A bounded fixture should prove:
+
+```text
+candidate -> synthetic audio fixture -> manifest -> baseline inference
+-> selective update -> checkpoint save -> streaming inference -> gate report
+```
+
+The fixture proves orchestration, not production accuracy.
+
+## Negative-path requirements
+
+Tests should prove failure for:
+
+- missing or invalid `target_lang`;
+- unsupported prompt;
+- non-16-kHz or stereo audio when strict mode is used;
+- empty transcript;
+- tokenizer corruption of Slovenian characters;
+- unexpected trainable parameters;
+- forbidden checkpoint changes;
+- protected-evaluation leakage;
+- missing license/provenance fields;
+- attempted acceptance with missing required metrics;
+- publication without release approval.
+
+## Performance tests
+
+Track:
+
+- real-time factor;
+- GPU memory;
+- batch throughput;
+- latency setting;
+- output stability;
+- checkpoint load time.
+
+Performance numbers must name hardware and software revisions.
+
+## Reporting vocabulary
+
+Use exactly:
+
+- `PASSED`
+- `FAILED`
+- `SKIPPED`
+- `NOT_RUN`
+- `ENVIRONMENT_BLOCKED`
+- `OUT_OF_SCOPE`
+
+Do not summarize partial verification as “all tests passed.”
+
+## CI staging
+
+The intended CI progression is:
+
+1. docs and repository hygiene;
+2. CPU unit tests;
+3. optional containerized NeMo smoke tests;
+4. scheduled or manually approved GPU verification;
+5. release-only full evaluation.
+
+GPU and external-download jobs should be explicit to control cost and supply-chain risk.

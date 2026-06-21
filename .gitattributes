@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.nemo binary
+*.ckpt binary
+*.pt binary
+*.pth binary
+*.safetensors binary
+*.wav binary
+*.flac binary

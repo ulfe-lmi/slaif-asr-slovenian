@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security and private-data report
+    url: mailto:janez.pers@fe.uni-lj.si
+    about: Do not disclose credentials, private speech, transcripts, or vulnerabilities in a public issue.

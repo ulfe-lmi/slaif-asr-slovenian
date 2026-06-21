@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software or its released model artifacts, please cite this repository and the underlying base model as documented in the relevant model card."
+title: "SLAIF Slovenian Streaming ASR"
+type: software
+authors:
+  - family-names: "Perš"
+    given-names: "Janez"
+    email: "janez.pers@fe.uni-lj.si"
+repository-code: "https://github.com/ulfe-lmi/slaif-asr-slovenian"
+url: "https://www.slaif.si"
+license: "Apache-2.0"
+keywords:
+  - "automatic speech recognition"
+  - "streaming ASR"
+  - "Slovenian"
+  - "SLAIF"
+  - "Nemotron"
+  - "NeMo"
+  - "active learning"

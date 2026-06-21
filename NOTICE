@@ -1,0 +1,18 @@
+SLAIF Slovenian Streaming ASR
+Copyright 2026 University of Ljubljana, Faculty of Electrical Engineering
+
+This repository's original code and documentation are licensed under the
+Apache License, Version 2.0.
+
+The project is designed to work with NVIDIA Nemotron 3.5 ASR Streaming 0.6B.
+The NVIDIA model checkpoint is not included in this repository and is licensed
+separately under NVIDIA Open Model Development and Weight License 1.1
+(OpenMDW 1.1). Any derived model artifact must preserve the applicable license,
+attribution, use restrictions, and disclosure obligations.
+
+NVIDIA NeMo is an external Apache-2.0 dependency. When source derived from NeMo
+is copied or modified, its original copyright and license header must be kept,
+and the source path and revision must be recorded.
+
+We acknowledge the support of the EC/EuroHPC JU and the Slovenian Ministry of
+HESI via the project SLAIF (grant number 101254461).

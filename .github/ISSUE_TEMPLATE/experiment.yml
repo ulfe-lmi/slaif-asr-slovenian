@@ -1,0 +1,48 @@
+name: Experiment proposal
+description: Propose a reproducible ASR adaptation or evaluation experiment.
+title: "[Experiment]: "
+labels:
+  - experiment
+body:
+  - type: textarea
+    attributes:
+      label: Hypothesis
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Parent checkpoint and trainable surface
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Data partitions
+      description: Identify synthetic, controller-development, immutable-gate, and regression use.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Fixed controls
+      description: State what remains identical across comparison arms.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Metrics and acceptance rule
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Hardware and budget
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Governance
+      options:
+        - label: No final blind-test data will influence this experiment.
+          required: true
+        - label: No model publication is part of this issue.
+          required: true
+        - label: Data rights and provenance will be recorded.
+          required: true
