@@ -7,6 +7,7 @@
 # SLAIF Slovenian Streaming ASR
 
 [![License: Apache-2.0](https://img.shields.io/badge/code%20license-Apache--2.0-blue.svg)](LICENSE)
+[![CPU CI](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml/badge.svg)](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml)
 [![Project status](https://img.shields.io/badge/status-runtime%20baseline-yellow.svg)](docs/roadmap.md)
 
 SLAIF Slovenian Streaming ASR is a reproducible research and engineering project for adapting, evaluating, and releasing open-weight streaming automatic speech recognition models for Slovenian.
@@ -30,6 +31,7 @@ This repository is currently at **M1 complete: runtime contract and baseline inf
 Present:
 
 - project constitution for coding agents;
+- CPU-only GitHub Actions baseline for repository hygiene and unit checks;
 - architecture and trust-boundary decisions;
 - data, testing, evaluation, and release policies;
 - a detailed Nemotron/NeMo adaptation plan;
@@ -55,6 +57,8 @@ Not yet present:
 No accuracy or readiness claim should be inferred from the baseline runtime tooling.
 The M1 smoke evidence proves functional restoration and single-GPU inference only;
 it is not a Slovenian quality benchmark.
+CPU CI does not install NeMo, download checkpoints or audio, use either GPU, or
+prove model restoration or GPU inference.
 
 ## Repository role
 
@@ -108,9 +112,11 @@ ulfe-lmi/slaif-asr-slovenian-nemotron-3.5
 
 Names are project decisions, not claims of ownership over NVIDIA technology.
 
-## Current runtime task
+## Current validation task
 
-The current runtime repair-and-verification task is defined by
+The current CPU CI baseline task is defined by
+[`docs/work-orders/0003-cpu-ci-baseline.md`](docs/work-orders/0003-cpu-ci-baseline.md).
+The runtime repair-and-verification task is defined by
 [`docs/work-orders/0002-m1-runtime-repair-and-2080ti-verification.md`](docs/work-orders/0002-m1-runtime-repair-and-2080ti-verification.md).
 The original runtime baseline work order is
 [`docs/work-orders/0001-runtime-contract-and-baseline-inference.md`](docs/work-orders/0001-runtime-contract-and-baseline-inference.md).

@@ -17,6 +17,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Baseline inference quickstart and text-only manifest schema.
 - M1 repair work order for one-RTX-2080-Ti verification.
 - CUDA 12.6/PyTorch `.venv` runtime requirements and constraints.
+- CPU-only GitHub Actions baseline for repository hygiene, unit tests, Python
+  compilation, and shell syntax.
+- Tracked-file repository validation command for JSON/TOML syntax, Markdown
+  links, forbidden artifacts, oversized files, local paths, secrets, and
+  trailing whitespace.
 
 ### Changed
 

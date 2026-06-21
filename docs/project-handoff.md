@@ -4,6 +4,9 @@
 
 - Intended repository: `ulfe-lmi/slaif-asr-slovenian`.
 - Project has completed M1 runtime contract and one-RTX-2080-Ti baseline smoke verification.
+- The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
+  unit tests, Python compilation, and shell syntax. This CI does not install
+  NeMo, download checkpoints or audio, use GPUs, or prove model restoration.
 - Executable baseline helpers exist for official-checkpoint download, runtime inspection, tokenizer audit, and forced `sl-SI` cache-aware streaming inference.
 - No model weights, datasets, or benchmark results are part of the repository.
 - Selected first base model: `nvidia/nemotron-3.5-asr-streaming-0.6b`.
@@ -37,9 +40,27 @@ See:
 
 The baseline commands require the repository-local `.venv` and a disposable GPU environment before checkpoint loading and streaming inference can be represented as passed.
 
+## Current CPU validation
+
+The durable pull-request baseline is:
+
+```text
+.venv/bin/python -m unittest discover -s tests
+.venv/bin/python -m py_compile <all tracked Python files>
+.venv/bin/python scripts/check_repository.py
+bash -n scripts/*.sh
+git diff --check
+```
+
+GPU verification remains separate manual or future self-hosted evidence. The M1
+GPU evidence comes from the RTX 2080 Ti verification work order and should not
+be inferred from CPU CI.
+
 ## Next recommended task
 
-After the M1 repair-and-verification PR is reviewed and merged, execute the next approved work order for manifest and audio validation. Do not start training before that next approved work order.
+After the CPU CI baseline PR is reviewed and merged, execute the next approved
+work order for manifest and audio validation. Do not start training before that
+next approved work order.
 
 ## Do not do next
 

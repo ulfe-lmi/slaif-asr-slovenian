@@ -50,7 +50,17 @@ Work order:
 Repair and verification work order:
 [`work-orders/0002-m1-runtime-repair-and-2080ti-verification.md`](work-orders/0002-m1-runtime-repair-and-2080ti-verification.md)
 
+CPU CI baseline work order:
+[`work-orders/0003-cpu-ci-baseline.md`](work-orders/0003-cpu-ci-baseline.md)
+
+CPU CI is the durable pull-request baseline for repository hygiene and unit
+checks. It does not install NeMo, restore the model, use GPUs, or prove
+Slovenian ASR quality. GPU verification remains separate manual or future
+self-hosted evidence.
+
 ## M2 — Data and TTS ingestion
+
+Status: **not started**
 
 Execution hardware policy: use one RTX 2080 Ti process-visible GPU unless a later work order explicitly permits different hardware.
 
@@ -143,16 +153,17 @@ Exit gate:
 
 1. Repository strategic scaffold.
 2. Runtime contract and baseline inference.
-3. Manifest and audio validation.
-4. Evaluation normalization and metrics.
-5. Selective prompt-specific adaptation.
-6. Checkpoint-diff integrity tests.
-7. GaMS candidate schema and text validation.
-8. TTS adapter and provenance.
-9. Active candidate selector.
-10. Bounded training-round runner.
-11. Acceptance/rollback gates.
-12. Multilingual and latency regression harness.
-13. Model release tooling and model-card template.
+3. CPU-only CI baseline.
+4. Manifest and audio validation.
+5. Evaluation normalization and metrics.
+6. Selective prompt-specific adaptation.
+7. Checkpoint-diff integrity tests.
+8. GaMS candidate schema and text validation.
+9. TTS adapter and provenance.
+10. Active candidate selector.
+11. Bounded training-round runner.
+12. Acceptance/rollback gates.
+13. Multilingual and latency regression harness.
+14. Model release tooling and model-card template.
 
 A failing or unresolved PR is repaired before the next feature slice.
