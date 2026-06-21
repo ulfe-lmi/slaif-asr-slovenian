@@ -65,6 +65,7 @@ runs/*
 !runs/README.md
 
 # Hugging Face and NeMo local caches
+.external/
 .huggingface/
 hf-cache/
 nemo-cache/

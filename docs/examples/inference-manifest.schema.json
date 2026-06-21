@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ulfe-lmi/slaif-asr-slovenian/docs/examples/inference-manifest.schema.json",
+  "title": "SLAIF ASR inference manifest entry",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["audio_filepath", "text"],
+  "properties": {
+    "audio_filepath": {
+      "type": "string",
+      "description": "Local path to a mono 16 kHz WAV file. Do not commit the audio file."
+    },
+    "text": {
+      "type": "string",
+      "description": "Reference transcript when available. Use an empty string only for private inference without scoring."
+    },
+    "duration": {
+      "type": "number",
+      "minimum": 0
+    },
+    "language": {
+      "const": "sl-SI"
+    },
+    "source": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    }
+  }
+}

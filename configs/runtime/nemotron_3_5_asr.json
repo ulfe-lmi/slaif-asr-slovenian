@@ -1,0 +1,54 @@
+{
+  "base_model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "filename": "nemotron-3.5-asr-streaming-0.6b.nemo",
+    "sha256": "79766c070eed987b43ee595fff7bd21fe49aae6ee26e881f51b86d8e662e713d",
+    "license": "OpenMDW-1.1"
+  },
+  "nemo": {
+    "repository": "https://github.com/NVIDIA-NeMo/NeMo.git",
+    "revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "source_tree": ".external/NeMo",
+    "runtime_engine": "NeMo 26.06",
+    "interface_note": "NeMo release v2.7.3 was inspected and does not expose target_lang or strip_lang_tags in the cache-aware streaming example. This work order pins a later verified commit from main instead of a floating branch."
+  },
+  "runtime": {
+    "python": ">=3.10,<3.13",
+    "target_gpu": "NVIDIA A100",
+    "cuda": "Use the CUDA/PyTorch stack supplied by the pinned NeMo 26.06 runtime or the pinned NeMo source checkout; record exact CUDA, PyTorch, and NeMo versions in each generated contract."
+  },
+  "streaming_contexts": [
+    {
+      "att_context_size": [56, 0],
+      "chunk_seconds": 0.08
+    },
+    {
+      "att_context_size": [56, 1],
+      "chunk_seconds": 0.16
+    },
+    {
+      "att_context_size": [56, 3],
+      "chunk_seconds": 0.32
+    },
+    {
+      "att_context_size": [56, 6],
+      "chunk_seconds": 0.56
+    },
+    {
+      "att_context_size": [56, 13],
+      "chunk_seconds": 1.12
+    }
+  ],
+  "prompt": {
+    "target_lang": "sl-SI",
+    "fallback_language_key_to_check": "sl",
+    "strip_lang_tags": true
+  },
+  "local_artifacts": {
+    "checkpoint_dir": "models/checkpoints",
+    "runtime_contract_dir": "runs/contracts",
+    "tokenizer_audit_dir": "runs/tokenizer-audits",
+    "inference_output_dir": "runs/inference"
+  }
+}
