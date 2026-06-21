@@ -1,10 +1,10 @@
 # Nemotron 3.5 ASR Streaming 0.6B: Slovenian Inference and Adaptive Fine-Tuning Plan
 
-**Base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`  
-**Target locale:** `sl-SI`  
-**Hardware:** 1–4 × NVIDIA A100 80 GB  
-**Training loop:** GaMS generates Slovenian text → existing Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update  
-**Prepared:** 2026-06-21
+- **Base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`
+- **Target locale:** `sl-SI`
+- **Hardware:** 1–4 × NVIDIA A100 80 GB
+- **Training loop:** GaMS generates Slovenian text → existing Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update
+- **Prepared:** 2026-06-21
 
 ---
 
