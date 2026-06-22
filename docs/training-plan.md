@@ -52,6 +52,13 @@ The recommended adaptation ladder is:
 4. **Last encoder layers** — only when real-speech errors demonstrate an acoustic/phonetic ceiling.
 5. **Full fine-tune** — retain as the official reference baseline, not the first production choice.
 
+The first prompt-column micro-proof has now been executed on one RTX 2080 Ti.
+It supports only the narrow mechanism claim: a 2048-scalar Slovenian prompt
+column delta can overfit the tiny synthetic smoke set while preserving exact
+parameter isolation. It does not establish a production adaptation or an
+accepted parent checkpoint because the diagnostic public real-smoke sample
+regressed.
+
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
 ---
@@ -627,7 +634,9 @@ The M2 ingestion slice uses `OHF-Voice/piper1-gpl` revision
 Piper remains an external GPL executable in `.venv-piper`; voice artifacts,
 native 22,050 Hz WAVs, resampled 16 kHz WAVs, logs, provenance, and manifests
 remain ignored local artifacts. Future 2080 Ti training should use FP16 AMP
-rather than BF16 unless a later work order changes that policy.
+rather than BF16 unless a later work order changes that policy. The first
+prompt-column micro-proof records an explicit FP32 fallback after FP16 AMP
+produced loss-scale overflow events during the one-sample proof.
 
 ---
 

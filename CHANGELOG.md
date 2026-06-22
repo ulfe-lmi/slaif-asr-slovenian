@@ -27,6 +27,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   wrapper, provenance and NeMo manifest generation.
 - ADR and third-party attribution documentation for the Piper GPL boundary and
   ARTUR voice license discrepancy.
+- Prompt-column-only Slovenian adaptation utilities, metrics, experiment
+  configuration, training/evaluation drivers, and privacy-safe aggregate M3
+  micro-overfit report.
 
 ### Changed
 
@@ -36,3 +39,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Single-file inference now resolves relative audio paths and persists per-context `result.json` plus logs.
 - M2 status is now in progress for the Piper-to-Nemotron vertical slice; no
   training, GaMS integration, or public audio/model publication is included.
+- M3 prompt-column proof records FP32 fallback after FP16 AMP loss-scale
+  overflow events and reports the tiny synthetic result separately from holdout
+  and public real-smoke diagnostics.

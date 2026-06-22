@@ -12,7 +12,9 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Control loop:** generate -> synthesize -> evaluate -> select failures -> train bounded update -> run gates -> accept or roll back.
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
-- **Current milestone:** M2 data and TTS ingestion is in progress. No production ASR implementation exists yet.
+- **Current milestone:** M3 prompt-column proof is complete for one
+  micro-experiment. Broader M2 data governance and production ASR work remain
+  incomplete.
 
 ## Mission
 

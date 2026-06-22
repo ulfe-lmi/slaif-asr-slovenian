@@ -60,14 +60,14 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **in progress**
+Status: **vertical slice complete; scalable governance pending**
 
 Execution hardware policy: use one RTX 2080 Ti process-visible GPU unless a later work order explicitly permits different hardware.
 
 Deliverables:
 
 - candidate schema;
-- TTS adapter interface: **Piper vertical slice in progress**;
+- TTS adapter interface: **Piper vertical slice complete on one RTX 2080 Ti**;
 - audio and manifest validator;
 - provenance records;
 - partition and leakage checks;
@@ -79,7 +79,7 @@ Exit gate:
 - no word alignment requirement;
 - no immutable-gate leakage.
 
-Current work order:
+Current completed vertical-slice work order:
 [`work-orders/0004-piper-slovenian-tts-ingestion.md`](work-orders/0004-piper-slovenian-tts-ingestion.md)
 
 The current M2 slice proves real Piper `sl_SI-artur-medium` synthesis to a
@@ -89,21 +89,37 @@ replay, or production training manifests.
 
 ## M3 — Selective adaptation proof
 
+Status: **prompt-column micro-proof complete; broader adaptation pending**
+
 The first prompt-specific proof is expected to attempt one RTX 2080 Ti with FP16 AMP. A100 is requested only after measured memory, throughput, or authoritative benchmark evidence supports escalation.
 
 Deliverables:
 
-- prompt-specific trainable-surface implementation;
-- trainable-parameter diff verifier;
-- tiny-set overfit test;
-- saved and reloadable `.nemo` challenger;
-- first real-Slovenian gate comparison.
+- prompt-specific trainable-surface implementation: **implemented for one
+  prompt column**;
+- trainable-parameter diff verifier: **implemented**;
+- tiny-set overfit test: **completed for the eight Piper smoke candidates**;
+- saved and reloadable `.nemo` challenger: **verified locally, ignored**;
+- first real-Slovenian gate comparison: **diagnostic public-smoke comparison
+  run; it regressed and is not a benchmark**.
 
 Exit gate:
 
 - intended parameter region is the only changed region;
 - resulting checkpoint runs streaming inference;
 - no transfer or latency regression beyond declared limits.
+
+The first micro-experiment supports the narrow claim that a 2048-scalar
+`sl-SI` prompt-column delta can overfit a tiny synthetic set while changing only
+the selected prompt column. It does not validate release quality. The public
+real-smoke diagnostic regressed, so broader M3 work must add real-speech gates
+before any accepted parent or model publication.
+
+Work order:
+[`work-orders/0005-m3-prompt-column-adaptation-proof.md`](work-orders/0005-m3-prompt-column-adaptation-proof.md)
+
+Aggregate report:
+[`experiments/0001-prompt-column-micro-overfit.md`](experiments/0001-prompt-column-micro-overfit.md)
 
 ## M4 — Active GaMS/TTS loop
 

@@ -4,8 +4,11 @@
 
 - Intended repository: `ulfe-lmi/slaif-asr-slovenian`.
 - Project has completed M1 runtime contract and one-RTX-2080-Ti baseline smoke verification.
-- M2 data and TTS ingestion is in progress through the Piper Slovenian TTS
-  vertical slice.
+- M2 Piper Slovenian TTS vertical slice is complete, while scalable generated
+  data governance remains pending.
+- M3 prompt-column micro-proof is complete for one tiny synthetic experiment.
+  The result supports the prompt-column mechanism on synthetic smoke data but
+  does not establish an accepted release parent.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
   unit tests, Python compilation, and shell syntax. This CI does not install
   NeMo, download checkpoints or audio, use GPUs, or prove model restoration.
@@ -25,6 +28,13 @@
 - Default runtime selection: `CUDA_VISIBLE_DEVICES=0`; the second RTX 2080 Ti remains unused unless a later work order explicitly permits it.
 - M1 and M2 use one RTX 2080 Ti. The first prompt-specific M3 proof should attempt one RTX 2080 Ti before requesting stronger hardware.
 - A100 is not a default prerequisite and becomes mandatory only through a later work order backed by measured memory, throughput, or authoritative benchmarking requirements.
+- First M3 trainable surface: one additive `sl-SI` prompt-column delta with
+  2048 effective trainable scalars, later merged into only the selected first
+  prompt-projection column.
+- M3 prompt-column micro-result: Phase A supported, Phase B executed, synthetic
+  training WER improved from 92.5 to 38.333 and empty synthetic-training
+  hypotheses dropped from 3 to 0. Synthetic holdout WER was unchanged at 87.5.
+  Public FLEURS smoke WER regressed from 75.0 to 85.0.
 
 ## Non-negotiable rules
 
@@ -78,18 +88,19 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-After the Piper TTS ingestion PR is reviewed and merged, continue M2 with
-manifest validation, leakage controls, and larger synthetic-data governance as
-separate bounded work orders. Do not start training before an approved M3 work
-order.
+Continue M2b with manifest validation, leakage controls, protected-evaluation
+deduplication, and larger synthetic-data governance as separate bounded work
+orders. Do not treat the prompt-column micro-checkpoint as an accepted parent or
+publishable artifact.
 
 ## Do not do next
 
-- Do not implement training before the runtime contract is verified.
 - Do not add GaMS orchestration yet.
 - Do not create a service API or UI.
 - Do not publish a checkpoint.
 - Do not add private data to obtain an early score.
+- Do not escalate beyond the prompt column without a new work order and real
+  evidence.
 
 ## Strategic questions after the next PR
 
