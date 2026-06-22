@@ -12,6 +12,9 @@ SUPPORTED_SCHEMA_VERSION = "1.0"
 CANDIDATE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{2,79}$")
 SLOVENIAN_HINT_PATTERN = re.compile(r"[čšžČŠŽ]|\b(je|in|sem|si|smo|ste|lahko|prosim|danes)\b", re.IGNORECASE)
 MARKDOWN_PATTERN = re.compile(r"(^|\n)\s*(```|[-*]\s+|#{1,6}\s+)")
+LINE_PREFIX_PATTERN = re.compile(r"^\s*(?:\d{1,4}[\).:\-]\s*|[-*•]\s*)")
+NOISY_LINE_PATTERN = re.compile(r"^\s*(?:json|candidates?|sentences?|stavki?|output|response)\s*:?\s*$", re.IGNORECASE)
+SENTENCE_SPLIT_PATTERN = re.compile(r"(?<=[.!?])\s+(?=[A-ZČŠŽ])")
 
 
 @dataclass(frozen=True)
@@ -49,6 +52,69 @@ def parse_strict_json_candidates(text: str) -> list[dict[str, Any]]:
     if not all(isinstance(item, dict) for item in payload):
         raise ValueError("every GaMS candidate must be a JSON object")
     return payload
+
+
+def clean_generated_line(line: str) -> str:
+    value = LINE_PREFIX_PATTERN.sub("", line.strip())
+    value = value.strip(" \t\"'“”„`")
+    value = re.sub(r"\s+", " ", value)
+    return unicodedata.normalize("NFC", value).strip()
+
+
+def extract_candidate_text_lines(text: str) -> list[str]:
+    """Extract candidate sentence lines from free-form GaMS output.
+
+    GaMS is useful as a Slovenian text proposer but unreliable as a schema
+    serializer. This parser intentionally accepts simple line-oriented text and
+    leaves schema construction to project code.
+    """
+
+    lines: list[str] = []
+    in_fence = False
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not stripped or in_fence or NOISY_LINE_PATTERN.fullmatch(stripped):
+            continue
+        if stripped.endswith(":") and len(stripped.split()) <= 5:
+            continue
+        line = clean_generated_line(stripped)
+        if not line:
+            continue
+        if line.startswith(("{", "}", "[", "]")):
+            continue
+        if "\t" in line:
+            line = line.replace("\t", " ")
+        parts = SENTENCE_SPLIT_PATTERN.split(line)
+        lines.extend(part.strip() for part in parts if part.strip())
+    return lines
+
+
+def build_candidates_from_text_lines(
+    lines: list[str],
+    *,
+    round_id: str,
+    generation_seed: int,
+    phenomena: tuple[str, ...] = ("project_generated",),
+    protected_hashes: set[str] | None = None,
+    forbidden_texts: set[str] | None = None,
+) -> tuple[list[GamsCandidate], list[str]]:
+    rows: list[dict[str, Any]] = []
+    for index, text in enumerate(lines, start=1):
+        rows.append(
+            {
+                "candidate_id": f"{round_id}-{index:04d}",
+                "spoken_text": text,
+                "target_text": text,
+                "language": "sl-SI",
+                "phenomena": list(phenomena),
+                "source_error_clusters": [],
+                "generation_seed": generation_seed,
+            }
+        )
+    return validate_candidate_batch(rows, protected_hashes=protected_hashes, forbidden_texts=forbidden_texts)
 
 
 def validate_gams_candidate(row: dict[str, Any], *, protected_hashes: set[str] | None = None) -> GamsCandidate:
