@@ -8,7 +8,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/code%20license-Apache--2.0-blue.svg)](LICENSE)
 [![CPU CI](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml/badge.svg)](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml)
-[![Project status](https://img.shields.io/badge/status-M3%20prompt%20proof-yellow.svg)](docs/roadmap.md)
+[![Project status](https://img.shields.io/badge/status-M3%20active%20curriculum-yellow.svg)](docs/roadmap.md)
 
 SLAIF Slovenian Streaming ASR is a reproducible research and engineering project for adapting, evaluating, and releasing open-weight streaming automatic speech recognition models for Slovenian.
 
@@ -26,8 +26,9 @@ GaMS generates a small Slovenian candidate batch
 
 ## Status
 
-This repository is currently at **M3 prompt-column proof complete for a
-micro-experiment**. Broader M2 generated-data governance remains pending.
+This repository is currently at **M3 active-curriculum tooling**. The
+prompt-column micro-proof is complete, and the next bounded experiment tests two
+GaMS-directed active-learning rounds without broadening the trainable surface.
 
 Present:
 
@@ -47,6 +48,8 @@ Present:
   helpers.
 - a prompt-column-only Slovenian adaptation proof that changes only the derived
   `sl-SI` first prompt-projection input column in an ignored local checkpoint.
+- pinned GaMS generator configuration and deterministic active-curriculum
+  validation for the next prompt-column generalization experiment.
 
 Current M1/M2 development hardware is one physical NVIDIA RTX 2080 Ti selected
 with `CUDA_VISIBLE_DEVICES=0`. A second RTX 2080 Ti may be present in the
@@ -69,8 +72,8 @@ The M2 TTS slice renders only ignored local synthetic-smoke audio and does not
 authorize publishing synthetic audio or model artifacts.
 The M3 prompt-column proof is a tiny synthetic micro-overfit result, not a
 benchmark or production-readiness claim. The public real-smoke diagnostic
-regressed after the micro-update, so broader data governance and real-speech
-gates remain mandatory before any release.
+regressed after the micro-update. The active-curriculum protocol must pass fixed
+synthetic and real gates before any challenger can become an accepted parent.
 
 ## Repository role
 
@@ -132,6 +135,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 The prompt-column micro-overfit task is defined by
 [`docs/work-orders/0005-m3-prompt-column-adaptation-proof.md`](docs/work-orders/0005-m3-prompt-column-adaptation-proof.md).
+The GaMS-directed prompt-column active-curriculum task is defined by
+[`docs/work-orders/0006-gams-prompt-column-active-curriculum.md`](docs/work-orders/0006-gams-prompt-column-active-curriculum.md).
 The Piper Slovenian TTS ingestion task is defined by
 [`docs/work-orders/0004-piper-slovenian-tts-ingestion.md`](docs/work-orders/0004-piper-slovenian-tts-ingestion.md).
 The CPU CI baseline task is defined by

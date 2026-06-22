@@ -60,6 +60,7 @@ The repository will not own:
 - the Piper TTS source tree or binary;
 - the `sl_SI-artur-medium` voice artifact;
 - GaMS model weights;
+- generated GaMS candidate pools, active-curriculum manifests, or round outputs;
 - the Slovenian TTS implementation unless separately imported under an approved license;
 - private or third-party speech corpora;
 - production deployment credentials.
@@ -165,6 +166,15 @@ The `sl_SI-artur-medium` voice metadata is inconsistent across repository,
 model-card, and ARTUR source records. Apply the conservative ARTUR CC BY-SA 4.0
 attribution and publication policy until later legal review. Public synthetic
 audio release is not authorized by M2 ingestion work.
+
+## GaMS boundary
+
+GaMS is an external local candidate-text generator. Use only pinned Hugging Face
+revisions, keep model weights and generated candidate pools out of Git, and run
+model generation only with the GPU visibility authorized by the active work
+order. Do not send immutable real-gate or final-test reference text to GaMS.
+Synthetic candidate-pool failures may steer later rounds only when the work
+order explicitly permits it.
 
 ## Workflow
 

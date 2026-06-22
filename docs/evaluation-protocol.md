@@ -33,6 +33,16 @@ Report:
 - foreign-script leakage;
 - silence/noise hallucination rate.
 
+Active-curriculum reports must also distinguish:
+
+- corpus WER from total word edits divided by total reference words;
+- corpus CER from total character edits divided by total reference characters;
+- mean utterance WER/CER;
+- median utterance WER/CER;
+- empty-hypothesis counts.
+
+Do not label mean utterance WER as corpus WER.
+
 ## Streaming settings
 
 Evaluate every release candidate at the supported context settings:

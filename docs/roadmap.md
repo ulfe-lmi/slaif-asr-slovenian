@@ -89,7 +89,7 @@ replay, or production training manifests.
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; broader adaptation pending**
+Status: **prompt-column micro-proof complete; active-curriculum generalization tooling in progress**
 
 The first prompt-specific proof is expected to attempt one RTX 2080 Ti with FP16 AMP. A100 is requested only after measured memory, throughput, or authoritative benchmark evidence supports escalation.
 
@@ -121,7 +121,20 @@ Work order:
 Aggregate report:
 [`experiments/0001-prompt-column-micro-overfit.md`](experiments/0001-prompt-column-micro-overfit.md)
 
+Active-curriculum work order:
+[`work-orders/0006-gams-prompt-column-active-curriculum.md`](work-orders/0006-gams-prompt-column-active-curriculum.md)
+
+Active-curriculum report:
+[`experiments/0002-prompt-column-active-curriculum.md`](experiments/0002-prompt-column-active-curriculum.md)
+
+The active-curriculum PR adds the bounded GaMS -> Piper -> Nemotron protocol,
+metric corrections, and promotion/rollback machinery. It does not by itself make
+a challenger accepted; real GPU rounds and fixed-gate outcomes remain the
+deciding evidence.
+
 ## M4 — Active GaMS/TTS loop
+
+Status: **not started as a release loop**
 
 Deliverables:
 

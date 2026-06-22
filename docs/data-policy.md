@@ -88,6 +88,11 @@ Raw and normalized metrics must be reported separately when normalization materi
 - Deduplicate generated candidates against public and protected evaluation text.
 - Store hashes or similarity indexes needed to audit leakage.
 - A candidate too close to protected evaluation text is rejected.
+- For the prompt-column active-curriculum experiment, round-2 steering may use
+  synthetic candidate-pool references and hypotheses, substitution/deletion/
+  insertion clusters, failed phenomenon counts, and aggregate real-gate category
+  counts. It must not include raw real-gate references or synthetic-holdout raw
+  errors.
 
 ## TTS policy
 

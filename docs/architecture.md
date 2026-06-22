@@ -230,6 +230,13 @@ The first M3 prompt-column challenger remains an ignored local artifact. Its
 aggregate report is committed, but the delta, merged checkpoint, manifests, and
 per-run outputs are not.
 
+The active-curriculum experiment keeps the same prompt-column trainable surface
+and adds a pinned external GaMS generator boundary. GaMS runs in `.venv-gams`
+with one visible GPU, returns strict JSON, and receives only synthetic
+candidate-pool failures plus permitted aggregate gate categories. Fixed
+real-gate reference text and synthetic-holdout raw errors remain outside GaMS
+prompts.
+
 ## Architectural non-goals
 
 The first release will not provide:

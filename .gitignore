@@ -9,6 +9,7 @@ __pycache__/
 htmlcov/
 .venv/
 .venv-piper/
+.venv-gams/
 venv/
 .env
 .env.*
@@ -70,6 +71,7 @@ runs/*
 .huggingface/
 hf-cache/
 nemo-cache/
+gams-cache/
 
 # Local Piper TTS artifacts
 piper-cache/

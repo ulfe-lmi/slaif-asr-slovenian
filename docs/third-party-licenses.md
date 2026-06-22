@@ -91,3 +91,21 @@ License links:
 - ARTUR license: <https://creativecommons.org/licenses/by-sa/4.0/>
 - Model-card dataset reference: <https://huggingface.co/datasets/ppisljar/artur_studio_tts/>
 - Model-card dataset license: <https://creativecommons.org/licenses/by/4.0/>
+
+## GaMS Generator
+
+- Primary source: `cjvt/GaMS3-12B-Instruct`
+- Primary pinned revision: `1d0b27af5748784482600d24779409e7e1dc9adc`
+- Fallback source: `cjvt/GaMS-9B-Instruct`
+- Fallback pinned revision: `292744023fa0b7ccc7ae2c3c885a67468e49fa03`
+- Role: external local Slovenian candidate-text generator
+- License: Gemma Terms of Use
+- Artifact status: not committed to Git
+- Runtime environment: repository-local `.venv-gams`
+- Loading policy: Transformers, Accelerate, bitsandbytes, 4-bit NF4, double
+  quantization, FP16 compute, one visible GPU selected with
+  `CUDA_VISIBLE_DEVICES=0`
+
+GaMS model weights remain external supply-chain inputs. They must not be
+committed, redistributed, or used with CPU offload, GPU 1, model sharding, or a
+floating Hugging Face revision in this project.

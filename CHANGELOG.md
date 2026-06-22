@@ -30,6 +30,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Prompt-column-only Slovenian adaptation utilities, metrics, experiment
   configuration, training/evaluation drivers, and privacy-safe aggregate M3
   micro-overfit report.
+- GaMS active-curriculum configuration, strict candidate validation,
+  deterministic active selection, corpus metric summaries, and promotion or
+  rollback helpers.
+- `.venv-gams` setup and durable CUDA 12.6 Nemotron training-environment
+  verification helpers for the Numba/NVVM stack used in M3.
+- ADR, work order, and experiment report scaffold for the GaMS-directed
+  prompt-column active-curriculum protocol.
 
 ### Changed
 
@@ -42,3 +49,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - M3 prompt-column proof records FP32 fallback after FP16 AMP loss-scale
   overflow events and reports the tiny synthetic result separately from holdout
   and public real-smoke diagnostics.
+- M3 generalization status now distinguishes protocol/tooling from completed
+  two-round GPU evidence.

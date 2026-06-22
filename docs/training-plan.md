@@ -59,6 +59,13 @@ parameter isolation. It does not establish a production adaptation or an
 accepted parent checkpoint because the diagnostic public real-smoke sample
 regressed.
 
+The next bounded experiment keeps the same 2048-scalar trainable surface and
+adds two GaMS-directed active-learning rounds. It uses pinned GaMS generation,
+Piper synthesis, untouched-base pre-scoring, deterministic hard-example
+selection, prompt-column-only training, and fixed synthetic plus real gates.
+Promotion requires real-gate non-regression; synthetic training-set improvement
+alone never accepts a parent.
+
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
 ---
