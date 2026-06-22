@@ -88,6 +88,8 @@ The first implementation must make the trainable surface explicit and measurable
 1. **Slovenian prompt-specific adaptation**
    - modify only the part of prompt conditioning activated by `sl-SI`;
    - strongest transfer-preservation guarantee.
+   - first micro-proof implemented the narrowest version: one additive
+     first-linear `sl-SI` input-column delta, merged only into that column.
 2. **Prompt-projection adaptation**
    - train the small prompt projection;
    - requires multilingual regression gates because the component is shared.
@@ -223,6 +225,10 @@ Every challenger records:
 - commands;
 - metrics;
 - acceptance decision.
+
+The first M3 prompt-column challenger remains an ignored local artifact. Its
+aggregate report is committed, but the delta, merged checkpoint, manifests, and
+per-run outputs are not.
 
 ## Architectural non-goals
 

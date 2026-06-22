@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "prompt-column-micro-overfit-0001",
+  "target_lang": "sl-SI",
+  "context": [56, 3],
+  "seed": 1234,
+  "paths": {
+    "checkpoint": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "synthetic_provenance": "runs/tts/piper/rendered-records.jsonl",
+    "run_dir": "runs/experiments/prompt-column-micro-overfit-0001"
+  },
+  "training": {
+    "prompt_mode": "langID",
+    "precision": "fp32",
+    "batch_size": 1,
+    "weight_decay": 0,
+    "optimizer": "AdamW",
+    "disable_spec_augment": true,
+    "keep_frozen_modules_eval": true
+  },
+  "phase_a": {
+    "candidate_id": "piper-smoke-0007",
+    "learning_rates": [0.01, 0.001, 0.05],
+    "max_optimizer_steps": 200,
+    "log_every_steps": 10
+  },
+  "phase_b": {
+    "train_candidate_ids": [
+      "piper-smoke-0001",
+      "piper-smoke-0003",
+      "piper-smoke-0004",
+      "piper-smoke-0005",
+      "piper-smoke-0007",
+      "piper-smoke-0008"
+    ],
+    "max_optimizer_steps": 500,
+    "early_stop_loss": null,
+    "deterministic_order": true
+  },
+  "holdout_candidate_ids": [
+    "piper-smoke-0002",
+    "piper-smoke-0006"
+  ],
+  "real_public_smoke": {
+    "sample_id": "fleurs-sl-si-smoke",
+    "source": "google/fleurs",
+    "config": "sl_si",
+    "split": "test",
+    "row_id": 1738,
+    "license": "CC BY 4.0",
+    "audio_filepath": "runs/inference/smoke-audio/fleurs-sl-si-smoke.wav",
+    "reference_text": "napadel je tudi vsa bitja ki so stopila v vodo niti ogromni dinozavri kot so tiranozavri mu niso bili kos",
+    "source_url": "https://huggingface.co/datasets/google/fleurs",
+    "training_allowed": false
+  }
+}
