@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "prompt-column-active-curriculum-0002",
+  "target_lang": "sl-SI",
+  "base_model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74"
+  },
+  "training": {
+    "prompt_mode": "langID",
+    "target_prompt": "sl-SI",
+    "precision": "32",
+    "optimizer": "AdamW",
+    "learning_rate": 0.01,
+    "weight_decay": 0,
+    "batch_size": 1,
+    "seed": 1234,
+    "augmentation": "disabled"
+  },
+  "fixed_gates": {
+    "synthetic_holdout": {
+      "size": 64,
+      "seed": 2234,
+      "role": "synthetic_holdout",
+      "source": "GaMS independent general Slovenian prompt",
+      "raw_errors_may_steer_later_rounds": false
+    },
+    "real_fleurs": {
+      "dataset": "google/fleurs",
+      "config": "sl_si",
+      "revision": "refs/convert/parquet",
+      "split": "test",
+      "license": "CC BY 4.0",
+      "size": 64,
+      "seed": 4234,
+      "duration_seconds_min": 2.0,
+      "duration_seconds_max": 12.0,
+      "exclude_known_row_ids": [
+        1738
+      ],
+      "raw_reference_text_may_be_sent_to_gams": false
+    }
+  },
+  "rounds": [
+    {
+      "round_id": "round1",
+      "candidate_request_count": 128,
+      "hard_examples": 48,
+      "general_controls": 16,
+      "replay_examples": 0,
+      "max_steps": 1500
+    },
+    {
+      "round_id": "round2",
+      "candidate_request_count": 128,
+      "hard_examples": 48,
+      "general_controls": 16,
+      "replay_examples": 16,
+      "max_steps": 2000
+    }
+  ],
+  "promotion_gates": {
+    "synthetic_holdout_relative_wer_or_cer_improvement_percent": 15.0,
+    "real_gate_max_absolute_wer_regression": 1.0,
+    "real_gate_max_absolute_cer_regression": 1.5,
+    "real_gate_empty_hypotheses_must_not_increase": true
+  },
+  "paths": {
+    "run_dir": "runs/experiments/prompt-column-active-curriculum-0002",
+    "checkpoint": "models/nemotron-3.5-asr-streaming-0.6b/nemotron-3.5-asr-streaming-0.6b.nemo"
+  }
+}

@@ -122,3 +122,10 @@ Piper ONNX Runtime provider status, physical GPU 0 selection, GPU 1 non-use,
 voice checksum verification, native and resampled WAV validation, provenance
 output, NeMo manifest hash, and Nemotron smoke output. It does not prove ASR
 quality and must not be represented as training.
+
+The GaMS active-curriculum path adds CPU-testable checks for strict generated
+JSON, duplicate and protected-text rejection, deterministic active selection,
+promotion and rollback decisions, and corpus-versus-mean metric separation. The
+actual GaMS, Piper, Nemotron pre-scoring, prompt-column training, and fixed-gate
+evaluation phases remain manual GPU verification until a later self-hosted
+runner exists.

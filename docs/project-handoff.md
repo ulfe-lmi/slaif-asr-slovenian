@@ -9,6 +9,9 @@
 - M3 prompt-column micro-proof is complete for one tiny synthetic experiment.
   The result supports the prompt-column mechanism on synthetic smoke data but
   does not establish an accepted release parent.
+- M3 prompt-column generalization is now represented by a bounded two-round
+  GaMS active-curriculum protocol. The tooling and configs are separate from
+  completed GPU evidence until the experiment runs.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
   unit tests, Python compilation, and shell syntax. This CI does not install
   NeMo, download checkpoints or audio, use GPUs, or prove model restoration.
@@ -18,6 +21,11 @@
 - Selected framework: NVIDIA NeMo.
 - Slovenian locale/prompt: `sl-SI`.
 - Planned active loop: GaMS -> Slovenian TTS -> current-model failure selection -> bounded training -> acceptance/rollback.
+- Pinned primary GaMS generator: `cjvt/GaMS3-12B-Instruct` at
+  `1d0b27af5748784482600d24779409e7e1dc9adc`.
+- Pinned fallback GaMS generator: `cjvt/GaMS-9B-Instruct` at
+  `292744023fa0b7ccc7ae2c3c885a67468e49fa03`, used only if the primary model
+  cannot load or generate within 11 GiB under the committed 4-bit policy.
 - Selected initial TTS engine: external `OHF-Voice/piper1-gpl`.
 - Selected initial TTS voice: `rhasspy/piper-voices` `sl_SI-artur-medium`.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
@@ -88,14 +96,15 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Continue M2b with manifest validation, leakage controls, protected-evaluation
-deduplication, and larger synthetic-data governance as separate bounded work
-orders. Do not treat the prompt-column micro-checkpoint as an accepted parent or
-publishable artifact.
+Complete the two active-curriculum GPU rounds only under
+[`work-orders/0006-gams-prompt-column-active-curriculum.md`](work-orders/0006-gams-prompt-column-active-curriculum.md).
+Do not treat the prompt-column micro-checkpoint as an accepted parent or
+publishable artifact unless the fixed synthetic and real gates promote it.
 
 ## Do not do next
 
-- Do not add GaMS orchestration yet.
+- Do not expose real-gate reference text to GaMS.
+- Do not broaden beyond the prompt column in the active-curriculum experiment.
 - Do not create a service API or UI.
 - Do not publish a checkpoint.
 - Do not add private data to obtain an early score.

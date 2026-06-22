@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "primary_model": {
+    "repository": "cjvt/GaMS3-12B-Instruct",
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc",
+    "license": "Gemma Terms of Use"
+  },
+  "fallback_model": {
+    "repository": "cjvt/GaMS-9B-Instruct",
+    "revision": "292744023fa0b7ccc7ae2c3c885a67468e49fa03",
+    "license": "Gemma Terms of Use",
+    "fallback_condition": "Use only if the primary model cannot load or generate one 128-token response within 11 GiB after 4-bit NF4, double quantization, and context reduction to 1024 tokens."
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "double_quantization": true,
+    "compute_dtype": "float16"
+  },
+  "device_policy": {
+    "cuda_visible_devices": "0",
+    "visible_gpu_count": 1,
+    "cpu_offload": false,
+    "max_memory_gib": 11
+  },
+  "generation": {
+    "initial_context_tokens": 2048,
+    "fallback_context_tokens": 1024,
+    "batch_size": 1,
+    "max_new_tokens": 128,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "round_1_seed": 1234,
+    "synthetic_holdout_seed": 2234,
+    "round_2_seed": 3234
+  },
+  "round_1_allocation": {
+    "ordinary_short_slovenian": 0.25,
+    "diacritic_contrasts": 0.15,
+    "function_words_and_clitics": 0.15,
+    "morphology_and_inflection": 0.15,
+    "names_and_slovenian_places": 0.1,
+    "dates_times_and_numbers": 0.1,
+    "technical_code_switched_slovenian": 0.1
+  }
+}
