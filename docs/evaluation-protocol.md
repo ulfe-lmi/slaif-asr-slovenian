@@ -99,6 +99,11 @@ These are not final blind tests. Raw references and hypotheses remain local
 ignored artifacts. Future challengers must evaluate both gates before any
 accepted-parent decision.
 
+The first project-generated Round 1 challenger evaluated both gates and was
+rejected: FLEURS and ARTUR-J normalized WER/CER regressed and empty hypotheses
+increased. This reinforces that selected-synthetic improvement is diagnostic
+only.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.

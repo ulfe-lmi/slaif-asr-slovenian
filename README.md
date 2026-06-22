@@ -29,7 +29,9 @@ GaMS generates a small Slovenian candidate batch
 This repository is currently at **real-gate baseline evaluation**. The
 prompt-column micro-proof is complete, active-curriculum tooling exists, and
 the first immutable real Slovenian development gates now establish the
-untouched Nemotron baseline before any further curriculum work.
+untouched Nemotron baseline before any further curriculum work. The first
+project-generated Slovenian curriculum round has run and its challenger was
+rejected by the fixed gates.
 
 Present:
 
@@ -54,6 +56,9 @@ Present:
 - immutable real-speech development gates for the complete FLEURS Slovenian
   test split and a deterministic ARTUR-J public-speech project gate, with
   untouched-base aggregate metrics.
+- a completed project-generated Round 1 curriculum experiment whose
+  prompt-column challenger improved selected synthetic training examples but
+  regressed FLEURS and ARTUR-J, so it is not an accepted parent.
 
 Current M1/M2 development hardware is one physical NVIDIA RTX 2080 Ti selected
 with `CUDA_VISIBLE_DEVICES=0`. A second RTX 2080 Ti may be present in the
@@ -79,6 +84,8 @@ synthetic and real gates before any challenger can become an accepted parent.
 The real FLEURS and ARTUR-J gates are immutable development gates, not final
 blind tests and not release-quality claims. Their raw references, audio,
 manifests, hypotheses, and per-sample outputs remain ignored local artifacts.
+The Round 1 curriculum text, audio, hypotheses, delta, and checkpoint are also
+ignored local artifacts and are not published by this repository.
 
 ## Repository role
 

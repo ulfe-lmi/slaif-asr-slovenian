@@ -15,6 +15,10 @@
 - The first real Slovenian development gates are complete: full FLEURS
   Slovenian test and deterministic ARTUR-J public-speech gate. The untouched
   Nemotron baseline has been measured on both.
+- Project-generated Slovenian curriculum Round 1 has run without GaMS or an
+  external LLM. Its prompt-column challenger is rejected: it improved selected
+  synthetic training examples, did not meet the fixed synthetic-holdout
+  promotion threshold, and regressed both real gates.
 - The ignored M3 micro-proof checkpoint regressed on both full real gates and
   remains unaccepted.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -54,6 +58,11 @@
   29.016 with 12 empty hypotheses.
 - Full real-gate micro-proof diagnostic: FLEURS normalized WER regressed to
   66.961; ARTUR-J normalized WER regressed to 76.190.
+- Round 1 project-generated curriculum diagnostic: selected synthetic training
+  normalized WER improved from 89.070 to 51.632, fixed synthetic holdout
+  normalized WER moved from 77.563 to 76.983, FLEURS normalized WER regressed
+  from 52.734 to 70.885, and ARTUR-J normalized WER regressed from 67.453 to
+  80.996. The challenger is rejected and is not a parent.
 
 ## Non-negotiable rules
 
@@ -107,11 +116,9 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Run round one of the coding-agent-generated Slovenian curriculum against the
-fixed FLEURS and ARTUR-J gates only under
-[`work-orders/0006-gams-prompt-column-active-curriculum.md`](work-orders/0006-gams-prompt-column-active-curriculum.md).
-Do not treat the prompt-column micro-checkpoint as an accepted parent or
-publishable artifact unless the fixed synthetic and real gates promote it.
+Use the rejected Round 1 aggregate evidence to design the next controlled work
+order. Do not generate Round 2 in this PR, and do not treat either the
+micro-proof checkpoint or the Round 1 checkpoint as an accepted parent.
 
 ## Do not do next
 

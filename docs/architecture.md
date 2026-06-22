@@ -242,6 +242,11 @@ The first real Slovenian development gates are `fleurs-sl-si-test-full-v1` and
 hypotheses, and per-sample predictions remain ignored; committed artifacts are
 limited to privacy-safe metadata and aggregate reports.
 
+The same storage boundary applies to project-generated curriculum rounds that
+do not use GaMS: the repository owns configuration, validation, selection,
+execution code, and aggregate evidence, while generated text/audio/manifests,
+raw hypotheses, deltas, and checkpoints remain ignored local artifacts.
+
 ## Architectural non-goals
 
 The first release will not provide:

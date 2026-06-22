@@ -111,7 +111,7 @@ Work order:
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; active-curriculum generalization tooling in progress**
+Status: **prompt-column micro-proof complete; Round 1 generalization rejected**
 
 The first prompt-specific proof is expected to attempt one RTX 2080 Ti with FP16 AMP. A100 is requested only after measured memory, throughput, or authoritative benchmark evidence supports escalation.
 
@@ -153,6 +153,17 @@ The active-curriculum PR adds the bounded GaMS -> Piper -> Nemotron protocol,
 metric corrections, and promotion/rollback machinery. It does not by itself make
 a challenger accepted; real GPU rounds and FLEURS plus ARTUR-J fixed-gate
 outcomes remain the deciding evidence.
+
+Project-generated Slovenian curriculum Round 1 has now run without GaMS or an
+external LLM. It improved selected synthetic training examples but failed the
+fixed synthetic-holdout threshold and regressed both real gates. The challenger
+is rejected and is not a valid parent.
+
+Round 1 work order:
+[`work-orders/0008-slovenian-curriculum-round-1.md`](work-orders/0008-slovenian-curriculum-round-1.md)
+
+Round 1 report:
+[`experiments/0004-slovenian-curriculum-round-1.md`](experiments/0004-slovenian-curriculum-round-1.md)
 
 ## M4 — Active GaMS/TTS loop
 

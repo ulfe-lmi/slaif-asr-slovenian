@@ -58,6 +58,6 @@ work order. No credentials or account setup are required for this PR.
 ## Leakage Policy
 
 Neither development gate may enter training. Raw references from these gates
-must not be sent to GaMS, a coding-agent corpus generator, Piper candidate
+must not be sent to GaMS, a project text generator, Piper candidate
 generation, or any other synthetic-data generator. Later generation may use only
 aggregate categories and metrics explicitly allowed by a work order.

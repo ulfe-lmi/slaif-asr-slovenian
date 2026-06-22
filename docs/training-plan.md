@@ -59,14 +59,14 @@ parameter isolation. It does not establish a production adaptation or an
 accepted parent checkpoint because the diagnostic public real-smoke sample
 regressed.
 
-The real development gates are now established before the next bounded
-experiment: complete FLEURS Slovenian test and deterministic ARTUR-J
-public-speech. The next active-curriculum run keeps the same 2048-scalar
-trainable surface and uses pinned GaMS generation, Piper synthesis,
-untouched-base pre-scoring, deterministic hard-example selection,
-prompt-column-only training, and fixed synthetic plus real gates. Promotion
-requires non-regression on both real gates; synthetic training-set improvement
-alone never accepts a parent.
+The real development gates are now established: complete FLEURS Slovenian test
+and deterministic ARTUR-J public-speech. The first project-generated
+curriculum round kept the same 2048-scalar trainable surface, used Piper
+synthesis, untouched-base pre-scoring, deterministic hard-example selection,
+prompt-column-only training, and fixed synthetic plus real gates. It was
+rejected because fixed synthetic-holdout improvement was insufficient and both
+real gates regressed. Promotion still requires non-regression on both real
+gates; synthetic training-set improvement alone never accepts a parent.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
