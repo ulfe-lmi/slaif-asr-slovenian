@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "generation_spec_revision": "sl-curriculum-round1-v1",
+  "experiment_id": "slovenian-curriculum-round-1",
+  "target_lang": "sl-SI",
+  "provenance": {
+    "system": "project-generated",
+    "method": "direct-language-generation",
+    "round": 1,
+    "prompt_revision": "sl-curriculum-round1-v1",
+    "model_identity": "not-exposed-by-execution-runtime",
+    "seed": null
+  },
+  "base_model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74"
+  },
+  "piper": {
+    "engine_revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6",
+    "voice_revision": "217ddc79818708b078d0d14a8fae9608b9d77141",
+    "voice": "sl_SI-artur-medium"
+  },
+  "gates": {
+    "fleurs": {
+      "gate_id": "fleurs-sl-si-test-full-v1",
+      "manifest_sha256": "07838a58222b9a0f6a4f4639b66d678ee38f87254518e43b742a143ef4aeaf4e",
+      "baseline_normalized_corpus_wer": 52.734,
+      "baseline_normalized_corpus_cer": 16.423,
+      "baseline_empty_hypotheses": 0
+    },
+    "artur_j": {
+      "gate_id": "artur-j-public-gate-v1",
+      "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "baseline_normalized_corpus_wer": 67.453,
+      "baseline_normalized_corpus_cer": 29.016,
+      "baseline_empty_hypotheses": 12
+    }
+  },
+  "validation": {
+    "min_words": 4,
+    "max_words": 20,
+    "min_characters": 25,
+    "max_characters": 160,
+    "near_duplicate_char_ngram": 5,
+    "near_duplicate_jaccard_threshold": 0.82,
+    "max_same_first_two_words": 5,
+    "max_same_final_three_words": 5,
+    "forbidden_substrings": [
+      "http://",
+      "https://",
+      "@",
+      "```",
+      "€",
+      "°"
+    ]
+  },
+  "holdout": {
+    "partition_role": "synthetic_holdout",
+    "required_count": 96,
+    "category_quotas": {
+      "ordinary": 16,
+      "questions_requests": 10,
+      "commands": 10,
+      "names_places_institutions": 12,
+      "morphology_inflection": 12,
+      "dual": 8,
+      "dates_numbers_quantities": 8,
+      "technical_code_switching": 8,
+      "cz_sz_z_coverage": 6,
+      "function_words_clitics": 6
+    }
+  },
+  "candidate_pool": {
+    "partition_role": "synthetic_candidate",
+    "required_count": 320,
+    "batches": 8,
+    "batch_size": 40,
+    "category_quotas": {
+      "ordinary": 50,
+      "questions_requests": 35,
+      "commands": 35,
+      "cz_sz_z_coverage": 40,
+      "morphology_inflection": 40,
+      "dual": 25,
+      "function_words_clitics": 25,
+      "names_places_institutions": 25,
+      "dates_numbers_quantities": 25,
+      "technical_code_switching": 20
+    }
+  },
+  "selection": {
+    "hard_examples": 120,
+    "general_controls": 40,
+    "training_total": 160,
+    "hard_category_fraction_cap": 0.25,
+    "control_seed": 1234
+  },
+  "training": {
+    "prompt_mode": "langID",
+    "target_prompt": "sl-SI",
+    "precision": "32",
+    "optimizer": "AdamW",
+    "learning_rate": 0.01,
+    "weight_decay": 0,
+    "batch_size": 1,
+    "max_optimizer_steps": 3000,
+    "seed": 1234,
+    "augmentation": "disabled",
+    "early_stop": {
+      "enabled": true,
+      "minimum_steps": 1500,
+      "window_steps": 300,
+      "minimum_relative_improvement": 0.005
+    }
+  },
+  "promotion": {
+    "synthetic_holdout_relative_wer_or_cer_improvement_percent": 15.0,
+    "fleurs_max_absolute_wer_regression": 1.0,
+    "artur_j_max_absolute_wer_regression": 1.0,
+    "fleurs_max_absolute_cer_regression": 1.5,
+    "artur_j_max_absolute_cer_regression": 1.5,
+    "empty_hypotheses_must_not_increase": true,
+    "real_improvement_wer_abs": 0.5,
+    "real_improvement_cer_abs": 0.75
+  },
+  "paths": {
+    "run_dir": "runs/experiments/slovenian-curriculum-round-1",
+    "holdout_jsonl": "runs/experiments/slovenian-curriculum-round-1/corpora/synthetic-holdout.jsonl",
+    "candidate_jsonl": "runs/experiments/slovenian-curriculum-round-1/corpora/candidate-pool.jsonl",
+    "validation_report": "runs/experiments/slovenian-curriculum-round-1/corpora/validation-report.json",
+    "checkpoint": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo"
+  }
+}

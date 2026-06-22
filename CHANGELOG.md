@@ -40,6 +40,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Real Slovenian evaluation-suite configuration, normalizer, FLEURS full-test
   gate builder, ARTUR-J standardized-transcript parser and gate builder,
   baseline evaluator, privacy-safe gate metadata, and aggregate baseline report.
+- Project-generated Slovenian curriculum Round 1 configuration, validation,
+  selection, execution runner, tests, and privacy-safe aggregate experiment
+  report.
 
 ### Changed
 
@@ -56,3 +59,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   two-round GPU evidence.
 - Future challenger promotion now requires non-regression on both full FLEURS
   Slovenian test and ARTUR-J public-speech development gates.
+- Round 1 prompt-column curriculum evidence now records a rejected challenger:
+  selected synthetic training improved, fixed synthetic holdout did not meet
+  the promotion threshold, and both real gates regressed.

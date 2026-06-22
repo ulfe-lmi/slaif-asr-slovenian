@@ -92,7 +92,7 @@ Raw and normalized metrics must be reported separately when normalization materi
 
 - Do not include immutable-gate or final-test text in GaMS prompts.
 - Do not include raw FLEURS or ARTUR-J development-gate references in any
-  coding-agent-generated curriculum prompt.
+  project-generated curriculum prompt.
 - Deduplicate generated candidates against public and protected evaluation text.
 - Store hashes or similarity indexes needed to audit leakage.
 - A candidate too close to protected evaluation text is rejected.
@@ -127,6 +127,11 @@ Normalization tasks are added only as separately tagged curricula.
 ## Retention
 
 Generated candidates that are not selected need not be retained indefinitely. Keep enough metadata to reproduce generation when licensing and model availability permit.
+
+Project-generated curriculum corpora are local synthetic artifacts. Their JSONL
+records, audio, manifests, hypotheses, deltas, and checkpoints remain ignored
+unless a later publication work order and rights review explicitly authorize
+release.
 
 Private real-speech data follows institutional retention and access policy. Public logs must never contain raw private text.
 
