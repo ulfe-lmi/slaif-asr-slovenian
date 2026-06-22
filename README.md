@@ -8,7 +8,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/code%20license-Apache--2.0-blue.svg)](LICENSE)
 [![CPU CI](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml/badge.svg)](https://github.com/ulfe-lmi/slaif-asr-slovenian/actions/workflows/ci.yml)
-[![Project status](https://img.shields.io/badge/status-M3%20active%20curriculum-yellow.svg)](docs/roadmap.md)
+[![Project status](https://img.shields.io/badge/status-real%20gates%20established-yellow.svg)](docs/roadmap.md)
 
 SLAIF Slovenian Streaming ASR is a reproducible research and engineering project for adapting, evaluating, and releasing open-weight streaming automatic speech recognition models for Slovenian.
 
@@ -26,9 +26,10 @@ GaMS generates a small Slovenian candidate batch
 
 ## Status
 
-This repository is currently at **M3 active-curriculum tooling**. The
-prompt-column micro-proof is complete, and the next bounded experiment tests two
-GaMS-directed active-learning rounds without broadening the trainable surface.
+This repository is currently at **real-gate baseline evaluation**. The
+prompt-column micro-proof is complete, active-curriculum tooling exists, and
+the first immutable real Slovenian development gates now establish the
+untouched Nemotron baseline before any further curriculum work.
 
 Present:
 
@@ -50,6 +51,9 @@ Present:
   `sl-SI` first prompt-projection input column in an ignored local checkpoint.
 - pinned GaMS generator configuration and deterministic active-curriculum
   validation for the next prompt-column generalization experiment.
+- immutable real-speech development gates for the complete FLEURS Slovenian
+  test split and a deterministic ARTUR-J public-speech project gate, with
+  untouched-base aggregate metrics.
 
 Current M1/M2 development hardware is one physical NVIDIA RTX 2080 Ti selected
 with `CUDA_VISIBLE_DEVICES=0`. A second RTX 2080 Ti may be present in the
@@ -58,9 +62,7 @@ it. A100 hardware is not a default prerequisite.
 
 Not yet present:
 
-- datasets;
 - model weights;
-- benchmark results;
 - a released Slovenian checkpoint.
 
 No accuracy or readiness claim should be inferred from the baseline runtime tooling.
@@ -74,6 +76,9 @@ The M3 prompt-column proof is a tiny synthetic micro-overfit result, not a
 benchmark or production-readiness claim. The public real-smoke diagnostic
 regressed after the micro-update. The active-curriculum protocol must pass fixed
 synthetic and real gates before any challenger can become an accepted parent.
+The real FLEURS and ARTUR-J gates are immutable development gates, not final
+blind tests and not release-quality claims. Their raw references, audio,
+manifests, hypotheses, and per-sample outputs remain ignored local artifacts.
 
 ## Repository role
 
@@ -100,6 +105,7 @@ vendored into this repository.
 - [Data policy](docs/data-policy.md)
 - [Testing strategy](docs/testing-strategy.md)
 - [Evaluation protocol](docs/evaluation-protocol.md)
+- [Evaluation datasets](docs/evaluation-datasets.md)
 - [Release policy](docs/release-policy.md)
 - [Third-party licenses and attribution](docs/third-party-licenses.md)
 - [Baseline inference quickstart](docs/baseline-inference.md)

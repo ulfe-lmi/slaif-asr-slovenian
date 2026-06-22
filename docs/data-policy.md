@@ -57,6 +57,12 @@ The active loop may inspect references and hypotheses. Metrics from this set are
 
 Used after rounds for acceptance. GaMS receives aggregate categories only, not raw reference sentences.
 
+Current immutable real development gates are the complete FLEURS Slovenian test
+split and the ARTUR-J public-speech project gate. Neither gate may enter
+training, candidate generation, synthetic-data selection, or a GaMS prompt.
+Only aggregate categories and metrics may steer later generation when a work
+order explicitly permits it.
+
 ### Final blind test
 
 Used only for major release decisions. It must not influence training, prompts, selection, or hyperparameters.
@@ -85,6 +91,8 @@ Raw and normalized metrics must be reported separately when normalization materi
 ## GaMS leakage controls
 
 - Do not include immutable-gate or final-test text in GaMS prompts.
+- Do not include raw FLEURS or ARTUR-J development-gate references in any
+  coding-agent-generated curriculum prompt.
 - Deduplicate generated candidates against public and protected evaluation text.
 - Store hashes or similarity indexes needed to audit leakage.
 - A candidate too close to protected evaluation text is rejected.

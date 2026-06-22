@@ -37,6 +37,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   verification helpers for the Numba/NVVM stack used in M3.
 - ADR, work order, and experiment report scaffold for the GaMS-directed
   prompt-column active-curriculum protocol.
+- Real Slovenian evaluation-suite configuration, normalizer, FLEURS full-test
+  gate builder, ARTUR-J standardized-transcript parser and gate builder,
+  baseline evaluator, privacy-safe gate metadata, and aggregate baseline report.
 
 ### Changed
 
@@ -51,3 +54,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   and public real-smoke diagnostics.
 - M3 generalization status now distinguishes protocol/tooling from completed
   two-round GPU evidence.
+- Future challenger promotion now requires non-regression on both full FLEURS
+  Slovenian test and ARTUR-J public-speech development gates.

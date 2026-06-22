@@ -87,6 +87,28 @@ Nemotron smoke manifest on one RTX 2080 Ti. It does not implement GaMS
 generation, failure-directed selection, large-batch synthesis, leakage controls,
 replay, or production training manifests.
 
+## Real Evaluation Gates
+
+Status: **complete for initial development gates**
+
+Deliverables:
+
+- complete FLEURS Slovenian test gate: **implemented and baseline-evaluated**;
+- deterministic ARTUR-J public-speech gate: **implemented and baseline-evaluated**;
+- Slovenian normalizer `sl-asr-normalization-v1`: **implemented**;
+- untouched Nemotron aggregate baseline: **recorded**;
+- unaccepted micro-proof diagnostic on both gates: **recorded; regressed**.
+
+These are immutable development gates, not final blind tests or release
+criteria. Raw references, audio, manifests, hypotheses, and per-sample outputs
+remain ignored local artifacts.
+
+Report:
+[`experiments/0003-real-slovenian-baseline.md`](experiments/0003-real-slovenian-baseline.md)
+
+Work order:
+[`work-orders/0007-real-slovenian-evaluation-suite.md`](work-orders/0007-real-slovenian-evaluation-suite.md)
+
 ## M3 — Selective adaptation proof
 
 Status: **prompt-column micro-proof complete; active-curriculum generalization tooling in progress**
@@ -111,9 +133,9 @@ Exit gate:
 
 The first micro-experiment supports the narrow claim that a 2048-scalar
 `sl-SI` prompt-column delta can overfit a tiny synthetic set while changing only
-the selected prompt column. It does not validate release quality. The public
-real-smoke diagnostic regressed, so broader M3 work must add real-speech gates
-before any accepted parent or model publication.
+the selected prompt column. It does not validate release quality. The full
+FLEURS and ARTUR-J diagnostics both regressed for the ignored micro-proof
+checkpoint, so it remains unaccepted and is not a valid parent.
 
 Work order:
 [`work-orders/0005-m3-prompt-column-adaptation-proof.md`](work-orders/0005-m3-prompt-column-adaptation-proof.md)
@@ -129,8 +151,8 @@ Active-curriculum report:
 
 The active-curriculum PR adds the bounded GaMS -> Piper -> Nemotron protocol,
 metric corrections, and promotion/rollback machinery. It does not by itself make
-a challenger accepted; real GPU rounds and fixed-gate outcomes remain the
-deciding evidence.
+a challenger accepted; real GPU rounds and FLEURS plus ARTUR-J fixed-gate
+outcomes remain the deciding evidence.
 
 ## M4 — Active GaMS/TTS loop
 

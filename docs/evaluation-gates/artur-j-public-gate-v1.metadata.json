@@ -1,0 +1,2610 @@
+{
+  "audio_archives": [
+    {
+      "actual_md5": "bc8b4e0625fce2b47d99ed7da8db7393",
+      "filename": "Artur-J-Audio_00.tar",
+      "md5": "bc8b4e0625fce2b47d99ed7da8db7393"
+    },
+    {
+      "actual_md5": "6e4e6684a424d8efeefe1c891536899d",
+      "filename": "Artur-J-Audio_01.tar",
+      "md5": "6e4e6684a424d8efeefe1c891536899d"
+    }
+  ],
+  "construction_algorithm": "artur-j-public-gate-v1",
+  "distinct_source_recordings": 64,
+  "domain": "Artur-J-Splosni",
+  "duration_seconds": {
+    "count": 256,
+    "max": 10.25,
+    "median": 3.6945,
+    "min": 2.001,
+    "total": 1049.59
+  },
+  "excluded_domains": [
+    "Artur-B-Studio",
+    "Artur-B-Izloceno",
+    "Artur-N",
+    "Artur-P"
+  ],
+  "gate_id": "artur-j-public-gate-v1",
+  "handles": {
+    "audio": "11356/1776",
+    "transcriptions": "11356/1772"
+  },
+  "license": "CC BY-SA 4.0",
+  "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+  "max_segments_per_recording": 4,
+  "normalizer": "sl-asr-normalization-v1",
+  "public_metadata_hash": "7782c0d6343550464ab2ea9db21d1c0aaee96279bfcc660e15dacbf1b4578026",
+  "reference_manifest_sha256": "227b41f6e02a0d3a924b58eb051694678d7ac6fc9216952634b3c05967ffec4b",
+  "segments": 256,
+  "selected": [
+    {
+      "audio_sha256": "dea8f447ea2cdd96c52254fc7f8acb93c6c172195cf309ba8c4f1c13f4bd3344",
+      "duration_seconds": 3.722,
+      "end": 7.267,
+      "recording_id": "Artur-J-Gvecg-P500001-std",
+      "reference_sha256": "46d8ae769fd26a7b967d5b50f6db30bef3f49c9f522417e892d5977821045cc8",
+      "sample_id": "artur-j-artur-j-gvecg-p500001-std-0000-0002",
+      "start": 3.545,
+      "transcript_sha256": "221310d5c615986a00520a26987af56ec5dc4fd85115c4ed36fc821949510c46"
+    },
+    {
+      "audio_sha256": "face33ed74e74587a299190562370851d471c1cf8fd46b501362419c6d8b2318",
+      "duration_seconds": 3.346,
+      "end": 14.956,
+      "recording_id": "Artur-J-Gvecg-P500001-std",
+      "reference_sha256": "1cd7f8cf9fb0f25034b45fbf35dbc957e80554528281c84b14e96f88d38d9785",
+      "sample_id": "artur-j-artur-j-gvecg-p500001-std-0000-0004",
+      "start": 11.61,
+      "transcript_sha256": "221310d5c615986a00520a26987af56ec5dc4fd85115c4ed36fc821949510c46"
+    },
+    {
+      "audio_sha256": "6603241d0966d40b992e0c13d54c41a0c4fa318277c6abdf1523ff4a1f3005ed",
+      "duration_seconds": 2.827,
+      "end": 17.783,
+      "recording_id": "Artur-J-Gvecg-P500001-std",
+      "reference_sha256": "d485ea9276f7bda16512401e122c46c2125f102cd33e6374d47968675a87b837",
+      "sample_id": "artur-j-artur-j-gvecg-p500001-std-0000-0005",
+      "start": 14.956,
+      "transcript_sha256": "221310d5c615986a00520a26987af56ec5dc4fd85115c4ed36fc821949510c46"
+    },
+    {
+      "audio_sha256": "9c57b850b74870a41caf1b6655e27a2b82d64eee1124fe8e89e6a6531193fd89",
+      "duration_seconds": 4.564,
+      "end": 23.61,
+      "recording_id": "Artur-J-Gvecg-P500001-std",
+      "reference_sha256": "86f0678e5c992feff75e7d1b3087605e21cf38ab2803bd77526b8287a59be1dd",
+      "sample_id": "artur-j-artur-j-gvecg-p500001-std-0000-0007",
+      "start": 19.046,
+      "transcript_sha256": "221310d5c615986a00520a26987af56ec5dc4fd85115c4ed36fc821949510c46"
+    },
+    {
+      "audio_sha256": "1c5732ba56a186cd1d6ef277b6a1e10fe702469f3bfed0208929a0d51ade3314",
+      "duration_seconds": 8.916,
+      "end": 8.916,
+      "recording_id": "Artur-J-Gvecg-P500002-std",
+      "reference_sha256": "a63ab91836456313f2b3f74b01a4efaba8b2b69df5ef3abf4bd65cb5e0c3bfcd",
+      "sample_id": "artur-j-artur-j-gvecg-p500002-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "233d27aec0c46a54595f2f156cae079c0850e959174ea6fd2a9c0505e52da10b"
+    },
+    {
+      "audio_sha256": "e9863d2025b0449f4d4c34380c5568ce594750645bbb6bd2fa911b76f16bb99e",
+      "duration_seconds": 8.54,
+      "end": 17.456,
+      "recording_id": "Artur-J-Gvecg-P500002-std",
+      "reference_sha256": "c88540e4227a85df399a74cbe7d0d2da8d36a6f466bb90e7b335c5c56b512289",
+      "sample_id": "artur-j-artur-j-gvecg-p500002-std-0000-0001",
+      "start": 8.916,
+      "transcript_sha256": "233d27aec0c46a54595f2f156cae079c0850e959174ea6fd2a9c0505e52da10b"
+    },
+    {
+      "audio_sha256": "57d20f83dc3f291a53a81557a7b0e7463ac7b7d5e2bee288879df546515137a1",
+      "duration_seconds": 3.501,
+      "end": 37.933,
+      "recording_id": "Artur-J-Gvecg-P500002-std",
+      "reference_sha256": "1a3b5c7fd135cfb86fc3ee3eaef0e31a3e313f99539a552cd469acb31e348218",
+      "sample_id": "artur-j-artur-j-gvecg-p500002-std-0000-0004",
+      "start": 34.432,
+      "transcript_sha256": "233d27aec0c46a54595f2f156cae079c0850e959174ea6fd2a9c0505e52da10b"
+    },
+    {
+      "audio_sha256": "b490ef1a49df8e47381a2d40501e61f142b2458c2b8a95eb3c3a0db2d53d734f",
+      "duration_seconds": 8.987,
+      "end": 46.92,
+      "recording_id": "Artur-J-Gvecg-P500002-std",
+      "reference_sha256": "e361d25f3580d3e388d78ddaa301554f96b610911c9d2afbddb7d825fa43ee24",
+      "sample_id": "artur-j-artur-j-gvecg-p500002-std-0000-0005",
+      "start": 37.933,
+      "transcript_sha256": "233d27aec0c46a54595f2f156cae079c0850e959174ea6fd2a9c0505e52da10b"
+    },
+    {
+      "audio_sha256": "25b3bd809d42208ff055ffce3868f113c55b1adbb04c4201e2c08cc1dacc2b6c",
+      "duration_seconds": 2.77,
+      "end": 2.77,
+      "recording_id": "Artur-J-Gvecg-P500013-std",
+      "reference_sha256": "44cf0a6dca2df7830f636e2e120db26b11ef3d59f2f76f9b7a6430f39a6fc079",
+      "sample_id": "artur-j-artur-j-gvecg-p500013-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "558b8a362f712c00abe692f72030bc228a013eef37659fb0fcb1784705f1dd12"
+    },
+    {
+      "audio_sha256": "41c4c929e0d37134a537d16ca1d38a3247e0ea695da0ab21f52714be6e13cb3a",
+      "duration_seconds": 5.827,
+      "end": 8.597,
+      "recording_id": "Artur-J-Gvecg-P500013-std",
+      "reference_sha256": "aa2b5ebcad5cc69a4d7dc6e9f77ece9a6194cae55d2e855eaaad2cf0c61c039a",
+      "sample_id": "artur-j-artur-j-gvecg-p500013-std-0000-0001",
+      "start": 2.77,
+      "transcript_sha256": "558b8a362f712c00abe692f72030bc228a013eef37659fb0fcb1784705f1dd12"
+    },
+    {
+      "audio_sha256": "7e21cac235c90baed5cf481b451b8266e4e92875ded00cda20fce75b28c3d9be",
+      "duration_seconds": 4.13,
+      "end": 12.727,
+      "recording_id": "Artur-J-Gvecg-P500013-std",
+      "reference_sha256": "9e735179e36f647573e45c9f48888e413a8a59687b9405cc2150d78a8fa97d71",
+      "sample_id": "artur-j-artur-j-gvecg-p500013-std-0000-0002",
+      "start": 8.597,
+      "transcript_sha256": "558b8a362f712c00abe692f72030bc228a013eef37659fb0fcb1784705f1dd12"
+    },
+    {
+      "audio_sha256": "637f4b0b3d1d9c12dfc800d8fbf144ed9ec4c2c09054f68a4bd945f7e684a993",
+      "duration_seconds": 2.216,
+      "end": 21.173,
+      "recording_id": "Artur-J-Gvecg-P500013-std",
+      "reference_sha256": "198ce7536e29b8bd23339e1c36a40871d69d1f35a0964f65df0149db52aa17a4",
+      "sample_id": "artur-j-artur-j-gvecg-p500013-std-0000-0005",
+      "start": 18.957,
+      "transcript_sha256": "558b8a362f712c00abe692f72030bc228a013eef37659fb0fcb1784705f1dd12"
+    },
+    {
+      "audio_sha256": "bcc77168852a241ad9d66ab99fb645f44aa36c79093f0c1e294432936c80b22c",
+      "duration_seconds": 4.919,
+      "end": 6.758,
+      "recording_id": "Artur-J-Gvecg-P500014-std",
+      "reference_sha256": "bcb86602de6d3a31e787dea8f4a7277e43e5fba10133a51b5837e72abc25c8f9",
+      "sample_id": "artur-j-artur-j-gvecg-p500014-std-0000-0001",
+      "start": 1.839,
+      "transcript_sha256": "6cf0e115dd77b647c869a7e33076fc2d84459e902e9d1b5475792692e3c5af86"
+    },
+    {
+      "audio_sha256": "4302bab217e0c6de9103ee37fe18ce073dea5b37e5bcb31e0b74e7718e4aa144",
+      "duration_seconds": 4.312,
+      "end": 11.07,
+      "recording_id": "Artur-J-Gvecg-P500014-std",
+      "reference_sha256": "7873c82fc08c4c1e9422009a432d273c5b42a89854c49b0edd59f66b6920d0d8",
+      "sample_id": "artur-j-artur-j-gvecg-p500014-std-0000-0002",
+      "start": 6.758,
+      "transcript_sha256": "6cf0e115dd77b647c869a7e33076fc2d84459e902e9d1b5475792692e3c5af86"
+    },
+    {
+      "audio_sha256": "fa904ad437a21b5074a814c4c328bae06cf276d8480de2af79f82fe4c7e730aa",
+      "duration_seconds": 5.685,
+      "end": 16.755,
+      "recording_id": "Artur-J-Gvecg-P500014-std",
+      "reference_sha256": "64e77186a609d219fb6cd04a61421e5b1c6073165706c01418ecaa4fcf8024e6",
+      "sample_id": "artur-j-artur-j-gvecg-p500014-std-0000-0003",
+      "start": 11.07,
+      "transcript_sha256": "6cf0e115dd77b647c869a7e33076fc2d84459e902e9d1b5475792692e3c5af86"
+    },
+    {
+      "audio_sha256": "c47ad9d0ee0a6d9c88ae7f579072f378edb96ec839ca4f878fb77595e69c3c92",
+      "duration_seconds": 2.017,
+      "end": 18.772,
+      "recording_id": "Artur-J-Gvecg-P500014-std",
+      "reference_sha256": "4b012c6c869ba58e493386632591e25ae26e842c888c51098a8140d0ebb79e26",
+      "sample_id": "artur-j-artur-j-gvecg-p500014-std-0000-0004",
+      "start": 16.755,
+      "transcript_sha256": "6cf0e115dd77b647c869a7e33076fc2d84459e902e9d1b5475792692e3c5af86"
+    },
+    {
+      "audio_sha256": "7530cb56f3cb261cbec6a896ceb653f5650e0efe9b4bd28c931d035c73538f2a",
+      "duration_seconds": 2.083,
+      "end": 3.944,
+      "recording_id": "Artur-J-Gvecg-P500015-std",
+      "reference_sha256": "6b80201bacc829bcd07a78ccaf7054c7a183d781eb38a35f71bf6b63d90faf79",
+      "sample_id": "artur-j-artur-j-gvecg-p500015-std-0001-0000",
+      "start": 1.861,
+      "transcript_sha256": "e30c4e8003aab6f632cb74994f7dee2ec087f8e848178ad13de600520941f893"
+    },
+    {
+      "audio_sha256": "3ea3783e53c011804ccdb0d35cd9fad24640da1c0ca9add23ca9244610acf27f",
+      "duration_seconds": 5.264,
+      "end": 9.208,
+      "recording_id": "Artur-J-Gvecg-P500015-std",
+      "reference_sha256": "73fe88c5d22d014daca45d10d130ade7d21da2e3b6a8101f95afed8adc52d979",
+      "sample_id": "artur-j-artur-j-gvecg-p500015-std-0001-0001",
+      "start": 3.944,
+      "transcript_sha256": "e30c4e8003aab6f632cb74994f7dee2ec087f8e848178ad13de600520941f893"
+    },
+    {
+      "audio_sha256": "91d7c69f6a0da7d3b1360dd8efad9118b550982a146574182d47040f12536a6a",
+      "duration_seconds": 2.229,
+      "end": 12.922,
+      "recording_id": "Artur-J-Gvecg-P500015-std",
+      "reference_sha256": "324594f5960f7ad6b37da298c9838b0444acad6ea84da824ece8cbcc221a1461",
+      "sample_id": "artur-j-artur-j-gvecg-p500015-std-0001-0003",
+      "start": 10.693,
+      "transcript_sha256": "e30c4e8003aab6f632cb74994f7dee2ec087f8e848178ad13de600520941f893"
+    },
+    {
+      "audio_sha256": "e74e1609670414f71427713d09114037188994ccf68f02b5101717328eaace61",
+      "duration_seconds": 3.758,
+      "end": 16.68,
+      "recording_id": "Artur-J-Gvecg-P500015-std",
+      "reference_sha256": "d0bc55bc895e6f22c8f062c50b1ad546de8e8dec1bb1190b4da01abcc1eb6d7b",
+      "sample_id": "artur-j-artur-j-gvecg-p500015-std-0001-0004",
+      "start": 12.922,
+      "transcript_sha256": "e30c4e8003aab6f632cb74994f7dee2ec087f8e848178ad13de600520941f893"
+    },
+    {
+      "audio_sha256": "72ccdbe6b169982812bfedf4f7ee253a415b0645b6ddeb6c67ab54d78860a5bc",
+      "duration_seconds": 2.451,
+      "end": 11.048,
+      "recording_id": "Artur-J-Gvecg-P500016-std",
+      "reference_sha256": "a62eff9537310e7d39038f84ca55d65c41a547772a5912c17492ab3b8118ffc0",
+      "sample_id": "artur-j-artur-j-gvecg-p500016-std-0001-0001",
+      "start": 8.597,
+      "transcript_sha256": "40c989d1448f15ea48c3d77ee91d81c4dda5c325ab7af77b13406ecdad108144"
+    },
+    {
+      "audio_sha256": "004702d31662fe9b32df0f77e7c5f8d4293278f5f9f79f4b7d1f5e21cfb20e77",
+      "duration_seconds": 2.783,
+      "end": 13.831,
+      "recording_id": "Artur-J-Gvecg-P500016-std",
+      "reference_sha256": "6559dbd041b49e798a9a4590b42e5ed8c75c0bfc58a67c61893755d5c41a75e8",
+      "sample_id": "artur-j-artur-j-gvecg-p500016-std-0001-0002",
+      "start": 11.048,
+      "transcript_sha256": "40c989d1448f15ea48c3d77ee91d81c4dda5c325ab7af77b13406ecdad108144"
+    },
+    {
+      "audio_sha256": "2770211693e1e7c0d351ec5cf67c1fd2066d0cf90ca286ecdaa2c6524cdfc6d0",
+      "duration_seconds": 3.581,
+      "end": 17.412,
+      "recording_id": "Artur-J-Gvecg-P500016-std",
+      "reference_sha256": "24113325a13d625ccabf129c5cb5bbfb0154e1fd6dc99a88de1930c91bc187da",
+      "sample_id": "artur-j-artur-j-gvecg-p500016-std-0001-0003",
+      "start": 13.831,
+      "transcript_sha256": "40c989d1448f15ea48c3d77ee91d81c4dda5c325ab7af77b13406ecdad108144"
+    },
+    {
+      "audio_sha256": "18946befbd3b1c4134f92666399f8f7c3d8148d9e27fb74ab46cf3cfed447898",
+      "duration_seconds": 2.761,
+      "end": 22.114,
+      "recording_id": "Artur-J-Gvecg-P500016-std",
+      "reference_sha256": "f8335178f2aef6d8c5b61f115d4dadd57df116b323b574af76bb7ab1e4456884",
+      "sample_id": "artur-j-artur-j-gvecg-p500016-std-0001-0005",
+      "start": 19.353,
+      "transcript_sha256": "40c989d1448f15ea48c3d77ee91d81c4dda5c325ab7af77b13406ecdad108144"
+    },
+    {
+      "audio_sha256": "d999128289e959fe545d6a70e5b78dc94737ac2802f8382c5adc2b76b7e7e365",
+      "duration_seconds": 2.747,
+      "end": 5.672,
+      "recording_id": "Artur-J-Gvecg-P500020-std",
+      "reference_sha256": "1e9b29a16966fe217c102f5add5600a81ce590d1dd254fc8d7f4637ac6f0247d",
+      "sample_id": "artur-j-artur-j-gvecg-p500020-std-0000-0001",
+      "start": 2.925,
+      "transcript_sha256": "a2eff750a7340ac4be5527a4fae92605c8ed67854f03e708d78440b32d56c53a"
+    },
+    {
+      "audio_sha256": "4302ed157f0390e85d0a42e5f0f1d9db40504e58e7a9130eb4f3a4b2d607ac20",
+      "duration_seconds": 3.292,
+      "end": 13.285,
+      "recording_id": "Artur-J-Gvecg-P500020-std",
+      "reference_sha256": "6728e96bee200b9d864f1f0cafc9058d76bb1ebb205e2035c82c31cf2d50b9aa",
+      "sample_id": "artur-j-artur-j-gvecg-p500020-std-0000-0003",
+      "start": 9.993,
+      "transcript_sha256": "a2eff750a7340ac4be5527a4fae92605c8ed67854f03e708d78440b32d56c53a"
+    },
+    {
+      "audio_sha256": "dd161466d8d33b17f9e64c872b9f731e8b48d1ce26e9f248584871ee133e7d51",
+      "duration_seconds": 5.53,
+      "end": 19.813,
+      "recording_id": "Artur-J-Gvecg-P500020-std",
+      "reference_sha256": "95e1ceadb6e71d627737b1cf48ded864f4fbe084e4723b542540fb2b6dc3fc7e",
+      "sample_id": "artur-j-artur-j-gvecg-p500020-std-0000-0005",
+      "start": 14.283,
+      "transcript_sha256": "a2eff750a7340ac4be5527a4fae92605c8ed67854f03e708d78440b32d56c53a"
+    },
+    {
+      "audio_sha256": "284b5c658e444952f0e99734336035d555a9d565448a32235a32b0e9004bdebc",
+      "duration_seconds": 5.008,
+      "end": 24.821,
+      "recording_id": "Artur-J-Gvecg-P500020-std",
+      "reference_sha256": "86f3367b8d9d095ac630b489169e5fda57452536f3d5cec27c0c65c1136a935e",
+      "sample_id": "artur-j-artur-j-gvecg-p500020-std-0000-0006",
+      "start": 19.813,
+      "transcript_sha256": "a2eff750a7340ac4be5527a4fae92605c8ed67854f03e708d78440b32d56c53a"
+    },
+    {
+      "audio_sha256": "f4e6f0f38e267e01a1d3bdb5092f78198c8051489e435b5c26aae59807caa96f",
+      "duration_seconds": 4.4,
+      "end": 7.613,
+      "recording_id": "Artur-J-Gvecg-P500021-std",
+      "reference_sha256": "bb6b5913951725b70287f7fbbebea181c44ee218f8c5069bff9a490ec167f6fe",
+      "sample_id": "artur-j-artur-j-gvecg-p500021-std-0000-0001",
+      "start": 3.213,
+      "transcript_sha256": "6672b7b03e0cb16e00d1b08b57d816fba6c2ac61c6451c1044d45fd8e85cc754"
+    },
+    {
+      "audio_sha256": "602b3204ade79b58f2081307ba3df8176338efaddae30d7c3807867c8fe88e1e",
+      "duration_seconds": 2.172,
+      "end": 9.785,
+      "recording_id": "Artur-J-Gvecg-P500021-std",
+      "reference_sha256": "574f5f7a59d3df9c1f9f011c46f66d63124e9549c4a8e1b1c2dedc1ea9eebc34",
+      "sample_id": "artur-j-artur-j-gvecg-p500021-std-0000-0002",
+      "start": 7.613,
+      "transcript_sha256": "6672b7b03e0cb16e00d1b08b57d816fba6c2ac61c6451c1044d45fd8e85cc754"
+    },
+    {
+      "audio_sha256": "4d3ce365b333e975a5ec133c8ef1476c83f4a1874fca6d7959440583f22585e2",
+      "duration_seconds": 5.619,
+      "end": 19.716,
+      "recording_id": "Artur-J-Gvecg-P500021-std",
+      "reference_sha256": "600b83a33d4a72306032d37840699950a2502727a1beba3948172ac6852ec335",
+      "sample_id": "artur-j-artur-j-gvecg-p500021-std-0000-0004",
+      "start": 14.097,
+      "transcript_sha256": "6672b7b03e0cb16e00d1b08b57d816fba6c2ac61c6451c1044d45fd8e85cc754"
+    },
+    {
+      "audio_sha256": "cd0ee1d5c3c452479c73a5dab587eecd5301024bf11d8ed73287815e96adb96b",
+      "duration_seconds": 10.25,
+      "end": 31.464,
+      "recording_id": "Artur-J-Gvecg-P500021-std",
+      "reference_sha256": "d92f20ff9d344aae2a32e7fbd537be1150380d920f805f83f58687ef4197d621",
+      "sample_id": "artur-j-artur-j-gvecg-p500021-std-0000-0006",
+      "start": 21.214,
+      "transcript_sha256": "6672b7b03e0cb16e00d1b08b57d816fba6c2ac61c6451c1044d45fd8e85cc754"
+    },
+    {
+      "audio_sha256": "a5013c056c70516c891510e779c9c47b78edda169c38d4386d86bd188999bc38",
+      "duration_seconds": 2.361,
+      "end": 9.667,
+      "recording_id": "Artur-J-Gvecg-P500024-std",
+      "reference_sha256": "baa00647c62e8b53f633ad74ada0b32e49c53c5b76469bd0e0f82db1e7082aed",
+      "sample_id": "artur-j-artur-j-gvecg-p500024-std-0001-0005",
+      "start": 7.306,
+      "transcript_sha256": "b06c8c54c8d4f61b1b1ea5c2d6b4ac00554d1fe5d82981fe4095a3fe42be6bf0"
+    },
+    {
+      "audio_sha256": "0c8e5664875918b6e66d1929a3500833a79ca974f058d47cb8b452982ffd9b25",
+      "duration_seconds": 3.323,
+      "end": 13.604,
+      "recording_id": "Artur-J-Gvecg-P500024-std",
+      "reference_sha256": "6421559f37e5338ffb7bb024145f650f4480e2a327cbca0242154de3b8d83717",
+      "sample_id": "artur-j-artur-j-gvecg-p500024-std-0001-0007",
+      "start": 10.281,
+      "transcript_sha256": "b06c8c54c8d4f61b1b1ea5c2d6b4ac00554d1fe5d82981fe4095a3fe42be6bf0"
+    },
+    {
+      "audio_sha256": "6d26352dd8bf740be1ed3332e2f2de367fcdef86d394e33e3fa4170b3a3befd0",
+      "duration_seconds": 5.691,
+      "end": 19.295,
+      "recording_id": "Artur-J-Gvecg-P500024-std",
+      "reference_sha256": "df755390339355b64da841878ed2ce467223694d24f099f0558e8a4d70ffff4a",
+      "sample_id": "artur-j-artur-j-gvecg-p500024-std-0001-0008",
+      "start": 13.604,
+      "transcript_sha256": "b06c8c54c8d4f61b1b1ea5c2d6b4ac00554d1fe5d82981fe4095a3fe42be6bf0"
+    },
+    {
+      "audio_sha256": "ae9c8cf5a77c5f22118351be52dc37e944cd7acab7166638d096b6bb4073ba12",
+      "duration_seconds": 3.092,
+      "end": 22.387,
+      "recording_id": "Artur-J-Gvecg-P500024-std",
+      "reference_sha256": "8bf7bdd139591a28f9fe74d0709c82a22abe163092356f74221a721afcdee29b",
+      "sample_id": "artur-j-artur-j-gvecg-p500024-std-0001-0009",
+      "start": 19.295,
+      "transcript_sha256": "b06c8c54c8d4f61b1b1ea5c2d6b4ac00554d1fe5d82981fe4095a3fe42be6bf0"
+    },
+    {
+      "audio_sha256": "e66eb9a249db7240c4ebf16dc0f88cd4aab201cb0f65b7ae9579a20522b0bdc1",
+      "duration_seconds": 4.704,
+      "end": 6.666,
+      "recording_id": "Artur-J-Gvecg-P500026-std",
+      "reference_sha256": "967297506f6fb26f5adfa77f4ea73d24360fb3e53366860391a3219bdcde8fa9",
+      "sample_id": "artur-j-artur-j-gvecg-p500026-std-0001-0000",
+      "start": 1.962,
+      "transcript_sha256": "1fff8643bc6c94fa2b64e2e3bda57e540a4ce74bb3c4508527156ae245eb75de"
+    },
+    {
+      "audio_sha256": "e61afef12661ca2bdf2051fd574d4fc60f59cd6ef42fca9f68ba65335c328bd4",
+      "duration_seconds": 4.443,
+      "end": 11.546,
+      "recording_id": "Artur-J-Gvecg-P500026-std",
+      "reference_sha256": "8bbd24c27ab903edaaee3069330178a5b22f0990e6304d154a84a4bd5443e9ad",
+      "sample_id": "artur-j-artur-j-gvecg-p500026-std-0001-0002",
+      "start": 7.103,
+      "transcript_sha256": "1fff8643bc6c94fa2b64e2e3bda57e540a4ce74bb3c4508527156ae245eb75de"
+    },
+    {
+      "audio_sha256": "a30da3f43cc036a28a9f1e037d05fc45806e37b6fa592742229f5e0035317b83",
+      "duration_seconds": 4.066,
+      "end": 15.612,
+      "recording_id": "Artur-J-Gvecg-P500026-std",
+      "reference_sha256": "0b1ea644fa7d6c13b83e51989625178df844f0e882e48bd1dd5684166c2103b8",
+      "sample_id": "artur-j-artur-j-gvecg-p500026-std-0001-0003",
+      "start": 11.546,
+      "transcript_sha256": "1fff8643bc6c94fa2b64e2e3bda57e540a4ce74bb3c4508527156ae245eb75de"
+    },
+    {
+      "audio_sha256": "33da62b52a1c992233f1bbb33f47eb4ebeb13c454855faddf2955cf6d7475604",
+      "duration_seconds": 4.544,
+      "end": 20.156,
+      "recording_id": "Artur-J-Gvecg-P500026-std",
+      "reference_sha256": "604010c8aef4a14e730130591c71e817478ab71c967031c1d7657e8e1e059915",
+      "sample_id": "artur-j-artur-j-gvecg-p500026-std-0001-0004",
+      "start": 15.612,
+      "transcript_sha256": "1fff8643bc6c94fa2b64e2e3bda57e540a4ce74bb3c4508527156ae245eb75de"
+    },
+    {
+      "audio_sha256": "a65b81775870cc6d5a6a3687226555409ddba8f83c330dc4cfd69832c958c85f",
+      "duration_seconds": 4.646,
+      "end": 6.768,
+      "recording_id": "Artur-J-Gvecg-P500027-std",
+      "reference_sha256": "26df89a9ad06783b769ac1dab7437a0e79e2367221994fb138540037b98d0c56",
+      "sample_id": "artur-j-artur-j-gvecg-p500027-std-0001-0000",
+      "start": 2.122,
+      "transcript_sha256": "e4a3ceca434328776f369f9ae5c69433690f4c122ffd900f025eb43a17ee89c8"
+    },
+    {
+      "audio_sha256": "67ce32f997c67aad7f19bc21116c114fd9cbe769aa70ac9efa4cef8530f2bc3f",
+      "duration_seconds": 5.389,
+      "end": 12.157,
+      "recording_id": "Artur-J-Gvecg-P500027-std",
+      "reference_sha256": "f701b50df545290603ea162d787e2b2fe77ddaa6412b498c054c7cd02f322d8d",
+      "sample_id": "artur-j-artur-j-gvecg-p500027-std-0001-0001",
+      "start": 6.768,
+      "transcript_sha256": "e4a3ceca434328776f369f9ae5c69433690f4c122ffd900f025eb43a17ee89c8"
+    },
+    {
+      "audio_sha256": "f631f22d4c3ae4e681ac178e2f5c2b68be5151cec81de92995b20d07495f443b",
+      "duration_seconds": 3.692,
+      "end": 15.849,
+      "recording_id": "Artur-J-Gvecg-P500027-std",
+      "reference_sha256": "cd6a8e93a8154f3cbf2b62a8e100eea9c61fb51d1dd5c45d7765fd314b1528c9",
+      "sample_id": "artur-j-artur-j-gvecg-p500027-std-0001-0002",
+      "start": 12.157,
+      "transcript_sha256": "e4a3ceca434328776f369f9ae5c69433690f4c122ffd900f025eb43a17ee89c8"
+    },
+    {
+      "audio_sha256": "ea8347267984967bb641a8953124ecde5ae3dc69abb944cac6586e227f445e98",
+      "duration_seconds": 6.471,
+      "end": 35.89,
+      "recording_id": "Artur-J-Gvecg-P500027-std",
+      "reference_sha256": "30995b6d6ee18e19d1dd854b286fe21d066bae55522daf820cfea394acf627c8",
+      "sample_id": "artur-j-artur-j-gvecg-p500027-std-0001-0005",
+      "start": 29.419,
+      "transcript_sha256": "e4a3ceca434328776f369f9ae5c69433690f4c122ffd900f025eb43a17ee89c8"
+    },
+    {
+      "audio_sha256": "75b7758919b61ce5d26804cdc6511e3b77d4a750ee8545748303aafb168b62d5",
+      "duration_seconds": 2.138,
+      "end": 23.991,
+      "recording_id": "Artur-J-Gvecg-P500028-std",
+      "reference_sha256": "00add31e160c50dca2fb2a012e42473c0344e0f5c964bcf9fd9f0e1916d6e8d8",
+      "sample_id": "artur-j-artur-j-gvecg-p500028-std-0001-0004",
+      "start": 21.853,
+      "transcript_sha256": "26345816c9271c04823240507c58abad4dfee1b3795e7a1c701cbc70aecef394"
+    },
+    {
+      "audio_sha256": "08353355dcd4e978aea2b7356c51b93a332e1e4b15815710d15f006ebcd99ae0",
+      "duration_seconds": 5.156,
+      "end": 43.164,
+      "recording_id": "Artur-J-Gvecg-P500028-std",
+      "reference_sha256": "5d9673a406af15f0cca77f2e0f748d8f2e7ecb9e0361a1dec0f645caa606fc1a",
+      "sample_id": "artur-j-artur-j-gvecg-p500028-std-0001-0009",
+      "start": 38.008,
+      "transcript_sha256": "26345816c9271c04823240507c58abad4dfee1b3795e7a1c701cbc70aecef394"
+    },
+    {
+      "audio_sha256": "eb68d60458bc8ab3a6ce8d65b20c5107377de9c70298a7390ebd206d15fd4ebd",
+      "duration_seconds": 4.723,
+      "end": 47.887,
+      "recording_id": "Artur-J-Gvecg-P500028-std",
+      "reference_sha256": "a88b4a37a168190347a9421078e3e0fb4c3923348a255595e2acf4c8edc85bd8",
+      "sample_id": "artur-j-artur-j-gvecg-p500028-std-0001-0010",
+      "start": 43.164,
+      "transcript_sha256": "26345816c9271c04823240507c58abad4dfee1b3795e7a1c701cbc70aecef394"
+    },
+    {
+      "audio_sha256": "0891342b4e94eb665100b403d9ff70a5df0e89509d54a80d7b0303600baf2df1",
+      "duration_seconds": 3.034,
+      "end": 53.84,
+      "recording_id": "Artur-J-Gvecg-P500028-std",
+      "reference_sha256": "710e3db3601563b0272b17ce0f89e7481e6485f4901894d86bc787fae0a0c684",
+      "sample_id": "artur-j-artur-j-gvecg-p500028-std-0001-0012",
+      "start": 50.806,
+      "transcript_sha256": "26345816c9271c04823240507c58abad4dfee1b3795e7a1c701cbc70aecef394"
+    },
+    {
+      "audio_sha256": "16162c0b157263bc567ffad85885bd6d9f7ce2e8f849b6142bb3e21c0e559356",
+      "duration_seconds": 3.047,
+      "end": 16.499,
+      "recording_id": "Artur-J-Gvecg-P500029-std",
+      "reference_sha256": "9364308b577c5939cce14176299d7f1be66ef838a2756ed7734cbf16689fd86e",
+      "sample_id": "artur-j-artur-j-gvecg-p500029-std-0001-0006",
+      "start": 13.452,
+      "transcript_sha256": "5b5e634e0361f4d5061f9f2e85d7c52b2f476c3c09521124c6f405334843c3a9"
+    },
+    {
+      "audio_sha256": "8678c9da02a13ed9ed310fbfb7534d932253156e3fabdc6f8d87eae0f279529d",
+      "duration_seconds": 5.321,
+      "end": 25.196,
+      "recording_id": "Artur-J-Gvecg-P500029-std",
+      "reference_sha256": "f3d0747ec9bec5496bcc3a9b96bc7dd93468529075c6d25629e9301a8b2d2267",
+      "sample_id": "artur-j-artur-j-gvecg-p500029-std-0001-0010",
+      "start": 19.875,
+      "transcript_sha256": "5b5e634e0361f4d5061f9f2e85d7c52b2f476c3c09521124c6f405334843c3a9"
+    },
+    {
+      "audio_sha256": "3f4720ff8a61390befd34e04bf4581c40e6d075698d0b98a7e2c3444b1cfea78",
+      "duration_seconds": 2.91,
+      "end": 36.084,
+      "recording_id": "Artur-J-Gvecg-P500029-std",
+      "reference_sha256": "5a4083c4547f509466dd9bcde0a275a557bcc3f99d4bd49903629541e56e3527",
+      "sample_id": "artur-j-artur-j-gvecg-p500029-std-0001-0015",
+      "start": 33.174,
+      "transcript_sha256": "5b5e634e0361f4d5061f9f2e85d7c52b2f476c3c09521124c6f405334843c3a9"
+    },
+    {
+      "audio_sha256": "40af01720ee5fc7d445a12f2f966f5260883d81b935cd9511ddc1019b0f5b6e2",
+      "duration_seconds": 4.796,
+      "end": 40.88,
+      "recording_id": "Artur-J-Gvecg-P500029-std",
+      "reference_sha256": "1219343d028663bc763a608ca540003b0ed867e3c02995383ae42220e24a8aca",
+      "sample_id": "artur-j-artur-j-gvecg-p500029-std-0001-0016",
+      "start": 36.084,
+      "transcript_sha256": "5b5e634e0361f4d5061f9f2e85d7c52b2f476c3c09521124c6f405334843c3a9"
+    },
+    {
+      "audio_sha256": "3f279f06506776451d217b981fb42292a0a59914b3547144abcf3b247d62de71",
+      "duration_seconds": 2.604,
+      "end": 4.782,
+      "recording_id": "Artur-J-Gvecg-P500030-std",
+      "reference_sha256": "0c2997ea63781db3dc0ad6c60cd48bca7f1d97ac7d8e1e1ebfa81b820483f4df",
+      "sample_id": "artur-j-artur-j-gvecg-p500030-std-0000-0001",
+      "start": 2.178,
+      "transcript_sha256": "ecbc3aa1bf0b13fdef7089afd94547bbf12651f301b660e9c1a4f8fdcbe0b661"
+    },
+    {
+      "audio_sha256": "54d96a2de0a9edaf644768f40d6a31ebda5d6edc6998a9f66c35d389096e2fce",
+      "duration_seconds": 2.277,
+      "end": 8.305,
+      "recording_id": "Artur-J-Gvecg-P500030-std",
+      "reference_sha256": "0e08ea7454ef4610b10d1c20597b79d20d0fde00cfe86ed99734444bbf9028ca",
+      "sample_id": "artur-j-artur-j-gvecg-p500030-std-0000-0003",
+      "start": 6.028,
+      "transcript_sha256": "ecbc3aa1bf0b13fdef7089afd94547bbf12651f301b660e9c1a4f8fdcbe0b661"
+    },
+    {
+      "audio_sha256": "5a3a67a74d309b28d2057835d2ede1fb01f227b0023642559d01dd7db9533743",
+      "duration_seconds": 3.328,
+      "end": 11.633,
+      "recording_id": "Artur-J-Gvecg-P500030-std",
+      "reference_sha256": "3e12d67ab1f41a9e8ce87aa47ee39eb7348b1dbf0b1b1786f7667c1715a6f347",
+      "sample_id": "artur-j-artur-j-gvecg-p500030-std-0000-0004",
+      "start": 8.305,
+      "transcript_sha256": "ecbc3aa1bf0b13fdef7089afd94547bbf12651f301b660e9c1a4f8fdcbe0b661"
+    },
+    {
+      "audio_sha256": "a40806e7440dcbfb6a5416547ef9cb52af9c12bf664f7a5fb1525a75a1a2e4a4",
+      "duration_seconds": 4.335,
+      "end": 15.968,
+      "recording_id": "Artur-J-Gvecg-P500030-std",
+      "reference_sha256": "f82741d02b9157289e7a848ed83be2a991dcf4ff6c14cab63024021868444f22",
+      "sample_id": "artur-j-artur-j-gvecg-p500030-std-0000-0005",
+      "start": 11.633,
+      "transcript_sha256": "ecbc3aa1bf0b13fdef7089afd94547bbf12651f301b660e9c1a4f8fdcbe0b661"
+    },
+    {
+      "audio_sha256": "37b79c8b25d564449fcce76c05d42e4c1848628dfd8ec12177a1a7b9543e9b78",
+      "duration_seconds": 3.566,
+      "end": 15.122,
+      "recording_id": "Artur-J-Gvecg-P500032-std",
+      "reference_sha256": "c9377b263d6da0daa5ce5b478b6d1deadf16dfd72a24eb9b659c47b112df7299",
+      "sample_id": "artur-j-artur-j-gvecg-p500032-std-0000-0003",
+      "start": 11.556,
+      "transcript_sha256": "9c2a97efc26f60ee58ea8577dd02107a229ea2b362d47dd7f944e695c8a218ef"
+    },
+    {
+      "audio_sha256": "9d180e1ef65a3406be57adb218e149ed6ded24c04ace11dd626fcc9b7e68918a",
+      "duration_seconds": 3.377,
+      "end": 36.495,
+      "recording_id": "Artur-J-Gvecg-P500032-std",
+      "reference_sha256": "239b750a880f5e8e27b3b8b20046ab64c4c69da1f013bc1df0900137bad45a73",
+      "sample_id": "artur-j-artur-j-gvecg-p500032-std-0000-0011",
+      "start": 33.118,
+      "transcript_sha256": "9c2a97efc26f60ee58ea8577dd02107a229ea2b362d47dd7f944e695c8a218ef"
+    },
+    {
+      "audio_sha256": "5b1e7374c09d9cd2718a3d2e77e2153f7bfa84823259d3fb50c584993f6c97a7",
+      "duration_seconds": 3.478,
+      "end": 50.76,
+      "recording_id": "Artur-J-Gvecg-P500032-std",
+      "reference_sha256": "668cf65031542e81ff796763010828a13afcffc98e5d5771d64c64bc6927d635",
+      "sample_id": "artur-j-artur-j-gvecg-p500032-std-0000-0015",
+      "start": 47.282,
+      "transcript_sha256": "9c2a97efc26f60ee58ea8577dd02107a229ea2b362d47dd7f944e695c8a218ef"
+    },
+    {
+      "audio_sha256": "84dd121918d5ac8003692edfb1e060e60045231d12b713e258d4b8292eca5d9a",
+      "duration_seconds": 2.914,
+      "end": 70.944,
+      "recording_id": "Artur-J-Gvecg-P500032-std",
+      "reference_sha256": "3e4462f682bd1911215ed13b8d48d06e951df7fb6de670cc189c6fd3e779fdc4",
+      "sample_id": "artur-j-artur-j-gvecg-p500032-std-0000-0021",
+      "start": 68.03,
+      "transcript_sha256": "9c2a97efc26f60ee58ea8577dd02107a229ea2b362d47dd7f944e695c8a218ef"
+    },
+    {
+      "audio_sha256": "106d6e9ad3e268e788c940b1f7acf23a2459ae1820c9cc1fce3d277273f11109",
+      "duration_seconds": 3.036,
+      "end": 4.473,
+      "recording_id": "Artur-J-Gvecg-P500034-std",
+      "reference_sha256": "93bf005a40e5b832b3001a37503aacdf7137749829457ec33ae8b876eab6f5f2",
+      "sample_id": "artur-j-artur-j-gvecg-p500034-std-0000-0002",
+      "start": 1.437,
+      "transcript_sha256": "1622d0e378caa0077c5716565f767511dc7f9620ad3b79a355e8e41b251cdee7"
+    },
+    {
+      "audio_sha256": "91a2fd06b4fe559cb9c6d456637a9efcaf762358cf5494f44b2754f262494533",
+      "duration_seconds": 2.764,
+      "end": 35.267,
+      "recording_id": "Artur-J-Gvecg-P500034-std",
+      "reference_sha256": "0155954226a161455f903a0f598554c62645bc048c2292b8620e42cb94e94ff2",
+      "sample_id": "artur-j-artur-j-gvecg-p500034-std-0000-0011",
+      "start": 32.503,
+      "transcript_sha256": "1622d0e378caa0077c5716565f767511dc7f9620ad3b79a355e8e41b251cdee7"
+    },
+    {
+      "audio_sha256": "26d2548fc06723fe90e52f2d0c64b45e4e68cc0229cdf0e915d487167ad3d845",
+      "duration_seconds": 2.138,
+      "end": 37.405,
+      "recording_id": "Artur-J-Gvecg-P500034-std",
+      "reference_sha256": "26c3a57a01fd2196589be2e5c7e8a238504e5e8a8dd1cad46b0b5c7488ed140f",
+      "sample_id": "artur-j-artur-j-gvecg-p500034-std-0000-0012",
+      "start": 35.267,
+      "transcript_sha256": "1622d0e378caa0077c5716565f767511dc7f9620ad3b79a355e8e41b251cdee7"
+    },
+    {
+      "audio_sha256": "94e3aebf8574a6d8c5eb5036d7d361e5423d717c3386e06821a3435afd84983c",
+      "duration_seconds": 2.823,
+      "end": 41.694,
+      "recording_id": "Artur-J-Gvecg-P500034-std",
+      "reference_sha256": "6b294dc0579e6e933d1ca9a3acac98d1ec1ce489a7b8c46585375417af0ba060",
+      "sample_id": "artur-j-artur-j-gvecg-p500034-std-0000-0014",
+      "start": 38.871,
+      "transcript_sha256": "1622d0e378caa0077c5716565f767511dc7f9620ad3b79a355e8e41b251cdee7"
+    },
+    {
+      "audio_sha256": "6d2ba68afe5d314e341e6b8897019a14846d0bce9a62c68191c5e4d84667e236",
+      "duration_seconds": 2.752,
+      "end": 7.137,
+      "recording_id": "Artur-J-Gvecg-P500035-std",
+      "reference_sha256": "9d4f1a8cd8e3fdae605f3f78b5029fbd628817e76d11fa25089d99e973be5a69",
+      "sample_id": "artur-j-artur-j-gvecg-p500035-std-0001-0001",
+      "start": 4.385,
+      "transcript_sha256": "36935eb15d51e68fc11bcc904a280624c7f4e8557202deb6113e0b4d11d8f428"
+    },
+    {
+      "audio_sha256": "88ce1aa2b03c01d7568984a3bb9c54a0b57c73ba5fa9c2ac33b2764688123c93",
+      "duration_seconds": 3.492,
+      "end": 12.401,
+      "recording_id": "Artur-J-Gvecg-P500035-std",
+      "reference_sha256": "c167623960dbbeb2cb5bd237983a588d046d6a97da495c388664178ce5c4c320",
+      "sample_id": "artur-j-artur-j-gvecg-p500035-std-0001-0003",
+      "start": 8.909,
+      "transcript_sha256": "36935eb15d51e68fc11bcc904a280624c7f4e8557202deb6113e0b4d11d8f428"
+    },
+    {
+      "audio_sha256": "54d15f43e596b6ab8241b65404b6337c4275d454ce369acd700170bd3944a362",
+      "duration_seconds": 2.481,
+      "end": 16.735,
+      "recording_id": "Artur-J-Gvecg-P500035-std",
+      "reference_sha256": "d0bc8883391456e3f22daf87bfc4a298c92f0c20e396fb991fad159085c969ee",
+      "sample_id": "artur-j-artur-j-gvecg-p500035-std-0001-0005",
+      "start": 14.254,
+      "transcript_sha256": "36935eb15d51e68fc11bcc904a280624c7f4e8557202deb6113e0b4d11d8f428"
+    },
+    {
+      "audio_sha256": "db15f75517a6ff35b93eddff055dfc946395f0987d725c479ae479bc6dfa92c8",
+      "duration_seconds": 3.728,
+      "end": 20.463,
+      "recording_id": "Artur-J-Gvecg-P500035-std",
+      "reference_sha256": "a6757fa7f674d6f6aaa48079829cbd8337e34e678a302db29350576bf2336abd",
+      "sample_id": "artur-j-artur-j-gvecg-p500035-std-0001-0006",
+      "start": 16.735,
+      "transcript_sha256": "36935eb15d51e68fc11bcc904a280624c7f4e8557202deb6113e0b4d11d8f428"
+    },
+    {
+      "audio_sha256": "4e66931512d36e4a7c0e6714521395b4cdbec0dfc0ef7eb8e34a1cbe79dfeec9",
+      "duration_seconds": 5.519,
+      "end": 6.541,
+      "recording_id": "Artur-J-Gvecg-P500036-std",
+      "reference_sha256": "4a5fc6a6d1983873045404832190d462aa553c07b174e7017710001f960bd8c0",
+      "sample_id": "artur-j-artur-j-gvecg-p500036-std-0000-0001",
+      "start": 1.022,
+      "transcript_sha256": "9bc943c835a3bd72ca237f95ae52d5eec07bd18aa34cfc0256023d1f29bc6585"
+    },
+    {
+      "audio_sha256": "3e5d8af7b557d53450b73e76ff28236a0e1cf7a0349153159a53160235f5acec",
+      "duration_seconds": 2.73,
+      "end": 9.271,
+      "recording_id": "Artur-J-Gvecg-P500036-std",
+      "reference_sha256": "6910d6174c32ff560663bfe0550d9d477f2c4e5a9bed48ea850a79c32f074efe",
+      "sample_id": "artur-j-artur-j-gvecg-p500036-std-0000-0002",
+      "start": 6.541,
+      "transcript_sha256": "9bc943c835a3bd72ca237f95ae52d5eec07bd18aa34cfc0256023d1f29bc6585"
+    },
+    {
+      "audio_sha256": "a0387379521755ea3f52fd158141ebe6b1f9b196144ad7e499a3d60653c17855",
+      "duration_seconds": 2.517,
+      "end": 18.737,
+      "recording_id": "Artur-J-Gvecg-P500036-std",
+      "reference_sha256": "e4a989492c1796d98f730c59653d444e46380b4922d04ca0042c0bbd7d15a162",
+      "sample_id": "artur-j-artur-j-gvecg-p500036-std-0000-0010",
+      "start": 16.22,
+      "transcript_sha256": "9bc943c835a3bd72ca237f95ae52d5eec07bd18aa34cfc0256023d1f29bc6585"
+    },
+    {
+      "audio_sha256": "edd626086259953b2a7b62d562bdcbe9df8c618b261bd1c269b87c9ec657cfd5",
+      "duration_seconds": 3.833,
+      "end": 22.57,
+      "recording_id": "Artur-J-Gvecg-P500036-std",
+      "reference_sha256": "809c73f982dee71cc0adbafcc991ee5d7c54940041e77bc03b0138482453bb60",
+      "sample_id": "artur-j-artur-j-gvecg-p500036-std-0000-0011",
+      "start": 18.737,
+      "transcript_sha256": "9bc943c835a3bd72ca237f95ae52d5eec07bd18aa34cfc0256023d1f29bc6585"
+    },
+    {
+      "audio_sha256": "b89684c96d5403c5f95e45565d27986e80788e7aa01b64be22ab6e237cf1d1fe",
+      "duration_seconds": 3.511,
+      "end": 3.511,
+      "recording_id": "Artur-J-Gvecg-P500037-std",
+      "reference_sha256": "a4aa98c52613e21f49399eb103f6e9a2ceb354aa88ccde788bae1e08f6553f67",
+      "sample_id": "artur-j-artur-j-gvecg-p500037-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "bc375cc8fb9b8e689ab9848d908b8d69ae768c5101a55246de661cab59707fee"
+    },
+    {
+      "audio_sha256": "06c34db37421a8fd99279a5eac671902305f873b6385e6d30bb323582ebcc6e3",
+      "duration_seconds": 4.825,
+      "end": 8.336,
+      "recording_id": "Artur-J-Gvecg-P500037-std",
+      "reference_sha256": "7d12e2263b03e45bbe69a4bd15889ebef8653db67f37b77a66c6975666129042",
+      "sample_id": "artur-j-artur-j-gvecg-p500037-std-0000-0001",
+      "start": 3.511,
+      "transcript_sha256": "bc375cc8fb9b8e689ab9848d908b8d69ae768c5101a55246de661cab59707fee"
+    },
+    {
+      "audio_sha256": "aa83cbc69f9d808e11d92a7210d8a4bd20701e9e8695886224c82ff8480c24c7",
+      "duration_seconds": 2.75,
+      "end": 11.086,
+      "recording_id": "Artur-J-Gvecg-P500037-std",
+      "reference_sha256": "91b81991ba5780fe30cdc748f7d2cef23676665c19201ee48f53a33a7a8d7140",
+      "sample_id": "artur-j-artur-j-gvecg-p500037-std-0000-0002",
+      "start": 8.336,
+      "transcript_sha256": "bc375cc8fb9b8e689ab9848d908b8d69ae768c5101a55246de661cab59707fee"
+    },
+    {
+      "audio_sha256": "b6628833a635d87403ea7fe5a79d3f62696a1d09e10378e92e72735e763c1d3d",
+      "duration_seconds": 2.315,
+      "end": 17.413,
+      "recording_id": "Artur-J-Gvecg-P500037-std",
+      "reference_sha256": "8f6e16d1f35138430e0b7df3106c03fb5525452c1753b378372600c5bd4db588",
+      "sample_id": "artur-j-artur-j-gvecg-p500037-std-0000-0005",
+      "start": 15.098,
+      "transcript_sha256": "bc375cc8fb9b8e689ab9848d908b8d69ae768c5101a55246de661cab59707fee"
+    },
+    {
+      "audio_sha256": "c43afdd9f12198e013ca86bdcb39412952c451e10939d500a8d0b2aaf2649c8f",
+      "duration_seconds": 2.719,
+      "end": 6.099,
+      "recording_id": "Artur-J-Gvecg-P500040-std",
+      "reference_sha256": "e855ea86eabed9b0deb3994b012a7bb56300e09ccdb49b0d6b9a7084c7aec32e",
+      "sample_id": "artur-j-artur-j-gvecg-p500040-std-0002-0001",
+      "start": 3.38,
+      "transcript_sha256": "1ae6cc8a60354c9cecdd9183c48400fceeb5df87bda46dbae62f1c688cc2ab46"
+    },
+    {
+      "audio_sha256": "b030d238dabe00642620e3b4e16a72add39493e58b8d765eaf50fff074df02ba",
+      "duration_seconds": 3.694,
+      "end": 16.649,
+      "recording_id": "Artur-J-Gvecg-P500040-std",
+      "reference_sha256": "7a768b94fd9f7b4d670ca3fa68284c7cffd07ab92aa3b7afe7660469bfd10a25",
+      "sample_id": "artur-j-artur-j-gvecg-p500040-std-0002-0005",
+      "start": 12.955,
+      "transcript_sha256": "1ae6cc8a60354c9cecdd9183c48400fceeb5df87bda46dbae62f1c688cc2ab46"
+    },
+    {
+      "audio_sha256": "554918e06e85ef485eb6707f9643aaeccd195eeb99c5afc912d1e12929e39db2",
+      "duration_seconds": 3.453,
+      "end": 21.22,
+      "recording_id": "Artur-J-Gvecg-P500040-std",
+      "reference_sha256": "b302d59bf028f7a12f086dfb844b776188e7031a0056ae8c9db38c6056802242",
+      "sample_id": "artur-j-artur-j-gvecg-p500040-std-0002-0007",
+      "start": 17.767,
+      "transcript_sha256": "1ae6cc8a60354c9cecdd9183c48400fceeb5df87bda46dbae62f1c688cc2ab46"
+    },
+    {
+      "audio_sha256": "e3445f9b88e0aa88564c4c3205e598ea2f5de2fb6f481573812dd9e4434ff3a2",
+      "duration_seconds": 6.16,
+      "end": 39.035,
+      "recording_id": "Artur-J-Gvecg-P500040-std",
+      "reference_sha256": "48c7ae99effa8e66a24c01e4a32ed224a77820a3c66fbc822f261c18aef7506a",
+      "sample_id": "artur-j-artur-j-gvecg-p500040-std-0002-0010",
+      "start": 32.875,
+      "transcript_sha256": "1ae6cc8a60354c9cecdd9183c48400fceeb5df87bda46dbae62f1c688cc2ab46"
+    },
+    {
+      "audio_sha256": "731f293b93cbd49f9e042e4c4b69ee3c3a5a61c1d8dc5f81c395dc5b3f4d4c22",
+      "duration_seconds": 2.311,
+      "end": 11.057,
+      "recording_id": "Artur-J-Gvecg-P500041-std",
+      "reference_sha256": "774f9418c99a2a5c573cb082e7ae0fd6dc02a1330b3db54fbc0d62f92ca9713f",
+      "sample_id": "artur-j-artur-j-gvecg-p500041-std-0000-0003",
+      "start": 8.746,
+      "transcript_sha256": "74c4df2ab21fa3618a3c6aef70b7436a267b7170fe8d3a1a4a97b199c237d2bf"
+    },
+    {
+      "audio_sha256": "7118c8920935603b82631779277186ce349ca7116efc371f6b9abe2c8cbede1c",
+      "duration_seconds": 3.225,
+      "end": 16.488,
+      "recording_id": "Artur-J-Gvecg-P500041-std",
+      "reference_sha256": "a0a2c656b98ce371540340ca2689eca2fdc46198e0cbe8c7929e280490a3a591",
+      "sample_id": "artur-j-artur-j-gvecg-p500041-std-0000-0006",
+      "start": 13.263,
+      "transcript_sha256": "74c4df2ab21fa3618a3c6aef70b7436a267b7170fe8d3a1a4a97b199c237d2bf"
+    },
+    {
+      "audio_sha256": "d6bfb68b6f55f136edf9739896ddda90c87cf0117ba5b662cd16b607ce569cf5",
+      "duration_seconds": 3.485,
+      "end": 25.623,
+      "recording_id": "Artur-J-Gvecg-P500041-std",
+      "reference_sha256": "66c12c2af77f67960284409e2326c8449e350b964d4309756ce2e7f8a0ffb1c5",
+      "sample_id": "artur-j-artur-j-gvecg-p500041-std-0000-0010",
+      "start": 22.138,
+      "transcript_sha256": "74c4df2ab21fa3618a3c6aef70b7436a267b7170fe8d3a1a4a97b199c237d2bf"
+    },
+    {
+      "audio_sha256": "37405974a33fd8af726dbf296a61ceb0dbb90c541755280867338407b69a41be",
+      "duration_seconds": 2.276,
+      "end": 35.54,
+      "recording_id": "Artur-J-Gvecg-P500041-std",
+      "reference_sha256": "121d00a0d2b87b421fe19d369da753ab9a88c0f2eb227ea6fd05cf4bc6ab63f1",
+      "sample_id": "artur-j-artur-j-gvecg-p500041-std-0000-0016",
+      "start": 33.264,
+      "transcript_sha256": "74c4df2ab21fa3618a3c6aef70b7436a267b7170fe8d3a1a4a97b199c237d2bf"
+    },
+    {
+      "audio_sha256": "86acd6ff0c9e09b5e03c9bb9650604c4d5bf2259d73fc49b236d54df873d43b5",
+      "duration_seconds": 2.522,
+      "end": 18.057,
+      "recording_id": "Artur-J-Gvecg-P500042-std",
+      "reference_sha256": "1576a358136edc2d2557a4bcf8a90cfbd38ad3bdbe4c0b3e7bb822f2d9ba9428",
+      "sample_id": "artur-j-artur-j-gvecg-p500042-std-0000-0008",
+      "start": 15.535,
+      "transcript_sha256": "2414e26b8568c09ffeec5c354949c8eb94a3fd4482b9319237fb842ba67e2425"
+    },
+    {
+      "audio_sha256": "5b7fef99a74bc07cf7b2736a14d6f6a055cf60d78378f012379e3e93055aadeb",
+      "duration_seconds": 2.306,
+      "end": 23.344,
+      "recording_id": "Artur-J-Gvecg-P500042-std",
+      "reference_sha256": "a191a906c04db3de0b6da511afee946fbec9742f93747e20681b368f2e9c26fd",
+      "sample_id": "artur-j-artur-j-gvecg-p500042-std-0000-0010",
+      "start": 21.038,
+      "transcript_sha256": "2414e26b8568c09ffeec5c354949c8eb94a3fd4482b9319237fb842ba67e2425"
+    },
+    {
+      "audio_sha256": "ee16ecd53f3099171233125c9e4bb2d145e9a9811c7fff3f5695b91de0e39da5",
+      "duration_seconds": 3.504,
+      "end": 29.709,
+      "recording_id": "Artur-J-Gvecg-P500042-std",
+      "reference_sha256": "48278616c63001a8280cf1495417d032f520a70a27837dec22f8cbdfdd243a54",
+      "sample_id": "artur-j-artur-j-gvecg-p500042-std-0000-0012",
+      "start": 26.205,
+      "transcript_sha256": "2414e26b8568c09ffeec5c354949c8eb94a3fd4482b9319237fb842ba67e2425"
+    },
+    {
+      "audio_sha256": "36b01aadb065814d647127e5c88b68df366fb2465ce311cb385d7fe69e5e8eb4",
+      "duration_seconds": 2.984,
+      "end": 37.473,
+      "recording_id": "Artur-J-Gvecg-P500042-std",
+      "reference_sha256": "84efcee982a91d37a05284850c6635385494f4d937f847cf10bdc001650205b8",
+      "sample_id": "artur-j-artur-j-gvecg-p500042-std-0000-0015",
+      "start": 34.489,
+      "transcript_sha256": "2414e26b8568c09ffeec5c354949c8eb94a3fd4482b9319237fb842ba67e2425"
+    },
+    {
+      "audio_sha256": "56aee9f8549857961e8a3b56e49376e3216fa847e67adcffe1469fa90f65c0f5",
+      "duration_seconds": 2.43,
+      "end": 2.43,
+      "recording_id": "Artur-J-Gvecg-P500043-std",
+      "reference_sha256": "8ac384e112ca44081c1126a31e538861347825ec7027e66213ac3e65f2ed1038",
+      "sample_id": "artur-j-artur-j-gvecg-p500043-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "b7d3ec7488dfeb0b057d11bcba656f8d0845981af742ce976cbe9572a9828b46"
+    },
+    {
+      "audio_sha256": "4a89a657cb97eead84c761e684931da3cf53ecd14fc726a55adf74faddf19bf1",
+      "duration_seconds": 3.717,
+      "end": 11.544,
+      "recording_id": "Artur-J-Gvecg-P500043-std",
+      "reference_sha256": "e6040a9f113de60eb24fb740db5a206b6e75760185bca94406f93e9b2c0ff566",
+      "sample_id": "artur-j-artur-j-gvecg-p500043-std-0000-0004",
+      "start": 7.827,
+      "transcript_sha256": "b7d3ec7488dfeb0b057d11bcba656f8d0845981af742ce976cbe9572a9828b46"
+    },
+    {
+      "audio_sha256": "2362c84ab2b20a6c7537e791928710be0a37a3a45dc3a9b4e044123aa1f34013",
+      "duration_seconds": 3.229,
+      "end": 16.865,
+      "recording_id": "Artur-J-Gvecg-P500043-std",
+      "reference_sha256": "3b310c99bcf32b3b7bdf2b8b1962a2dd85c51299d9a168af665a1962b531d8e9",
+      "sample_id": "artur-j-artur-j-gvecg-p500043-std-0000-0006",
+      "start": 13.636,
+      "transcript_sha256": "b7d3ec7488dfeb0b057d11bcba656f8d0845981af742ce976cbe9572a9828b46"
+    },
+    {
+      "audio_sha256": "3978029b6005c2540d45a8abeafc423f756075f4261c34f52504859c39cb1f57",
+      "duration_seconds": 4.656,
+      "end": 21.521,
+      "recording_id": "Artur-J-Gvecg-P500043-std",
+      "reference_sha256": "2f53448378f61cb0ad50122e4ba70478ea78b6d51701d8f6c00181c8c70cdecc",
+      "sample_id": "artur-j-artur-j-gvecg-p500043-std-0000-0007",
+      "start": 16.865,
+      "transcript_sha256": "b7d3ec7488dfeb0b057d11bcba656f8d0845981af742ce976cbe9572a9828b46"
+    },
+    {
+      "audio_sha256": "f900c49a70a111518330ca282f5825f36c4b077f6998866cbce5b0279e073b5d",
+      "duration_seconds": 6.244,
+      "end": 6.244,
+      "recording_id": "Artur-J-Gvecg-P500045-std",
+      "reference_sha256": "41ef583ced6b91683e7314d968b986293c1eddf3d1c26f4dfc33059ea5900554",
+      "sample_id": "artur-j-artur-j-gvecg-p500045-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "cdd4c45cf1469dad745b4312a0c48f5672f3ad7cd8ffacf55d26c3b8144348c4"
+    },
+    {
+      "audio_sha256": "34acba28568994a897a5f3ed9cbf3b7d3692857034789ded7496fe1afcedcf12",
+      "duration_seconds": 3.182,
+      "end": 24.954,
+      "recording_id": "Artur-J-Gvecg-P500045-std",
+      "reference_sha256": "6f2c7dc3b88e9724e4f73f453b86ba1f6faad5d7460b8378a72b4b4838e22851",
+      "sample_id": "artur-j-artur-j-gvecg-p500045-std-0002-0002",
+      "start": 21.772,
+      "transcript_sha256": "cdd4c45cf1469dad745b4312a0c48f5672f3ad7cd8ffacf55d26c3b8144348c4"
+    },
+    {
+      "audio_sha256": "10d503522490d5b88149ccef840d8595ee11506490c592ad2409ea4a59b9b870",
+      "duration_seconds": 3.08,
+      "end": 51.625,
+      "recording_id": "Artur-J-Gvecg-P500045-std",
+      "reference_sha256": "1b7494d208c2392bb8bd0c04e3aa0456036f7d9a6d4c9991a8ade420025e1af2",
+      "sample_id": "artur-j-artur-j-gvecg-p500045-std-0002-0007",
+      "start": 48.545,
+      "transcript_sha256": "cdd4c45cf1469dad745b4312a0c48f5672f3ad7cd8ffacf55d26c3b8144348c4"
+    },
+    {
+      "audio_sha256": "75fa4373afc28701af0794c180165bdb92277ee0aec95d972b4ab651b0adf2a0",
+      "duration_seconds": 4.217,
+      "end": 64.53,
+      "recording_id": "Artur-J-Gvecg-P500045-std",
+      "reference_sha256": "072cb3a8520b4631a479586d9366f5f96ec261a696cae496f7ac1fa44345c8e4",
+      "sample_id": "artur-j-artur-j-gvecg-p500045-std-0002-0009",
+      "start": 60.313,
+      "transcript_sha256": "cdd4c45cf1469dad745b4312a0c48f5672f3ad7cd8ffacf55d26c3b8144348c4"
+    },
+    {
+      "audio_sha256": "76cf198a043acd86c174cdf0e517949e1c472c9da0f1bd60467e99b3d02633d7",
+      "duration_seconds": 5.438,
+      "end": 5.438,
+      "recording_id": "Artur-J-Gvecg-P500046-std",
+      "reference_sha256": "7d454dbeebb4eacdbc296ad05afb018d53887f7fca034dfb93c44c16ad3a2a5d",
+      "sample_id": "artur-j-artur-j-gvecg-p500046-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "46f2b13617427a2158c99b06c42335f5782da9d704e0f667a920c84da938ffb2"
+    },
+    {
+      "audio_sha256": "7ab4c3e890690d2d19a749b9d076f35d19efc132df25a64c1cef82039e465b21",
+      "duration_seconds": 3.458,
+      "end": 8.896,
+      "recording_id": "Artur-J-Gvecg-P500046-std",
+      "reference_sha256": "6f29360a535c82158601bea744f04104b1772a4142a84ef7b9321c336856d291",
+      "sample_id": "artur-j-artur-j-gvecg-p500046-std-0000-0001",
+      "start": 5.438,
+      "transcript_sha256": "46f2b13617427a2158c99b06c42335f5782da9d704e0f667a920c84da938ffb2"
+    },
+    {
+      "audio_sha256": "aa2b446f0a9070ba8e528396f46120f7524283e49f6b026f0621af6ab81b93d7",
+      "duration_seconds": 5.777,
+      "end": 25.986,
+      "recording_id": "Artur-J-Gvecg-P500046-std",
+      "reference_sha256": "0e5896d7613e7565b4baccfd566f50355bf5abe2782b2ec74039e036c223bfc2",
+      "sample_id": "artur-j-artur-j-gvecg-p500046-std-0000-0006",
+      "start": 20.209,
+      "transcript_sha256": "46f2b13617427a2158c99b06c42335f5782da9d704e0f667a920c84da938ffb2"
+    },
+    {
+      "audio_sha256": "d4ba2d25c7a81a22e11307940974dbb1305bafcd1c6273d640610fc68ee5a3ff",
+      "duration_seconds": 3.962,
+      "end": 29.948,
+      "recording_id": "Artur-J-Gvecg-P500046-std",
+      "reference_sha256": "2ae03ed23f0d17d6d700fce62d6de136bf0dd46dfc07c6ec70002e44356f9f57",
+      "sample_id": "artur-j-artur-j-gvecg-p500046-std-0000-0007",
+      "start": 25.986,
+      "transcript_sha256": "46f2b13617427a2158c99b06c42335f5782da9d704e0f667a920c84da938ffb2"
+    },
+    {
+      "audio_sha256": "58444fbd5f48f8638b8122f5d3278603d16917643eb0674daf8b779688c05b84",
+      "duration_seconds": 2.88,
+      "end": 22.014,
+      "recording_id": "Artur-J-Gvecg-P500047-std",
+      "reference_sha256": "344b0ceb29e8b7c4af787cf8f3fb267d3d99f53348dc8ae3548c6fbf9ec014b8",
+      "sample_id": "artur-j-artur-j-gvecg-p500047-std-0000-0003",
+      "start": 19.134,
+      "transcript_sha256": "f528dec146a00f13bd28e1b4aa3279d8f35314ec19096ecc00349de207dc6f9e"
+    },
+    {
+      "audio_sha256": "3e7d02806c3a86cabaf9474b0714cd5b35b44c4dcff32390b4c08f1a92afe6b5",
+      "duration_seconds": 3.607,
+      "end": 25.621,
+      "recording_id": "Artur-J-Gvecg-P500047-std",
+      "reference_sha256": "c8844760b61fb0c1b2143256e4e617eeceecb9ef78a9d73adc9aedee4f91be5e",
+      "sample_id": "artur-j-artur-j-gvecg-p500047-std-0000-0004",
+      "start": 22.014,
+      "transcript_sha256": "f528dec146a00f13bd28e1b4aa3279d8f35314ec19096ecc00349de207dc6f9e"
+    },
+    {
+      "audio_sha256": "be3e5161dbe17e8ec23ea555e88b41d4daeb8ca0700808f84e315139497cbe75",
+      "duration_seconds": 2.915,
+      "end": 34.608,
+      "recording_id": "Artur-J-Gvecg-P500047-std",
+      "reference_sha256": "5ceeeaa2360758898584ebdbbb340fe954ad9cbbab61fab64a9548668e06208b",
+      "sample_id": "artur-j-artur-j-gvecg-p500047-std-0000-0006",
+      "start": 31.693,
+      "transcript_sha256": "f528dec146a00f13bd28e1b4aa3279d8f35314ec19096ecc00349de207dc6f9e"
+    },
+    {
+      "audio_sha256": "c48d964f632fa63c3e0f4a0268d07e6813491ec4382b153d7285dd792f266722",
+      "duration_seconds": 2.79,
+      "end": 37.398,
+      "recording_id": "Artur-J-Gvecg-P500047-std",
+      "reference_sha256": "b34ab06c8b5cae445b77c12926dc712526e937f8470ac876e9e796ef8b0e2c35",
+      "sample_id": "artur-j-artur-j-gvecg-p500047-std-0000-0007",
+      "start": 34.608,
+      "transcript_sha256": "f528dec146a00f13bd28e1b4aa3279d8f35314ec19096ecc00349de207dc6f9e"
+    },
+    {
+      "audio_sha256": "1321278b0ebe23e51ca00b59e8f0453e74789ea6827047573651e0fe3a3603ec",
+      "duration_seconds": 3.289,
+      "end": 22.025,
+      "recording_id": "Artur-J-Gvecg-P500048-std",
+      "reference_sha256": "ee6f7f70d75094ad88d7dc6ce0967152275db87d9e418d07f2ff7882a2060c92",
+      "sample_id": "artur-j-artur-j-gvecg-p500048-std-0000-0004",
+      "start": 18.736,
+      "transcript_sha256": "e0c55a24ecb4761bff80c4b0b3a9a4632078eb68d205cb1c6161e0dcc276eeb8"
+    },
+    {
+      "audio_sha256": "9342f8d53e8e7ade4288209fe90d7f1ad4a1a9e94fad1d257db7bc0f28aeea02",
+      "duration_seconds": 7.789,
+      "end": 29.814,
+      "recording_id": "Artur-J-Gvecg-P500048-std",
+      "reference_sha256": "1e7a4ab860d30a32bdd48a8803f1876bb7592d99f622e41d322f5aeeb9f9a00e",
+      "sample_id": "artur-j-artur-j-gvecg-p500048-std-0000-0005",
+      "start": 22.025,
+      "transcript_sha256": "e0c55a24ecb4761bff80c4b0b3a9a4632078eb68d205cb1c6161e0dcc276eeb8"
+    },
+    {
+      "audio_sha256": "05c8b4d5e6e0b200cc9d8464f36ec72a0badc9bcc3acf16a2d6ef66c5d2fbea8",
+      "duration_seconds": 3.805,
+      "end": 33.619,
+      "recording_id": "Artur-J-Gvecg-P500048-std",
+      "reference_sha256": "769cf9c32738e30942de88d9505bd8468d467b9930e7da974b5dcd7f5a05b5d5",
+      "sample_id": "artur-j-artur-j-gvecg-p500048-std-0000-0006",
+      "start": 29.814,
+      "transcript_sha256": "e0c55a24ecb4761bff80c4b0b3a9a4632078eb68d205cb1c6161e0dcc276eeb8"
+    },
+    {
+      "audio_sha256": "3a94757ad1c87c81a20a2f4fd3ce184691329ef9f17fe467c547086597f155ea",
+      "duration_seconds": 4.668,
+      "end": 39.77,
+      "recording_id": "Artur-J-Gvecg-P500048-std",
+      "reference_sha256": "87d21b2bc8a203af15ee4099754c30907af4d6ff0fcb405a5db86342b4b8fe75",
+      "sample_id": "artur-j-artur-j-gvecg-p500048-std-0000-0008",
+      "start": 35.102,
+      "transcript_sha256": "e0c55a24ecb4761bff80c4b0b3a9a4632078eb68d205cb1c6161e0dcc276eeb8"
+    },
+    {
+      "audio_sha256": "ddc412cf537971f2031559534e80f681d0f82c6ecda3251ceb357b45b470765c",
+      "duration_seconds": 3.674,
+      "end": 18.808,
+      "recording_id": "Artur-J-Gvecg-P500050-std",
+      "reference_sha256": "791ac74e298c5f965d0089e4e8cb35479f4efe344f7cbd2bdceb0472b5f23e2a",
+      "sample_id": "artur-j-artur-j-gvecg-p500050-std-0001-0002",
+      "start": 15.134,
+      "transcript_sha256": "837562f38ab927f4b64a509398407e48d15523c82a259a24e53843e3f0273cc7"
+    },
+    {
+      "audio_sha256": "8764399ade109a2b3063ef1f1bfd4f54177de841053ed0b001725765587d4c35",
+      "duration_seconds": 3.371,
+      "end": 22.179,
+      "recording_id": "Artur-J-Gvecg-P500050-std",
+      "reference_sha256": "a1a7c1fbdcdf56a54a38b590efcc48f934b77c604747cb8daffdfaa2701534d3",
+      "sample_id": "artur-j-artur-j-gvecg-p500050-std-0001-0003",
+      "start": 18.808,
+      "transcript_sha256": "837562f38ab927f4b64a509398407e48d15523c82a259a24e53843e3f0273cc7"
+    },
+    {
+      "audio_sha256": "3b050b6b7694fe31343738827d7faf61e5848cc035ddd75476b2414a0874ff30",
+      "duration_seconds": 5.125,
+      "end": 27.304,
+      "recording_id": "Artur-J-Gvecg-P500050-std",
+      "reference_sha256": "9c0a7f01ff4bfff058d0919912d16c58741f325351be5ad773dfe3f6f47c413a",
+      "sample_id": "artur-j-artur-j-gvecg-p500050-std-0001-0004",
+      "start": 22.179,
+      "transcript_sha256": "837562f38ab927f4b64a509398407e48d15523c82a259a24e53843e3f0273cc7"
+    },
+    {
+      "audio_sha256": "f3eb13b7f31030525393eb3bed9b0f7e41f5373fbacb519ef78b4b8a3ad72007",
+      "duration_seconds": 3.616,
+      "end": 30.92,
+      "recording_id": "Artur-J-Gvecg-P500050-std",
+      "reference_sha256": "8dcfe6308bdc2d7eaa6f655aff537cc68f37dfb47e09ace600a5af999b307385",
+      "sample_id": "artur-j-artur-j-gvecg-p500050-std-0001-0005",
+      "start": 27.304,
+      "transcript_sha256": "837562f38ab927f4b64a509398407e48d15523c82a259a24e53843e3f0273cc7"
+    },
+    {
+      "audio_sha256": "0d3a3c97fe252029fe0ff8e06c5aea8d4dcbc68278fc3a95777d573de8ccf311",
+      "duration_seconds": 2.679,
+      "end": 2.679,
+      "recording_id": "Artur-J-Gvecg-P500053-std",
+      "reference_sha256": "bc7975ca80dc3481f26cde8331e410d3177d4d527463af8ae9230551a0639210",
+      "sample_id": "artur-j-artur-j-gvecg-p500053-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "5edb16e5b0d3790051a35334bd0dbc3e7902303d04bd3b969cd9921532b7b9d4"
+    },
+    {
+      "audio_sha256": "8adb4f8d634b6afce75311b1365faf4bb56579178d1839d56272cb6d73541234",
+      "duration_seconds": 4.442,
+      "end": 16.341,
+      "recording_id": "Artur-J-Gvecg-P500053-std",
+      "reference_sha256": "1faeef693ae726ff658ddd61fa3eca8ec0352e8ebf1d1ff03b41fd627606bf42",
+      "sample_id": "artur-j-artur-j-gvecg-p500053-std-0000-0004",
+      "start": 11.899,
+      "transcript_sha256": "5edb16e5b0d3790051a35334bd0dbc3e7902303d04bd3b969cd9921532b7b9d4"
+    },
+    {
+      "audio_sha256": "b15f477b3b7fedb62c664799ff302327d5db9c89cd12fb71b04644303b1260a2",
+      "duration_seconds": 3.237,
+      "end": 19.578,
+      "recording_id": "Artur-J-Gvecg-P500053-std",
+      "reference_sha256": "1bcac25178261f4f5c6ddb8ab12f9c22c3c4f76c52ce7044460160b8571d6b59",
+      "sample_id": "artur-j-artur-j-gvecg-p500053-std-0000-0005",
+      "start": 16.341,
+      "transcript_sha256": "5edb16e5b0d3790051a35334bd0dbc3e7902303d04bd3b969cd9921532b7b9d4"
+    },
+    {
+      "audio_sha256": "c3c4a004b5a1f043152751c4c0ed170c66ce12071cf916fe3c9f02ebdf5e6e5d",
+      "duration_seconds": 5.0,
+      "end": 32.069,
+      "recording_id": "Artur-J-Gvecg-P500053-std",
+      "reference_sha256": "16e4f4d85cae9f48351fc6f9d5fbb6be2326df558230930559235cc976ca28e9",
+      "sample_id": "artur-j-artur-j-gvecg-p500053-std-0000-0007",
+      "start": 27.069,
+      "transcript_sha256": "5edb16e5b0d3790051a35334bd0dbc3e7902303d04bd3b969cd9921532b7b9d4"
+    },
+    {
+      "audio_sha256": "8792f6dc84cbadea301ca2120be526d018c5ed11f8fca4690f2d8d251227d550",
+      "duration_seconds": 3.938,
+      "end": 7.128,
+      "recording_id": "Artur-J-Gvecg-P500054-std",
+      "reference_sha256": "3fdba686db9200e191194bdf0fb2ba32a4d3d82cb7e468b7a5f7f29643b5c4bc",
+      "sample_id": "artur-j-artur-j-gvecg-p500054-std-0001-0000",
+      "start": 3.19,
+      "transcript_sha256": "3f029280947550635e17c2176654742e674c00d12e8e517521080acd0d07c3f2"
+    },
+    {
+      "audio_sha256": "11ecdaecd8c45c7a286463aec5f06c30be71ea925f747b9348249a41123458db",
+      "duration_seconds": 2.171,
+      "end": 10.892,
+      "recording_id": "Artur-J-Gvecg-P500054-std",
+      "reference_sha256": "bdce5f3c6c6a29b544fbae91aaf243c92c69451f7cf761da72d19767a2552c6a",
+      "sample_id": "artur-j-artur-j-gvecg-p500054-std-0001-0002",
+      "start": 8.721,
+      "transcript_sha256": "3f029280947550635e17c2176654742e674c00d12e8e517521080acd0d07c3f2"
+    },
+    {
+      "audio_sha256": "6a34a04c47eb468ee573772bce1465cb05e43ad59e017080b21593f30a0ae5d7",
+      "duration_seconds": 7.491,
+      "end": 34.154,
+      "recording_id": "Artur-J-Gvecg-P500054-std",
+      "reference_sha256": "7ede965db5a0eb8343013c9f4c30d9ea4903c6dcb79ece618acd2e5cb431c316",
+      "sample_id": "artur-j-artur-j-gvecg-p500054-std-0001-0005",
+      "start": 26.663,
+      "transcript_sha256": "3f029280947550635e17c2176654742e674c00d12e8e517521080acd0d07c3f2"
+    },
+    {
+      "audio_sha256": "027a1b86274d7b614a885cb8a15309b89194ce36a9a4ce07a6af28ed7b1ed24d",
+      "duration_seconds": 3.629,
+      "end": 37.783,
+      "recording_id": "Artur-J-Gvecg-P500054-std",
+      "reference_sha256": "20fd34d779547e459de3b97cba4165d6f510f086178452e23efb45c0b45a01de",
+      "sample_id": "artur-j-artur-j-gvecg-p500054-std-0001-0006",
+      "start": 34.154,
+      "transcript_sha256": "3f029280947550635e17c2176654742e674c00d12e8e517521080acd0d07c3f2"
+    },
+    {
+      "audio_sha256": "43463b66074f05001443cf8810d96ad2a892eae2368944755a05ef9128b38bdc",
+      "duration_seconds": 2.837,
+      "end": 2.837,
+      "recording_id": "Artur-J-Gvecg-P500055-std",
+      "reference_sha256": "ede0e95c502ceb3cd58b6af46c133d84f785166004b7a524d5af24d647e7d2f2",
+      "sample_id": "artur-j-artur-j-gvecg-p500055-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "e29484e3687a30b24d180aedb8ed3b5e077e5b84cd5eda4d80adc3b71a2c33f6"
+    },
+    {
+      "audio_sha256": "76719131a7559136c9b793d32dc11517436be7b18fafd6ac1fa7f4ba220fa108",
+      "duration_seconds": 5.108,
+      "end": 11.121,
+      "recording_id": "Artur-J-Gvecg-P500055-std",
+      "reference_sha256": "c0426eccbca4ae08f083f5d4a19ed92d4901d3093d1c9606c85213f9152d1cb4",
+      "sample_id": "artur-j-artur-j-gvecg-p500055-std-0000-0002",
+      "start": 6.013,
+      "transcript_sha256": "e29484e3687a30b24d180aedb8ed3b5e077e5b84cd5eda4d80adc3b71a2c33f6"
+    },
+    {
+      "audio_sha256": "3b84148a0e53426863f38acd9f643c68d98c45dc28e9862e6c2c0ae091634d4d",
+      "duration_seconds": 2.953,
+      "end": 30.108,
+      "recording_id": "Artur-J-Gvecg-P500055-std",
+      "reference_sha256": "c380ef52c4332ad2c42709ffae758ece9bd5d2d3b847525085ab52bf0f0af4b3",
+      "sample_id": "artur-j-artur-j-gvecg-p500055-std-0000-0008",
+      "start": 27.155,
+      "transcript_sha256": "e29484e3687a30b24d180aedb8ed3b5e077e5b84cd5eda4d80adc3b71a2c33f6"
+    },
+    {
+      "audio_sha256": "500ad5add70d0b419634bf38f674b493122d979d4cfd09cc3517f79a46f161bc",
+      "duration_seconds": 3.836,
+      "end": 33.944,
+      "recording_id": "Artur-J-Gvecg-P500055-std",
+      "reference_sha256": "0a716a9d506eba09d7387326acfbd3fd86cb994f3cbeda902591f6c5675b6f13",
+      "sample_id": "artur-j-artur-j-gvecg-p500055-std-0000-0009",
+      "start": 30.108,
+      "transcript_sha256": "e29484e3687a30b24d180aedb8ed3b5e077e5b84cd5eda4d80adc3b71a2c33f6"
+    },
+    {
+      "audio_sha256": "08fbcaef76216e88399d48c60a9e9886048027c6bd2f0a5a9bd6acd6a0cc75a4",
+      "duration_seconds": 3.926,
+      "end": 3.926,
+      "recording_id": "Artur-J-Gvecg-P500056-std",
+      "reference_sha256": "baf0a06e507eaa4285b2121370edca2c113fb343dfdb976a86b8f43af18e1573",
+      "sample_id": "artur-j-artur-j-gvecg-p500056-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "56e2d2db8cb4029a39781575ae1755e4f4a7bcdc141d1b6c0677394433727eea"
+    },
+    {
+      "audio_sha256": "cd574111c988ec4b1ee42341952a83413e2ec5f8007ae2f882b60c482e246a7e",
+      "duration_seconds": 5.103,
+      "end": 30.742,
+      "recording_id": "Artur-J-Gvecg-P500056-std",
+      "reference_sha256": "88aabc3e0a29e0f0cd17e94ebd96f024d16513d45be4f6be0ce245c440111982",
+      "sample_id": "artur-j-artur-j-gvecg-p500056-std-0000-0005",
+      "start": 25.639,
+      "transcript_sha256": "56e2d2db8cb4029a39781575ae1755e4f4a7bcdc141d1b6c0677394433727eea"
+    },
+    {
+      "audio_sha256": "2555aa0b0f4618da2ff4a702d0db593af980b65e34d676727b45d19057b7f5bb",
+      "duration_seconds": 5.326,
+      "end": 49.546,
+      "recording_id": "Artur-J-Gvecg-P500056-std",
+      "reference_sha256": "c0904a772bae5888acdcf971c9624fa9a183294da111fc88bf92812df22366ef",
+      "sample_id": "artur-j-artur-j-gvecg-p500056-std-0000-0009",
+      "start": 44.22,
+      "transcript_sha256": "56e2d2db8cb4029a39781575ae1755e4f4a7bcdc141d1b6c0677394433727eea"
+    },
+    {
+      "audio_sha256": "7d3c654144126451d315229f3b138bcd3099469a2fe353604fe8fa048a940e4c",
+      "duration_seconds": 3.451,
+      "end": 61.582,
+      "recording_id": "Artur-J-Gvecg-P500056-std",
+      "reference_sha256": "9de885dbe66a3182937f3681ccc344b744e74cd4b353696f26667c6a5621ea6c",
+      "sample_id": "artur-j-artur-j-gvecg-p500056-std-0000-0012",
+      "start": 58.131,
+      "transcript_sha256": "56e2d2db8cb4029a39781575ae1755e4f4a7bcdc141d1b6c0677394433727eea"
+    },
+    {
+      "audio_sha256": "98c4249cc279b4320c1d15377d64d8060f240614850cf31f86cedb9e1c2985aa",
+      "duration_seconds": 3.89,
+      "end": 5.703,
+      "recording_id": "Artur-J-Gvecg-P500057-std",
+      "reference_sha256": "2a370b4a07acb992d40ce73048e8fa9466a51c6d5c011155b2bdbc2e90b058e2",
+      "sample_id": "artur-j-artur-j-gvecg-p500057-std-0000-0001",
+      "start": 1.813,
+      "transcript_sha256": "2b4a1a40248c40ee64554418843c44b6a3f83bc7f5430eef6619d2ef8be05b4f"
+    },
+    {
+      "audio_sha256": "2f19f0da742c158a08a22a066dc5ef6610240967f9098ae1815c7fc5c9dc1e42",
+      "duration_seconds": 3.695,
+      "end": 10.371,
+      "recording_id": "Artur-J-Gvecg-P500057-std",
+      "reference_sha256": "321a484dac3659bda64e1b2d78624d55f212e5838bdd7c92bd170d65e99206d4",
+      "sample_id": "artur-j-artur-j-gvecg-p500057-std-0000-0003",
+      "start": 6.676,
+      "transcript_sha256": "2b4a1a40248c40ee64554418843c44b6a3f83bc7f5430eef6619d2ef8be05b4f"
+    },
+    {
+      "audio_sha256": "4dba49f5577de4e3bd90c2b909aa7b3b30e08ddfd481a137fb90f398974b82c2",
+      "duration_seconds": 6.922,
+      "end": 17.293,
+      "recording_id": "Artur-J-Gvecg-P500057-std",
+      "reference_sha256": "e78bce2c4064850509839c0c2b6eb9fe13bed47cf8cace4b25a90d19ddd58951",
+      "sample_id": "artur-j-artur-j-gvecg-p500057-std-0000-0004",
+      "start": 10.371,
+      "transcript_sha256": "2b4a1a40248c40ee64554418843c44b6a3f83bc7f5430eef6619d2ef8be05b4f"
+    },
+    {
+      "audio_sha256": "5d10fd7ce26fe7da3f9a601d0aa9f97ec84ce077d88b804b479b22ef62b0b034",
+      "duration_seconds": 4.192,
+      "end": 28.914,
+      "recording_id": "Artur-J-Gvecg-P500057-std",
+      "reference_sha256": "47e2ce68ac54aaf2cce75f644d95f71b77446ec77f6ff3b0f730d16e9cd92e08",
+      "sample_id": "artur-j-artur-j-gvecg-p500057-std-0000-0007",
+      "start": 24.722,
+      "transcript_sha256": "2b4a1a40248c40ee64554418843c44b6a3f83bc7f5430eef6619d2ef8be05b4f"
+    },
+    {
+      "audio_sha256": "aeba6c6c72606e0ab8dcafb613844d8f5e6ccb02eb10c189a2a8e39874cdc1c9",
+      "duration_seconds": 3.906,
+      "end": 13.013,
+      "recording_id": "Artur-J-Gvecg-P500058-std",
+      "reference_sha256": "84d6cba2205d66cb291c90265d6c95b69503653d00db3f1a5a97b8b6679c8930",
+      "sample_id": "artur-j-artur-j-gvecg-p500058-std-0000-0002",
+      "start": 9.107,
+      "transcript_sha256": "ac5e917557044129936c82405c5825918893d2b7b6fe5c360bf99d2fb4e2e320"
+    },
+    {
+      "audio_sha256": "612877dbef2073d5fe1c73ed1e74150e1c1879969876fbbcb365b49ef3796dd0",
+      "duration_seconds": 3.416,
+      "end": 18.17,
+      "recording_id": "Artur-J-Gvecg-P500058-std",
+      "reference_sha256": "b1aff89667351d40f61cd51353eed02421ee5edf5132fdc50011c64724357566",
+      "sample_id": "artur-j-artur-j-gvecg-p500058-std-0000-0005",
+      "start": 14.754,
+      "transcript_sha256": "ac5e917557044129936c82405c5825918893d2b7b6fe5c360bf99d2fb4e2e320"
+    },
+    {
+      "audio_sha256": "5122d7596e230ae2f57a02887f4d1ff24dcf28de905c0b7c7ef67db36f16340e",
+      "duration_seconds": 9.902,
+      "end": 28.072,
+      "recording_id": "Artur-J-Gvecg-P500058-std",
+      "reference_sha256": "0354974ca689ea58e5de124432b4729654609910904e4be0af591d537b9f6d26",
+      "sample_id": "artur-j-artur-j-gvecg-p500058-std-0000-0006",
+      "start": 18.17,
+      "transcript_sha256": "ac5e917557044129936c82405c5825918893d2b7b6fe5c360bf99d2fb4e2e320"
+    },
+    {
+      "audio_sha256": "ec50ae18cf44368f6c05d1e62bc75842fd3c7b7776e26d3ced2ad70e4a1d21be",
+      "duration_seconds": 7.045,
+      "end": 35.117,
+      "recording_id": "Artur-J-Gvecg-P500058-std",
+      "reference_sha256": "526c1a39b461afa65784f4f1abdbdc2f7d2898e90206d537a06aee3793d66525",
+      "sample_id": "artur-j-artur-j-gvecg-p500058-std-0000-0007",
+      "start": 28.072,
+      "transcript_sha256": "ac5e917557044129936c82405c5825918893d2b7b6fe5c360bf99d2fb4e2e320"
+    },
+    {
+      "audio_sha256": "889e5e34e009192aadc72de6e375a4e7fe0e180e1a822915e48dd55839baf014",
+      "duration_seconds": 5.482,
+      "end": 14.217,
+      "recording_id": "Artur-J-Gvecg-P500059-std",
+      "reference_sha256": "b004868c3b77b459a1cf848792cd1cb75f5ed2d5de9cc27617ce20dae345f6dc",
+      "sample_id": "artur-j-artur-j-gvecg-p500059-std-0000-0002",
+      "start": 8.735,
+      "transcript_sha256": "55b08e4084c0b362a9f392c97426b6ff8669a264b8b017a16f4a65485cedcc94"
+    },
+    {
+      "audio_sha256": "e10b40ed39e88a02ce194923643d7b1368f8c3ec7db9baa8a98e62422815f871",
+      "duration_seconds": 3.52,
+      "end": 20.957,
+      "recording_id": "Artur-J-Gvecg-P500059-std",
+      "reference_sha256": "0301263033ae90585c5909afcbe278cc2ec16975aeb08b3b3845717fb2e14fee",
+      "sample_id": "artur-j-artur-j-gvecg-p500059-std-0000-0004",
+      "start": 17.437,
+      "transcript_sha256": "55b08e4084c0b362a9f392c97426b6ff8669a264b8b017a16f4a65485cedcc94"
+    },
+    {
+      "audio_sha256": "848369ed4882f6c5923cdcbe9bf62b82eb8b290a41c9321adee37f0da2e0c94d",
+      "duration_seconds": 2.984,
+      "end": 23.941,
+      "recording_id": "Artur-J-Gvecg-P500059-std",
+      "reference_sha256": "bbf5dde946d4e9673d1920e764ce28e1a72824ad95c88dc064a247c3b507048b",
+      "sample_id": "artur-j-artur-j-gvecg-p500059-std-0000-0005",
+      "start": 20.957,
+      "transcript_sha256": "55b08e4084c0b362a9f392c97426b6ff8669a264b8b017a16f4a65485cedcc94"
+    },
+    {
+      "audio_sha256": "b02c50d3831a9d220e010a2898e698f0b8f24f916c842a9f43aeae1117e5622e",
+      "duration_seconds": 4.679,
+      "end": 35.062,
+      "recording_id": "Artur-J-Gvecg-P500059-std",
+      "reference_sha256": "eaa4f18139b6fd49c82501e4642ce4abf79d9bcea997454d8870323de63870b1",
+      "sample_id": "artur-j-artur-j-gvecg-p500059-std-0000-0007",
+      "start": 30.383,
+      "transcript_sha256": "55b08e4084c0b362a9f392c97426b6ff8669a264b8b017a16f4a65485cedcc94"
+    },
+    {
+      "audio_sha256": "f52a6491d15abea4f44a717a135fa69ddb855a3c1c9dfef9ee1a5bf6a2d8237c",
+      "duration_seconds": 4.814,
+      "end": 30.915,
+      "recording_id": "Artur-J-Gvecg-P500060-std",
+      "reference_sha256": "7bfdb0b09095fff7a68f8e89ef703841fa66069cdd4b591bd1770b8ad36010d5",
+      "sample_id": "artur-j-artur-j-gvecg-p500060-std-0009-0000",
+      "start": 26.101,
+      "transcript_sha256": "fcdbd34a4c5249d99bbf6a2d23d48297fab4f9c114382df7a55a3e8986211702"
+    },
+    {
+      "audio_sha256": "d3d408e6a229fd9071a91a3fc03821dc58ee8127c756c949176b13759c30f53e",
+      "duration_seconds": 2.222,
+      "end": 42.697,
+      "recording_id": "Artur-J-Gvecg-P500060-std",
+      "reference_sha256": "e362276c2c0e5a5ac24c61c89e8520f0c7f8eecfc23f6432ad5d04b9aa0b6e77",
+      "sample_id": "artur-j-artur-j-gvecg-p500060-std-0009-0002",
+      "start": 40.475,
+      "transcript_sha256": "fcdbd34a4c5249d99bbf6a2d23d48297fab4f9c114382df7a55a3e8986211702"
+    },
+    {
+      "audio_sha256": "16fa16e517af24a9c0d1c6f608ee1956886829fdd82333f4daff213c925513ee",
+      "duration_seconds": 6.27,
+      "end": 48.967,
+      "recording_id": "Artur-J-Gvecg-P500060-std",
+      "reference_sha256": "9a3f1529a5327470eb081ece4de9705cc6ecf7962eb65fd17e001df67306d487",
+      "sample_id": "artur-j-artur-j-gvecg-p500060-std-0009-0003",
+      "start": 42.697,
+      "transcript_sha256": "fcdbd34a4c5249d99bbf6a2d23d48297fab4f9c114382df7a55a3e8986211702"
+    },
+    {
+      "audio_sha256": "3fc892c7e34c0c19f7dc711fb0bc6366e6b8dedb5d318cec2d7548f6a0e2936d",
+      "duration_seconds": 7.694,
+      "end": 56.661,
+      "recording_id": "Artur-J-Gvecg-P500060-std",
+      "reference_sha256": "e36d72af0e479326b8816b42a69b8160988bc92c89d58a5513d5e8a8320014a3",
+      "sample_id": "artur-j-artur-j-gvecg-p500060-std-0009-0004",
+      "start": 48.967,
+      "transcript_sha256": "fcdbd34a4c5249d99bbf6a2d23d48297fab4f9c114382df7a55a3e8986211702"
+    },
+    {
+      "audio_sha256": "e52b161126c57ec6517e05dff669eb9da18937108c90e43ddbe67298279cf1ff",
+      "duration_seconds": 2.918,
+      "end": 6.86,
+      "recording_id": "Artur-J-Gvecg-P500061-std",
+      "reference_sha256": "4035c5b739deb6a9901e4d347feea49ed0c5efd4bd12187aa07d1a1a9c00c03d",
+      "sample_id": "artur-j-artur-j-gvecg-p500061-std-0000-0001",
+      "start": 3.942,
+      "transcript_sha256": "6839a18392894d23720d78898adfae2c616ccf5b15b9e694d26475ac066cc067"
+    },
+    {
+      "audio_sha256": "33214aca33507d2b9724c91efb551ef9250ab1f8af109a7d21e02c742a35ae05",
+      "duration_seconds": 4.968,
+      "end": 17.46,
+      "recording_id": "Artur-J-Gvecg-P500061-std",
+      "reference_sha256": "ab35e7c43b026108c1ec739d3a39f3c9f7b5f1f0e2b3d5acd0eb89362f96d06c",
+      "sample_id": "artur-j-artur-j-gvecg-p500061-std-0000-0003",
+      "start": 12.492,
+      "transcript_sha256": "6839a18392894d23720d78898adfae2c616ccf5b15b9e694d26475ac066cc067"
+    },
+    {
+      "audio_sha256": "84f7f91a9970449fafa5fe7184497a579eafa58694c57d3946e7000059e90373",
+      "duration_seconds": 5.305,
+      "end": 23.962,
+      "recording_id": "Artur-J-Gvecg-P500061-std",
+      "reference_sha256": "8bdd208c5b2fe9fda89e06f2b8487ff1e775f2e3d48f570b4b9b8c1e3422e092",
+      "sample_id": "artur-j-artur-j-gvecg-p500061-std-0000-0005",
+      "start": 18.657,
+      "transcript_sha256": "6839a18392894d23720d78898adfae2c616ccf5b15b9e694d26475ac066cc067"
+    },
+    {
+      "audio_sha256": "1919c0b91e11c0e18826c08ef6f25c3f85eaf72ff0cc3875698bcecf6f93ddfc",
+      "duration_seconds": 2.94,
+      "end": 26.902,
+      "recording_id": "Artur-J-Gvecg-P500061-std",
+      "reference_sha256": "c0cbfe597b0410bb313a80496c06ea6b9fdd7414f88899b8de9927459016a00a",
+      "sample_id": "artur-j-artur-j-gvecg-p500061-std-0000-0006",
+      "start": 23.962,
+      "transcript_sha256": "6839a18392894d23720d78898adfae2c616ccf5b15b9e694d26475ac066cc067"
+    },
+    {
+      "audio_sha256": "a84ecc50a0ed1c240446ecf63cde7917cd87b37a69cc484d066e24ac8611deda",
+      "duration_seconds": 2.091,
+      "end": 2.091,
+      "recording_id": "Artur-J-Gvecg-P500062-std",
+      "reference_sha256": "c7cdff8fd177bcdfa5fd2652de7f78f63f57ad8879cbbc961bc91386bdf1d884",
+      "sample_id": "artur-j-artur-j-gvecg-p500062-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "d4b066a19aa8b5dda929a490103f767204521916330cfaf3381e10dd57f0b7b8"
+    },
+    {
+      "audio_sha256": "2ad6c98ea6ad71b836adcafc81c6aeffc9e02346bfe4d137283b3f7b6e4b90da",
+      "duration_seconds": 3.078,
+      "end": 5.169,
+      "recording_id": "Artur-J-Gvecg-P500062-std",
+      "reference_sha256": "1c4f14bf119678a51ccdab496268c167e72f7253de69ac7ffff48b9a40878447",
+      "sample_id": "artur-j-artur-j-gvecg-p500062-std-0000-0001",
+      "start": 2.091,
+      "transcript_sha256": "d4b066a19aa8b5dda929a490103f767204521916330cfaf3381e10dd57f0b7b8"
+    },
+    {
+      "audio_sha256": "01bf2b45ac5d62056d88621d036e9c69614fba904155df465457be604013389b",
+      "duration_seconds": 7.422,
+      "end": 12.591,
+      "recording_id": "Artur-J-Gvecg-P500062-std",
+      "reference_sha256": "59f56515801a910ecec8ba80f06d5f6f26bd5a99fe37c37d87cb5b57f404c6a6",
+      "sample_id": "artur-j-artur-j-gvecg-p500062-std-0000-0002",
+      "start": 5.169,
+      "transcript_sha256": "d4b066a19aa8b5dda929a490103f767204521916330cfaf3381e10dd57f0b7b8"
+    },
+    {
+      "audio_sha256": "8542415040c6dd91272f452b781e8d1b37039a2f460434a60f5a2f456a646c8f",
+      "duration_seconds": 2.372,
+      "end": 14.963,
+      "recording_id": "Artur-J-Gvecg-P500062-std",
+      "reference_sha256": "e160b26e03617d271d2b83aada889190dca00f192ba02bbe22347ec53378f765",
+      "sample_id": "artur-j-artur-j-gvecg-p500062-std-0000-0003",
+      "start": 12.591,
+      "transcript_sha256": "d4b066a19aa8b5dda929a490103f767204521916330cfaf3381e10dd57f0b7b8"
+    },
+    {
+      "audio_sha256": "325e2e93bc5ac94f064bdd9ae299ef8a0e8fae9dc4fec9ec25f3fe9b0315d4b1",
+      "duration_seconds": 2.871,
+      "end": 9.434,
+      "recording_id": "Artur-J-Gvecg-P500063-std",
+      "reference_sha256": "b210b0d9cf4d5a5ce2b59640fab550de462f2051f968cc62b2c7f9f9df5a0004",
+      "sample_id": "artur-j-artur-j-gvecg-p500063-std-0000-0001",
+      "start": 6.563,
+      "transcript_sha256": "89b27aa7a92c24583f6940c8f2bcc6e7eacef784eb6509cb6dd99c48bd209f9c"
+    },
+    {
+      "audio_sha256": "7ca98e228931400bbd400cd73f0d9eabe34da83601c23e64bdaca8984612add3",
+      "duration_seconds": 6.228,
+      "end": 26.367,
+      "recording_id": "Artur-J-Gvecg-P500063-std",
+      "reference_sha256": "59a800fff78fa4a2a6e395e86d4b50e2d5e24a41cea20e7c3675537789df6a7a",
+      "sample_id": "artur-j-artur-j-gvecg-p500063-std-0000-0004",
+      "start": 20.139,
+      "transcript_sha256": "89b27aa7a92c24583f6940c8f2bcc6e7eacef784eb6509cb6dd99c48bd209f9c"
+    },
+    {
+      "audio_sha256": "05e4f230c2963d784240a484565408ca30dd1546a3e7df239183aabaa6db15bb",
+      "duration_seconds": 3.156,
+      "end": 38.577,
+      "recording_id": "Artur-J-Gvecg-P500063-std",
+      "reference_sha256": "93dc23a2d6659983d855a67395757e163a6eb909ec951e074d058401822eec20",
+      "sample_id": "artur-j-artur-j-gvecg-p500063-std-0000-0007",
+      "start": 35.421,
+      "transcript_sha256": "89b27aa7a92c24583f6940c8f2bcc6e7eacef784eb6509cb6dd99c48bd209f9c"
+    },
+    {
+      "audio_sha256": "733c126f8e74a7ef5477a5e61abf8bfdb2b3cdba0eb51ee345c67b640d404fb1",
+      "duration_seconds": 4.032,
+      "end": 73.98,
+      "recording_id": "Artur-J-Gvecg-P500063-std",
+      "reference_sha256": "993e16eb08b12cc089dcfbfc39246707c7389f41658440a1646c43bc37b9e5b4",
+      "sample_id": "artur-j-artur-j-gvecg-p500063-std-0000-0015",
+      "start": 69.948,
+      "transcript_sha256": "89b27aa7a92c24583f6940c8f2bcc6e7eacef784eb6509cb6dd99c48bd209f9c"
+    },
+    {
+      "audio_sha256": "22f5d69a99532a94fac30abbfc2f16ca88f2764699ff332b3c8b139108ae6692",
+      "duration_seconds": 6.25,
+      "end": 6.25,
+      "recording_id": "Artur-J-Gvecg-P500064-std",
+      "reference_sha256": "44c753327ecb51861c60c92715941c3a50a7fdf3f5810934f40f4bd9545a9204",
+      "sample_id": "artur-j-artur-j-gvecg-p500064-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "288b7acaa1e1c9dbf7c9a166f8eba3b0dd7a9ab58d29b16e5d25fcdb748ebbdb"
+    },
+    {
+      "audio_sha256": "7d983d1b8e0c4e1e85943e3e089b8fab7aec794c0d573a6859bed9b2d377424d",
+      "duration_seconds": 8.196,
+      "end": 16.102,
+      "recording_id": "Artur-J-Gvecg-P500064-std",
+      "reference_sha256": "e34a26ae49aa305b086127a4e103bb312ba62c3af919921cb25e83c638a53f2d",
+      "sample_id": "artur-j-artur-j-gvecg-p500064-std-0000-0002",
+      "start": 7.906,
+      "transcript_sha256": "288b7acaa1e1c9dbf7c9a166f8eba3b0dd7a9ab58d29b16e5d25fcdb748ebbdb"
+    },
+    {
+      "audio_sha256": "9ff03ff6d3a41ed3e3663b2b6bb03640edd640070d9716a523bd1723d2833b62",
+      "duration_seconds": 4.614,
+      "end": 20.716,
+      "recording_id": "Artur-J-Gvecg-P500064-std",
+      "reference_sha256": "f1709ad3cf489ebcd9a1e0f0b8a5cfa31d2f7136bdfa2aa3973a593c6ba787be",
+      "sample_id": "artur-j-artur-j-gvecg-p500064-std-0000-0003",
+      "start": 16.102,
+      "transcript_sha256": "288b7acaa1e1c9dbf7c9a166f8eba3b0dd7a9ab58d29b16e5d25fcdb748ebbdb"
+    },
+    {
+      "audio_sha256": "dce2102cc986649e15e285ad261be7665a21a29559b6577fc38817f9672049e3",
+      "duration_seconds": 4.59,
+      "end": 25.306,
+      "recording_id": "Artur-J-Gvecg-P500064-std",
+      "reference_sha256": "1d2ef94cfe5f44a15f0ee10daed4e18eb070aa6fbe540e6c4029bb95f5bab0f8",
+      "sample_id": "artur-j-artur-j-gvecg-p500064-std-0000-0004",
+      "start": 20.716,
+      "transcript_sha256": "288b7acaa1e1c9dbf7c9a166f8eba3b0dd7a9ab58d29b16e5d25fcdb748ebbdb"
+    },
+    {
+      "audio_sha256": "d0a3e9138ea9d6b10dc22f49bbde927236b14be675baab77e53c672d1d087f31",
+      "duration_seconds": 6.848,
+      "end": 6.848,
+      "recording_id": "Artur-J-Gvecg-P500078-std",
+      "reference_sha256": "ceb530e0113b377fa543c826d83e7d56ceef9e674916525f7b43214a3bb4f808",
+      "sample_id": "artur-j-artur-j-gvecg-p500078-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "5e491f4faa3ffe3d62c0f7ed6bc6412801f2e1c6508a807759c6fe4be182ffef"
+    },
+    {
+      "audio_sha256": "0e02740e8a1a82f56d47437248e362f2b2acb50cbfd23df0e0d893b4e938e2f8",
+      "duration_seconds": 3.446,
+      "end": 10.294,
+      "recording_id": "Artur-J-Gvecg-P500078-std",
+      "reference_sha256": "1209c6c380e0d9e3b1c0413404abc82ffdf6982ad7ded40d79cd147d6ae8f26a",
+      "sample_id": "artur-j-artur-j-gvecg-p500078-std-0000-0001",
+      "start": 6.848,
+      "transcript_sha256": "5e491f4faa3ffe3d62c0f7ed6bc6412801f2e1c6508a807759c6fe4be182ffef"
+    },
+    {
+      "audio_sha256": "88d8f8c6e5939ff9bbff8d9e22142f79955bb9377603214e056d2582a338b759",
+      "duration_seconds": 5.151,
+      "end": 15.445,
+      "recording_id": "Artur-J-Gvecg-P500078-std",
+      "reference_sha256": "0b912feb9db3341ae84c871f71792d5cd7d65296a2a6fcce4cfdfd7db8015de9",
+      "sample_id": "artur-j-artur-j-gvecg-p500078-std-0000-0002",
+      "start": 10.294,
+      "transcript_sha256": "5e491f4faa3ffe3d62c0f7ed6bc6412801f2e1c6508a807759c6fe4be182ffef"
+    },
+    {
+      "audio_sha256": "7121796ffdd989fe658a66f8a35f7e2395ee9a164340c5e5c20cf284c9bfb43c",
+      "duration_seconds": 4.934,
+      "end": 25.581,
+      "recording_id": "Artur-J-Gvecg-P500078-std",
+      "reference_sha256": "b71c9943c5d2a0a8ab9ff8432606e8608dd69cba2eeeba240e42cf1e73965688",
+      "sample_id": "artur-j-artur-j-gvecg-p500078-std-0000-0004",
+      "start": 20.647,
+      "transcript_sha256": "5e491f4faa3ffe3d62c0f7ed6bc6412801f2e1c6508a807759c6fe4be182ffef"
+    },
+    {
+      "audio_sha256": "ec3371f7aa4b796be9beb22b6e8658c116af906587fe5de131d44b005b1f2112",
+      "duration_seconds": 4.53,
+      "end": 95.326,
+      "recording_id": "Artur-J-Gvecg-P500079-std",
+      "reference_sha256": "f54d3d7322813d8b6183b6c167f59b5ddda73d50fbfae86f1004c13250a8886d",
+      "sample_id": "artur-j-artur-j-gvecg-p500079-std-0000-0022",
+      "start": 90.796,
+      "transcript_sha256": "0647cb047a109686c5b283063670890269c1160ea8f3c880a5fdbd7a3d66ed9b"
+    },
+    {
+      "audio_sha256": "9199b67630b513e34e0477269d9e0cf820225a1b9a872202c3f063cc00a23801",
+      "duration_seconds": 3.262,
+      "end": 120.052,
+      "recording_id": "Artur-J-Gvecg-P500079-std",
+      "reference_sha256": "1035dba12408ae52a94f5331a1a5d5991920400b00801c483fcfd6cb75b78efa",
+      "sample_id": "artur-j-artur-j-gvecg-p500079-std-0000-0027",
+      "start": 116.79,
+      "transcript_sha256": "0647cb047a109686c5b283063670890269c1160ea8f3c880a5fdbd7a3d66ed9b"
+    },
+    {
+      "audio_sha256": "711879fc548fcfef722b5a11770f73583a2c388b780bc8ea3d6492b3af86aee3",
+      "duration_seconds": 5.98,
+      "end": 151.07,
+      "recording_id": "Artur-J-Gvecg-P500079-std",
+      "reference_sha256": "2e97066064e01c415c9af334421a1848d45251aa63ff602791207bfe656534c1",
+      "sample_id": "artur-j-artur-j-gvecg-p500079-std-0000-0033",
+      "start": 145.09,
+      "transcript_sha256": "0647cb047a109686c5b283063670890269c1160ea8f3c880a5fdbd7a3d66ed9b"
+    },
+    {
+      "audio_sha256": "c97d11731860b31d785daf327871dfc6f2828ec780159c4dc00ea5ba43b03f06",
+      "duration_seconds": 2.001,
+      "end": 153.071,
+      "recording_id": "Artur-J-Gvecg-P500079-std",
+      "reference_sha256": "1c68a6245d6d4d734ea10eea313dae973dd2d4002f3755f7fa1513bad6d506f7",
+      "sample_id": "artur-j-artur-j-gvecg-p500079-std-0000-0034",
+      "start": 151.07,
+      "transcript_sha256": "0647cb047a109686c5b283063670890269c1160ea8f3c880a5fdbd7a3d66ed9b"
+    },
+    {
+      "audio_sha256": "5b472d16fc41f1cce894e6d83600be3a19f43fc882c75044008d60f7b4c7e273",
+      "duration_seconds": 4.749,
+      "end": 8.831,
+      "recording_id": "Artur-J-Gvecg-P500080-std",
+      "reference_sha256": "482f4cd132c505b3434e6556ee110547c51c4f2b9038e5c298b01f93ff56743a",
+      "sample_id": "artur-j-artur-j-gvecg-p500080-std-0000-0001",
+      "start": 4.082,
+      "transcript_sha256": "4bd050349a4fcc032f7d4c9643d5e791a44f80c2735c07f18390885905f48e0a"
+    },
+    {
+      "audio_sha256": "39f68961686f462ed840d2edd3318c7203a1fdedbfc7c12f6304a5e98653b173",
+      "duration_seconds": 5.427,
+      "end": 14.258,
+      "recording_id": "Artur-J-Gvecg-P500080-std",
+      "reference_sha256": "ecaab94e035f4d53200b7484b5a9c9a4e1256d0a338d3ad84834ea8c87ec8e9d",
+      "sample_id": "artur-j-artur-j-gvecg-p500080-std-0000-0002",
+      "start": 8.831,
+      "transcript_sha256": "4bd050349a4fcc032f7d4c9643d5e791a44f80c2735c07f18390885905f48e0a"
+    },
+    {
+      "audio_sha256": "c0857b5107575805ecd4fb96f9d3e3c8b2f3649aee56899d2b48eeb331d43b0f",
+      "duration_seconds": 2.814,
+      "end": 32.726,
+      "recording_id": "Artur-J-Gvecg-P500080-std",
+      "reference_sha256": "dd7ef8b0cac264934910126517f18750a5352045176e47584cb91bef6fa6f786",
+      "sample_id": "artur-j-artur-j-gvecg-p500080-std-0000-0006",
+      "start": 29.912,
+      "transcript_sha256": "4bd050349a4fcc032f7d4c9643d5e791a44f80c2735c07f18390885905f48e0a"
+    },
+    {
+      "audio_sha256": "27deeb1fd9009893bd15682dcf8913f6b65501b22cabc19f908f278049c38ab5",
+      "duration_seconds": 3.103,
+      "end": 38.156,
+      "recording_id": "Artur-J-Gvecg-P500080-std",
+      "reference_sha256": "d8b59762870c8de7016ffda4dd911ba84191c0292532b569bc71d11ce3e0d4c3",
+      "sample_id": "artur-j-artur-j-gvecg-p500080-std-0000-0008",
+      "start": 35.053,
+      "transcript_sha256": "4bd050349a4fcc032f7d4c9643d5e791a44f80c2735c07f18390885905f48e0a"
+    },
+    {
+      "audio_sha256": "9e166cac25690a0a3281646ce68e04a1db69ee1adb5d2959f0485324e1c28849",
+      "duration_seconds": 6.196,
+      "end": 6.196,
+      "recording_id": "Artur-J-Gvecg-P500082-std",
+      "reference_sha256": "9012ec969a8f7c48096d57ad143cfa369cb9bd7d0b3b489fe99ff8fb01017a18",
+      "sample_id": "artur-j-artur-j-gvecg-p500082-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "f82dda2693d34ee0f83ee68c18d0dd05f84e35089a904ef92fc1f2b61c5c9040"
+    },
+    {
+      "audio_sha256": "8838a660340c601895e49c3cd1990968ec14f1c3593281be2b618476c5dabf46",
+      "duration_seconds": 2.182,
+      "end": 8.378,
+      "recording_id": "Artur-J-Gvecg-P500082-std",
+      "reference_sha256": "94dbcd99fe7e05c7c5a21f3d1196e4b4c64984a17890a9032d37f58fb416fb77",
+      "sample_id": "artur-j-artur-j-gvecg-p500082-std-0000-0001",
+      "start": 6.196,
+      "transcript_sha256": "f82dda2693d34ee0f83ee68c18d0dd05f84e35089a904ef92fc1f2b61c5c9040"
+    },
+    {
+      "audio_sha256": "7d7c6c7fa8d6ad2ad9e4bdde986d9c42ed7e60fdf5de7a4385b0410495ed9ba1",
+      "duration_seconds": 2.48,
+      "end": 10.858,
+      "recording_id": "Artur-J-Gvecg-P500082-std",
+      "reference_sha256": "14afd557a3f26a1e3be3dc7cd631ea4b61662f29cd56ed4d323901a891e2b521",
+      "sample_id": "artur-j-artur-j-gvecg-p500082-std-0000-0002",
+      "start": 8.378,
+      "transcript_sha256": "f82dda2693d34ee0f83ee68c18d0dd05f84e35089a904ef92fc1f2b61c5c9040"
+    },
+    {
+      "audio_sha256": "28be75e01cc3e94553d300ddda63a2bd4dfb0ede6f8157a87518172793ebda1c",
+      "duration_seconds": 5.514,
+      "end": 16.372,
+      "recording_id": "Artur-J-Gvecg-P500082-std",
+      "reference_sha256": "51f3aa84c3050a2f3b46e634bcd022f87a8803da3c82a5b8ac096bf94fd64611",
+      "sample_id": "artur-j-artur-j-gvecg-p500082-std-0000-0003",
+      "start": 10.858,
+      "transcript_sha256": "f82dda2693d34ee0f83ee68c18d0dd05f84e35089a904ef92fc1f2b61c5c9040"
+    },
+    {
+      "audio_sha256": "d2252d7e0ba0c5b150b504a672518cbd78f387b46c4114554248bb645620dcdd",
+      "duration_seconds": 2.052,
+      "end": 5.154,
+      "recording_id": "Artur-J-Gvecg-P580001-std",
+      "reference_sha256": "430d3d0966c6f50055498c0207718edabc14337c6b24a5490476696a42ea9ecd",
+      "sample_id": "artur-j-artur-j-gvecg-p580001-std-0001-0000",
+      "start": 3.102,
+      "transcript_sha256": "7ba93c727b2ef5e060aac2517e9a68766a560db1291b29f6d661ca870021de21"
+    },
+    {
+      "audio_sha256": "4b139fe6da03437090d36fcee5066b3b80f8ec58f2c3bd3bdc5b474ec0490a03",
+      "duration_seconds": 2.02,
+      "end": 25.773,
+      "recording_id": "Artur-J-Gvecg-P580001-std",
+      "reference_sha256": "29787a2e475664567e63dd777dbc8db822d32c084ad73dc84a91ef460793bea8",
+      "sample_id": "artur-j-artur-j-gvecg-p580001-std-0001-0006",
+      "start": 23.753,
+      "transcript_sha256": "7ba93c727b2ef5e060aac2517e9a68766a560db1291b29f6d661ca870021de21"
+    },
+    {
+      "audio_sha256": "0604d304a101fbf52daf560c585adab99090fbfb97ea89721be01a056bbada99",
+      "duration_seconds": 3.731,
+      "end": 34.379,
+      "recording_id": "Artur-J-Gvecg-P580001-std",
+      "reference_sha256": "59210a64a0c1081c5c3adfc66277419cb4d45dae6c19df3c560566536005004c",
+      "sample_id": "artur-j-artur-j-gvecg-p580001-std-0001-0010",
+      "start": 30.648,
+      "transcript_sha256": "7ba93c727b2ef5e060aac2517e9a68766a560db1291b29f6d661ca870021de21"
+    },
+    {
+      "audio_sha256": "e5458807d6905a9b1ceebae5c1033b634fdc5154b786c6a27108419dfc55f7e1",
+      "duration_seconds": 3.878,
+      "end": 58.424,
+      "recording_id": "Artur-J-Gvecg-P580001-std",
+      "reference_sha256": "eba92dad1f90162f8796a4a76b1f2f8f0abb9778d1917378bc9d0168e27954fa",
+      "sample_id": "artur-j-artur-j-gvecg-p580001-std-0001-0015",
+      "start": 54.546,
+      "transcript_sha256": "7ba93c727b2ef5e060aac2517e9a68766a560db1291b29f6d661ca870021de21"
+    },
+    {
+      "audio_sha256": "6a978fd87d172b6ee1191bdc7e37410d0aac8e4da73ee39a5e13d0c3c0c95454",
+      "duration_seconds": 6.45,
+      "end": 8.253,
+      "recording_id": "Artur-J-Gvecg-P580002-std",
+      "reference_sha256": "12fac3e1064423c64da8e1569141d84b810e3a12df9f240faa6101bab104508f",
+      "sample_id": "artur-j-artur-j-gvecg-p580002-std-0000-0001",
+      "start": 1.803,
+      "transcript_sha256": "2384faad8f0bab16bc67caa812e231cce9aeca300498d5eb54c72d04010a3cce"
+    },
+    {
+      "audio_sha256": "d0da2291d4da9e71386cbeed8d06bc3e017d11a520195076fa4c7ead25f92ecf",
+      "duration_seconds": 3.174,
+      "end": 12.191,
+      "recording_id": "Artur-J-Gvecg-P580002-std",
+      "reference_sha256": "b02e22d70eadadd0c1faee583ac07d68395826b4921ce1349b790f2933735730",
+      "sample_id": "artur-j-artur-j-gvecg-p580002-std-0000-0003",
+      "start": 9.017,
+      "transcript_sha256": "2384faad8f0bab16bc67caa812e231cce9aeca300498d5eb54c72d04010a3cce"
+    },
+    {
+      "audio_sha256": "ea1a5fa84a723127526125019555904dc29e1f9a174b6f759a691ea72214dd55",
+      "duration_seconds": 4.617,
+      "end": 20.08,
+      "recording_id": "Artur-J-Gvecg-P580002-std",
+      "reference_sha256": "2b40b0e7808f0336fc1fae7cc028252fa9ba7d14da07890163d98b869f4402bd",
+      "sample_id": "artur-j-artur-j-gvecg-p580002-std-0002-0001",
+      "start": 15.463,
+      "transcript_sha256": "2384faad8f0bab16bc67caa812e231cce9aeca300498d5eb54c72d04010a3cce"
+    },
+    {
+      "audio_sha256": "9e7c37c5a800923740e1f9161b2553e4ef673a14c73a834ada931889029a1d5a",
+      "duration_seconds": 7.438,
+      "end": 29.865,
+      "recording_id": "Artur-J-Gvecg-P580002-std",
+      "reference_sha256": "e0decc4b8d8a15be5fd50e080b8b892351cb141b1e08f5202292b00467ed7cb9",
+      "sample_id": "artur-j-artur-j-gvecg-p580002-std-0003-0000",
+      "start": 22.427,
+      "transcript_sha256": "2384faad8f0bab16bc67caa812e231cce9aeca300498d5eb54c72d04010a3cce"
+    },
+    {
+      "audio_sha256": "a5944066f586f5202aff60ab1bf1614c9d6a783896a891998538d19207c3cb6b",
+      "duration_seconds": 5.72,
+      "end": 5.72,
+      "recording_id": "Artur-J-Gvecg-P580003-std",
+      "reference_sha256": "3c987b3b23f3cd7ca7948677a828fd8fb08b120d51990d79ddb74df753668788",
+      "sample_id": "artur-j-artur-j-gvecg-p580003-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "e85a61520e209f8517fef31726a35d6173a7bd598d5fa69f46e1b4cf7da24ca5"
+    },
+    {
+      "audio_sha256": "5fbbd401a2c56c87da0faeb48b56cccafd0b80f1d0ad4961de404e40b233c319",
+      "duration_seconds": 5.144,
+      "end": 10.864,
+      "recording_id": "Artur-J-Gvecg-P580003-std",
+      "reference_sha256": "5887cf09759bf725998a39b099aaefc26cec3f12d05afb98abeae1925c16fa48",
+      "sample_id": "artur-j-artur-j-gvecg-p580003-std-0000-0001",
+      "start": 5.72,
+      "transcript_sha256": "e85a61520e209f8517fef31726a35d6173a7bd598d5fa69f46e1b4cf7da24ca5"
+    },
+    {
+      "audio_sha256": "b154ce224683ec4edda145be2ecdf43b0d18d1ae87dfa98c3db648c1eeffaaf5",
+      "duration_seconds": 2.523,
+      "end": 13.387,
+      "recording_id": "Artur-J-Gvecg-P580003-std",
+      "reference_sha256": "e21766be26aa640e3d778fac78e0feef930ce45760bdfe51a13ae23f5f9f2f9f",
+      "sample_id": "artur-j-artur-j-gvecg-p580003-std-0000-0002",
+      "start": 10.864,
+      "transcript_sha256": "e85a61520e209f8517fef31726a35d6173a7bd598d5fa69f46e1b4cf7da24ca5"
+    },
+    {
+      "audio_sha256": "07dfb65440cb74d0fbbedca3618afb475b8411faab3023cdb0252a8f6ee86e8c",
+      "duration_seconds": 3.169,
+      "end": 16.556,
+      "recording_id": "Artur-J-Gvecg-P580003-std",
+      "reference_sha256": "d72e86520fa738329ba080a1325994ddd90e5181346be8034080502f6715bac1",
+      "sample_id": "artur-j-artur-j-gvecg-p580003-std-0000-0003",
+      "start": 13.387,
+      "transcript_sha256": "e85a61520e209f8517fef31726a35d6173a7bd598d5fa69f46e1b4cf7da24ca5"
+    },
+    {
+      "audio_sha256": "c5e9a63324ee4e7f103dd27e8c572bb33123e749c623ed675a722a5596326f2f",
+      "duration_seconds": 4.043,
+      "end": 4.043,
+      "recording_id": "Artur-J-Gvecg-P580004-std",
+      "reference_sha256": "d64842fb01a1aa0641fdc4a46e8528ac156a1c72f56c13d54d7126ecd4605993",
+      "sample_id": "artur-j-artur-j-gvecg-p580004-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "769fa9a2938a9f0950b70531144e9df783199fa8ecc7bbdfb227128553ee7030"
+    },
+    {
+      "audio_sha256": "7a75f48b3e518b7b174a53e830eb5cd29bf3dceb8e425862aa3516c3b85a92d2",
+      "duration_seconds": 2.812,
+      "end": 12.777,
+      "recording_id": "Artur-J-Gvecg-P580004-std",
+      "reference_sha256": "43b000f5531867c1ec93c6ac0164c8303178ec5fc6cd4465c037c166ef4c8cbd",
+      "sample_id": "artur-j-artur-j-gvecg-p580004-std-0000-0005",
+      "start": 9.965,
+      "transcript_sha256": "769fa9a2938a9f0950b70531144e9df783199fa8ecc7bbdfb227128553ee7030"
+    },
+    {
+      "audio_sha256": "036bda50ca61a5614363757d5e5451f8f161b898bf2bef1da18c5dd4a5339dc1",
+      "duration_seconds": 3.35,
+      "end": 17.445,
+      "recording_id": "Artur-J-Gvecg-P580004-std",
+      "reference_sha256": "c0c782121857c394f12683b5a5c0d64a8c1054fc4cc85bbd441e75b7b2230d10",
+      "sample_id": "artur-j-artur-j-gvecg-p580004-std-0000-0007",
+      "start": 14.095,
+      "transcript_sha256": "769fa9a2938a9f0950b70531144e9df783199fa8ecc7bbdfb227128553ee7030"
+    },
+    {
+      "audio_sha256": "9bc0b79bf0b96fca364eddb9274c4b292becae7fdbd78d51f9a8b081d91e5e10",
+      "duration_seconds": 5.026,
+      "end": 22.471,
+      "recording_id": "Artur-J-Gvecg-P580004-std",
+      "reference_sha256": "36050a79b1ab9d79eaf38b9cfcc651128dcbfd2b015a41f83b5706753e135303",
+      "sample_id": "artur-j-artur-j-gvecg-p580004-std-0000-0008",
+      "start": 17.445,
+      "transcript_sha256": "769fa9a2938a9f0950b70531144e9df783199fa8ecc7bbdfb227128553ee7030"
+    },
+    {
+      "audio_sha256": "e90797e1a41346d774d73306088516641571c1e2dbc3af2b6380260109a408df",
+      "duration_seconds": 2.06,
+      "end": 2.06,
+      "recording_id": "Artur-J-Gvecg-P580005-std",
+      "reference_sha256": "764d5a039412f15e31ff821b9a516923e3ce33f746bd35b53b37f3af5d0864ac",
+      "sample_id": "artur-j-artur-j-gvecg-p580005-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "564f899161df4833027ca62b37c4f1fa8cffd650d8473e9fd372cc25c22dd5d3"
+    },
+    {
+      "audio_sha256": "fe9c555b20bded4528dbc2036258bf0e25e5d1ac47d231f6179e4520547327fe",
+      "duration_seconds": 7.229,
+      "end": 15.529,
+      "recording_id": "Artur-J-Gvecg-P580005-std",
+      "reference_sha256": "efc613331c82dbcbfebce6faebd021917b9397bf995b46d2b0b1999dbad66cdf",
+      "sample_id": "artur-j-artur-j-gvecg-p580005-std-0002-0000",
+      "start": 8.3,
+      "transcript_sha256": "564f899161df4833027ca62b37c4f1fa8cffd650d8473e9fd372cc25c22dd5d3"
+    },
+    {
+      "audio_sha256": "a261d4963e2eb85ed2276159f11c35e714e7cb0133108f343673dba256143cb2",
+      "duration_seconds": 2.581,
+      "end": 26.322,
+      "recording_id": "Artur-J-Gvecg-P580005-std",
+      "reference_sha256": "cb2959574d4b55ea170c90ccc354ba975bcdab131867d89f3b4bdb9a0aa80fed",
+      "sample_id": "artur-j-artur-j-gvecg-p580005-std-0005-0000",
+      "start": 23.741,
+      "transcript_sha256": "564f899161df4833027ca62b37c4f1fa8cffd650d8473e9fd372cc25c22dd5d3"
+    },
+    {
+      "audio_sha256": "e978cc9cb927c0c8dcdc090d5e5c22d2a93deb7798be0fb7aa07baa9988e4e4c",
+      "duration_seconds": 2.411,
+      "end": 30.693,
+      "recording_id": "Artur-J-Gvecg-P580005-std",
+      "reference_sha256": "3a70a823ed6d0286890ac7e0ea9bc4e19082b89a4b9d1e693ddeebfc17419b46",
+      "sample_id": "artur-j-artur-j-gvecg-p580005-std-0005-0002",
+      "start": 28.282,
+      "transcript_sha256": "564f899161df4833027ca62b37c4f1fa8cffd650d8473e9fd372cc25c22dd5d3"
+    },
+    {
+      "audio_sha256": "1caf71350b327f4fd4862c022671e6e416db23656bffa5b57943cc049cbbd0c8",
+      "duration_seconds": 2.924,
+      "end": 2.924,
+      "recording_id": "Artur-J-Gvecg-P580006-std",
+      "reference_sha256": "5049d2c12c429dd4a4dde13984cdddf49010a9e00d754931819d26134ec61d68",
+      "sample_id": "artur-j-artur-j-gvecg-p580006-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "6d7c86c5b10f64510c2fe8c2c866932186d64988d333101d3d62279fa754e6c6"
+    },
+    {
+      "audio_sha256": "d1fcf210aa6e693cf854badc309de992c6fc1d6e2968a20e89d23e19e9d742a9",
+      "duration_seconds": 7.217,
+      "end": 10.141,
+      "recording_id": "Artur-J-Gvecg-P580006-std",
+      "reference_sha256": "cb56a12262f79f427d7748125fc543e973815b7c1fe7f2b9f9a403d6090f9d72",
+      "sample_id": "artur-j-artur-j-gvecg-p580006-std-0000-0001",
+      "start": 2.924,
+      "transcript_sha256": "6d7c86c5b10f64510c2fe8c2c866932186d64988d333101d3d62279fa754e6c6"
+    },
+    {
+      "audio_sha256": "704970e71f013c3b700d57de5934f1f9096648327feb55b8087214a5020a65ee",
+      "duration_seconds": 5.01,
+      "end": 15.151,
+      "recording_id": "Artur-J-Gvecg-P580006-std",
+      "reference_sha256": "335eb406030ecd2f89f461a9c5461575e32b3d38535a573bcceac9a5827eecfb",
+      "sample_id": "artur-j-artur-j-gvecg-p580006-std-0000-0002",
+      "start": 10.141,
+      "transcript_sha256": "6d7c86c5b10f64510c2fe8c2c866932186d64988d333101d3d62279fa754e6c6"
+    },
+    {
+      "audio_sha256": "c65b5792d86a5fe1c0ad8634af0dde3f5b7adf5b2e6d5fbb16772eaeff7fb79f",
+      "duration_seconds": 2.589,
+      "end": 28.521,
+      "recording_id": "Artur-J-Gvecg-P580006-std",
+      "reference_sha256": "a66b222b12971055b342bb2eec3589ce92d310158b81d72f27c4d5228a97fe67",
+      "sample_id": "artur-j-artur-j-gvecg-p580006-std-0002-0000",
+      "start": 25.932,
+      "transcript_sha256": "6d7c86c5b10f64510c2fe8c2c866932186d64988d333101d3d62279fa754e6c6"
+    },
+    {
+      "audio_sha256": "44c5f38b88086e1a26f7f322bc7511e5c22dd913632ad1893ed8ad94cb2f1f39",
+      "duration_seconds": 2.621,
+      "end": 2.621,
+      "recording_id": "Artur-J-Gvecg-P580007-std",
+      "reference_sha256": "5049d2c12c429dd4a4dde13984cdddf49010a9e00d754931819d26134ec61d68",
+      "sample_id": "artur-j-artur-j-gvecg-p580007-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "a84303b6164e0a0f3c597c96b92e042d07aee0384c4da8b5386eb54ea443e238"
+    },
+    {
+      "audio_sha256": "5579b4257a37f0b342948aa85a1c5980ec556cbd47db08f6c8f4a0f7401c5ac8",
+      "duration_seconds": 2.361,
+      "end": 4.982,
+      "recording_id": "Artur-J-Gvecg-P580007-std",
+      "reference_sha256": "c457ab88ce88e399d31ec3468bd9595839212dce1424bf49910377195a18ba41",
+      "sample_id": "artur-j-artur-j-gvecg-p580007-std-0000-0001",
+      "start": 2.621,
+      "transcript_sha256": "a84303b6164e0a0f3c597c96b92e042d07aee0384c4da8b5386eb54ea443e238"
+    },
+    {
+      "audio_sha256": "2fd3829e6b35f6397808e432638c753e9306701a2c22c2c6ba82aa54ff7a8871",
+      "duration_seconds": 5.277,
+      "end": 18.981,
+      "recording_id": "Artur-J-Gvecg-P580007-std",
+      "reference_sha256": "efc72a4da8d5a407dcc1f43221712ef8f1af0dcf2a9aad372caa220532ad43e7",
+      "sample_id": "artur-j-artur-j-gvecg-p580007-std-0002-0000",
+      "start": 13.704,
+      "transcript_sha256": "a84303b6164e0a0f3c597c96b92e042d07aee0384c4da8b5386eb54ea443e238"
+    },
+    {
+      "audio_sha256": "1b9a25832689399db55d3ea4d8fcddd9fa02599c2b30ee141dfcebbdc9258c60",
+      "duration_seconds": 3.578,
+      "end": 22.559,
+      "recording_id": "Artur-J-Gvecg-P580007-std",
+      "reference_sha256": "5958f459695267070b9020e226ce6b508998f00166e2b8b0dc5313e00adda970",
+      "sample_id": "artur-j-artur-j-gvecg-p580007-std-0002-0001",
+      "start": 18.981,
+      "transcript_sha256": "a84303b6164e0a0f3c597c96b92e042d07aee0384c4da8b5386eb54ea443e238"
+    },
+    {
+      "audio_sha256": "98555c26dd3ab2976a57d024a0087c506478ba0ea500a69fec770425a5aba7a9",
+      "duration_seconds": 4.286,
+      "end": 4.286,
+      "recording_id": "Artur-J-Gvecg-P580008-std",
+      "reference_sha256": "f923de3e967a0f65533d42c53673cb763d149d706af3da652f2f30016c921874",
+      "sample_id": "artur-j-artur-j-gvecg-p580008-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "d9d5ec8dea51054a279f1cadec60a6074b98a0908999b45c8be9b7f139c2412c"
+    },
+    {
+      "audio_sha256": "8a7a23ebe9e624f56cb446440ef3ab405a3714a340a7a9b9757b17b95dc3d2d3",
+      "duration_seconds": 5.126,
+      "end": 9.412,
+      "recording_id": "Artur-J-Gvecg-P580008-std",
+      "reference_sha256": "e5af53a123be4cc59c187773e94af4cd67d3c022a77e9e719f75b0c824aa3ec8",
+      "sample_id": "artur-j-artur-j-gvecg-p580008-std-0000-0001",
+      "start": 4.286,
+      "transcript_sha256": "d9d5ec8dea51054a279f1cadec60a6074b98a0908999b45c8be9b7f139c2412c"
+    },
+    {
+      "audio_sha256": "858695a2cdb4b266523d953b807ad3d3061b1994fcbfb6a02480223c0c6b602a",
+      "duration_seconds": 2.58,
+      "end": 11.992,
+      "recording_id": "Artur-J-Gvecg-P580008-std",
+      "reference_sha256": "2bd99a351bb97ca338d5c419af6455b0b7582d2bc20bc89d386c78fd16c85196",
+      "sample_id": "artur-j-artur-j-gvecg-p580008-std-0000-0002",
+      "start": 9.412,
+      "transcript_sha256": "d9d5ec8dea51054a279f1cadec60a6074b98a0908999b45c8be9b7f139c2412c"
+    },
+    {
+      "audio_sha256": "a87b00214db3a20f1a5f1b1920d6098b2c04bf4c6c4c5a88946dd5cc12d47121",
+      "duration_seconds": 4.192,
+      "end": 16.184,
+      "recording_id": "Artur-J-Gvecg-P580008-std",
+      "reference_sha256": "cff252284e4f518591238b654128836fcf8285d8afb5b3e7c2146aacc093658d",
+      "sample_id": "artur-j-artur-j-gvecg-p580008-std-0000-0003",
+      "start": 11.992,
+      "transcript_sha256": "d9d5ec8dea51054a279f1cadec60a6074b98a0908999b45c8be9b7f139c2412c"
+    },
+    {
+      "audio_sha256": "4f5ab5cb64bfa5a10d03ca553cd793d504780a9f4a431e551de5b1132677f02d",
+      "duration_seconds": 3.628,
+      "end": 3.628,
+      "recording_id": "Artur-J-Gvecg-P580009-std",
+      "reference_sha256": "6d17f826af08bf66b36414cde5ba264b3def7544bf2cc8a2e4f67319762e1a92",
+      "sample_id": "artur-j-artur-j-gvecg-p580009-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "a4eed8a0dbbbb2cae1d9631ddbeeaf7ad122496196f4921eb7edcc5405659353"
+    },
+    {
+      "audio_sha256": "d87dcb56ce8326d8fedba4bf773abb097a72832224448ebb14c4d9f62a28015b",
+      "duration_seconds": 3.798,
+      "end": 7.426,
+      "recording_id": "Artur-J-Gvecg-P580009-std",
+      "reference_sha256": "1a6e88f7bfaa385bfbb8db79f1b69d90063e2c4de44bc22c6951cd8dbe11744b",
+      "sample_id": "artur-j-artur-j-gvecg-p580009-std-0000-0001",
+      "start": 3.628,
+      "transcript_sha256": "a4eed8a0dbbbb2cae1d9631ddbeeaf7ad122496196f4921eb7edcc5405659353"
+    },
+    {
+      "audio_sha256": "402ccbdd57f7aab80ebc890ecf708aa60009d67f5d81695fb8624953ecb241be",
+      "duration_seconds": 2.198,
+      "end": 9.624,
+      "recording_id": "Artur-J-Gvecg-P580009-std",
+      "reference_sha256": "53c52441453604dc23cd8a03aaf6130c7e9b0244945956691636f3cbfe56f42e",
+      "sample_id": "artur-j-artur-j-gvecg-p580009-std-0000-0002",
+      "start": 7.426,
+      "transcript_sha256": "a4eed8a0dbbbb2cae1d9631ddbeeaf7ad122496196f4921eb7edcc5405659353"
+    },
+    {
+      "audio_sha256": "e41665cd58129707bb3f70db3be83a7ddd5682288cec0ab183c859256238f36d",
+      "duration_seconds": 4.031,
+      "end": 13.655,
+      "recording_id": "Artur-J-Gvecg-P580009-std",
+      "reference_sha256": "9b41993a6ccd550d6e1d92ada5dd12408cc293531800aea0d7dda637403a063f",
+      "sample_id": "artur-j-artur-j-gvecg-p580009-std-0000-0003",
+      "start": 9.624,
+      "transcript_sha256": "a4eed8a0dbbbb2cae1d9631ddbeeaf7ad122496196f4921eb7edcc5405659353"
+    },
+    {
+      "audio_sha256": "bb237ac8c9c1f18912dc051849efaeb90e1a1b987bca86babec00b9c9e815985",
+      "duration_seconds": 8.338,
+      "end": 8.338,
+      "recording_id": "Artur-J-Gvecg-P580010-std",
+      "reference_sha256": "f05f29e87ca5303d8d2db3f45f7c4f33a513fc344b35bf9741a8e0220bf832c5",
+      "sample_id": "artur-j-artur-j-gvecg-p580010-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "4747cd314e18e26380b8f3a0f6b52374ea900b18a9c4d9a18efe56d71649d16f"
+    },
+    {
+      "audio_sha256": "ac4b9d8920d0921ee07cd324229ff223c83ccd29c9ad53b717b1459660ede499",
+      "duration_seconds": 4.138,
+      "end": 18.548,
+      "recording_id": "Artur-J-Gvecg-P580010-std",
+      "reference_sha256": "9b261b864653ac58768052a37b295aff1a2e579e641de44801ef9843adc63b1e",
+      "sample_id": "artur-j-artur-j-gvecg-p580010-std-0002-0002",
+      "start": 14.41,
+      "transcript_sha256": "4747cd314e18e26380b8f3a0f6b52374ea900b18a9c4d9a18efe56d71649d16f"
+    },
+    {
+      "audio_sha256": "52bfb0f01fdae584745196a9d469babeef076cabf9efb1b250e484f9b0198fc0",
+      "duration_seconds": 6.047,
+      "end": 33.926,
+      "recording_id": "Artur-J-Gvecg-P580010-std",
+      "reference_sha256": "c85ce5cec8ebd91b6f8168f11647beeaba6e351b52d32cfba3746d9311eee301",
+      "sample_id": "artur-j-artur-j-gvecg-p580010-std-0004-0001",
+      "start": 27.879,
+      "transcript_sha256": "4747cd314e18e26380b8f3a0f6b52374ea900b18a9c4d9a18efe56d71649d16f"
+    },
+    {
+      "audio_sha256": "ce6e0f17af9e92080df8946814a5f6165ee04772e3149fcfe3225ebbdbed4df4",
+      "duration_seconds": 3.649,
+      "end": 37.575,
+      "recording_id": "Artur-J-Gvecg-P580010-std",
+      "reference_sha256": "0c78ba1db77a3647f1850553cdfb40b0edc5bbc2982860ab88774d17eac1c5ba",
+      "sample_id": "artur-j-artur-j-gvecg-p580010-std-0004-0002",
+      "start": 33.926,
+      "transcript_sha256": "4747cd314e18e26380b8f3a0f6b52374ea900b18a9c4d9a18efe56d71649d16f"
+    },
+    {
+      "audio_sha256": "7646bae662c13167f07f369fe35e2f6075d46391e50d0bd3c74d7f3937f7ac0d",
+      "duration_seconds": 2.8,
+      "end": 2.8,
+      "recording_id": "Artur-J-Gvecg-P580011-std",
+      "reference_sha256": "31645176f4ca96b223ccbbe0369cd540f547e475f4c5e4409ff835fd800bb883",
+      "sample_id": "artur-j-artur-j-gvecg-p580011-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "23f596ab5d0c867ad8ab9d2b4cb1fa3294212dee736eb8fee281a6a6d41f2c89"
+    },
+    {
+      "audio_sha256": "4895c1c10eecafd2158278274b2595754fcb1442b93d0fe848503635a75e7305",
+      "duration_seconds": 3.098,
+      "end": 5.898,
+      "recording_id": "Artur-J-Gvecg-P580011-std",
+      "reference_sha256": "81fc72f06b7841bdf37e887a7d133d7a71d0d6fc5383e22862ae5845919095ff",
+      "sample_id": "artur-j-artur-j-gvecg-p580011-std-0000-0001",
+      "start": 2.8,
+      "transcript_sha256": "23f596ab5d0c867ad8ab9d2b4cb1fa3294212dee736eb8fee281a6a6d41f2c89"
+    },
+    {
+      "audio_sha256": "0253a7d9f7689537b188870c507d1b9a210e97e476b2d0bc993000146a1d712e",
+      "duration_seconds": 3.84,
+      "end": 16.774,
+      "recording_id": "Artur-J-Gvecg-P580011-std",
+      "reference_sha256": "a79e864398968bb46b7fb0b4020e2892e6680982600e0341cce2203daff83e11",
+      "sample_id": "artur-j-artur-j-gvecg-p580011-std-0002-0000",
+      "start": 12.934,
+      "transcript_sha256": "23f596ab5d0c867ad8ab9d2b4cb1fa3294212dee736eb8fee281a6a6d41f2c89"
+    },
+    {
+      "audio_sha256": "7f563a13f25bbf29a10a92df65c9ff42a885e1191b98f693fbc1bd3b00ce6dce",
+      "duration_seconds": 3.769,
+      "end": 20.543,
+      "recording_id": "Artur-J-Gvecg-P580011-std",
+      "reference_sha256": "1cc7b9bbec1ca67f04e5b806203285b8c385d1cb0c1131d5e0a1469b1f034017",
+      "sample_id": "artur-j-artur-j-gvecg-p580011-std-0002-0001",
+      "start": 16.774,
+      "transcript_sha256": "23f596ab5d0c867ad8ab9d2b4cb1fa3294212dee736eb8fee281a6a6d41f2c89"
+    },
+    {
+      "audio_sha256": "34317895caa5a9cad35cb37554293e27a4cfc832d8ac2e391b54a743f7622c2c",
+      "duration_seconds": 3.104,
+      "end": 9.34,
+      "recording_id": "Artur-J-Gvecg-P580012-std",
+      "reference_sha256": "2017646186fb19c56b0f9a38e1daace9579837c5a77ea2bc1cbb9baa0b19ebb3",
+      "sample_id": "artur-j-artur-j-gvecg-p580012-std-0002-0002",
+      "start": 6.236,
+      "transcript_sha256": "c36ddc174a12db09f3b4ab96d8209f4f3880118554fb8a0c4d95ce8bddb8f9f5"
+    },
+    {
+      "audio_sha256": "39d427fbc5bc9dc075302089b9139e8bfce8e4ba66076894b0b2944a911b8a56",
+      "duration_seconds": 4.34,
+      "end": 19.07,
+      "recording_id": "Artur-J-Gvecg-P580012-std",
+      "reference_sha256": "d481de0026fa17492f129c8860431bc3041834179b8b9c6aafa891aed67fe1a2",
+      "sample_id": "artur-j-artur-j-gvecg-p580012-std-0004-0000",
+      "start": 14.73,
+      "transcript_sha256": "c36ddc174a12db09f3b4ab96d8209f4f3880118554fb8a0c4d95ce8bddb8f9f5"
+    },
+    {
+      "audio_sha256": "9a7fe128fd42683fdceb0f73e3538fae1f86799f4e29aef094ac37426d06df22",
+      "duration_seconds": 4.469,
+      "end": 23.539,
+      "recording_id": "Artur-J-Gvecg-P580012-std",
+      "reference_sha256": "c22386240fa79afd9ee0491e6bfba3681deb0fdc9bc13791ed7b103d7017bb0e",
+      "sample_id": "artur-j-artur-j-gvecg-p580012-std-0004-0001",
+      "start": 19.07,
+      "transcript_sha256": "c36ddc174a12db09f3b4ab96d8209f4f3880118554fb8a0c4d95ce8bddb8f9f5"
+    },
+    {
+      "audio_sha256": "cc657742819e1070e297c6864a97a02d55ff60ba15dc49629e674833917605eb",
+      "duration_seconds": 2.907,
+      "end": 29.104,
+      "recording_id": "Artur-J-Gvecg-P580012-std",
+      "reference_sha256": "ef73e2efbdd09009df3cc7d40b055fcca249ea31e9697503766c146b305ce552",
+      "sample_id": "artur-j-artur-j-gvecg-p580012-std-0004-0004",
+      "start": 26.197,
+      "transcript_sha256": "c36ddc174a12db09f3b4ab96d8209f4f3880118554fb8a0c4d95ce8bddb8f9f5"
+    },
+    {
+      "audio_sha256": "dc0754e6da2484e88d6a6d0168365346176354b81162fe8efe002407ed76835f",
+      "duration_seconds": 3.998,
+      "end": 3.998,
+      "recording_id": "Artur-J-Gvecg-P580013-std",
+      "reference_sha256": "53eba4f9754c5c5040f2fe7e07b1fe8855fe682fe3879ec5d83280b936b87bf4",
+      "sample_id": "artur-j-artur-j-gvecg-p580013-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "3a7cd4b937a294d58315f6fcafd1058e3216652a7566a888185f6998a27e6fb1"
+    },
+    {
+      "audio_sha256": "02d0b0aed2ec2d43871bd289ff57f9afd2f5738ef5974a42c7c9e510cde51b1e",
+      "duration_seconds": 4.03,
+      "end": 8.028,
+      "recording_id": "Artur-J-Gvecg-P580013-std",
+      "reference_sha256": "ca7d1f476189d312415af3c2220f820bef734531f26f50882df7fbe3b22c21a3",
+      "sample_id": "artur-j-artur-j-gvecg-p580013-std-0000-0001",
+      "start": 3.998,
+      "transcript_sha256": "3a7cd4b937a294d58315f6fcafd1058e3216652a7566a888185f6998a27e6fb1"
+    },
+    {
+      "audio_sha256": "9859c9da6ef1ed402cd1d3807ac5c9aaa56f6c2d2188bb33ef1b12cb506359ff",
+      "duration_seconds": 2.706,
+      "end": 19.545,
+      "recording_id": "Artur-J-Gvecg-P580013-std",
+      "reference_sha256": "b8628eebe6bb8fc6ffba1bc5b83ef184ce1d596a5106d6e99c91ee6df92a7502",
+      "sample_id": "artur-j-artur-j-gvecg-p580013-std-0001-0000",
+      "start": 16.839,
+      "transcript_sha256": "3a7cd4b937a294d58315f6fcafd1058e3216652a7566a888185f6998a27e6fb1"
+    },
+    {
+      "audio_sha256": "ab3de4be16ab72a4878e62bc7b8da6e39f2f122afa9816fd1d32d3d862d2e664",
+      "duration_seconds": 5.455,
+      "end": 25.0,
+      "recording_id": "Artur-J-Gvecg-P580013-std",
+      "reference_sha256": "4471e0b6b8a13df28d64fa0db3b1d3ba3fede573f746b3b3d303088d317acbdd",
+      "sample_id": "artur-j-artur-j-gvecg-p580013-std-0001-0001",
+      "start": 19.545,
+      "transcript_sha256": "3a7cd4b937a294d58315f6fcafd1058e3216652a7566a888185f6998a27e6fb1"
+    },
+    {
+      "audio_sha256": "f274ae5f69a40e647b537dbb1160dc7d78737309f2a612e3d71bc1236f8cd75f",
+      "duration_seconds": 4.026,
+      "end": 4.026,
+      "recording_id": "Artur-J-Gvecg-P580014-std",
+      "reference_sha256": "0cb434b0b3b04e0d6ebcbf5b5e9be10a08071d79157cdf20b2d30b571d350dd1",
+      "sample_id": "artur-j-artur-j-gvecg-p580014-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "45b78a2f9f0ba6649daa75ebdb5a3bc4cb6e3963ceb76ee5267b52c0e1a7691a"
+    },
+    {
+      "audio_sha256": "265a6fe5e9b6b054fbeb312622726662a51b66e017ca9dc7938ee7ad044252ef",
+      "duration_seconds": 4.305,
+      "end": 8.331,
+      "recording_id": "Artur-J-Gvecg-P580014-std",
+      "reference_sha256": "cadfd1b8ad609e9efa04ddb731c1165add1fddaede7dcb24abcf1ece5a389421",
+      "sample_id": "artur-j-artur-j-gvecg-p580014-std-0000-0001",
+      "start": 4.026,
+      "transcript_sha256": "45b78a2f9f0ba6649daa75ebdb5a3bc4cb6e3963ceb76ee5267b52c0e1a7691a"
+    },
+    {
+      "audio_sha256": "ba283fa050ea6afaa4850d8d0f2b87c51bc95abcaa92eaf662a26d81487e2d6b",
+      "duration_seconds": 2.537,
+      "end": 12.427,
+      "recording_id": "Artur-J-Gvecg-P580014-std",
+      "reference_sha256": "0f02d977257813badbc70b67df9b6bdb8bf37fb94964e11fad03631759f5496b",
+      "sample_id": "artur-j-artur-j-gvecg-p580014-std-0000-0003",
+      "start": 9.89,
+      "transcript_sha256": "45b78a2f9f0ba6649daa75ebdb5a3bc4cb6e3963ceb76ee5267b52c0e1a7691a"
+    },
+    {
+      "audio_sha256": "0da1f60eb6ff0c6ccd780f19774a6894b58e576d8cc0e9b053cf9c7cd511ed56",
+      "duration_seconds": 8.099,
+      "end": 20.526,
+      "recording_id": "Artur-J-Gvecg-P580014-std",
+      "reference_sha256": "1db1f0a0130b879737b50d066286f68234844ff082c57b2a0714f217f8d65e8f",
+      "sample_id": "artur-j-artur-j-gvecg-p580014-std-0000-0004",
+      "start": 12.427,
+      "transcript_sha256": "45b78a2f9f0ba6649daa75ebdb5a3bc4cb6e3963ceb76ee5267b52c0e1a7691a"
+    },
+    {
+      "audio_sha256": "4e003ee7b26c127fabc6bf5e2c95c1c6a6b1c9201901a8aa4a6b194bb4ddccaf",
+      "duration_seconds": 3.052,
+      "end": 3.052,
+      "recording_id": "Artur-J-Gvecg-P580015-std",
+      "reference_sha256": "5049d2c12c429dd4a4dde13984cdddf49010a9e00d754931819d26134ec61d68",
+      "sample_id": "artur-j-artur-j-gvecg-p580015-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "8f3e16f606ca91f2dc7ef6444d0585dda8d90c2adb6c94f4338c21e31100e092"
+    },
+    {
+      "audio_sha256": "1d15fe3b407eb639a4013fbe240af59d4c56d1bfa075c90bf7151653ca1c9186",
+      "duration_seconds": 5.15,
+      "end": 8.202,
+      "recording_id": "Artur-J-Gvecg-P580015-std",
+      "reference_sha256": "453afca58d310c9ce751e5cb541ce3780e543a414a9634d0dd73d1b48d098f0e",
+      "sample_id": "artur-j-artur-j-gvecg-p580015-std-0000-0001",
+      "start": 3.052,
+      "transcript_sha256": "8f3e16f606ca91f2dc7ef6444d0585dda8d90c2adb6c94f4338c21e31100e092"
+    },
+    {
+      "audio_sha256": "0335fff078aaa42ee666fc31dc8e290d2b4b3aad4f4fa7851dee6fb22cc890c1",
+      "duration_seconds": 6.406,
+      "end": 14.608,
+      "recording_id": "Artur-J-Gvecg-P580015-std",
+      "reference_sha256": "f0ff6136d32adfc97d836cee201183c469590c54edcf0b405d4393a1ceb7a3c1",
+      "sample_id": "artur-j-artur-j-gvecg-p580015-std-0000-0002",
+      "start": 8.202,
+      "transcript_sha256": "8f3e16f606ca91f2dc7ef6444d0585dda8d90c2adb6c94f4338c21e31100e092"
+    },
+    {
+      "audio_sha256": "3fedb4b00d22b92533373d17d3aa27b3c0aa628015cb5536dcc3df9c4e455d51",
+      "duration_seconds": 2.822,
+      "end": 25.167,
+      "recording_id": "Artur-J-Gvecg-P580015-std",
+      "reference_sha256": "59a938ba5fd951c64c4dbe9d5d43a544e31b95d21eb9acc054390c7c28f24fed",
+      "sample_id": "artur-j-artur-j-gvecg-p580015-std-0002-0001",
+      "start": 22.345,
+      "transcript_sha256": "8f3e16f606ca91f2dc7ef6444d0585dda8d90c2adb6c94f4338c21e31100e092"
+    },
+    {
+      "audio_sha256": "5836309ef9a690473e97608b59572fc6ea9cb4b40a61ab4ae8c4ffeff2556249",
+      "duration_seconds": 3.822,
+      "end": 3.822,
+      "recording_id": "Artur-J-Gvecg-P580016-std",
+      "reference_sha256": "957b1a0fe8452b71b0c14b226bc3511c41f5eefae7c5efee9f72af7d05c77e8b",
+      "sample_id": "artur-j-artur-j-gvecg-p580016-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "758e09216ac7b4610e7c5fec9628a26b50574e91783f687cb4710fffc9fa5555"
+    },
+    {
+      "audio_sha256": "b99605a09212df316736e0ec7f3c22646d42abccb2fd5bd8cbb558138e928b0e",
+      "duration_seconds": 5.0,
+      "end": 8.822,
+      "recording_id": "Artur-J-Gvecg-P580016-std",
+      "reference_sha256": "403085b23067bd0ee085b47e54984c1adac6bc129b68f24b56984c329b9cf095",
+      "sample_id": "artur-j-artur-j-gvecg-p580016-std-0000-0001",
+      "start": 3.822,
+      "transcript_sha256": "758e09216ac7b4610e7c5fec9628a26b50574e91783f687cb4710fffc9fa5555"
+    },
+    {
+      "audio_sha256": "6206f8fd4be113fcff3c532dbfdd5936e2234f526cfc4c40b9274a1596c74044",
+      "duration_seconds": 2.558,
+      "end": 13.08,
+      "recording_id": "Artur-J-Gvecg-P580016-std",
+      "reference_sha256": "94981daad4aeb38c162b5568622660e9af51da6dd3a5eff4db4730e4adfbd411",
+      "sample_id": "artur-j-artur-j-gvecg-p580016-std-0000-0003",
+      "start": 10.522,
+      "transcript_sha256": "758e09216ac7b4610e7c5fec9628a26b50574e91783f687cb4710fffc9fa5555"
+    },
+    {
+      "audio_sha256": "9ffbd8d0b178512c72b8b52b10fa72e577fede24e23a7833fef5e7c29a17673f",
+      "duration_seconds": 6.514,
+      "end": 23.519,
+      "recording_id": "Artur-J-Gvecg-P580016-std",
+      "reference_sha256": "1a741ee547af4e3eb09dd436d6c54838700193422b5f64a90b01bff9a40feace",
+      "sample_id": "artur-j-artur-j-gvecg-p580016-std-0002-0000",
+      "start": 17.005,
+      "transcript_sha256": "758e09216ac7b4610e7c5fec9628a26b50574e91783f687cb4710fffc9fa5555"
+    },
+    {
+      "audio_sha256": "2f727f875e65191962515707e208f2dee22b20e0f11c983a5b76644ce1fbf3b9",
+      "duration_seconds": 3.536,
+      "end": 3.536,
+      "recording_id": "Artur-J-Gvecg-P580017-std",
+      "reference_sha256": "957b1a0fe8452b71b0c14b226bc3511c41f5eefae7c5efee9f72af7d05c77e8b",
+      "sample_id": "artur-j-artur-j-gvecg-p580017-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "52797ba9b5006df341d4cd8acaa69bac871a05db789991556ec045963285a0d2"
+    },
+    {
+      "audio_sha256": "62661403e60c15b840fbea2e06c43a1efee7bddc33a4f8f6f990b9a7825887ff",
+      "duration_seconds": 6.051,
+      "end": 9.587,
+      "recording_id": "Artur-J-Gvecg-P580017-std",
+      "reference_sha256": "ec6eba346f399f5d81fc138336d0cb2cadd2add27b447f36827bfa29b4dc285a",
+      "sample_id": "artur-j-artur-j-gvecg-p580017-std-0000-0001",
+      "start": 3.536,
+      "transcript_sha256": "52797ba9b5006df341d4cd8acaa69bac871a05db789991556ec045963285a0d2"
+    },
+    {
+      "audio_sha256": "1ea44296e569d5d6594bd32c2c4a9f63a2601036895e89138e0d3d264ef5f818",
+      "duration_seconds": 3.125,
+      "end": 13.775,
+      "recording_id": "Artur-J-Gvecg-P580017-std",
+      "reference_sha256": "bf58209516f0df5df99a508d039f9b56b0d0207d4a0fac609737ce989cadb20a",
+      "sample_id": "artur-j-artur-j-gvecg-p580017-std-0000-0003",
+      "start": 10.65,
+      "transcript_sha256": "52797ba9b5006df341d4cd8acaa69bac871a05db789991556ec045963285a0d2"
+    },
+    {
+      "audio_sha256": "b16dc4fbe8c23239ad1f08569b9037f00ba24fce1b1174fdc484f735b29dd74e",
+      "duration_seconds": 2.817,
+      "end": 21.64,
+      "recording_id": "Artur-J-Gvecg-P580017-std",
+      "reference_sha256": "f025c24a9cccd07d71abb03c1246a3118fd87cb2f1460349db8657a0ebf536a7",
+      "sample_id": "artur-j-artur-j-gvecg-p580017-std-0001-0001",
+      "start": 18.823,
+      "transcript_sha256": "52797ba9b5006df341d4cd8acaa69bac871a05db789991556ec045963285a0d2"
+    },
+    {
+      "audio_sha256": "0ad78bb1fdbd7b27cc8e2b95de382f8374c2150b88facdf1017ff181faab599c",
+      "duration_seconds": 6.566,
+      "end": 6.566,
+      "recording_id": "Artur-J-Gvecg-P580019-std",
+      "reference_sha256": "f5930f4613a3197d52a57fb97229e5e1d954032eece778b131f673f1b5734c15",
+      "sample_id": "artur-j-artur-j-gvecg-p580019-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "8a1c17ef01829bca74cf78142c54c3e1e8d89902834c316a897d58c950c9fbd0"
+    },
+    {
+      "audio_sha256": "028587cf42a1f6fc572cb073e9abb6cd048477ef348da6598b856a08fad1a4fd",
+      "duration_seconds": 3.501,
+      "end": 10.067,
+      "recording_id": "Artur-J-Gvecg-P580019-std",
+      "reference_sha256": "23b41eaf49e966d28fe36bb92823ba870ee2847ace9db6a9296ef364cce60254",
+      "sample_id": "artur-j-artur-j-gvecg-p580019-std-0000-0001",
+      "start": 6.566,
+      "transcript_sha256": "8a1c17ef01829bca74cf78142c54c3e1e8d89902834c316a897d58c950c9fbd0"
+    },
+    {
+      "audio_sha256": "ba85170756e66add8e39a827bbfb257b2c314c4af27e8594f52f78a4db969e73",
+      "duration_seconds": 2.994,
+      "end": 18.94,
+      "recording_id": "Artur-J-Gvecg-P580019-std",
+      "reference_sha256": "3fde5b0b0378e0f5a75410514e7eef96823e1a9ffe204494edcdf67976e6a150",
+      "sample_id": "artur-j-artur-j-gvecg-p580019-std-0002-0000",
+      "start": 15.946,
+      "transcript_sha256": "8a1c17ef01829bca74cf78142c54c3e1e8d89902834c316a897d58c950c9fbd0"
+    },
+    {
+      "audio_sha256": "4f7f8feca9ec8b1484fcd14cf1b5b89ececb665167e26246cc169b1929b1d984",
+      "duration_seconds": 2.574,
+      "end": 21.514,
+      "recording_id": "Artur-J-Gvecg-P580019-std",
+      "reference_sha256": "122d68baae135c8292f252eb2ede0551b964284097d8e75616c58a45192c8cc2",
+      "sample_id": "artur-j-artur-j-gvecg-p580019-std-0002-0001",
+      "start": 18.94,
+      "transcript_sha256": "8a1c17ef01829bca74cf78142c54c3e1e8d89902834c316a897d58c950c9fbd0"
+    },
+    {
+      "audio_sha256": "e38270422a0d3b4742512a2e2e7d4213488410459fd2dfe549fd832ae222bb88",
+      "duration_seconds": 3.601,
+      "end": 3.601,
+      "recording_id": "Artur-J-Gvecg-P580020-std",
+      "reference_sha256": "c69c3fe2beaa4d4d1eaf7caa335358aa1a6b2a2dcd55a1655f629f58f31dc662",
+      "sample_id": "artur-j-artur-j-gvecg-p580020-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "a1ac52c346a85b919d4bd05b2a79c8a6f0c57fbf5edca0facaaa0f544b52a3d8"
+    },
+    {
+      "audio_sha256": "07dde3d27848875bad3d0e6bac2673f5fde6ad0a5fb4c82f52174951b25364d5",
+      "duration_seconds": 3.295,
+      "end": 7.859,
+      "recording_id": "Artur-J-Gvecg-P580020-std",
+      "reference_sha256": "e69c89e3ffb0d7e9f75ade9c851e87ee4d48be20cc0da24f87ca2ed3c4ffe963",
+      "sample_id": "artur-j-artur-j-gvecg-p580020-std-0000-0002",
+      "start": 4.564,
+      "transcript_sha256": "a1ac52c346a85b919d4bd05b2a79c8a6f0c57fbf5edca0facaaa0f544b52a3d8"
+    },
+    {
+      "audio_sha256": "ff9328c392e8881ab33c61c52f37a2dc07e7cc6be834963f7450caf1e7e3922e",
+      "duration_seconds": 5.932,
+      "end": 13.791,
+      "recording_id": "Artur-J-Gvecg-P580020-std",
+      "reference_sha256": "138a813ef295bb3df367caaa2e5f2f9b48091bd44b5981bbc34749a76abdf21b",
+      "sample_id": "artur-j-artur-j-gvecg-p580020-std-0000-0003",
+      "start": 7.859,
+      "transcript_sha256": "a1ac52c346a85b919d4bd05b2a79c8a6f0c57fbf5edca0facaaa0f544b52a3d8"
+    },
+    {
+      "audio_sha256": "ca2f12545f381cfff088e268b346ba8f36ddc475d767152bf101fce53d0029b2",
+      "duration_seconds": 4.387,
+      "end": 26.799,
+      "recording_id": "Artur-J-Gvecg-P580020-std",
+      "reference_sha256": "f0c894e9cc158bc1f1300f77b8d6c44b0695e7f5d5be3f13a319d52311ab0c54",
+      "sample_id": "artur-j-artur-j-gvecg-p580020-std-0002-0000",
+      "start": 22.412,
+      "transcript_sha256": "a1ac52c346a85b919d4bd05b2a79c8a6f0c57fbf5edca0facaaa0f544b52a3d8"
+    },
+    {
+      "audio_sha256": "4f6b723287fb73ec73959baa75d93688bebfc8cee5786b15d0340806e5b217aa",
+      "duration_seconds": 3.912,
+      "end": 3.912,
+      "recording_id": "Artur-J-Gvecg-P580021-std",
+      "reference_sha256": "957b1a0fe8452b71b0c14b226bc3511c41f5eefae7c5efee9f72af7d05c77e8b",
+      "sample_id": "artur-j-artur-j-gvecg-p580021-std-0000-0000",
+      "start": 0.0,
+      "transcript_sha256": "8e020ecca9178156ee854999b880d46568b21ad55aef1d084a15903ab349fc50"
+    },
+    {
+      "audio_sha256": "0c48aaf8e3af771ead19bbb645acb11b2a01c45d2f5062e0b578d0f1cdf79945",
+      "duration_seconds": 3.671,
+      "end": 7.583,
+      "recording_id": "Artur-J-Gvecg-P580021-std",
+      "reference_sha256": "1a5c777c1f49bb7d0e125d1e31bb3318c7f6772f92fe2ee883aa9f9479397912",
+      "sample_id": "artur-j-artur-j-gvecg-p580021-std-0000-0001",
+      "start": 3.912,
+      "transcript_sha256": "8e020ecca9178156ee854999b880d46568b21ad55aef1d084a15903ab349fc50"
+    },
+    {
+      "audio_sha256": "fa325dc8dafee37c52fff378541fc82726b248245c196c60d1d713c0717df033",
+      "duration_seconds": 3.959,
+      "end": 11.542,
+      "recording_id": "Artur-J-Gvecg-P580021-std",
+      "reference_sha256": "dbbdd654042a5ea0a1ce28a6fbc22d5e7808138ce28b5e114c0ab874de49100f",
+      "sample_id": "artur-j-artur-j-gvecg-p580021-std-0000-0002",
+      "start": 7.583,
+      "transcript_sha256": "8e020ecca9178156ee854999b880d46568b21ad55aef1d084a15903ab349fc50"
+    },
+    {
+      "audio_sha256": "7acde9e30c00454b98fb52c001e79f9d987656056102cb8f6b90437f9d675066",
+      "duration_seconds": 6.033,
+      "end": 27.983,
+      "recording_id": "Artur-J-Gvecg-P580021-std",
+      "reference_sha256": "2e4a5b2b1d9ff35dc39386d57f1f7078773386ca4b1f5187929563fecb45fde4",
+      "sample_id": "artur-j-artur-j-gvecg-p580021-std-0002-0000",
+      "start": 21.95,
+      "transcript_sha256": "8e020ecca9178156ee854999b880d46568b21ad55aef1d084a15903ab349fc50"
+    }
+  ],
+  "transcript_archive": {
+    "actual_md5": "6f21947593ccdea7dc23ecc3c9a7c012",
+    "filename": "Artur_1.0_TRS.tgz",
+    "md5": "6f21947593ccdea7dc23ecc3c9a7c012"
+  },
+  "transcript_mode": "std"
+}

@@ -59,11 +59,13 @@ parameter isolation. It does not establish a production adaptation or an
 accepted parent checkpoint because the diagnostic public real-smoke sample
 regressed.
 
-The next bounded experiment keeps the same 2048-scalar trainable surface and
-adds two GaMS-directed active-learning rounds. It uses pinned GaMS generation,
-Piper synthesis, untouched-base pre-scoring, deterministic hard-example
-selection, prompt-column-only training, and fixed synthetic plus real gates.
-Promotion requires real-gate non-regression; synthetic training-set improvement
+The real development gates are now established before the next bounded
+experiment: complete FLEURS Slovenian test and deterministic ARTUR-J
+public-speech. The next active-curriculum run keeps the same 2048-scalar
+trainable surface and uses pinned GaMS generation, Piper synthesis,
+untouched-base pre-scoring, deterministic hard-example selection,
+prompt-column-only training, and fixed synthetic plus real gates. Promotion
+requires non-regression on both real gates; synthetic training-set improvement
 alone never accepts a parent.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
@@ -1195,7 +1197,9 @@ May expose reference/hypothesis examples to error mining and GaMS.
 
 ### Immutable real-Slovenian gate
 
-Used after every round for checkpoint acceptance. GaMS receives only aggregate error categories, not raw sentences.
+Used after every round for checkpoint acceptance. The current gates are the
+complete FLEURS Slovenian test split and deterministic ARTUR-J public-speech
+gate. GaMS receives only aggregate error categories, not raw sentences.
 
 ### Final blind test
 
@@ -1480,7 +1484,11 @@ Project starting gates:
 
 - targeted synthetic hard-set error improves by at least 10% relative;
 - controller-development real Slovenian improves or stays statistically neutral while a targeted category improves materially;
-- immutable real-Slovenian WER does not regress by more than 0.3 absolute points;
+- normalized FLEURS corpus WER does not regress by more than 1.0 absolute point;
+- normalized ARTUR-J corpus WER does not regress by more than 1.0 absolute point;
+- normalized FLEURS corpus CER does not regress by more than 1.5 absolute points;
+- normalized ARTUR-J corpus CER does not regress by more than 1.5 absolute points;
+- empty-hypothesis count does not increase on either real gate;
 - supported-language macro WER does not regress by more than 0.5 absolute points after shared decoder/joint parameters are trained;
 - 80 ms median final-token latency does not regress materially;
 - no increased silence hallucination;

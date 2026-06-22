@@ -43,6 +43,12 @@ Active-curriculum reports must also distinguish:
 
 Do not label mean utterance WER as corpus WER.
 
+The committed Slovenian normalizer for development-gate reporting is
+`sl-asr-normalization-v1`. It applies NFC normalization, Slovenian-aware
+lowercasing, apostrophe normalization, whitespace normalization, punctuation
+removal, and hyphen-to-space handling while preserving Slovenian letters
+including `č`, `š`, and `ž`. It does not expand numbers with an LLM.
+
 ## Streaming settings
 
 Evaluate every release candidate at the supported context settings:
@@ -80,6 +86,19 @@ Separate reports for:
 
 Never present a synthetic-only score as real-world Slovenian performance.
 
+Current immutable Slovenian development gates:
+
+- `fleurs-sl-si-test-full-v1`: complete official `google/fleurs` Slovenian
+  `sl_si` test split at revision
+  `70bb2e84b976b7e960aa89f1c648e09c59f894dd`;
+- `artur-j-public-gate-v1`: deterministic 256-utterance project gate from
+  ARTUR-J `Artur-J-Splosni` standardized orthographic transcripts and public
+  audio.
+
+These are not final blind tests. Raw references and hypotheses remain local
+ignored artifacts. Future challengers must evaluate both gates before any
+accepted-parent decision.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.
@@ -87,7 +106,11 @@ Compare the challenger with its parent accepted checkpoint, not only with the or
 Initial project guardrails, subject to revision through an ADR:
 
 - targeted hard-set improvement: at least 10% relative;
-- immutable Slovenian gate: no more than 0.3 absolute WER regression;
+- normalized FLEURS corpus WER: no more than 1.0 absolute-point regression;
+- normalized ARTUR-J corpus WER: no more than 1.0 absolute-point regression;
+- normalized FLEURS corpus CER: no more than 1.5 absolute-point regression;
+- normalized ARTUR-J corpus CER: no more than 1.5 absolute-point regression;
+- empty-hypothesis count must not increase on either real gate;
 - multilingual macro WER after shared-weight training: no more than 0.5 absolute WER regression;
 - no new systematic foreign-script leakage;
 - no increased silence hallucination;
@@ -95,6 +118,10 @@ Initial project guardrails, subject to revision through an ADR:
 - parameter-diff integrity passes.
 
 Statistical uncertainty should be reported using paired bootstrap intervals when the sample size supports it.
+
+A claim of real-speech improvement requires material improvement on at least
+one real gate and non-regression on the other. Synthetic-only improvement is
+classified as synthetic-only and cannot accept a parent checkpoint.
 
 ## Normalization
 

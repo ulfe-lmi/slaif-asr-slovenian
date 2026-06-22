@@ -122,3 +122,8 @@ fixed real-speech gate also passes its promotion criteria. A challenger trained
 from generated Piper audio must not be released, described as accepted, or used
 as the parent for another round solely because training-set or synthetic-holdout
 metrics improved.
+
+The current real-speech development gates are the complete FLEURS Slovenian test
+split and deterministic ARTUR-J project gate. Passing these gates is still not a
+release decision; they are development acceptance evidence before any later
+final blind-test or public model-card claim.
