@@ -59,7 +59,12 @@ fi
 "${venv_dir}/bin/python" -m pip install -r "${requirements}"
 "${venv_dir}/bin/python" -m pip check
 
-CUDA_VISIBLE_DEVICES=0 "${venv_dir}/bin/python" - <<'PY'
+if [[ -z "${CUDA_VISIBLE_DEVICES:-}" || "${CUDA_VISIBLE_DEVICES}" == *","* ]]; then
+  echo "Set CUDA_VISIBLE_DEVICES to exactly one physical GPU before verifying GaMS." >&2
+  exit 1
+fi
+
+"${venv_dir}/bin/python" - <<'PY'
 import torch
 import transformers
 import accelerate
@@ -67,12 +72,13 @@ import bitsandbytes
 
 assert torch.cuda.is_available()
 assert torch.cuda.device_count() == 1
-assert "2080 Ti" in torch.cuda.get_device_name(0)
+device_name = torch.cuda.get_device_name(0)
+assert any(name in device_name for name in ("2080 Ti", "A100")), device_name
 print(f"PyTorch={torch.__version__}")
 print(f"Transformers={transformers.__version__}")
 print(f"Accelerate={accelerate.__version__}")
 print(f"bitsandbytes={bitsandbytes.__version__}")
-print(f"CUDA device={torch.cuda.get_device_name(0)}")
+print(f"CUDA device={device_name}")
 PY
 
 cat <<EOF

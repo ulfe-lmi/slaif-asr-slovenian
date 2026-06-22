@@ -225,8 +225,8 @@ def validate_generation_config(config: dict[str, Any]) -> None:
     quant = config.get("quantization", {})
     if quant.get("load_in_4bit") is not True or quant.get("quant_type") != "nf4":
         raise ValueError("GaMS generator must use 4-bit NF4 quantization")
-    if quant.get("double_quantization") is not True or quant.get("compute_dtype") != "float16":
-        raise ValueError("GaMS generator must use double quantization with FP16 compute")
+    if quant.get("double_quantization") is not True or quant.get("compute_dtype") != "bfloat16":
+        raise ValueError("GaMS generator must use double quantization with BF16 compute")
     if config.get("device_policy", {}).get("cpu_offload") is not False:
         raise ValueError("GaMS CPU offload is forbidden")
     if config.get("device_policy", {}).get("visible_gpu_count") != 1:

@@ -24,7 +24,7 @@ non-Slovenian prompt parameter is trainable.
 - Fallback GaMS model: `cjvt/GaMS-9B-Instruct`
 - Fallback GaMS revision: `292744023fa0b7ccc7ae2c3c885a67468e49fa03`
 - GaMS license: Gemma Terms of Use
-- GaMS quantization: 4-bit NF4, double quantization, FP16 compute
+- GaMS quantization: 4-bit NF4, double quantization, BF16 compute
 - Piper engine revision: `b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6`
 - Piper voice revision: `217ddc79818708b078d0d14a8fae9608b9d77141`
 - Base checkpoint revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`
@@ -99,6 +99,12 @@ The fallback result proves the generator interface can produce a valid candidate
 on one RTX 2080 Ti. It does not complete the required 64-item synthetic holdout,
 128-candidate round pools, Piper synthesis, Nemotron pre-scoring, training, or
 fixed-gate evaluation.
+
+Later A100 diagnostics found that the FP16-compute path was unstable for the
+primary GaMS3 checkpoint: the same prompt produced repeated padding tokens,
+while full BF16 and 4-bit NF4 with BF16 compute produced coherent Slovenian.
+The durable generator configuration therefore uses BF16 compute. See
+[`docs/reviews/gams-generation-bf16-debugging.md`](../reviews/gams-generation-bf16-debugging.md).
 
 ## Scientific Classification
 

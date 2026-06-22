@@ -24,9 +24,9 @@ Use GaMS as an external local generator for two bounded active-learning rounds:
 - fallback revision: `292744023fa0b7ccc7ae2c3c885a67468e49fa03`;
 - license: Gemma Terms of Use;
 - execution: `.venv-gams`, Transformers, Accelerate, bitsandbytes, 4-bit NF4,
-  double quantization, FP16 compute, one visible RTX 2080 Ti GPU;
-- CPU offload, GPU 1, model sharding, and multiple generators in one scientific
-  comparison are forbidden.
+  double quantization, BF16 compute, one operator-selected visible GPU;
+- CPU offload, unauthorized additional GPUs, model sharding, and multiple
+  generators in one scientific comparison are forbidden.
 
 GaMS returns strict JSON candidate records. The repository validates UTF-8 NFC
 text, `sl-SI`, unique safe IDs, duplicate and near-duplicate text,
@@ -48,7 +48,8 @@ Positive:
 
 Costs and risks:
 
-- GaMS may not fit in 11 GiB even with 4-bit NF4;
+- GaMS3 primary generation may require A100-class memory for reliable BF16
+  generation;
 - generation is slower because model phases run sequentially;
 - two active rounds remain too small for production claims;
 - the same prompt-column trainable surface may still fail to generalize.
