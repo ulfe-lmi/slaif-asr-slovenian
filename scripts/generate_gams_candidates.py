@@ -58,17 +58,20 @@ def load_model(config: dict[str, Any], *, use_fallback: bool, context_tokens: in
 
     model_cfg = config["fallback_model" if use_fallback else "primary_model"]
     quant_cfg = config["quantization"]
+    compute_dtype_name = quant_cfg["compute_dtype"]
+    compute_dtype = torch.bfloat16 if compute_dtype_name == "bfloat16" else torch.float16
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type=quant_cfg["quant_type"],
         bnb_4bit_use_double_quant=quant_cfg["double_quantization"],
-        bnb_4bit_compute_dtype=torch.float16,
+        bnb_4bit_compute_dtype=compute_dtype,
     )
     tokenizer = AutoTokenizer.from_pretrained(model_cfg["repository"], revision=model_cfg["revision"], trust_remote_code=False)
     model = AutoModelForCausalLM.from_pretrained(
         model_cfg["repository"],
         revision=model_cfg["revision"],
         quantization_config=bnb_config,
+        torch_dtype=compute_dtype,
         device_map={"": 0},
         max_memory={0: f"{os.environ.get('SLAIF_GAMS_MAX_MEMORY_GIB', config['device_policy']['max_memory_gib'])}GiB"},
         trust_remote_code=False,
@@ -89,19 +92,32 @@ def generate_text(tokenizer: Any, model: Any, prompt: str, config: dict[str, Any
         add_generation_prompt=True,
         tokenize=True,
         return_tensors="pt",
-    ).to("cuda")
+    )
+    attention_mask = torch.ones_like(input_ids)
     if input_ids.shape[-1] > generation_cfg["initial_context_tokens"]:
         input_ids = input_ids[:, -generation_cfg["initial_context_tokens"] :]
+        attention_mask = attention_mask[:, -generation_cfg["initial_context_tokens"] :]
+    input_ids = input_ids.to("cuda")
+    attention_mask = attention_mask.to("cuda")
+    pad_token_id = tokenizer.pad_token_id
+    if pad_token_id is None:
+        pad_token_id = model.generation_config.pad_token_id
+    if pad_token_id is None:
+        pad_token_id = tokenizer.eos_token_id
+    model.generation_config.temperature = None
+    model.generation_config.top_p = None
+    model.generation_config.top_k = None
     with torch.inference_mode():
         output = model.generate(
             input_ids=input_ids,
+            attention_mask=attention_mask,
             max_new_tokens=generation_cfg["max_new_tokens"],
             do_sample=True,
             temperature=generation_cfg["temperature"],
             top_p=generation_cfg["top_p"],
             remove_invalid_values=True,
             renormalize_logits=True,
-            pad_token_id=tokenizer.eos_token_id,
+            pad_token_id=pad_token_id,
         )
     return tokenizer.decode(output[0][input_ids.shape[-1] :], skip_special_tokens=True)
 

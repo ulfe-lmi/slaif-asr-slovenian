@@ -89,7 +89,17 @@ class GamsCandidateTests(unittest.TestCase):
         config = load_generation_config(Path("configs/generation/gams_prompt_curriculum.json"))
         self.assertEqual(config["primary_model"]["revision"], "1d0b27af5748784482600d24779409e7e1dc9adc")
         self.assertTrue(config["quantization"]["load_in_4bit"])
+        self.assertEqual(config["quantization"]["compute_dtype"], "bfloat16")
         self.assertFalse(config["device_policy"]["cpu_offload"])
+
+    def test_generation_config_rejects_fp16_compute(self) -> None:
+        config = json.loads(Path("configs/generation/gams_prompt_curriculum.json").read_text(encoding="utf-8"))
+        config["quantization"]["compute_dtype"] = "float16"
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "bad.json"
+            path.write_text(json.dumps(config), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "BF16 compute"):
+                load_generation_config(path)
 
     def test_generation_config_rejects_cpu_offload(self) -> None:
         config = json.loads(Path("configs/generation/gams_prompt_curriculum.json").read_text(encoding="utf-8"))

@@ -103,12 +103,12 @@ License links:
 - Artifact status: not committed to Git
 - Runtime environment: repository-local `.venv-gams`
 - Loading policy: Transformers, Accelerate, bitsandbytes, 4-bit NF4, double
-  quantization, FP16 compute, one visible GPU selected with
-  `CUDA_VISIBLE_DEVICES=0`
+  quantization, BF16 compute, one visible GPU selected with
+  `CUDA_VISIBLE_DEVICES`
 
 GaMS model weights remain external supply-chain inputs. They must not be
-committed, redistributed, or used with CPU offload, GPU 1, model sharding, or a
-floating Hugging Face revision in this project.
+committed, redistributed, or used with CPU offload, an unauthorized additional
+GPU, model sharding, or a floating Hugging Face revision in this project.
 
 ## FLEURS Slovenian Test Gate
 

@@ -43,6 +43,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Project-generated Slovenian curriculum Round 1 configuration, validation,
   selection, execution runner, tests, and privacy-safe aggregate experiment
   report.
+- GaMS command-line probe and BF16 generation-debugging report for the A100
+  runtime.
 
 ### Changed
 
@@ -62,3 +64,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Round 1 prompt-column curriculum evidence now records a rejected challenger:
   selected synthetic training improved, fixed synthetic holdout did not meet
   the promotion threshold, and both real gates regressed.
+- GaMS generation now uses the model-compatible Transformers stack and 4-bit
+  BF16 compute, with explicit attention masks and correct padding semantics.

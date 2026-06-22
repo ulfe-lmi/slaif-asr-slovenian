@@ -35,7 +35,12 @@
   `1d0b27af5748784482600d24779409e7e1dc9adc`.
 - Pinned fallback GaMS generator: `cjvt/GaMS-9B-Instruct` at
   `292744023fa0b7ccc7ae2c3c885a67468e49fa03`, used only if the primary model
-  cannot load or generate within 11 GiB under the committed 4-bit policy.
+  cannot load or generate under the committed 4-bit BF16 policy.
+- GaMS3 A100 diagnostic: the FP16-compute 4-bit path produced unusable output,
+  while full BF16 and 4-bit NF4 with BF16 compute produced coherent Slovenian.
+  The current `.venv-gams` policy therefore uses Transformers 4.55.2 and BF16
+  compute. See
+  [`gams-generation-bf16-debugging.md`](reviews/gams-generation-bf16-debugging.md).
 - Selected initial TTS engine: external `OHF-Voice/piper1-gpl`.
 - Selected initial TTS voice: `rhasspy/piper-voices` `sl_SI-artur-medium`.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
