@@ -104,6 +104,12 @@ rejected: FLEURS and ARTUR-J normalized WER/CER regressed and empty hypotheses
 increased. This reinforces that selected-synthetic improvement is diagnostic
 only.
 
+The first Slovenian residual-adapter proof reused the same Round 1 corpus and
+gates. Rank 16 and rank 64 adapters both improved the fixed synthetic holdout
+but regressed FLEURS and ARTUR-J normalized WER/CER beyond promotion
+thresholds. This is classified as synthetic-only evidence, not real-speech
+generalization.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.

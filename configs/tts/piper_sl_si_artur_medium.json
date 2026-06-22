@@ -70,8 +70,8 @@
   "runtime": {
     "onnxruntime_gpu": "1.22.0",
     "required_execution_provider": "CUDAExecutionProvider",
-    "physical_gpu": 0,
-    "visible_devices": "CUDA_VISIBLE_DEVICES=0"
+    "physical_gpu": "one selected physical GPU",
+    "visible_devices": "CUDA_VISIBLE_DEVICES=<one physical GPU selector>"
   },
   "local_artifacts": {
     "native_audio_dir": "runs/tts/piper/native-22050",

@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".external" / "NeMo"))
 
 from slaif_asr.config import load_runtime_config, repo_path
+from slaif_asr.gpu_policy import require_single_visible_cuda
 from slaif_asr.inference import resolve_existing_path, run_context
 from slaif_asr.metrics import corpus_metric_summary, raw_cer, raw_wer, raw_word_edit_counts
 from slaif_asr.prompt_column import (
@@ -72,18 +73,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def require_single_gpu() -> str:
-    import torch
-
-    if os.environ.get("CUDA_VISIBLE_DEVICES") != "0":
-        raise RuntimeError("CUDA_VISIBLE_DEVICES must be exactly 0")
-    if not torch.cuda.is_available():
-        raise RuntimeError("CUDA is not available")
-    if torch.cuda.device_count() != 1:
-        raise RuntimeError(f"expected one visible CUDA device, saw {torch.cuda.device_count()}")
-    name = torch.cuda.get_device_name(0)
-    if "2080 Ti" not in name:
-        raise RuntimeError(f"expected RTX 2080 Ti, saw {name}")
-    return name
+    return require_single_visible_cuda().device_name
 
 
 def run_nvidia_smi(path: Path) -> None:

@@ -21,14 +21,15 @@ import torch
 import numba
 import llvmlite
 
-assert os.environ.get("CUDA_VISIBLE_DEVICES") == "0"
+visible = os.environ.get("CUDA_VISIBLE_DEVICES")
+assert visible and "," not in visible, visible
 assert torch.__version__ == "2.7.1+cu126", torch.__version__
 assert torch.version.cuda == "12.6", torch.version.cuda
 assert numba.__version__ == "0.61.2", numba.__version__
 assert llvmlite.__version__ == "0.44.0", llvmlite.__version__
 assert torch.cuda.is_available()
 assert torch.cuda.device_count() == 1
-assert "2080 Ti" in torch.cuda.get_device_name(0)
+assert any(name in torch.cuda.get_device_name(0) for name in ("2080 Ti", "A100"))
 print(f"Python={os.sys.version.split()[0]}")
 print(f"PyTorch={torch.__version__}")
 print(f"CUDA runtime={torch.version.cuda}")

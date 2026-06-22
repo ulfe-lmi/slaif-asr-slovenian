@@ -247,6 +247,12 @@ do not use GaMS: the repository owns configuration, validation, selection,
 execution code, and aggregate evidence, while generated text/audio/manifests,
 raw hypotheses, deltas, and checkpoints remain ignored local artifacts.
 
+The Slovenian residual-adapter proof adds a project-owned adapter wrapper around
+the frozen prompt kernel. Adapter artifacts are saved separately from the base
+checkpoint and remain ignored local outputs. Experiment 0005 showed that rank
+16 and rank 64 residual adapters improved the fixed synthetic holdout but
+regressed both real gates, so neither adapter is an accepted parent.
+
 ## Architectural non-goals
 
 The first release will not provide:

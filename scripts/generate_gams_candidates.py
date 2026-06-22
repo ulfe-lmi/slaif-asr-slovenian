@@ -18,20 +18,12 @@ from slaif_asr.gams import (
     parse_strict_json_candidates,
     validate_candidate_batch,
 )
+from slaif_asr.gpu_policy import require_single_visible_cuda
 from slaif_asr.prompt_experiment import atomic_write_text
 
 
 def require_single_gpu() -> None:
-    visible = os.environ.get("CUDA_VISIBLE_DEVICES")
-    if not visible or "," in visible:
-        raise RuntimeError("CUDA_VISIBLE_DEVICES must select exactly one physical GPU")
-    import torch
-
-    if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-        raise RuntimeError("GaMS generation requires exactly one visible CUDA device")
-    device_name = torch.cuda.get_device_name(0)
-    if not any(name in device_name for name in ("2080 Ti", "A100")):
-        raise RuntimeError(f"expected RTX 2080 Ti or A100, saw {device_name}")
+    require_single_visible_cuda()
 
 
 def build_prompt(*, round_id: str, count: int, brief_path: Path | None) -> str:

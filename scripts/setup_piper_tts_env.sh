@@ -78,7 +78,12 @@ fi
 
 "${VENV_DIR}/bin/python" -m pip check
 
-CUDA_VISIBLE_DEVICES=0 "${VENV_DIR}/bin/python" - <<'PY'
+if [[ -z "${CUDA_VISIBLE_DEVICES:-}" || "${CUDA_VISIBLE_DEVICES}" == *","* ]]; then
+  echo "Set CUDA_VISIBLE_DEVICES to exactly one physical GPU before verifying Piper." >&2
+  exit 1
+fi
+
+"${VENV_DIR}/bin/python" - <<'PY'
 import onnxruntime as ort
 
 providers = ort.get_available_providers()

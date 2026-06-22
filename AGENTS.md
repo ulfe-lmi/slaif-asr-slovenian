@@ -129,12 +129,20 @@ Agents may:
 
 Current development hardware policy:
 
-- M1 and M2 use one NVIDIA RTX 2080 Ti process-visible GPU.
-- The default physical device is GPU 0, selected with `CUDA_VISIBLE_DEVICES=0`.
-- The second RTX 2080 Ti remains unused unless a later work order explicitly permits it.
-- A100 is not a default prerequisite. It becomes mandatory only through a later work order backed by measured memory, throughput, or authoritative benchmarking requirements.
+- Historical M1 and M2 evidence used one NVIDIA RTX 2080 Ti process-visible GPU.
+- The current A100 development host uses physical GPU 1 selected with
+  `CUDA_VISIBLE_DEVICES=1`; PyTorch must see exactly one logical CUDA device,
+  `cuda:0`.
+- Project-owned GPU execution helpers must use the shared single-GPU policy:
+  exactly one visible A100 or RTX 2080 Ti is accepted, multiple visible GPUs are
+  rejected, CPU fallback is rejected, and code must not assume that the physical
+  selector is zero.
+- Other physical GPUs remain unused unless a later work order explicitly
+  permits them.
 - Cache-aware inference uses FP32 under the pinned NeMo implementation.
-- Future 2080 Ti training should use FP16 AMP rather than BF16 unless a later work order changes the policy.
+- RTX 2080 Ti remains a supported smaller development platform. Future 2080 Ti
+  training should use FP16 AMP rather than BF16 unless a later work order
+  changes the policy.
 
 Agents must not:
 

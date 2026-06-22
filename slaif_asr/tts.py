@@ -279,7 +279,6 @@ def render_candidates(
             raise FileNotFoundError(required)
 
     env = os.environ.copy()
-    env["CUDA_VISIBLE_DEVICES"] = "0"
     conversion = {
         "tool": "sox",
         "version": sox_version(),

@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "slovenian-residual-adapter-proof",
+  "target_lang": "sl-SI",
+  "base_model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74"
+  },
+  "adapter": {
+    "type": "slovenian_residual_prompt_kernel_adapter",
+    "ranks": [16, 64],
+    "activation": "GELU",
+    "bias": false,
+    "dropout": 0,
+    "zero_initialized_output_projection": true,
+    "merge_into_base_prompt_kernel": false
+  },
+  "data_hashes": {
+    "candidate_pool_sha256": "0c92c60c58d60b629ef275527ed31b7eba5e3eab90fc988928666a121aa86b17",
+    "synthetic_holdout_sha256": "ed10fe7eb49e034d47857a9639a1022d4ad8ab70f6a8c741e6e2b12f1069bec9",
+    "selected_training_manifest_sha256": "92b195e2cecb69ee3096ac6644eb65ae592ba60d8cf31d265c45c6eec9d781a4",
+    "fleurs_manifest_sha256": "07838a58222b9a0f6a4f4639b66d678ee38f87254518e43b742a143ef4aeaf4e",
+    "artur_j_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763"
+  },
+  "training": {
+    "precision": "32",
+    "tf32": false,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "fallback_learning_rate": 0.0003,
+    "fallback_check_step": 600,
+    "fallback_min_loss_reduction_percent": 20.0,
+    "weight_decay": 0,
+    "batch_size": 1,
+    "max_optimizer_steps": 1800,
+    "seed": 1234,
+    "prompt_mode": "langID",
+    "target_prompt": "sl-SI",
+    "augmentation": "disabled",
+    "specaugment": "disabled",
+    "log_every_steps": 25
+  },
+  "evaluation": {
+    "att_context_size": [56, 3],
+    "batch_size": 1,
+    "target_lang": "sl-SI",
+    "normalizer": "sl-asr-normalization-v1"
+  },
+  "baseline_metrics": {
+    "fleurs": {
+      "normalized": {
+        "corpus_wer": 52.734,
+        "corpus_cer": 16.423,
+        "mean_utterance_wer": 53.541,
+        "median_utterance_wer": 52.941,
+        "empty_hypothesis_count": 0
+      }
+    },
+    "artur_j": {
+      "normalized": {
+        "corpus_wer": 67.453,
+        "corpus_cer": 29.016,
+        "mean_utterance_wer": 76.555,
+        "median_utterance_wer": 75.0,
+        "empty_hypothesis_count": 12
+      }
+    }
+  },
+  "promotion": {
+    "synthetic_holdout_relative_wer_or_cer_improvement_percent": 10.0,
+    "fleurs_max_absolute_wer_regression": 1.0,
+    "artur_j_max_absolute_wer_regression": 1.0,
+    "fleurs_max_absolute_cer_regression": 1.5,
+    "artur_j_max_absolute_cer_regression": 1.5,
+    "empty_hypotheses_must_not_increase": true,
+    "real_improvement_wer_abs": 1.0,
+    "real_improvement_cer_abs": 1.5
+  },
+  "paths": {
+    "run_dir": "runs/experiments/slovenian-residual-adapter-proof",
+    "candidate_pool_jsonl": "runs/experiments/slovenian-curriculum-round-1/corpora/candidate-pool.jsonl",
+    "synthetic_holdout_jsonl": "runs/experiments/slovenian-curriculum-round-1/corpora/synthetic-holdout.jsonl",
+    "selected_training_manifest": "runs/experiments/slovenian-curriculum-round-1/manifests/selected-training.jsonl",
+    "synthetic_holdout_manifest": "runs/experiments/slovenian-curriculum-round-1/evaluation/synthetic-holdout.jsonl",
+    "fleurs_manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v1/manifest.jsonl",
+    "artur_j_manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+    "checkpoint": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo"
+  }
+}
