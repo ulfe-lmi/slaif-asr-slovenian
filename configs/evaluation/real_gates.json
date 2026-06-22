@@ -1,0 +1,61 @@
+{
+  "artur_j_public_gate_v1": {
+    "audio_archives": [
+      {
+        "filename": "Artur-J-Audio_00.tar",
+        "md5": "bc8b4e0625fce2b47d99ed7da8db7393",
+        "url": "https://www.clarin.si/repository/xmlui/bitstream/handle/11356/1776/Artur-J-Audio_00.tar?sequence=62&isAllowed=y"
+      },
+      {
+        "filename": "Artur-J-Audio_01.tar",
+        "md5": "6e4e6684a424d8efeefe1c891536899d",
+        "optional": true,
+        "url": "https://www.clarin.si/repository/xmlui/bitstream/handle/11356/1776/Artur-J-Audio_01.tar?sequence=63&isAllowed=y"
+      }
+    ],
+    "audio_handle": "11356/1776",
+    "construction_algorithm": "artur-j-public-gate-v1",
+    "duration_seconds_max": 15.0,
+    "duration_seconds_min": 2.0,
+    "excluded_domains": [
+      "Artur-B-Studio",
+      "Artur-B-Izloceno",
+      "Artur-N",
+      "Artur-P"
+    ],
+    "gate_id": "artur-j-public-gate-v1",
+    "license": "CC BY-SA 4.0",
+    "max_segments_per_recording": 4,
+    "normalizer": "sl-asr-normalization-v1",
+    "preferred_domain": "Artur-J-Splosni",
+    "required_segments": 256,
+    "target_lang": "sl-SI",
+    "transcript_archive": {
+      "filename": "Artur_1.0_TRS.tgz",
+      "md5": "6f21947593ccdea7dc23ecc3c9a7c012",
+      "url": "https://www.clarin.si/repository/xmlui/bitstream/11356/1772/1/Artur_1.0_TRS.tgz"
+    },
+    "transcript_handle": "11356/1772",
+    "transcript_mode": "std"
+  },
+  "fleurs_sl_si_test_full_v1": {
+    "config": "sl_si",
+    "construction_algorithm": "fleurs-sl-si-test-full-v1",
+    "dataset": "google/fleurs",
+    "gate_id": "fleurs-sl-si-test-full-v1",
+    "license": "CC BY 4.0",
+    "normalizer": "sl-asr-normalization-v1",
+    "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+    "split": "test",
+    "target_lang": "sl-SI",
+    "use_complete_split": true
+  },
+  "promotion_guardrails": {
+    "artur_j_normalized_cer_regression_abs_max": 1.5,
+    "artur_j_normalized_wer_regression_abs_max": 1.0,
+    "empty_hypothesis_count_must_not_increase": true,
+    "fleurs_normalized_cer_regression_abs_max": 1.5,
+    "fleurs_normalized_wer_regression_abs_max": 1.0,
+    "synthetic_only_improvement_classification": "synthetic-only"
+  }
+}

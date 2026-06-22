@@ -109,3 +109,28 @@ License links:
 GaMS model weights remain external supply-chain inputs. They must not be
 committed, redistributed, or used with CPU offload, GPU 1, model sharding, or a
 floating Hugging Face revision in this project.
+
+## FLEURS Slovenian Test Gate
+
+- Source: `google/fleurs`
+- Configuration: `sl_si`
+- Split: `test`
+- Pinned revision: `70bb2e84b976b7e960aa89f1c648e09c59f894dd`
+- Role: immutable Slovenian development-gate evaluation
+- License: CC BY 4.0
+- Artifact status: local ignored audio/manifests and committed privacy-safe
+  metadata only
+
+## ARTUR-J Public-Speech Gate
+
+- Transcription handle: `11356/1772`
+- Audio handle: `11356/1776`
+- Domain: `Artur-J-Splosni`
+- Transcript mode: standardized orthographic `std`
+- Role: immutable Slovenian development-gate evaluation
+- License: CC BY-SA 4.0
+- Artifact status: local ignored archives/audio/manifests and committed
+  privacy-safe metadata only
+
+`Artur-B-Studio` is excluded from the evaluation gate because it is associated
+with the selected Piper/ARTUR studio voice domain.

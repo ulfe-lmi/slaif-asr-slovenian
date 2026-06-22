@@ -12,11 +12,17 @@
 - M3 prompt-column generalization is now represented by a bounded two-round
   GaMS active-curriculum protocol. The tooling and configs are separate from
   completed GPU evidence until the experiment runs.
+- The first real Slovenian development gates are complete: full FLEURS
+  Slovenian test and deterministic ARTUR-J public-speech gate. The untouched
+  Nemotron baseline has been measured on both.
+- The ignored M3 micro-proof checkpoint regressed on both full real gates and
+  remains unaccepted.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
   unit tests, Python compilation, and shell syntax. This CI does not install
   NeMo, download checkpoints or audio, use GPUs, or prove model restoration.
 - Executable baseline helpers exist for official-checkpoint download, runtime inspection, tokenizer audit, and forced `sl-SI` cache-aware streaming inference.
-- No model weights, datasets, or benchmark results are part of the repository.
+- No model weights or raw datasets are part of the repository. Only privacy-safe
+  aggregate development-gate metadata and results are committed.
 - Selected first base model: `nvidia/nemotron-3.5-asr-streaming-0.6b`.
 - Selected framework: NVIDIA NeMo.
 - Slovenian locale/prompt: `sl-SI`.
@@ -43,6 +49,11 @@
   training WER improved from 92.5 to 38.333 and empty synthetic-training
   hypotheses dropped from 3 to 0. Synthetic holdout WER was unchanged at 87.5.
   Public FLEURS smoke WER regressed from 75.0 to 85.0.
+- Full real-gate base baseline: FLEURS normalized corpus WER 52.734 and CER
+  16.423 with 0 empty hypotheses; ARTUR-J normalized corpus WER 67.453 and CER
+  29.016 with 12 empty hypotheses.
+- Full real-gate micro-proof diagnostic: FLEURS normalized WER regressed to
+  66.961; ARTUR-J normalized WER regressed to 76.190.
 
 ## Non-negotiable rules
 
@@ -96,7 +107,8 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Complete the two active-curriculum GPU rounds only under
+Run round one of the coding-agent-generated Slovenian curriculum against the
+fixed FLEURS and ARTUR-J gates only under
 [`work-orders/0006-gams-prompt-column-active-curriculum.md`](work-orders/0006-gams-prompt-column-active-curriculum.md).
 Do not treat the prompt-column micro-checkpoint as an accepted parent or
 publishable artifact unless the fixed synthetic and real gates promote it.

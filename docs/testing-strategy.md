@@ -129,3 +129,9 @@ promotion and rollback decisions, and corpus-versus-mean metric separation. The
 actual GaMS, Piper, Nemotron pre-scoring, prompt-column training, and fixed-gate
 evaluation phases remain manual GPU verification until a later self-hosted
 runner exists.
+
+The real-gate evaluation suite adds CPU-testable checks for pinned FLEURS and
+ARTUR source identities, ARTUR TRS parsing, deterministic gate selection,
+Slovenian normalization, raw/normalized metric separation, privacy-safe
+metadata, and leakage guards. Full FLEURS and ARTUR-J inference remains manual
+GPU evidence.
