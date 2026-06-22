@@ -6,6 +6,8 @@ import unittest
 from pathlib import Path
 
 from slaif_asr.gams import (
+    build_candidates_from_text_lines,
+    extract_candidate_text_lines,
     load_generation_config,
     parse_strict_json_candidates,
     protected_hash,
@@ -31,6 +33,31 @@ class GamsCandidateTests(unittest.TestCase):
         self.assertEqual(rows[0]["candidate_id"], "round1-0001")
         with self.assertRaisesRegex(ValueError, "Markdown"):
             parse_strict_json_candidates("```json\n[]\n```")
+
+    def test_text_line_harness_extracts_numbered_sentences(self) -> None:
+        raw = """
+        Tukaj so stavki:
+        1. Danes je v Ljubljani miren večer.
+        2) Prosim, preveri čisto škatlo na mizi.
+        - To ni seznam v obliki JSON, ampak je uporaben slovenski stavek.
+        """
+        lines = extract_candidate_text_lines(raw)
+        self.assertEqual(lines[0], "Danes je v Ljubljani miren večer.")
+        valid, rejected = build_candidates_from_text_lines(lines, round_id="round1", generation_seed=1234)
+        self.assertGreaterEqual(len(valid), 2)
+        self.assertFalse(rejected)
+        self.assertEqual(valid[0].candidate_id, "round1-0001")
+        self.assertEqual(valid[0].spoken_text, valid[0].target_text)
+
+    def test_text_line_harness_rejects_duplicate_lines(self) -> None:
+        lines = [
+            "Danes je v Ljubljani miren večer.",
+            "Danes je v Ljubljani miren večer.",
+        ]
+        valid, rejected = build_candidates_from_text_lines(lines, round_id="round1", generation_seed=1234)
+        self.assertEqual(len(valid), 1)
+        self.assertEqual(len(rejected), 1)
+        self.assertIn("duplicate", rejected[0])
 
     def test_valid_candidate_passes(self) -> None:
         candidate = validate_gams_candidate(self.row())
