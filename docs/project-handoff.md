@@ -22,12 +22,21 @@
   external LLM. Its prompt-column challenger is rejected: it improved selected
   synthetic training examples, did not meet the fixed synthetic-holdout
   promotion threshold, and regressed ARTUR-J. Its FLEURS-v1 component is
-  deprecated.
+  deprecated. Later review found the Round 1 v1 corpus structurally repetitive,
+  linguistically defective, and train/holdout template-confounded, so it is
+  retired and must not be reused for training, steering, model comparison, or
+  promotion.
 - Slovenian residual-adapter proof has run on one A100 logical GPU using the
   exact Round 1 corpus and fixed real gates. Rank 16 and rank 64 adapters
   improved the fixed synthetic holdout but regressed ARTUR-J, so the result is
   `SL_RESIDUAL_SYNTHETIC_ONLY` and no adapter is accepted as a parent. Its
-  FLEURS-v1 component is deprecated.
+  FLEURS-v1 component is deprecated. Because it reused the retired corpus, the
+  experiment is corpus-confounded and must not be used as proof that residual
+  adapters or added prompt-side capacity are intrinsically unsuitable.
+- `docs/training-data-constitution.md` is adopted as the detailed companion to
+  `AGENTS.md`. Promotion-oriented training now requires `TRAINING_ELIGIBLE`
+  data and a privacy-safe acceptance certificate; schema validity and literal
+  duplicate checks are not enough.
 - The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
   unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -140,7 +149,9 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Run the governed A100 batched-streaming parity and throughput work order on
+Implement the reusable fail-closed training-corpus validator and adversarial
+fixtures required by the training-data constitution. In parallel or afterward,
+run the governed A100 batched-streaming parity and throughput work order on
 `fleurs-sl-si-test-full-v2`, then establish fresh untouched-base FLEURS v2
 metrics before using FLEURS in promotion decisions again.
 

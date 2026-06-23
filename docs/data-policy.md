@@ -4,6 +4,15 @@
 
 This policy governs real speech, synthetic speech, transcripts, generated text, manifests, metrics, and released dataset artifacts.
 
+`docs/training-data-constitution.md` is the detailed companion policy for
+training-data admission. This document continues to govern general privacy,
+provenance, licensing, storage, and partition handling; the training-data
+constitution adds corpus-quality doctrine, data-status states, admission
+stages, certificate requirements, and experiment-interpretation rules. A work
+order may make data requirements stricter. A named exception may weaken a
+requirement only with explicit human approval, written rationale, and a
+narrowed scientific claim.
+
 ## Default classification
 
 Treat all speech and transcripts as non-public unless their license and consent status are explicitly recorded.
@@ -134,6 +143,17 @@ Project-generated curriculum corpora are local synthetic artifacts. Their JSONL
 records, audio, manifests, hypotheses, deltas, and checkpoints remain ignored
 unless a later publication work order and rights review explicitly authorize
 release.
+
+The Round 1 v1 candidate pool
+`0c92c60c58d60b629ef275527ed31b7eba5e3eab90fc988928666a121aa86b17`,
+synthetic holdout
+`ed10fe7eb49e034d47857a9639a1022d4ad8ab70f6a8c741e6e2b12f1069bec9`, and
+selected training manifest
+`92b195e2cecb69ee3096ac6644eb65ae592ba60d8cf31d265c45c6eec9d781a4`
+are permanently retired for future training, steering, model comparison,
+early stopping, generator steering, promotion, or public corpus-quality claims.
+They may remain in ignored local storage only for audit and safe regression-test
+design.
 
 Private real-speech data follows institutional retention and access policy. Public logs must never contain raw private text.
 

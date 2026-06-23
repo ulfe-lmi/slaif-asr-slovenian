@@ -23,6 +23,12 @@ Use a closed active-learning loop:
 
 The accepted checkpoint, not the newest challenger, is the parent of the next round.
 
+Failure-directed selection begins only after corpus admission. High ASR error
+cannot rehabilitate malformed, repetitive, leaked, or structurally invalid
+text. ADR 0006 and the training-data constitution govern corpus eligibility,
+including `TRAINING_ELIGIBLE` status and the privacy-safe data acceptance
+certificate required before promotion-oriented training.
+
 ## Consequences
 
 Positive:

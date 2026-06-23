@@ -557,6 +557,15 @@ Use the cache-aware inference script for deployment-latency decisions.
 
 # Part III — Data construction
 
+All promotion-oriented data construction is now governed by
+[`training-data-constitution.md`](training-data-constitution.md). A candidate
+record is not training-eligible merely because it has valid JSON, unique IDs,
+or no literal duplicates. Before TTS, candidate scoring, hard-example
+selection, or model training, the corpus must pass the required structural
+fingerprints, concentration analysis, cross-partition family checks, Slovenian
+linguistic review, and privacy-safe acceptance-certificate process. Skipped,
+blocked, unknown, or unrun quality checks prevent `TRAINING_ELIGIBLE` status.
+
 ## 13. Text policy for the first adaptation
 
 The base model is trained to emit punctuation and capitalization. Match that style.
@@ -1233,6 +1242,11 @@ Hold out:
 - TTS voices/prosodies when available;
 - difficult minimal-pair groups.
 
+Synthetic holdouts are diagnostic synthetic-domain evidence. They must be
+content-family-disjoint from training data and must not be used for training,
+selection, early stopping, or steering. They do not establish real-speech
+generalization.
+
 ### Multilingual regression set
 
 A small evaluation-only set from several strong base-model languages. It is not required during prompt-column-only training because that update is Slovenian-specific, but it remains a valuable integrity check.
@@ -1285,6 +1299,11 @@ Training mixture:
 ```
 
 Adjust based on measured coverage and forgetting.
+
+These round sizes are planning targets only. A future work order must first
+produce a `TRAINING_ELIGIBLE` corpus under the training-data constitution.
+Hard-example selection must operate only on an accepted corpus; high ASR error
+on malformed or structurally invalid text is not a valid selection reason.
 
 ---
 

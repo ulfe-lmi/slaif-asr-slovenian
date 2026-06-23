@@ -32,8 +32,12 @@ The base model remains an external dependency and must be pinned by revision. Th
             |
             v
 +-----------------------+
-| Text validation and   |
-| deduplication         |
+| Corpus admission:     |
+| text quality,         |
+| fingerprints,         |
+| partition families,   |
+| linguistic review,    |
+| data certificate      |
 +-----------+-----------+
             |
             v
@@ -163,6 +167,15 @@ A separate dataset repository may be created only when data licenses, TTS rights
 - **Replay reservoir:** balanced memory of previously difficult examples.
 - **Multilingual regression:** evaluation-only speech from supported base-model languages.
 
+Before a generated or acquired corpus reaches TTS, ASR scoring, hard-example
+selection, or promotion-oriented training, it must satisfy
+[`training-data-constitution.md`](training-data-constitution.md). Schema
+validity and literal duplicate checks are not enough. The required evidence
+includes multi-view structural fingerprints, concentration analysis,
+cross-partition family checks, Slovenian linguistic review, and a privacy-safe
+data acceptance certificate. Only `TRAINING_ELIGIBLE` data may enter
+promotion-oriented training.
+
 ## Interface contracts
 
 ### Candidate text
@@ -248,6 +261,12 @@ The same storage boundary applies to project-generated curriculum rounds that
 do not use GaMS: the repository owns configuration, validation, selection,
 execution code, and aggregate evidence, while generated text/audio/manifests,
 raw hypotheses, deltas, and checkpoints remain ignored local artifacts.
+
+The Round 1 v1 curriculum corpora are retired because later review found
+corpus-wide artificial carrier templates, structural train/holdout overlap, and
+pervasive Slovenian defects. They remain audit material only and must not be
+used for future training, model-surface comparison, adapter-rank comparison,
+steering, or promotion.
 
 The Slovenian residual-adapter proof adds a project-owned adapter wrapper around
 the frozen prompt kernel. Adapter artifacts are saved separately from the base
