@@ -2,6 +2,14 @@
 
 Status: **completed; synthetic-only; no accepted adapter**
 
+> **FLEURS v1 deprecation:** this report used historical
+> `fleurs-sl-si-test-full-v1` metrics. That gate is now deprecated because
+> repeated upstream FLEURS source IDs caused duplicate sample IDs and WAV
+> overwrites; its 834 rows represented only 347 unique sample identities. The
+> FLEURS numbers below are preserved for auditability but must not be used as
+> complete-split quality evidence. ARTUR-J independently failed promotion and
+> remains unaffected.
+
 ## Purpose
 
 This experiment tests whether a Slovenian-specific residual adapter with more
@@ -64,7 +72,7 @@ non-`sl-SI` prompt columns.
 | Candidate pool | `0c92c60c58d60b629ef275527ed31b7eba5e3eab90fc988928666a121aa86b17` |
 | Synthetic holdout | `ed10fe7eb49e034d47857a9639a1022d4ad8ab70f6a8c741e6e2b12f1069bec9` |
 | Selected training manifest | `92b195e2cecb69ee3096ac6644eb65ae592ba60d8cf31d265c45c6eec9d781a4` |
-| FLEURS manifest | `07838a58222b9a0f6a4f4639b66d678ee38f87254518e43b742a143ef4aeaf4e` |
+| FLEURS manifest (deprecated v1) | `07838a58222b9a0f6a4f4639b66d678ee38f87254518e43b742a143ef4aeaf4e` |
 | ARTUR-J manifest | `66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763` |
 
 The transferred manifests were verified against the committed hashes first,
@@ -76,7 +84,7 @@ artifacts and were used only for execution on the current machine.
 |---|---:|---:|
 | Selected synthetic training | 160 | 160 |
 | Fixed synthetic holdout | 96 | 96 |
-| FLEURS full test | 834 | 347 |
+| FLEURS full test (deprecated v1) | 834 | 347 |
 | ARTUR-J gate | 256 | 256 |
 
 The synthetic holdout, FLEURS, and ARTUR-J did not enter training, selection, or
@@ -133,7 +141,7 @@ utterance metrics are named separately.
 | rank 16 | 63.926 | 30.183 | 63.779 | 63.636 | 5 |
 | rank 64 | 54.836 | 22.513 | 55.165 | 52.273 | 0 |
 
-### FLEURS Full Test
+### FLEURS Full Test (Deprecated v1)
 
 | Model | Normalized corpus WER | Normalized corpus CER | Mean utt. WER | Median utt. WER | Empty hypotheses |
 |---|---:|---:|---:|---:|---:|
@@ -170,8 +178,8 @@ utterance metrics are named separately.
 
 | Rank | Decision | Reasons |
 |---:|---|---|
-| 16 | rejected | FLEURS WER/CER regression beyond threshold; ARTUR-J WER/CER regression beyond threshold |
-| 64 | rejected | FLEURS WER/CER regression beyond threshold; ARTUR-J WER/CER regression beyond threshold |
+| 16 | rejected | historical FLEURS-v1 WER/CER regression beyond threshold; ARTUR-J WER/CER regression beyond threshold |
+| 64 | rejected | historical FLEURS-v1 WER/CER regression beyond threshold; ARTUR-J WER/CER regression beyond threshold |
 
 Selected adapter: none
 
@@ -186,8 +194,8 @@ SL_RESIDUAL_SYNTHETIC_ONLY
 Both residual adapters materially improved the fixed synthetic holdout, and
 rank 64 improved it more than rank 16. Neither adapter passed the real-gate
 promotion policy. The larger trainable surface increased synthetic memorization
-and synthetic-holdout fit but did not transfer to the real FLEURS and ARTUR-J
-development gates.
+and synthetic-holdout fit but did not transfer to ARTUR-J; the historical
+FLEURS-v1 component is deprecated.
 
 ## Interpretation
 

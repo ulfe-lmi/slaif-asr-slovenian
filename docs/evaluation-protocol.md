@@ -88,9 +88,10 @@ Never present a synthetic-only score as real-world Slovenian performance.
 
 Current immutable Slovenian development gates:
 
-- `fleurs-sl-si-test-full-v1`: complete official `google/fleurs` Slovenian
+- `fleurs-sl-si-test-full-v2`: complete official `google/fleurs` Slovenian
   `sl_si` test split at revision
-  `70bb2e84b976b7e960aa89f1c648e09c59f894dd`;
+  `70bb2e84b976b7e960aa89f1c648e09c59f894dd`, with occurrence-unique
+  sample IDs and WAV filenames derived from source-row indexes;
 - `artur-j-public-gate-v1`: deterministic 256-utterance project gate from
   ARTUR-J `Artur-J-Splosni` standardized orthographic transcripts and public
   audio.
@@ -98,6 +99,12 @@ Current immutable Slovenian development gates:
 These are not final blind tests. Raw references and hypotheses remain local
 ignored artifacts. Future challengers must evaluate both gates before any
 accepted-parent decision.
+
+Historical `fleurs-sl-si-test-full-v1` evidence is deprecated. It used the
+non-unique FLEURS source ID for manifest sample IDs and WAV filenames, causing
+path overwrites; its 834 manifest rows represented only 347 unique sample
+identities. v1 FLEURS metrics must not be used as complete-split quality
+evidence. ARTUR-J measurements are unaffected.
 
 The first project-generated Round 1 challenger evaluated both gates and was
 rejected: FLEURS and ARTUR-J normalized WER/CER regressed and empty hypotheses

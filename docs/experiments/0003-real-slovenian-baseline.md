@@ -2,6 +2,13 @@
 
 Status: **completed for untouched-base development-gate baseline**
 
+> **FLEURS v1 deprecation:** this report used
+> `fleurs-sl-si-test-full-v1`, which is now deprecated because repeated
+> upstream FLEURS source IDs caused duplicate sample IDs and WAV overwrites.
+> Its 834 manifest rows represented only 347 unique sample identities. The
+> FLEURS numbers below are preserved for auditability but must not be used as
+> complete-split quality evidence. ARTUR-J measurements are unaffected.
+
 ## Purpose
 
 This experiment establishes immutable real-speech development gates and the
@@ -12,7 +19,7 @@ accept a challenger.
 
 | Gate | Identifier | Source | Policy |
 |---|---|---|---|
-| FLEURS Slovenian full test | `fleurs-sl-si-test-full-v1` | `google/fleurs` `sl_si` `test` at `70bb2e84b976b7e960aa89f1c648e09c59f894dd` | complete split |
+| FLEURS Slovenian full test | `fleurs-sl-si-test-full-v1` | `google/fleurs` `sl_si` `test` at `70bb2e84b976b7e960aa89f1c648e09c59f894dd` | deprecated v1 evidence |
 | ARTUR-J public speech | `artur-j-public-gate-v1` | CLARIN.SI handles `11356/1772` and `11356/1776` | deterministic 256-segment project gate |
 
 Both gates are immutable development gates, not final blind tests.
@@ -47,6 +54,8 @@ Committed privacy-safe metadata:
 
 - FLEURS:
   [`docs/evaluation-gates/fleurs-sl-si-test-full-v1.metadata.json`](../evaluation-gates/fleurs-sl-si-test-full-v1.metadata.json)
+  and
+  [`docs/evaluation-gates/fleurs-sl-si-test-full-v1.deprecated.md`](../evaluation-gates/fleurs-sl-si-test-full-v1.deprecated.md)
 - ARTUR-J:
   [`docs/evaluation-gates/artur-j-public-gate-v1.metadata.json`](../evaluation-gates/artur-j-public-gate-v1.metadata.json)
 
@@ -64,14 +73,14 @@ gate measurements, not benchmark or production-readiness claims.
 
 | Gate | Raw corpus WER | Normalized corpus WER | Raw corpus CER | Normalized corpus CER | Mean utterance WER | Median utterance WER | Empty hypotheses |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| FLEURS full test | 62.679 | 52.734 | 19.599 | 16.423 | 53.541 | 52.941 | 0 |
+| FLEURS full test (deprecated v1) | 62.679 | 52.734 | 19.599 | 16.423 | 53.541 | 52.941 | 0 |
 | ARTUR-J gate | 74.585 | 67.453 | 32.234 | 29.016 | 76.555 | 75.000 | 12 |
 
 Runtime:
 
 | Gate | Rows | Audio duration | Wall time | Real-time factor | Observed GPU 0 VRAM |
 |---|---:|---:|---:|---:|---:|
-| FLEURS full test | 834 | 8173.140 s | 889.083 s | 0.108781 | about 2881 MiB |
+| FLEURS full test (deprecated v1) | 834 | 8173.140 s | 889.083 s | 0.108781 | about 2881 MiB |
 | ARTUR-J gate | 256 | 1049.590 s | 167.946 s | 0.160011 | about 2861 MiB |
 
 ## Micro-Proof Diagnostic
@@ -82,7 +91,7 @@ artifact and integrity report were available, so it was evaluated as
 
 | Gate | Base normalized WER | Diagnostic normalized WER | Base normalized CER | Diagnostic normalized CER | Empty hypotheses base/diagnostic |
 |---|---:|---:|---:|---:|---:|
-| FLEURS full test | 52.734 | 66.961 | 16.423 | 24.916 | 0 / 0 |
+| FLEURS full test (deprecated v1) | 52.734 | 66.961 | 16.423 | 24.916 | 0 / 0 |
 | ARTUR-J gate | 67.453 | 76.190 | 29.016 | 32.654 | 12 / 3 |
 
 The earlier public-smoke regression generalized to both full real development

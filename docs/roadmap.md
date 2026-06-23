@@ -93,19 +93,24 @@ replay, or production training manifests.
 
 ## Real Evaluation Gates
 
-Status: **complete for initial development gates**
+Status: **FLEURS v2 integrity complete; ARTUR-J baseline complete; FLEURS v2 ASR pending**
 
 Deliverables:
 
-- complete FLEURS Slovenian test gate: **implemented and baseline-evaluated**;
+- complete FLEURS Slovenian test gate: **implemented as
+  `fleurs-sl-si-test-full-v2` with 834 unique occurrences; ASR baseline
+  pending**;
 - deterministic ARTUR-J public-speech gate: **implemented and baseline-evaluated**;
 - Slovenian normalizer `sl-asr-normalization-v1`: **implemented**;
-- untouched Nemotron aggregate baseline: **recorded**;
-- unaccepted micro-proof diagnostic on both gates: **recorded; regressed**.
+- untouched Nemotron aggregate baseline: **recorded for ARTUR-J; historical
+  FLEURS-v1 baseline is deprecated**;
+- unaccepted micro-proof diagnostic on ARTUR-J: **recorded; regressed**.
 
 These are immutable development gates, not final blind tests or release
 criteria. Raw references, audio, manifests, hypotheses, and per-sample outputs
-remain ignored local artifacts.
+remain ignored local artifacts. Historical `fleurs-sl-si-test-full-v1` files
+remain available only for auditability and must not be used as complete-split
+quality evidence.
 
 Report:
 [`experiments/0003-real-slovenian-baseline.md`](experiments/0003-real-slovenian-baseline.md)
@@ -139,9 +144,10 @@ Exit gate:
 
 The first micro-experiment supports the narrow claim that a 2048-scalar
 `sl-SI` prompt-column delta can overfit a tiny synthetic set while changing only
-the selected prompt column. It does not validate release quality. The full
-FLEURS and ARTUR-J diagnostics both regressed for the ignored micro-proof
-checkpoint, so it remains unaccepted and is not a valid parent.
+the selected prompt column. It does not validate release quality. ARTUR-J
+regressed for the ignored micro-proof checkpoint, and the historical
+FLEURS-v1 component is deprecated, so it remains unaccepted and is not a valid
+parent.
 
 Work order:
 [`work-orders/0005-m3-prompt-column-adaptation-proof.md`](work-orders/0005-m3-prompt-column-adaptation-proof.md)
@@ -162,8 +168,9 @@ outcomes remain the deciding evidence.
 
 Project-generated Slovenian curriculum Round 1 has now run without GaMS or an
 external LLM. It improved selected synthetic training examples but failed the
-fixed synthetic-holdout threshold and regressed both real gates. The challenger
-is rejected and is not a valid parent.
+fixed synthetic-holdout threshold and regressed ARTUR-J. The historical
+FLEURS-v1 component is deprecated. The challenger is rejected and is not a valid
+parent.
 
 Round 1 work order:
 [`work-orders/0008-slovenian-curriculum-round-1.md`](work-orders/0008-slovenian-curriculum-round-1.md)
@@ -174,7 +181,8 @@ Round 1 report:
 The Slovenian residual-adapter proof reused the exact Round 1 corpus and fixed
 real gates while preserving every pretrained Nemotron parameter. Rank 16 and
 rank 64 adapters improved fixed synthetic-holdout metrics, but both regressed
-FLEURS and ARTUR-J, so the result is synthetic-only and no adapter is accepted.
+ARTUR-J. The historical FLEURS-v1 component is deprecated. The result remains
+synthetic-only and no adapter is accepted.
 
 Residual-adapter work order:
 [`work-orders/0009-slovenian-residual-adapter-proof.md`](work-orders/0009-slovenian-residual-adapter-proof.md)

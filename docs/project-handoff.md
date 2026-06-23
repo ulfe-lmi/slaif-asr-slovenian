@@ -12,19 +12,24 @@
 - M3 prompt-column generalization is now represented by a bounded two-round
   GaMS active-curriculum protocol. The tooling and configs are separate from
   completed GPU evidence until the experiment runs.
-- The first real Slovenian development gates are complete: full FLEURS
-  Slovenian test and deterministic ARTUR-J public-speech gate. The untouched
-  Nemotron baseline has been measured on both.
+- The canonical FLEURS development gate is now `fleurs-sl-si-test-full-v2`,
+  built from all 834 pinned Slovenian test occurrences with unique
+  occurrence-index sample IDs. Historical FLEURS v1 metrics are deprecated
+  because v1 represented only 347 unique sample identities. FLEURS v2 ASR
+  metrics have not yet been rerun.
+- The deterministic ARTUR-J public-speech gate remains valid and unaffected.
 - Project-generated Slovenian curriculum Round 1 has run without GaMS or an
   external LLM. Its prompt-column challenger is rejected: it improved selected
   synthetic training examples, did not meet the fixed synthetic-holdout
-  promotion threshold, and regressed both real gates.
+  promotion threshold, and regressed ARTUR-J. Its FLEURS-v1 component is
+  deprecated.
 - Slovenian residual-adapter proof has run on one A100 logical GPU using the
   exact Round 1 corpus and fixed real gates. Rank 16 and rank 64 adapters
-  improved the fixed synthetic holdout but regressed FLEURS and ARTUR-J, so the
-  result is `SL_RESIDUAL_SYNTHETIC_ONLY` and no adapter is accepted as a parent.
-- The ignored M3 micro-proof checkpoint regressed on both full real gates and
-  remains unaccepted.
+  improved the fixed synthetic holdout but regressed ARTUR-J, so the result is
+  `SL_RESIDUAL_SYNTHETIC_ONLY` and no adapter is accepted as a parent. Its
+  FLEURS-v1 component is deprecated.
+- The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
+  unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
   unit tests, Python compilation, and shell syntax. This CI does not install
   NeMo, download checkpoints or audio, use GPUs, or prove model restoration.
@@ -64,20 +69,24 @@
   training WER improved from 92.5 to 38.333 and empty synthetic-training
   hypotheses dropped from 3 to 0. Synthetic holdout WER was unchanged at 87.5.
   Public FLEURS smoke WER regressed from 75.0 to 85.0.
-- Full real-gate base baseline: FLEURS normalized corpus WER 52.734 and CER
-  16.423 with 0 empty hypotheses; ARTUR-J normalized corpus WER 67.453 and CER
-  29.016 with 12 empty hypotheses.
-- Full real-gate micro-proof diagnostic: FLEURS normalized WER regressed to
-  66.961; ARTUR-J normalized WER regressed to 76.190.
+- Historical FLEURS-v1 base baseline: normalized corpus WER 52.734 and CER
+  16.423 with 0 empty hypotheses. This is deprecated and must not be used as
+  complete-split quality evidence. ARTUR-J normalized corpus WER 67.453 and CER
+  29.016 with 12 empty hypotheses remains valid.
+- Historical FLEURS-v1 micro-proof diagnostic: normalized WER regressed to
+  66.961; this is deprecated. ARTUR-J normalized WER regressed to 76.190 and
+  remains valid.
 - Round 1 project-generated curriculum diagnostic: selected synthetic training
   normalized WER improved from 89.070 to 51.632, fixed synthetic holdout
-  normalized WER moved from 77.563 to 76.983, FLEURS normalized WER regressed
-  from 52.734 to 70.885, and ARTUR-J normalized WER regressed from 67.453 to
-  80.996. The challenger is rejected and is not a parent.
+  normalized WER moved from 77.563 to 76.983, historical FLEURS-v1 normalized
+  WER regressed from 52.734 to 70.885, and ARTUR-J normalized WER regressed
+  from 67.453 to 80.996. The challenger is rejected and is not a parent; ARTUR-J
+  independently failed promotion.
 - Residual-adapter diagnostic: rank 16 fixed synthetic-holdout normalized WER
   improved to 63.926 and rank 64 improved to 54.836, but rank 16 regressed
-  FLEURS to 67.076 and ARTUR-J to 78.943, while rank 64 regressed FLEURS to
-  70.430 and ARTUR-J to 81.739. No residual adapter is accepted.
+  historical FLEURS-v1 to 67.076 and ARTUR-J to 78.943, while rank 64 regressed
+  historical FLEURS-v1 to 70.430 and ARTUR-J to 81.739. No residual adapter is
+  accepted; ARTUR-J independently failed promotion.
 
 ## Non-negotiable rules
 
@@ -130,6 +139,10 @@ ignored local evidence. This proves a real TTS-to-ASR vertical slice only; it is
 not a benchmark and does not start training.
 
 ## Next recommended task
+
+Run the governed A100 batched-streaming parity and throughput work order on
+`fleurs-sl-si-test-full-v2`, then establish fresh untouched-base FLEURS v2
+metrics before using FLEURS in promotion decisions again.
 
 Use the rejected Round 1 and residual-adapter aggregate evidence to design the
 next controlled work order. The accepted parent remains the untouched Nemotron

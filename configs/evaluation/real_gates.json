@@ -50,6 +50,18 @@
     "target_lang": "sl-SI",
     "use_complete_split": true
   },
+  "fleurs_sl_si_test_full_v2": {
+    "config": "sl_si",
+    "construction_algorithm": "fleurs-sl-si-test-full-v2",
+    "dataset": "google/fleurs",
+    "gate_id": "fleurs-sl-si-test-full-v2",
+    "license": "CC BY 4.0",
+    "normalizer": "sl-asr-normalization-v1",
+    "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+    "split": "test",
+    "target_lang": "sl-SI",
+    "use_complete_split": true
+  },
   "promotion_guardrails": {
     "artur_j_normalized_cer_regression_abs_max": 1.5,
     "artur_j_normalized_wer_regression_abs_max": 1.0,

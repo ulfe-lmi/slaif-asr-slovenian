@@ -105,6 +105,18 @@ Required defaults:
 - record source, license, consent status, generation provenance, and hashes;
 - preserve a synthetic/real distinction in every report.
 
+Current canonical real development gates:
+
+- `fleurs-sl-si-test-full-v2`, the complete FLEURS Slovenian `sl_si` test split
+  at revision `70bb2e84b976b7e960aa89f1c648e09c59f894dd`, with occurrence IDs
+  derived from deterministic source-row indexes;
+- `artur-j-public-gate-v1`, the deterministic ARTUR-J public-speech project
+  gate.
+
+Historical `fleurs-sl-si-test-full-v1` evidence is deprecated because repeated
+upstream source IDs caused duplicate sample IDs and WAV overwrites. It must not
+be used as complete-split quality evidence.
+
 ## Model and dependency policy
 
 - Use the official checkpoint and official NeMo interfaces.
