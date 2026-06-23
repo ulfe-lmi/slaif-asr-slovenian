@@ -1298,6 +1298,12 @@ text admission through `TEXT_ACCEPTED`; it does not implement acoustic
 validation, does not issue a data acceptance certificate, and cannot emit
 `TRAINING_ELIGIBLE`.
 
+The first GaMS corpus-v2 candidate reservoir has been generated as a DRAFT
+source pool with a local native-speaker review pack and privacy-safe aggregate
+report. It is not `TEXT_ACCEPTED`, no review approval has been fabricated, and
+it cannot be used for TTS, ASR scoring, selection, or training until the later
+review and certificate stages succeed.
+
 The implementation MUST:
 
 - be deterministic;

@@ -60,7 +60,7 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **vertical slice complete; text validator implemented; corpus v2 pending**
+Status: **vertical slice complete; text validator implemented; corpus v2 reservoir DRAFT**
 
 Execution hardware policy: use exactly one process-visible GPU. Current
 project-owned helpers accept one visible A100 or RTX 2080 Ti and reject CPU
@@ -77,6 +77,8 @@ Deliverables:
 - partition and leakage checks;
 - synthetic text deduplication;
 - reusable text-stage training-data admission validator: **implemented**;
+- GaMS corpus-v2 candidate reservoir: **implemented as DRAFT pending
+  native-speaker linguistic review**;
 - acoustic validator and privacy-safe data certificate: **pending later work
   order**.
 
@@ -98,9 +100,9 @@ The training-data constitution is now a prerequisite for promotion-oriented
 data work. The retired Round 1 v1 corpus identities must not be reused for
 training, steering, model comparison, or promotion. The text-stage validator can
 produce `TEXT_ACCEPTED`, but it does not establish acoustic suitability. The
-next data milestone is a corpus v2 work order that uses the validator, then
-adds acoustic validation and a privacy-safe acceptance certificate before any
-new model-training experiment.
+first corpus-v2 GaMS reservoir is only DRAFT: human linguistic review remains
+outstanding, no synthetic holdout exists, no TTS or ASR scoring has run, and no
+data acceptance certificate exists.
 
 ## Real Evaluation Gates
 

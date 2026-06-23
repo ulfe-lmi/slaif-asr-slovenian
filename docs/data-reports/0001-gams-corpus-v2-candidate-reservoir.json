@@ -1,0 +1,143 @@
+{
+  "candidate_file_hashes": {
+    "generated_all_sha256": "b59af5df2562c0d88c0bf8312032fb4159b8cf24cad9bd2699311f8d33a8f924",
+    "pre_review_candidates_sha256": "5cb2520c27b3debd18a2f475368c2cdd8601fc5781ec541287092dbcd3ea0fe6",
+    "review_template_sha256": "a22d87aa5e6913d2ceeaa1c61414ab946ef4c5c1bb1f8cc5b8063f984e454d84"
+  },
+  "configuration_sha256": "1dca33057076a19447df22493088452fbb81c1c0a1a8ac94e541493fd3933e8c",
+  "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+  "family_summary": {
+    "discovered_family_count": 415,
+    "largest_family_fraction": 0.00241,
+    "largest_family_size": 1,
+    "source_family_count": 12
+  },
+  "fingerprint_unique_counts": {
+    "carrier_stripped": 415,
+    "entity_masked": 415,
+    "number_masked": 415,
+    "surface": 415
+  },
+  "generated_count": 476,
+  "generator_version": "gams-corpus-v2-reservoir-v1",
+  "gpu_monitor": {
+    "fraction_at_or_above_80_percent": 0.961466,
+    "mean_power_watts": 249.82,
+    "mean_utilization_percent": 90.195,
+    "median_utilization_percent": 93.0,
+    "p95_power_watts": 271.39,
+    "p95_utilization_percent": 96.0,
+    "peak_memory_mib": 11913.0,
+    "sample_count": 2128
+  },
+  "limitations": [
+    "Native-speaker linguistic review is outstanding.",
+    "No synthetic holdout exists in this work order.",
+    "No TTS synthesis, ASR scoring, acoustic validation, data certificate, or training was performed.",
+    "The reservoir is DRAFT and is not TRAINING_ELIGIBLE."
+  ],
+  "minimum_structurally_admissible_rows": 320,
+  "model": {
+    "license": "Gemma Terms of Use",
+    "repository": "cjvt/GaMS3-12B-Instruct",
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc"
+  },
+  "per_cell_counts": {
+    "generated": {
+      "cell01": 40,
+      "cell02": 36,
+      "cell03": 40,
+      "cell04": 40,
+      "cell05": 40,
+      "cell06": 40,
+      "cell07": 40,
+      "cell08": 40,
+      "cell09": 40,
+      "cell10": 40,
+      "cell11": 40,
+      "cell12": 40
+    },
+    "retained": {
+      "cell01": 39,
+      "cell02": 27,
+      "cell03": 36,
+      "cell04": 40,
+      "cell05": 10,
+      "cell06": 33,
+      "cell07": 39,
+      "cell08": 35,
+      "cell09": 39,
+      "cell10": 40,
+      "cell11": 40,
+      "cell12": 37
+    }
+  },
+  "prompt_cells": 12,
+  "prompt_revision": "sl-corpus-v2-gams-reservoir-v1",
+  "protected_indexes": [
+    {
+      "algorithm_version": "training-text-validator-v1",
+      "gate_id": "fleurs-sl-si-test-full-v2",
+      "manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "metadata_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "metadata_reference_manifest_sha256": "483961a368bb92cd3fcabe1649cde9655402ff2572bb54eceb26223aaa11ce83",
+      "normalizer": "sl-asr-normalization-v1",
+      "number_masked_hash_count": 347,
+      "reference_manifest_sha256": "483961a368bb92cd3fcabe1649cde9655402ff2572bb54eceb26223aaa11ce83",
+      "row_count": 834,
+      "surface_hash_count": 347
+    },
+    {
+      "algorithm_version": "training-text-validator-v1",
+      "gate_id": "artur-j-public-gate-v1",
+      "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "metadata_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "metadata_reference_manifest_sha256": "227b41f6e02a0d3a924b58eb051694678d7ac6fc9216952634b3c05967ffec4b",
+      "normalizer": "sl-asr-normalization-v1",
+      "number_masked_hash_count": 251,
+      "reference_manifest_sha256": "227b41f6e02a0d3a924b58eb051694678d7ac6fc9216952634b3c05967ffec4b",
+      "row_count": 256,
+      "surface_hash_count": 251
+    }
+  ],
+  "protected_overlap_counts": {
+    "number_masked_overlaps": 0,
+    "surface_overlaps": 0
+  },
+  "rejection_counts_by_reason": {
+    "fuzzy_similarity_candidate": 16,
+    "metadata_leak": 2,
+    "number_masked_collision": 28,
+    "quota_overflow": 9,
+    "surface_duplicate": 165,
+    "token_ngram_concentration": 104
+  },
+  "requested_rows": 480,
+  "retained_pre_review_count": 415,
+  "review_pack": {
+    "outcomes_prefilled": false,
+    "rows": 415
+  },
+  "schema_version": "1.0",
+  "shortfall": 0,
+  "status": "DRAFT — awaiting native-speaker linguistic review",
+  "validator": {
+    "checks": {
+      "carrier_detection": "PASSED",
+      "cross_partition": "PASSED",
+      "fingerprints": "PASSED",
+      "fuzzy_similarity": "PASSED",
+      "linguistic_review": "REVIEW_REQUIRED",
+      "metadata_leakage": "PASSED",
+      "protected_indexes": "PASSED",
+      "record_schema": "PASSED",
+      "retired_hash_checks": "PASSED",
+      "template_family_discovery": "PASSED"
+    },
+    "decision_reasons": [
+      "missing_linguistic_review_file"
+    ],
+    "fuzzy_review_pairs": 0,
+    "status": "DRAFT"
+  }
+}

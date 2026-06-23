@@ -1,0 +1,323 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+  "status": "DRAFT",
+  "prompt_revision": "sl-corpus-v2-gams-reservoir-v1",
+  "record_schema_version": "2.0",
+  "partition_role": "synthetic_candidate",
+  "source_type": "generated_text",
+  "target_generated_rows": 480,
+  "minimum_structurally_admissible_rows": 320,
+  "run_directory": "runs/data-quality/sl-corpus-v2-gams-candidate-reservoir-v1",
+  "protected_indexes": [
+    "runs/data-quality/protected/fleurs-v2.hash-index.json",
+    "runs/data-quality/protected/artur-j.hash-index.json"
+  ],
+  "public_reports": {
+    "markdown": "docs/data-reports/0001-gams-corpus-v2-candidate-reservoir.md",
+    "json": "docs/data-reports/0001-gams-corpus-v2-candidate-reservoir.json"
+  },
+  "model": {
+    "repository": "cjvt/GaMS3-12B-Instruct",
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc",
+    "license": "Gemma Terms of Use"
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "double_quantization": true,
+    "compute_dtype": "bfloat16",
+    "policy": "4bit-nf4-double-quant-bf16"
+  },
+  "device_policy": {
+    "cuda_visible_devices": "1",
+    "visible_gpu_count": 1,
+    "logical_device": "cuda:0",
+    "cpu_offload": false,
+    "disk_offload": false,
+    "max_memory_gib": 76
+  },
+  "generation": {
+    "prompt_batch_size": 4,
+    "allowed_prompt_batch_sizes": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "batch_fallback_order": [
+      4,
+      2,
+      1
+    ],
+    "max_new_tokens": 900,
+    "smoke_max_new_tokens": 220,
+    "temperature": 0.74,
+    "top_p": 0.92,
+    "seed_base": 730000,
+    "monitor_interval_seconds": 0.2
+  },
+  "filtering": {
+    "forbid_numbered_or_bulleted_lines": true,
+    "forbid_metadata_tokens": true,
+    "reject_surface_duplicates": true,
+    "reject_number_masked_collisions": true,
+    "reject_entity_masked_collisions": true,
+    "reject_prohibited_carriers": true,
+    "reject_protected_surface_overlaps": true,
+    "max_repeated_token_ngram_count": 16,
+    "token_jaccard_reject_threshold": 0.72,
+    "character_jaccard_reject_threshold": 0.8
+  },
+  "prompt_requirements": [
+    "natural standalone Slovenian utterances",
+    "grammatically correct morphology and agreement",
+    "natural case and preposition use",
+    "plausible spoken semantics",
+    "lexical and syntactic diversity",
+    "one utterance per output line",
+    "no numbering, bullets, JSON, labels or explanations",
+    "no repeated wrapper or common artificial tail",
+    "no row, group, candidate, batch, station or sample identifiers",
+    "no copied protected-gate text",
+    "no quota filling by repeated sentence frames"
+  ],
+  "prompt_cells": [
+    {
+      "cell_id": "cell01",
+      "domain": "everyday conversational Slovenian",
+      "register": "informal but neutral spoken Slovenian",
+      "length_target": "short utterances, 4 to 10 words",
+      "phenomena": [
+        "everyday_conversation",
+        "short_utterance"
+      ],
+      "source_family_id": "gams-v2-everyday-conversation-short",
+      "prompt_revision": "sl-corpus-v2-cell01-v1",
+      "seed_sequence": [
+        730101,
+        730102,
+        730103
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell02",
+      "domain": "everyday informational Slovenian",
+      "register": "neutral spoken information",
+      "length_target": "medium utterances, 8 to 16 words",
+      "phenomena": [
+        "everyday_information",
+        "medium_utterance"
+      ],
+      "source_family_id": "gams-v2-everyday-information-medium",
+      "prompt_revision": "sl-corpus-v2-cell02-v1",
+      "seed_sequence": [
+        730201,
+        730202,
+        730203
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell03",
+      "domain": "natural questions and requests",
+      "register": "polite spoken Slovenian",
+      "length_target": "short to medium utterances, 5 to 16 words",
+      "phenomena": [
+        "question",
+        "request"
+      ],
+      "source_family_id": "gams-v2-questions-requests",
+      "prompt_revision": "sl-corpus-v2-cell03-v1",
+      "seed_sequence": [
+        730301,
+        730302,
+        730303
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell04",
+      "domain": "practical commands and instructions",
+      "register": "clear practical spoken instructions",
+      "length_target": "short to medium utterances, 4 to 15 words",
+      "phenomena": [
+        "command",
+        "instruction"
+      ],
+      "source_family_id": "gams-v2-practical-instructions",
+      "prompt_revision": "sl-corpus-v2-cell04-v1",
+      "seed_sequence": [
+        730401,
+        730402,
+        730403
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell05",
+      "domain": "public services, institutions and administrative situations",
+      "register": "neutral public-service spoken Slovenian",
+      "length_target": "medium utterances, 7 to 18 words",
+      "phenomena": [
+        "public_service",
+        "institution",
+        "administrative_context"
+      ],
+      "source_family_id": "gams-v2-public-services-administration",
+      "prompt_revision": "sl-corpus-v2-cell05-v1",
+      "seed_sequence": [
+        730501,
+        730502,
+        730503
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell06",
+      "domain": "Slovenian people, places and inflected named entities",
+      "register": "natural spoken references to Slovenian names and places",
+      "length_target": "medium utterances, 6 to 18 words",
+      "phenomena": [
+        "named_entity",
+        "entity_inflection",
+        "slovenian_places"
+      ],
+      "source_family_id": "gams-v2-inflected-named-entities",
+      "prompt_revision": "sl-corpus-v2-cell06-v1",
+      "seed_sequence": [
+        730601,
+        730602,
+        730603
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell07",
+      "domain": "dates, times, quantities, measurements and addresses",
+      "register": "practical spoken Slovenian",
+      "length_target": "short to medium utterances, 5 to 18 words",
+      "phenomena": [
+        "date",
+        "time",
+        "quantity",
+        "measurement",
+        "address"
+      ],
+      "source_family_id": "gams-v2-dates-quantities-addresses",
+      "prompt_revision": "sl-corpus-v2-cell07-v1",
+      "seed_sequence": [
+        730701,
+        730702,
+        730703
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell08",
+      "domain": "case government, agreement and morphology",
+      "register": "natural grammatical Slovenian",
+      "length_target": "medium utterances, 7 to 18 words",
+      "phenomena": [
+        "case_government",
+        "agreement",
+        "morphology"
+      ],
+      "source_family_id": "gams-v2-case-agreement-morphology",
+      "prompt_revision": "sl-corpus-v2-cell08-v1",
+      "seed_sequence": [
+        730801,
+        730802,
+        730803
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell09",
+      "domain": "dual forms, clitics and function words",
+      "register": "natural spoken Slovenian",
+      "length_target": "short to medium utterances, 4 to 16 words",
+      "phenomena": [
+        "dual",
+        "clitic",
+        "function_word"
+      ],
+      "source_family_id": "gams-v2-dual-clitics-function-words",
+      "prompt_revision": "sl-corpus-v2-cell09-v1",
+      "seed_sequence": [
+        730901,
+        730902,
+        730903
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell10",
+      "domain": "prepared public speech and interview-style statements",
+      "register": "prepared but natural public Slovenian",
+      "length_target": "medium utterances, 9 to 20 words",
+      "phenomena": [
+        "public_speech",
+        "interview_statement"
+      ],
+      "source_family_id": "gams-v2-public-speech-interview",
+      "prompt_revision": "sl-corpus-v2-cell10-v1",
+      "seed_sequence": [
+        731001,
+        731002,
+        731003
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell11",
+      "domain": "technical, scientific and carefully bounded code-switching",
+      "register": "clear technical Slovenian with restrained English terms",
+      "length_target": "medium utterances, 7 to 20 words",
+      "phenomena": [
+        "technical",
+        "scientific",
+        "bounded_code_switching"
+      ],
+      "source_family_id": "gams-v2-technical-code-switching",
+      "prompt_revision": "sl-corpus-v2-cell11-v1",
+      "seed_sequence": [
+        731101,
+        731102,
+        731103
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell12",
+      "domain": "longer natural informational utterances",
+      "register": "natural explanatory Slovenian",
+      "length_target": "longer utterances, 14 to 28 words",
+      "phenomena": [
+        "long_informational",
+        "syntax_variety"
+      ],
+      "source_family_id": "gams-v2-long-informational",
+      "prompt_revision": "sl-corpus-v2-cell12-v1",
+      "seed_sequence": [
+        731201,
+        731202,
+        731203
+      ],
+      "requested_rows": 40,
+      "maximum_retries": 2
+    }
+  ]
+}

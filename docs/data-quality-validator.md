@@ -99,6 +99,21 @@ The public report is privacy-safe and contains no raw corpus text, no raw
 protected references, no local absolute paths, no generated audio paths, and no
 reviewer identity.
 
+## Corpus-v2 Reservoir Workflow
+
+`scripts/generate_gams_corpus_v2.py` and
+`scripts/prepare_corpus_v2_review.py` implement the first governed GaMS
+candidate-reservoir stage. The generator creates local schema-2.0
+`synthetic_candidate` rows, filters malformed and structurally concentrated
+output, builds a local review template, and writes a privacy-safe aggregate
+report.
+
+The reservoir remains `DRAFT` because no genuine native-speaker linguistic
+review sidecar is supplied. It is not `TEXT_ACCEPTED`, cannot become
+`TRAINING_ELIGIBLE`, and must not proceed to TTS, ASR scoring, selection, or
+training until later work orders complete review, acoustic validation, and data
+certification.
+
 ## Status Boundaries
 
 This validator may emit only:
