@@ -17,8 +17,8 @@
   },
   "runtime": {
     "python": "3.12",
-    "target_gpu": "NVIDIA RTX 2080 Ti",
-    "visible_devices": "CUDA_VISIBLE_DEVICES=0",
+    "target_gpu": "Exactly one visible NVIDIA A100 or RTX 2080 Ti",
+    "visible_devices": "CUDA_VISIBLE_DEVICES=<one physical GPU selector>",
     "pytorch": "torch==2.7.1+cu126",
     "torchaudio": "torchaudio==2.7.1+cu126",
     "cuda": "Use the repository-local .venv with CUDA 12.6 PyTorch wheels. Record exact CUDA, PyTorch, and NeMo versions in each generated contract."

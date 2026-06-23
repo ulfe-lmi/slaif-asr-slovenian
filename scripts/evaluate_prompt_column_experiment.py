@@ -13,6 +13,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from slaif_asr.config import load_runtime_config
+from slaif_asr.gpu_policy import require_single_visible_cuda
 from slaif_asr.metrics import empty_status, raw_cer, raw_wer, recognition_change
 from slaif_asr.prompt_experiment import load_json, repository_path, write_json
 from slaif_asr.tts import sha256_file
@@ -59,7 +60,6 @@ def run_inference(*, checkpoint: Path, manifest: Path, output_dir: Path) -> tupl
         str(output_dir),
     ]
     env = os.environ.copy()
-    env["CUDA_VISIBLE_DEVICES"] = "0"
     start = time.perf_counter()
     completed = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env, check=False)
     wall_time = time.perf_counter() - start
@@ -128,8 +128,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Evaluate base and adapted prompt-column checkpoints.")
     parser.add_argument("--config", type=Path, default=Path("configs/experiments/prompt_column_micro_overfit.json"))
     args = parser.parse_args()
-    if os.environ.get("CUDA_VISIBLE_DEVICES") != "0":
-        raise RuntimeError("CUDA_VISIBLE_DEVICES must be exactly 0")
+    require_single_visible_cuda()
     config = load_json(args.config)
     runtime_cfg = load_runtime_config()
     run_dir = repository_path(config["paths"]["run_dir"])

@@ -19,6 +19,10 @@
   external LLM. Its prompt-column challenger is rejected: it improved selected
   synthetic training examples, did not meet the fixed synthetic-holdout
   promotion threshold, and regressed both real gates.
+- Slovenian residual-adapter proof has run on one A100 logical GPU using the
+  exact Round 1 corpus and fixed real gates. Rank 16 and rank 64 adapters
+  improved the fixed synthetic holdout but regressed FLEURS and ARTUR-J, so the
+  result is `SL_RESIDUAL_SYNTHETIC_ONLY` and no adapter is accepted as a parent.
 - The ignored M3 micro-proof checkpoint regressed on both full real gates and
   remains unaccepted.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -47,10 +51,12 @@
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
 - Correct checkpoint SHA256: `210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74`.
-- Current development hardware: 48 GB class RAM, 2 x RTX 2080 Ti with 11 GB each, one GPU used per process.
-- Default runtime selection: `CUDA_VISIBLE_DEVICES=0`; the second RTX 2080 Ti remains unused unless a later work order explicitly permits it.
-- M1 and M2 use one RTX 2080 Ti. The first prompt-specific M3 proof should attempt one RTX 2080 Ti before requesting stronger hardware.
-- A100 is not a default prerequisite and becomes mandatory only through a later work order backed by measured memory, throughput, or authoritative benchmarking requirements.
+- Historical M1/M2 development hardware: 48 GB class RAM, 2 x RTX 2080 Ti with
+  11 GB each, one GPU used per process.
+- Current A100 development hardware: physical GPU 1 selected with
+  `CUDA_VISIBLE_DEVICES=1`; PyTorch sees exactly one logical device, `cuda:0`.
+- Project-owned GPU helpers now accept exactly one visible A100 or RTX 2080 Ti,
+  reject CPU fallback, and reject multiple visible GPUs.
 - First M3 trainable surface: one additive `sl-SI` prompt-column delta with
   2048 effective trainable scalars, later merged into only the selected first
   prompt-projection column.
@@ -68,6 +74,10 @@
   normalized WER moved from 77.563 to 76.983, FLEURS normalized WER regressed
   from 52.734 to 70.885, and ARTUR-J normalized WER regressed from 67.453 to
   80.996. The challenger is rejected and is not a parent.
+- Residual-adapter diagnostic: rank 16 fixed synthetic-holdout normalized WER
+  improved to 63.926 and rank 64 improved to 54.836, but rank 16 regressed
+  FLEURS to 67.076 and ARTUR-J to 78.943, while rank 64 regressed FLEURS to
+  70.430 and ARTUR-J to 81.739. No residual adapter is accepted.
 
 ## Non-negotiable rules
 
@@ -121,9 +131,10 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Use the rejected Round 1 aggregate evidence to design the next controlled work
-order. Do not generate Round 2 in this PR, and do not treat either the
-micro-proof checkpoint or the Round 1 checkpoint as an accepted parent.
+Use the rejected Round 1 and residual-adapter aggregate evidence to design the
+next controlled work order. The accepted parent remains the untouched Nemotron
+base checkpoint; do not treat the micro-proof checkpoint, Round 1 checkpoint, or
+residual adapter as an accepted parent.
 
 ## Do not do next
 
@@ -132,8 +143,8 @@ micro-proof checkpoint or the Round 1 checkpoint as an accepted parent.
 - Do not create a service API or UI.
 - Do not publish a checkpoint.
 - Do not add private data to obtain an early score.
-- Do not escalate beyond the prompt column without a new work order and real
-  evidence.
+- Do not accept a synthetic-only adapter without real-gate non-regression and a
+  work order that explicitly permits the next controlled step.
 
 ## Strategic questions after the next PR
 

@@ -11,11 +11,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from slaif_asr.tts import load_candidates, load_tts_config, render_candidates, repo_resolve
+from slaif_asr.gpu_policy import require_single_visible_cuda
 
 
 def verify_one_visible_gpu(piper_python: Path) -> str:
     env = os.environ.copy()
-    env["CUDA_VISIBLE_DEVICES"] = "0"
+    gpu = require_single_visible_cuda()
     code = (
         "import onnxruntime as ort\n"
         "providers = ort.get_available_providers()\n"
@@ -41,14 +42,11 @@ def verify_one_visible_gpu(piper_python: Path) -> str:
     )
     if nvidia.returncode != 0:
         raise RuntimeError(nvidia.stderr.strip() or "nvidia-smi failed")
-    first_line = nvidia.stdout.splitlines()[0] if nvidia.stdout.splitlines() else ""
-    if "2080 Ti" not in first_line:
-        raise RuntimeError(f"physical GPU 0 is not an RTX 2080 Ti: {first_line}")
-    return completed.stdout.strip()
+    return json.dumps({"gpu": gpu.to_dict(), "providers": completed.stdout.strip()}, sort_keys=True)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Render validated Slovenian smoke candidates with Piper on GPU 0.")
+    parser = argparse.ArgumentParser(description="Render validated Slovenian smoke candidates with Piper on one visible GPU.")
     parser.add_argument("--candidates", type=Path, default=Path("configs/tts/piper_smoke_candidates.jsonl"))
     parser.add_argument("--output-root", type=Path, default=None)
     args = parser.parse_args()

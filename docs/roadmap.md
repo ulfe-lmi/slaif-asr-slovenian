@@ -62,7 +62,11 @@ self-hosted evidence.
 
 Status: **vertical slice complete; scalable governance pending**
 
-Execution hardware policy: use one RTX 2080 Ti process-visible GPU unless a later work order explicitly permits different hardware.
+Execution hardware policy: use exactly one process-visible GPU. Current
+project-owned helpers accept one visible A100 or RTX 2080 Ti and reject CPU
+fallback or multiple visible GPUs. Historical M2 evidence used one RTX 2080 Ti;
+current A100 experiments use physical GPU 1 selected with
+`CUDA_VISIBLE_DEVICES=1`.
 
 Deliverables:
 
@@ -111,9 +115,11 @@ Work order:
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; Round 1 generalization rejected**
+Status: **prompt-column micro-proof complete; Round 1 and residual-adapter generalization rejected**
 
-The first prompt-specific proof is expected to attempt one RTX 2080 Ti with FP16 AMP. A100 is requested only after measured memory, throughput, or authoritative benchmark evidence supports escalation.
+Historical prompt-specific evidence first attempted one RTX 2080 Ti. Current
+A100-hosted experiments still use exactly one visible logical GPU and do not use
+multi-GPU training unless a future work order permits it.
 
 Deliverables:
 
@@ -164,6 +170,17 @@ Round 1 work order:
 
 Round 1 report:
 [`experiments/0004-slovenian-curriculum-round-1.md`](experiments/0004-slovenian-curriculum-round-1.md)
+
+The Slovenian residual-adapter proof reused the exact Round 1 corpus and fixed
+real gates while preserving every pretrained Nemotron parameter. Rank 16 and
+rank 64 adapters improved fixed synthetic-holdout metrics, but both regressed
+FLEURS and ARTUR-J, so the result is synthetic-only and no adapter is accepted.
+
+Residual-adapter work order:
+[`work-orders/0009-slovenian-residual-adapter-proof.md`](work-orders/0009-slovenian-residual-adapter-proof.md)
+
+Residual-adapter report:
+[`experiments/0005-slovenian-residual-adapter-proof.md`](experiments/0005-slovenian-residual-adapter-proof.md)
 
 ## M4 — Active GaMS/TTS loop
 

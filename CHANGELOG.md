@@ -45,6 +45,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   report.
 - GaMS command-line probe and BF16 generation-debugging report for the A100
   runtime.
+- Slovenian residual-adapter proof configuration, shared single-GPU hardware
+  policy helper, adapter implementation, tests, execution runner, and
+  privacy-safe aggregate experiment report.
 
 ### Changed
 
@@ -66,3 +69,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   the promotion threshold, and both real gates regressed.
 - GaMS generation now uses the model-compatible Transformers stack and 4-bit
   BF16 compute, with explicit attention masks and correct padding semantics.
+- GPU execution helpers no longer assume physical GPU 0 or RTX 2080 Ti only;
+  they now require exactly one visible A100 or RTX 2080 Ti and use logical
+  `cuda:0`.
+- Residual-adapter evidence records synthetic-only behavior: rank 16 and rank
+  64 adapters improved the fixed synthetic holdout but regressed both real
+  gates, so no adapter is accepted as a parent.

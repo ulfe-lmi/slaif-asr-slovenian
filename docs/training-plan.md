@@ -2,7 +2,10 @@
 
 - **Base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`
 - **Target locale:** `sl-SI`
-- **Hardware:** M1 and M2 use one NVIDIA RTX 2080 Ti with `CUDA_VISIBLE_DEVICES=0`; the first prompt-specific M3 proof should attempt one RTX 2080 Ti before requesting stronger hardware.
+- **Hardware:** GPU execution uses exactly one process-visible NVIDIA A100 or
+  RTX 2080 Ti. Historical M1/M2 evidence used one RTX 2080 Ti. Current A100
+  experiments select physical GPU 1 with `CUDA_VISIBLE_DEVICES=1`, which maps
+  to logical `cuda:0`.
 - **Training loop:** GaMS generates Slovenian text → external Piper Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update
 - **Prepared:** 2026-06-21
 
@@ -67,6 +70,13 @@ prompt-column-only training, and fixed synthetic plus real gates. It was
 rejected because fixed synthetic-holdout improvement was insufficient and both
 real gates regressed. Promotion still requires non-regression on both real
 gates; synthetic training-set improvement alone never accepts a parent.
+
+The first residual-adapter proof reused the same Round 1 corpus and fixed gates
+with rank 16 and rank 64 Slovenian-only residual adapters. Both adapters
+improved the fixed synthetic holdout, but both regressed FLEURS and ARTUR-J. No
+residual adapter is accepted as a parent. This suggests that increasing
+prompt-side capacity against the same single-voice synthetic corpus is not
+sufficient evidence for real-speech generalization.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -1095,7 +1105,10 @@ Mandatory post-run check:
 
 ## 24. Stage S1: prompt-kernel adaptation
 
-Use when prompt-column-only improves language selection but cannot adequately map Slovenian acoustics to text.
+Use when prompt-column-only and Slovenian-only residual adapters have been
+shown insufficient, and a new work order explicitly permits shared prompt-kernel
+adaptation. The residual-adapter proof indicates that more prompt-side capacity
+alone can improve synthetic holdout while still regressing real gates.
 
 ```bash
 +selective_stage=prompt_kernel
@@ -1565,7 +1578,10 @@ The official notebook uses:
 train_ds.batch_duration=200
 ```
 
-Start there on one RTX 2080 Ti. Escalate to A100 only through a later work order backed by measured memory, throughput, or authoritative benchmarking requirements.
+Start with exactly one visible GPU. Historical smaller-platform runs used one
+RTX 2080 Ti; current A100 experiments use physical GPU 1 exposed as logical
+`cuda:0`. Do not use multi-GPU execution unless a later work order explicitly
+permits it.
 
 If out of memory:
 

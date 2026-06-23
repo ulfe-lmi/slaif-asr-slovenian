@@ -26,12 +26,12 @@ GaMS generates a small Slovenian candidate batch
 
 ## Status
 
-This repository is currently at **real-gate baseline evaluation**. The
-prompt-column micro-proof is complete, active-curriculum tooling exists, and
-the first immutable real Slovenian development gates now establish the
-untouched Nemotron baseline before any further curriculum work. The first
-project-generated Slovenian curriculum round has run and its challenger was
-rejected by the fixed gates.
+This repository is currently at **real-gate-guided adaptation research**. The
+prompt-column micro-proof is complete, active-curriculum tooling exists, the
+first immutable real Slovenian development gates establish the untouched
+Nemotron baseline, and the first project-generated curriculum round plus a
+residual-adapter capacity proof have both been rejected as accepted parents by
+the fixed real gates.
 
 Present:
 
@@ -59,11 +59,15 @@ Present:
 - a completed project-generated Round 1 curriculum experiment whose
   prompt-column challenger improved selected synthetic training examples but
   regressed FLEURS and ARTUR-J, so it is not an accepted parent.
+- a completed Slovenian residual-adapter proof on one A100 logical GPU. Rank 16
+  and rank 64 adapters both improved the fixed synthetic holdout but regressed
+  FLEURS and ARTUR-J, so neither is an accepted parent.
 
-Current M1/M2 development hardware is one physical NVIDIA RTX 2080 Ti selected
-with `CUDA_VISIBLE_DEVICES=0`. A second RTX 2080 Ti may be present in the
-development host but remains unused unless a later work order explicitly permits
-it. A100 hardware is not a default prerequisite.
+Current GPU execution code supports exactly one visible NVIDIA A100 or RTX 2080
+Ti. The current A100 development host uses physical GPU 1 selected with
+`CUDA_VISIBLE_DEVICES=1`, which maps to PyTorch logical `cuda:0`. Historical
+M1/M2 evidence used one RTX 2080 Ti. Other physical GPUs remain unused unless a
+work order explicitly permits them.
 
 Not yet present:
 
@@ -84,8 +88,9 @@ synthetic and real gates before any challenger can become an accepted parent.
 The real FLEURS and ARTUR-J gates are immutable development gates, not final
 blind tests and not release-quality claims. Their raw references, audio,
 manifests, hypotheses, and per-sample outputs remain ignored local artifacts.
-The Round 1 curriculum text, audio, hypotheses, delta, and checkpoint are also
-ignored local artifacts and are not published by this repository.
+The Round 1 curriculum text, audio, hypotheses, delta, checkpoint, residual
+adapter artifacts, and raw reports are also ignored local artifacts and are not
+published by this repository.
 
 ## Repository role
 
@@ -146,6 +151,12 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The Slovenian residual-adapter proof is defined by
+[`docs/work-orders/0009-slovenian-residual-adapter-proof.md`](docs/work-orders/0009-slovenian-residual-adapter-proof.md).
+The project-generated Slovenian curriculum Round 1 task is defined by
+[`docs/work-orders/0008-slovenian-curriculum-round-1.md`](docs/work-orders/0008-slovenian-curriculum-round-1.md).
+The real Slovenian evaluation-suite task is defined by
+[`docs/work-orders/0007-real-slovenian-evaluation-suite.md`](docs/work-orders/0007-real-slovenian-evaluation-suite.md).
 The prompt-column micro-overfit task is defined by
 [`docs/work-orders/0005-m3-prompt-column-adaptation-proof.md`](docs/work-orders/0005-m3-prompt-column-adaptation-proof.md).
 The GaMS-directed prompt-column active-curriculum task is defined by
