@@ -48,6 +48,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Slovenian residual-adapter proof configuration, shared single-GPU hardware
   policy helper, adapter implementation, tests, execution runner, and
   privacy-safe aggregate experiment report.
+- FLEURS full-test v2 gate metadata, occurrence-index identity planning,
+  full-gate verifier, and v1 deprecation record.
 
 ### Changed
 
@@ -75,3 +77,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Residual-adapter evidence records synthetic-only behavior: rank 16 and rank
   64 adapters improved the fixed synthetic holdout but regressed both real
   gates, so no adapter is accepted as a parent.
+- Canonical FLEURS documentation now points to `fleurs-sl-si-test-full-v2`.
+  Historical FLEURS v1 evidence is deprecated because non-unique upstream
+  source IDs caused duplicate sample IDs and WAV overwrites; v1 metrics must
+  not be used as complete-split quality evidence.

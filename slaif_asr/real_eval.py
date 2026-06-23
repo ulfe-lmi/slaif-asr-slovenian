@@ -40,6 +40,14 @@ class ArturSegment:
 
 
 @dataclass(frozen=True)
+class FleursOccurrencePlan:
+    source_row_index: int
+    source_id: Any
+    sample_id: str
+    relative_audio_path: str
+
+
+@dataclass(frozen=True)
 class GateSummary:
     gate_id: str
     sample_count: int
@@ -201,9 +209,67 @@ def public_manifest_hash(rows: list[dict[str, Any]]) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def fleurs_occurrence_sample_id(source_row_index: int) -> str:
+    if source_row_index < 0:
+        raise ValueError(f"source_row_index must be non-negative: {source_row_index}")
+    return f"fleurs-sl-si-test-occ-{source_row_index:05d}"
+
+
+def plan_fleurs_occurrences(rows: list[dict[str, Any]]) -> list[FleursOccurrencePlan]:
+    plans = []
+    for source_row_index, row in enumerate(rows):
+        sample_id = fleurs_occurrence_sample_id(source_row_index)
+        plans.append(
+            FleursOccurrencePlan(
+                source_row_index=source_row_index,
+                source_id=row.get("id", source_row_index),
+                sample_id=sample_id,
+                relative_audio_path=f"audio/{sample_id}.wav",
+            )
+        )
+    validate_fleurs_occurrence_plan(plans)
+    return plans
+
+
+def validate_fleurs_occurrence_plan(plans: list[FleursOccurrencePlan]) -> None:
+    indexes = [item.source_row_index for item in plans]
+    sample_ids = [item.sample_id for item in plans]
+    audio_paths = [item.relative_audio_path for item in plans]
+    if len(indexes) != len(set(indexes)):
+        raise ValueError("duplicate FLEURS source_row_index in planned gate")
+    if len(sample_ids) != len(set(sample_ids)):
+        raise ValueError("duplicate FLEURS sample_id in planned gate")
+    if len(audio_paths) != len(set(audio_paths)):
+        raise ValueError("duplicate FLEURS relative audio path in planned gate")
+
+
+def validate_fleurs_v2_manifest_rows(rows: list[dict[str, Any]], *, expected_rows: int | None = None) -> None:
+    if expected_rows is not None and len(rows) != expected_rows:
+        raise ValueError(f"expected {expected_rows} FLEURS v2 rows, found {len(rows)}")
+    indexes: list[int] = []
+    for row in rows:
+        if row.get("dataset") != "fleurs-sl-si-test-full-v2":
+            raise ValueError("FLEURS v2 manifest row has wrong gate identifier")
+        if "source_row_index" not in row:
+            raise ValueError("FLEURS v2 manifest row is missing source_row_index")
+        if "source_id" not in row:
+            raise ValueError("FLEURS v2 manifest row is missing source_id")
+        source_row_index = int(row["source_row_index"])
+        indexes.append(source_row_index)
+        sample_id = fleurs_occurrence_sample_id(source_row_index)
+        if row.get("sample_id") != sample_id:
+            raise ValueError(f"FLEURS v2 sample_id mismatch for source_row_index {source_row_index}")
+        if Path(row["audio_filepath"]).name != f"{sample_id}.wav":
+            raise ValueError(f"FLEURS v2 audio filename mismatch for source_row_index {source_row_index}")
+    if len(indexes) != len(set(indexes)):
+        raise ValueError("duplicate source_row_index in FLEURS v2 manifest")
+    if expected_rows is not None and sorted(indexes) != list(range(expected_rows)):
+        raise ValueError(f"FLEURS v2 source_row_index values must be exactly 0..{expected_rows - 1}")
+
+
 def ensure_no_references_or_paths(metadata: dict[str, Any]) -> None:
     serialized = json.dumps(metadata, ensure_ascii=False)
-    forbidden_keys = {"text", "reference", "raw_transcription", "transcription", "audio_filepath"}
+    forbidden_keys = {"text", "reference", "raw_reference", "raw_transcription", "transcription", "audio_filepath"}
     def walk(value: Any, key: str = "") -> None:
         if key in forbidden_keys:
             raise ValueError(f"metadata contains forbidden key: {key}")
@@ -236,6 +302,8 @@ def summarize_predictions(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def validate_gate_manifest(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
+    sample_ids: set[str] = set()
+    audio_paths: set[str] = set()
     with path.open("r", encoding="utf-8") as fp:
         for line_number, line in enumerate(fp, start=1):
             if not line.strip():
@@ -248,6 +316,16 @@ def validate_gate_manifest(path: Path) -> list[dict[str, Any]]:
             if row.get("target_lang") != "sl-SI":
                 raise ValueError(f"{path}:{line_number}: target_lang must be sl-SI")
             audio_path = Path(row["audio_filepath"])
+            normalized_audio_path = audio_path.expanduser().resolve(strict=False).as_posix()
+            sample_id = str(row.get("sample_id", ""))
+            if not sample_id:
+                raise ValueError(f"{path}:{line_number}: missing sample_id")
+            if sample_id in sample_ids:
+                raise ValueError(f"{path}:{line_number}: duplicate sample_id {sample_id}")
+            if normalized_audio_path in audio_paths:
+                raise ValueError(f"{path}:{line_number}: duplicate audio_filepath {normalized_audio_path}")
+            sample_ids.add(sample_id)
+            audio_paths.add(normalized_audio_path)
             validate_wav(audio_path, sample_rate=16000)
             rows.append(row)
     if not rows:

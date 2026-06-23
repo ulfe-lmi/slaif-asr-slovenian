@@ -6,15 +6,18 @@ import unittest
 from pathlib import Path
 
 from slaif_asr.real_eval import (
+    FleursOccurrencePlan,
     NORMALIZER_VERSION,
     ArturSegment,
     ensure_no_references_or_paths,
+    plan_fleurs_occurrences,
     normalize_sl_asr_text,
     parse_artur_trs,
     reject_real_gate_for_generation,
     reject_real_gate_for_training,
     select_artur_segments,
     summarize_predictions,
+    validate_fleurs_occurrence_plan,
 )
 
 
@@ -36,6 +39,8 @@ class RealEvalTests(unittest.TestCase):
     def test_metadata_rejects_reference_and_local_path(self) -> None:
         with self.assertRaises(ValueError):
             ensure_no_references_or_paths({"selected": [{"reference": "secret"}]})
+        with self.assertRaises(ValueError):
+            ensure_no_references_or_paths({"selected": [{"raw_reference": "secret"}]})
         with self.assertRaises(ValueError):
             ensure_no_references_or_paths({"path": "/home/user/audio.wav"})
 
@@ -88,10 +93,53 @@ class RealEvalTests(unittest.TestCase):
             counts[item.recording_id] = counts.get(item.recording_id, 0) + 1
         self.assertLessEqual(max(counts.values()), 4)
 
+    def test_fleurs_occurrence_identity_survives_repeated_source_id(self) -> None:
+        rows = [
+            {"id": 1738, "transcription": "Prvi primer."},
+            {"id": 1738, "transcription": "Drugi primer."},
+        ]
+        plans = plan_fleurs_occurrences(rows)
+        self.assertEqual([item.source_id for item in plans], [1738, 1738])
+        self.assertEqual(
+            [item.sample_id for item in plans],
+            ["fleurs-sl-si-test-occ-00000", "fleurs-sl-si-test-occ-00001"],
+        )
+        self.assertEqual(
+            [item.relative_audio_path for item in plans],
+            ["audio/fleurs-sl-si-test-occ-00000.wav", "audio/fleurs-sl-si-test-occ-00001.wav"],
+        )
+        self.assertEqual(len({item.sample_id for item in plans}), 2)
+        self.assertEqual(len({item.relative_audio_path for item in plans}), 2)
+
+    def test_fleurs_occurrence_plan_rejects_collisions(self) -> None:
+        duplicate_index = [
+            FleursOccurrencePlan(0, 10, "fleurs-sl-si-test-occ-00000", "audio/fleurs-sl-si-test-occ-00000.wav"),
+            FleursOccurrencePlan(0, 11, "fleurs-sl-si-test-occ-00001", "audio/fleurs-sl-si-test-occ-00001.wav"),
+        ]
+        with self.assertRaises(ValueError):
+            validate_fleurs_occurrence_plan(duplicate_index)
+
+        duplicate_sample_id = [
+            FleursOccurrencePlan(0, 10, "fleurs-sl-si-test-occ-00000", "audio/a.wav"),
+            FleursOccurrencePlan(1, 11, "fleurs-sl-si-test-occ-00000", "audio/b.wav"),
+        ]
+        with self.assertRaises(ValueError):
+            validate_fleurs_occurrence_plan(duplicate_sample_id)
+
+        duplicate_audio_path = [
+            FleursOccurrencePlan(0, 10, "fleurs-sl-si-test-occ-00000", "audio/same.wav"),
+            FleursOccurrencePlan(1, 11, "fleurs-sl-si-test-occ-00001", "audio/same.wav"),
+        ]
+        with self.assertRaises(ValueError):
+            validate_fleurs_occurrence_plan(duplicate_audio_path)
+
     def test_gate_config_is_pinned(self) -> None:
         config = json.loads(Path("configs/evaluation/real_gates.json").read_text(encoding="utf-8"))
         self.assertEqual(config["fleurs_sl_si_test_full_v1"]["revision"], "70bb2e84b976b7e960aa89f1c648e09c59f894dd")
         self.assertTrue(config["fleurs_sl_si_test_full_v1"]["use_complete_split"])
+        self.assertEqual(config["fleurs_sl_si_test_full_v2"]["revision"], "70bb2e84b976b7e960aa89f1c648e09c59f894dd")
+        self.assertEqual(config["fleurs_sl_si_test_full_v2"]["gate_id"], "fleurs-sl-si-test-full-v2")
+        self.assertTrue(config["fleurs_sl_si_test_full_v2"]["use_complete_split"])
         self.assertEqual(config["artur_j_public_gate_v1"]["transcript_archive"]["md5"], "6f21947593ccdea7dc23ecc3c9a7c012")
         self.assertEqual(config["artur_j_public_gate_v1"]["audio_archives"][0]["md5"], "bc8b4e0625fce2b47d99ed7da8db7393")
 

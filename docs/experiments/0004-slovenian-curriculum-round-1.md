@@ -2,6 +2,13 @@
 
 Status: **completed; challenger rejected**
 
+> **FLEURS v1 deprecation:** this report used historical
+> `fleurs-sl-si-test-full-v1` metrics. That gate is now deprecated because
+> repeated upstream FLEURS source IDs caused duplicate sample IDs and WAV
+> overwrites. The FLEURS numbers below are preserved for auditability but must
+> not be used as complete-split quality evidence. ARTUR-J independently failed
+> promotion and remains unaffected.
+
 ## Purpose
 
 This experiment tests whether a broader project-generated Slovenian synthetic
@@ -107,7 +114,7 @@ from summed edits, not averaged utterance percentages.
 |---|---:|---:|---:|---:|---:|---:|
 | selected synthetic training | 89.070 | 51.632 | 62.622 | 22.805 | 35 | 0 |
 | fixed synthetic holdout | 77.563 | 76.983 | 39.092 | 37.093 | 20 | 6 |
-| FLEURS full test | 52.734 | 70.885 | 16.423 | 33.758 | 0 | 3 |
+| FLEURS full test (deprecated v1) | 52.734 | 70.885 | 16.423 | 33.758 | 0 | 3 |
 | ARTUR-J gate | 67.453 | 80.996 | 29.016 | 44.784 | 12 | 24 |
 
 Mean and median utterance metrics are recorded in the ignored local summary and
@@ -120,7 +127,8 @@ are intentionally reported separately from corpus WER/CER.
 Reasons:
 
 - synthetic holdout improvement was below the required 15% relative WER/CER;
-- FLEURS normalized corpus WER and CER regressed beyond thresholds;
+- historical FLEURS-v1 normalized corpus WER and CER regressed beyond
+  thresholds;
 - ARTUR-J normalized corpus WER and CER regressed beyond thresholds;
 - empty hypotheses increased on both real gates.
 
@@ -130,7 +138,8 @@ The challenger is not an accepted parent.
 
 - Synthetic training memorization improved strongly.
 - Fixed synthetic holdout did not improve enough to satisfy the promotion gate.
-- Real-gate aggregate behavior regressed on both FLEURS and ARTUR-J.
+- Real-gate aggregate behavior regressed on ARTUR-J; the historical FLEURS-v1
+  component also regressed but is deprecated.
 - Raw real references and hypotheses remain local ignored artifacts.
 - Synthetic holdout raw errors were not used for steering.
 

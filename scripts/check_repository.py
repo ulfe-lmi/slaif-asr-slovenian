@@ -114,6 +114,8 @@ def validate_repository(
         issues.extend(validate_text_file(relative, text))
         if suffix == ".json":
             issues.extend(validate_json(relative, text))
+            if relative.startswith("docs/evaluation-gates/") and relative.endswith(".metadata.json"):
+                issues.extend(validate_real_gate_metadata(relative, text))
         elif suffix == ".jsonl":
             issues.extend(validate_jsonl(relative, text))
         elif suffix == ".toml":
@@ -153,6 +155,75 @@ def validate_json(relative: str, text: str) -> list[RepositoryIssue]:
     except json.JSONDecodeError as exc:
         return [RepositoryIssue(relative, f"invalid JSON: line {exc.lineno} column {exc.colno}")]
     return []
+
+
+def validate_real_gate_metadata(relative: str, text: str) -> list[RepositoryIssue]:
+    issues: list[RepositoryIssue] = []
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [RepositoryIssue(relative, f"invalid JSON: line {exc.lineno} column {exc.colno}")]
+    if not isinstance(payload, dict):
+        return [RepositoryIssue(relative, "gate metadata must be a JSON object")]
+
+    forbidden_keys = {"text", "reference", "raw_reference", "raw_transcription", "transcription", "audio_filepath"}
+
+    def walk(value: object, key: str = "") -> None:
+        if key in forbidden_keys:
+            issues.append(RepositoryIssue(relative, f"gate metadata contains forbidden key: {key}"))
+        if isinstance(value, dict):
+            for child_key, child_value in value.items():
+                walk(child_value, child_key)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+        elif isinstance(value, str):
+            if re.search(r"(^|[\"'\s])/(?:home|mnt/data)/", value):
+                issues.append(RepositoryIssue(relative, "gate metadata contains a local absolute path"))
+
+    walk(payload)
+
+    if payload.get("gate_id") == "fleurs-sl-si-test-full-v2":
+        expected_rows = 834
+        selected = payload.get("selected")
+        if payload.get("construction_algorithm") != "fleurs-sl-si-test-full-v2":
+            issues.append(RepositoryIssue(relative, "FLEURS v2 metadata has wrong construction algorithm"))
+        if payload.get("rows") != expected_rows:
+            issues.append(RepositoryIssue(relative, "FLEURS v2 metadata must declare 834 rows"))
+        if not isinstance(selected, list):
+            issues.append(RepositoryIssue(relative, "FLEURS v2 metadata selected must be a list"))
+            return issues
+        if len(selected) != expected_rows:
+            issues.append(RepositoryIssue(relative, f"FLEURS v2 metadata selected count is {len(selected)}, expected 834"))
+        allowed_keys = {"source_row_index", "source_id", "sample_id", "audio_sha256", "reference_sha256", "duration_seconds", "gender"}
+        indexes: list[int] = []
+        sample_ids: list[str] = []
+        for item in selected:
+            if not isinstance(item, dict):
+                issues.append(RepositoryIssue(relative, "FLEURS v2 selected entry must be an object"))
+                continue
+            extra_keys = set(item) - allowed_keys
+            missing_keys = allowed_keys - set(item)
+            if extra_keys:
+                issues.append(RepositoryIssue(relative, f"FLEURS v2 selected entry has unexpected keys: {sorted(extra_keys)}"))
+            if missing_keys:
+                issues.append(RepositoryIssue(relative, f"FLEURS v2 selected entry is missing keys: {sorted(missing_keys)}"))
+            try:
+                source_row_index = int(item["source_row_index"])
+            except (KeyError, TypeError, ValueError):
+                issues.append(RepositoryIssue(relative, "FLEURS v2 selected entry has invalid source_row_index"))
+                continue
+            indexes.append(source_row_index)
+            sample_id = str(item.get("sample_id", ""))
+            sample_ids.append(sample_id)
+            expected_sample_id = f"fleurs-sl-si-test-occ-{source_row_index:05d}"
+            if sample_id != expected_sample_id:
+                issues.append(RepositoryIssue(relative, f"FLEURS v2 sample_id mismatch for source_row_index {source_row_index}"))
+        if sorted(indexes) != list(range(expected_rows)):
+            issues.append(RepositoryIssue(relative, "FLEURS v2 source_row_index values must be exactly 0..833"))
+        if len(sample_ids) != len(set(sample_ids)):
+            issues.append(RepositoryIssue(relative, "FLEURS v2 metadata has duplicate sample_id values"))
+    return issues
 
 
 def validate_jsonl(relative: str, text: str) -> list[RepositoryIssue]:

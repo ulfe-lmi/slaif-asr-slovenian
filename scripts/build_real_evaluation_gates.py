@@ -20,6 +20,8 @@ from slaif_asr.real_eval import (
     atomic_write_json,
     atomic_write_jsonl,
     duration_stats,
+    ensure_no_references_or_paths,
+    plan_fleurs_occurrences,
     md5_file,
     parse_artur_trs,
     public_manifest_hash,
@@ -83,20 +85,19 @@ def fleurs_audio_array(row: dict[str, Any]) -> tuple[Any, int]:
 def build_fleurs(config: dict[str, Any], output_root: Path, metadata_root: Path) -> dict[str, Any]:
     from datasets import Audio, load_dataset
 
-    cfg = config["fleurs_sl_si_test_full_v1"]
+    cfg = config["fleurs_sl_si_test_full_v2"]
     dataset = load_dataset(cfg["dataset"], cfg["config"], split=cfg["split"], revision=cfg["revision"])
     dataset = dataset.cast_column("audio", Audio(decode=False))
+    rows = list(dataset)
+    plans = plan_fleurs_occurrences(rows)
     manifest_rows: list[dict[str, Any]] = []
     local_reference_rows: list[dict[str, Any]] = []
     public_rows: list[dict[str, Any]] = []
     gender_counts: Counter[str] = Counter()
     durations: list[float] = []
-    audio_dir = output_root / cfg["gate_id"] / "audio"
-    for index, row in enumerate(dataset):
-        row_id = int(row.get("id", index))
-        sample_id = f"fleurs-sl-si-test-{row_id:05d}"
+    for row, plan in zip(rows, plans, strict=True):
         array, sample_rate = fleurs_audio_array(row)
-        wav_path = audio_dir / f"{sample_id}.wav"
+        wav_path = output_root / cfg["gate_id"] / plan.relative_audio_path
         write_wav(wav_path, array, sample_rate)
         info = validate_wav(wav_path, sample_rate=16000)
         text = row["transcription"]
@@ -112,15 +113,19 @@ def build_fleurs(config: dict[str, Any], output_root: Path, metadata_root: Path)
                 "text": text,
                 "lang": "sl-SI",
                 "target_lang": "sl-SI",
-                "sample_id": sample_id,
+                "sample_id": plan.sample_id,
                 "partition_role": "immutable_real_gate",
                 "source_type": "public_real",
                 "dataset": cfg["gate_id"],
+                "source_row_index": plan.source_row_index,
+                "source_id": plan.source_id,
             }
         )
         local_reference_rows.append(
             {
-                "sample_id": sample_id,
+                "sample_id": plan.sample_id,
+                "source_row_index": plan.source_row_index,
+                "source_id": plan.source_id,
                 "reference": text,
                 "raw_reference": raw_text,
                 "normalized_reference_sha256": stable_text_hash(text),
@@ -128,8 +133,9 @@ def build_fleurs(config: dict[str, Any], output_root: Path, metadata_root: Path)
         )
         public_rows.append(
             {
-                "row_id": row_id,
-                "sample_id": sample_id,
+                "source_row_index": plan.source_row_index,
+                "source_id": plan.source_id,
+                "sample_id": plan.sample_id,
                 "audio_sha256": info.sha256,
                 "reference_sha256": stable_text_hash(text),
                 "duration_seconds": duration,
@@ -159,6 +165,7 @@ def build_fleurs(config: dict[str, Any], output_root: Path, metadata_root: Path)
         "reference_manifest_sha256": sha256_file(references_path),
         "public_metadata_hash": public_manifest_hash(public_rows),
     }
+    ensure_no_references_or_paths(metadata)
     metadata_path = metadata_root / f"{cfg['gate_id']}.metadata.json"
     atomic_write_json(metadata_path, metadata)
     return {"gate": cfg["gate_id"], "manifest": str(manifest_path), "metadata": str(metadata_path), "rows": len(public_rows)}
@@ -355,6 +362,7 @@ def build_artur(config: dict[str, Any], output_root: Path, metadata_root: Path, 
         "reference_manifest_sha256": sha256_file(references_path),
         "public_metadata_hash": public_manifest_hash(public_rows),
     }
+    ensure_no_references_or_paths(metadata)
     metadata_path = metadata_root / f"{cfg['gate_id']}.metadata.json"
     atomic_write_json(metadata_path, metadata)
     return {"gate": cfg["gate_id"], "manifest": str(manifest_path), "metadata": str(metadata_path), "rows": len(public_rows)}

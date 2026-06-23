@@ -157,7 +157,7 @@ A separate dataset repository may be created only when data licenses, TTS rights
 ## Data partitions
 
 - **Controller development:** can drive error mining and GaMS curriculum.
-- **Immutable gate:** used for repeated acceptance; raw reference text is hidden from GaMS. The current gates are the full FLEURS Slovenian test split and deterministic ARTUR-J public project gate.
+- **Immutable gate:** used for repeated acceptance; raw reference text is hidden from GaMS. The current gates are `fleurs-sl-si-test-full-v2`, the complete FLEURS Slovenian test split with occurrence-index sample IDs, and the deterministic ARTUR-J public project gate.
 - **Final blind test:** used only at major release milestones.
 - **Synthetic candidate pool:** generated each round and mostly discarded after selection.
 - **Replay reservoir:** balanced memory of previously difficult examples.
@@ -237,10 +237,12 @@ candidate-pool failures plus permitted aggregate gate categories. Fixed
 real-gate reference text and synthetic-holdout raw errors remain outside GaMS
 prompts.
 
-The first real Slovenian development gates are `fleurs-sl-si-test-full-v1` and
-`artur-j-public-gate-v1`. Local manifests, audio, raw references, raw
-hypotheses, and per-sample predictions remain ignored; committed artifacts are
-limited to privacy-safe metadata and aggregate reports.
+The canonical real Slovenian development gates are
+`fleurs-sl-si-test-full-v2` and `artur-j-public-gate-v1`. Local manifests,
+audio, raw references, raw hypotheses, and per-sample predictions remain
+ignored; committed artifacts are limited to privacy-safe metadata and aggregate
+reports. Historical `fleurs-sl-si-test-full-v1` evidence is deprecated because
+non-unique upstream source IDs caused duplicate sample IDs and WAV overwrites.
 
 The same storage boundary applies to project-generated curriculum rounds that
 do not use GaMS: the repository owns configuration, validation, selection,

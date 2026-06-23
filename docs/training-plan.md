@@ -62,21 +62,26 @@ parameter isolation. It does not establish a production adaptation or an
 accepted parent checkpoint because the diagnostic public real-smoke sample
 regressed.
 
-The real development gates are now established: complete FLEURS Slovenian test
-and deterministic ARTUR-J public-speech. The first project-generated
-curriculum round kept the same 2048-scalar trainable surface, used Piper
-synthesis, untouched-base pre-scoring, deterministic hard-example selection,
-prompt-column-only training, and fixed synthetic plus real gates. It was
-rejected because fixed synthetic-holdout improvement was insufficient and both
-real gates regressed. Promotion still requires non-regression on both real
-gates; synthetic training-set improvement alone never accepts a parent.
+The real development gates now include `fleurs-sl-si-test-full-v2`, the
+complete FLEURS Slovenian test split with occurrence-index sample IDs, and the
+deterministic ARTUR-J public-speech gate. Historical FLEURS v1 aggregate
+metrics are deprecated because v1 did not preserve unique audio occurrences.
+The first project-generated curriculum round kept the same 2048-scalar
+trainable surface, used Piper synthesis, untouched-base pre-scoring,
+deterministic hard-example selection, prompt-column-only training, and fixed
+synthetic plus real gates. It was rejected because fixed synthetic-holdout
+improvement was insufficient and ARTUR-J regressed; the historical FLEURS-v1
+component also regressed but is deprecated. Promotion still requires
+non-regression on both real gates; synthetic training-set improvement alone
+never accepts a parent.
 
 The first residual-adapter proof reused the same Round 1 corpus and fixed gates
 with rank 16 and rank 64 Slovenian-only residual adapters. Both adapters
-improved the fixed synthetic holdout, but both regressed FLEURS and ARTUR-J. No
-residual adapter is accepted as a parent. This suggests that increasing
-prompt-side capacity against the same single-voice synthetic corpus is not
-sufficient evidence for real-speech generalization.
+improved the fixed synthetic holdout, but both regressed ARTUR-J. The
+historical FLEURS-v1 component also regressed but is deprecated. No residual
+adapter is accepted as a parent. This suggests that increasing prompt-side
+capacity against the same single-voice synthetic corpus is not sufficient
+evidence for real-speech generalization.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -1211,8 +1216,9 @@ May expose reference/hypothesis examples to error mining and GaMS.
 ### Immutable real-Slovenian gate
 
 Used after every round for checkpoint acceptance. The current gates are the
-complete FLEURS Slovenian test split and deterministic ARTUR-J public-speech
-gate. GaMS receives only aggregate error categories, not raw sentences.
+complete FLEURS Slovenian test split as `fleurs-sl-si-test-full-v2` and
+deterministic ARTUR-J public-speech gate. GaMS receives only aggregate error
+categories, not raw sentences. Historical FLEURS v1 evidence is deprecated.
 
 ### Final blind test
 

@@ -57,11 +57,13 @@ The active loop may inspect references and hypotheses. Metrics from this set are
 
 Used after rounds for acceptance. GaMS receives aggregate categories only, not raw reference sentences.
 
-Current immutable real development gates are the complete FLEURS Slovenian test
-split and the ARTUR-J public-speech project gate. Neither gate may enter
-training, candidate generation, synthetic-data selection, or a GaMS prompt.
-Only aggregate categories and metrics may steer later generation when a work
-order explicitly permits it.
+Current immutable real development gates are `fleurs-sl-si-test-full-v2`, the
+complete FLEURS Slovenian test split with occurrence-index sample IDs, and the
+ARTUR-J public-speech project gate. Neither gate may enter training, candidate
+generation, synthetic-data selection, or a GaMS prompt. Only aggregate
+categories and metrics may steer later generation when a work order explicitly
+permits it. Historical FLEURS v1 evidence is deprecated because it did not
+preserve unique audio occurrences.
 
 ### Final blind test
 

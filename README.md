@@ -54,8 +54,8 @@ Present:
 - pinned GaMS generator configuration and deterministic active-curriculum
   validation for the next prompt-column generalization experiment.
 - immutable real-speech development gates for the complete FLEURS Slovenian
-  test split and a deterministic ARTUR-J public-speech project gate, with
-  untouched-base aggregate metrics.
+  test split (`fleurs-sl-si-test-full-v2`) and a deterministic ARTUR-J
+  public-speech project gate.
 - a completed project-generated Round 1 curriculum experiment whose
   prompt-column challenger improved selected synthetic training examples but
   regressed FLEURS and ARTUR-J, so it is not an accepted parent.
@@ -88,6 +88,10 @@ synthetic and real gates before any challenger can become an accepted parent.
 The real FLEURS and ARTUR-J gates are immutable development gates, not final
 blind tests and not release-quality claims. Their raw references, audio,
 manifests, hypotheses, and per-sample outputs remain ignored local artifacts.
+Historical FLEURS v1 aggregate metrics are deprecated because v1 used
+non-unique upstream source IDs for sample IDs and WAV filenames; its 834
+manifest rows represented only 347 unique sample identities. ARTUR-J evidence is
+unaffected. FLEURS v2 has not yet been ASR-evaluated.
 The Round 1 curriculum text, audio, hypotheses, delta, checkpoint, residual
 adapter artifacts, and raw reports are also ignored local artifacts and are not
 published by this repository.

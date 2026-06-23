@@ -7,7 +7,7 @@ gates, not final blind tests.
 
 ### FLEURS Slovenian Test
 
-- Gate identifier: `fleurs-sl-si-test-full-v1`
+- Gate identifier: `fleurs-sl-si-test-full-v2`
 - Repository: `google/fleurs`
 - Configuration: `sl_si`
 - Split: `test`
@@ -16,13 +16,26 @@ gates, not final blind tests.
 - Rows: 834
 - Total duration: 8173.140 seconds
 - Manifest SHA256:
-  `07838a58222b9a0f6a4f4639b66d678ee38f87254518e43b742a143ef4aeaf4e`
+  `8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513`
+- Reference-manifest SHA256:
+  `483961a368bb92cd3fcabe1649cde9655402ff2572bb54eceb26223aaa11ce83`
+- Public metadata hash:
+  `5f062f6a8afe441eca17ee9bdb5a88d93aaaabfdb92597dec2bac1e4d3af220f`
 - Policy: the complete official test split is used. Rows are not sampled or
   excluded for model-performance reasons.
+- Identity policy: sample IDs and WAV filenames are derived from deterministic
+  source-row enumeration indexes, `0..833`. The upstream FLEURS `source_id` is
+  retained as provenance but is not unique and is not used as an identity.
 
 Raw references, hypotheses, local manifests, and audio remain ignored local
 artifacts. Committed metadata contains row identifiers, hashes, counts,
 durations, and checksums only.
+
+Historical `fleurs-sl-si-test-full-v1` metadata is deprecated because repeated
+upstream source IDs caused duplicate sample IDs and WAV overwrites. Its 834
+manifest rows represented only 347 unique sample identities, so v1 metrics must
+not be used as complete-split quality evidence. See
+[`fleurs-sl-si-test-full-v1.deprecated.md`](evaluation-gates/fleurs-sl-si-test-full-v1.deprecated.md).
 
 ### ARTUR-J Public Gate
 

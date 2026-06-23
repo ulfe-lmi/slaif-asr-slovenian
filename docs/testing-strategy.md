@@ -131,7 +131,10 @@ evaluation phases remain manual GPU verification until a later self-hosted
 runner exists.
 
 The real-gate evaluation suite adds CPU-testable checks for pinned FLEURS and
-ARTUR source identities, ARTUR TRS parsing, deterministic gate selection,
-Slovenian normalization, raw/normalized metric separation, privacy-safe
-metadata, and leakage guards. Full FLEURS and ARTUR-J inference remains manual
-GPU evidence.
+ARTUR source identities, FLEURS occurrence-index identity planning, repeated
+FLEURS source-ID collision handling, ARTUR TRS parsing, deterministic gate
+selection, Slovenian normalization, raw/normalized metric separation,
+privacy-safe metadata, and leakage guards. The full FLEURS v2 gate verifier
+checks row count, unique sample IDs, unique audio paths, source-row index range,
+manifest hash, and WAV validity. Full FLEURS and ARTUR-J inference remains
+manual GPU evidence.

@@ -112,6 +112,7 @@ GPU, model sharding, or a floating Hugging Face revision in this project.
 
 ## FLEURS Slovenian Test Gate
 
+- Gate identifier: `fleurs-sl-si-test-full-v2`
 - Source: `google/fleurs`
 - Configuration: `sl_si`
 - Split: `test`
