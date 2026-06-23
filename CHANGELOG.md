@@ -55,6 +55,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Fail-closed text-stage training-corpus validator, protected-gate hash-index
   builder, retired-corpus registry, adversarial fixtures, and validator usage
   documentation.
+- GaMS corpus-v2 candidate-reservoir configuration, batched generation harness,
+  native-speaker review-pack builder, CPU tests, and privacy-safe DRAFT data
+  report.
 
 ### Changed
 
@@ -95,3 +98,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   historical Round 1 schema/duplicate checker. The validator can produce
   `TEXT_ACCEPTED`, but it does not prove acoustic suitability or issue
   `TRAINING_ELIGIBLE`.
+- The first corpus-v2 GaMS reservoir is DRAFT only. It is not committed as raw
+  generated text, has no fabricated linguistic review, and is not authorized
+  for TTS, ASR scoring, selection, or training.

@@ -31,7 +31,8 @@ prompt-column micro-proof is complete, active-curriculum tooling exists, the
 first immutable real Slovenian development gates establish the untouched
 Nemotron baseline, and the first project-generated curriculum round plus a
 residual-adapter capacity proof have both been rejected as accepted parents by
-the fixed real gates.
+the fixed real gates. The first GaMS corpus-v2 candidate reservoir now exists
+as a DRAFT source pool awaiting native-speaker linguistic review.
 
 Present:
 
@@ -43,6 +44,8 @@ Present:
   selection, or training;
 - a fail-closed text-stage training-corpus validator, protected-gate hash-index
   builder, and retired-corpus registry;
+- a governed GaMS corpus-v2 candidate-reservoir generator, local review-pack
+  builder, and privacy-safe aggregate DRAFT report;
 - a detailed Nemotron/NeMo adaptation plan;
 - PR, issue, review, and work-order templates;
 - pinned baseline runtime configuration;
@@ -108,6 +111,9 @@ Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
 training-data constitution. The current validator can reach `TEXT_ACCEPTED`
 only; acoustic validation and the first data certificate remain separate future
 work.
+The GaMS corpus-v2 reservoir is not committed as raw text and is not
+`TEXT_ACCEPTED`; it remains DRAFT until genuine native-speaker review is
+completed. No TTS, ASR scoring, selection, or training is authorized from it.
 
 ## Repository role
 
@@ -170,6 +176,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The GaMS corpus-v2 candidate-reservoir task is defined by
+[`docs/work-orders/0013-gams-corpus-v2-candidate-reservoir.md`](docs/work-orders/0013-gams-corpus-v2-candidate-reservoir.md).
 The fail-closed training-corpus validator task is defined by
 [`docs/work-orders/0012-fail-closed-training-corpus-validator.md`](docs/work-orders/0012-fail-closed-training-corpus-validator.md).
 The training-data constitution adoption task is defined by

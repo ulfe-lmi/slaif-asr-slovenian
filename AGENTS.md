@@ -13,8 +13,9 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
 - **Current milestone:** M3 prompt-column proof is complete for one
-  micro-experiment. The training-data constitution is adopted and text-stage
-  corpus-validation tooling exists, but corpus v2, acoustic acceptance,
+  micro-experiment. The training-data constitution is adopted, text-stage
+  corpus-validation tooling exists, and the first GaMS corpus-v2 candidate
+  reservoir is DRAFT pending native-speaker review. Acoustic acceptance,
   `TRAINING_ELIGIBLE` certification, and production ASR work remain incomplete.
 
 ## Mission
@@ -151,6 +152,10 @@ Non-negotiable rules:
   `configs/data_quality/training_text_v1.json` for new text-stage admission.
   The legacy Round 1 validator is historical only and is not an admission
   authority for new corpora.
+- The GaMS corpus-v2 candidate reservoir is a DRAFT source pool only. It has
+  not passed native-speaker linguistic review, TTS synthesis, acoustic
+  validation, or data certification, and it must not enter selection, scoring,
+  or training.
 
 ## Model and dependency policy
 
