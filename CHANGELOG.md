@@ -50,6 +50,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   privacy-safe aggregate experiment report.
 - FLEURS full-test v2 gate metadata, occurrence-index identity planning,
   full-gate verifier, and v1 deprecation record.
+- Training-data constitution, data-admission ADR, and governance links for
+  future corpus validation and acceptance certificates.
 
 ### Changed
 
@@ -81,3 +83,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   Historical FLEURS v1 evidence is deprecated because non-unique upstream
   source IDs caused duplicate sample IDs and WAV overwrites; v1 metrics must
   not be used as complete-split quality evidence.
+- Round 1 v1 corpus identities are permanently retired from future training,
+  steering, model comparison, early stopping, generator steering, promotion,
+  and public corpus-quality claims. Experiments 0004 and 0005 remain auditable
+  historical evidence, but their architecture-level conclusions are narrowed by
+  the corpus-confounding finding.

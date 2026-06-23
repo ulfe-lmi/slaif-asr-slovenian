@@ -138,3 +138,13 @@ privacy-safe metadata, and leakage guards. The full FLEURS v2 gate verifier
 checks row count, unique sample IDs, unique audio paths, source-row index range,
 manifest hash, and WAV validity. Full FLEURS and ARTUR-J inference remains
 manual GPU evidence.
+
+Training-data admission requires a later reusable fail-closed validator. Its
+tests must include adversarial fixtures that reproduce the Round 1 v1 failure
+with safe synthetic strings: metadata identifiers embedded in speech, same
+template with different row numbers, same body with different artificial
+prefixes or suffixes, train/holdout body overlap with different IDs, suspicious
+threshold-boundary pairs, malformed Slovenian slot insertion, and acoustic
+variants of one utterance crossing partitions. Until that validator and a
+privacy-safe data acceptance certificate exist, a corpus cannot be reported as
+`TRAINING_ELIGIBLE`.

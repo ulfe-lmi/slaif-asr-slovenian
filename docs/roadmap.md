@@ -60,7 +60,7 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **vertical slice complete; scalable governance pending**
+Status: **vertical slice complete; training-data constitution adopted; corpus v2 pending**
 
 Execution hardware policy: use exactly one process-visible GPU. Current
 project-owned helpers accept one visible A100 or RTX 2080 Ti and reject CPU
@@ -75,7 +75,9 @@ Deliverables:
 - audio and manifest validator;
 - provenance records;
 - partition and leakage checks;
-- synthetic text deduplication.
+- synthetic text deduplication;
+- reusable training-data admission validator and data certificate:
+  **pending later work order**.
 
 Exit gate:
 
@@ -90,6 +92,12 @@ The current M2 slice proves real Piper `sl_SI-artur-medium` synthesis to a
 Nemotron smoke manifest on one RTX 2080 Ti. It does not implement GaMS
 generation, failure-directed selection, large-batch synthesis, leakage controls,
 replay, or production training manifests.
+
+The training-data constitution is now a prerequisite for promotion-oriented
+data work. The retired Round 1 v1 corpus identities must not be reused for
+training, steering, model comparison, or promotion. The next data milestone is a
+corpus v2 work order that produces `TRAINING_ELIGIBLE` text/audio plus a
+privacy-safe acceptance certificate before any new model-training experiment.
 
 ## Real Evaluation Gates
 
@@ -172,6 +180,11 @@ fixed synthetic-holdout threshold and regressed ARTUR-J. The historical
 FLEURS-v1 component is deprecated. The challenger is rejected and is not a valid
 parent.
 
+Later review found the Round 1 v1 corpus structurally repetitive,
+linguistically defective, and train/holdout template-confounded. This narrows
+the scientific interpretation: the rejection remains valid, but the result must
+not be cited as evidence that a clean curriculum would fail.
+
 Round 1 work order:
 [`work-orders/0008-slovenian-curriculum-round-1.md`](work-orders/0008-slovenian-curriculum-round-1.md)
 
@@ -183,6 +196,11 @@ real gates while preserving every pretrained Nemotron parameter. Rank 16 and
 rank 64 adapters improved fixed synthetic-holdout metrics, but both regressed
 ARTUR-J. The historical FLEURS-v1 component is deprecated. The result remains
 synthetic-only and no adapter is accepted.
+
+Because this proof reused the retired Round 1 v1 corpus, it is
+corpus-confounded. Its runtime and parameter-integrity evidence remain useful,
+but it must not be cited as proof that residual adapters, their placement, or
+added capacity are intrinsically unsuitable.
 
 Residual-adapter work order:
 [`work-orders/0009-slovenian-residual-adapter-proof.md`](work-orders/0009-slovenian-residual-adapter-proof.md)

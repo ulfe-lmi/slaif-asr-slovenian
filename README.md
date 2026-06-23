@@ -39,6 +39,8 @@ Present:
 - CPU-only GitHub Actions baseline for repository hygiene and unit checks;
 - architecture and trust-boundary decisions;
 - data, testing, evaluation, and release policies;
+- a training-data constitution governing corpus admission before TTS, scoring,
+  selection, or training;
 - a detailed Nemotron/NeMo adaptation plan;
 - PR, issue, review, and work-order templates;
 - pinned baseline runtime configuration;
@@ -95,6 +97,12 @@ unaffected. FLEURS v2 has not yet been ASR-evaluated.
 The Round 1 curriculum text, audio, hypotheses, delta, checkpoint, residual
 adapter artifacts, and raw reports are also ignored local artifacts and are not
 published by this repository.
+The Round 1 v1 candidate pool, synthetic holdout, and selected-training
+manifest are permanently retired for future training, steering, model
+comparison, and promotion because later review found structural repetition,
+train/holdout template-family overlap, and pervasive Slovenian quality defects.
+Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
+training-data constitution.
 
 ## Repository role
 
@@ -119,6 +127,7 @@ vendored into this repository.
 - [Roadmap and PR sequence](docs/roadmap.md)
 - [Detailed training plan](docs/training-plan.md)
 - [Data policy](docs/data-policy.md)
+- [Training-data constitution](docs/training-data-constitution.md)
 - [Testing strategy](docs/testing-strategy.md)
 - [Evaluation protocol](docs/evaluation-protocol.md)
 - [Evaluation datasets](docs/evaluation-datasets.md)
@@ -155,6 +164,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The training-data constitution adoption task is defined by
+[`docs/work-orders/0011-adopt-training-data-constitution.md`](docs/work-orders/0011-adopt-training-data-constitution.md).
 The Slovenian residual-adapter proof is defined by
 [`docs/work-orders/0009-slovenian-residual-adapter-proof.md`](docs/work-orders/0009-slovenian-residual-adapter-proof.md).
 The project-generated Slovenian curriculum Round 1 task is defined by

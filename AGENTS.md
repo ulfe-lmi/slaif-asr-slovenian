@@ -13,7 +13,8 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
 - **Current milestone:** M3 prompt-column proof is complete for one
-  micro-experiment. Broader M2 data governance and production ASR work remain
+  micro-experiment. The training-data constitution is adopted, but reusable
+  corpus-validation tooling, corpus v2, and production ASR work remain
   incomplete.
 
 ## Mission
@@ -116,6 +117,36 @@ Current canonical real development gates:
 Historical `fleurs-sl-si-test-full-v1` evidence is deprecated because repeated
 upstream source IDs caused duplicate sample IDs and WAV overwrites. It must not
 be used as complete-split quality evidence.
+
+## Training-data constitution
+
+Read `docs/training-data-constitution.md` before generating candidate text,
+selecting curriculum samples, creating training or holdout partitions,
+synthesizing TTS data, ingesting real training speech, scoring candidates for
+difficulty, training any model parameter, or interpreting synthetic-data
+results.
+
+Non-negotiable rules:
+
+- Corpus IDs, row numbers, group labels, batch labels, filenames, and
+  provenance markers must never enter spoken or target text.
+- Schema validity, literal duplicate checks, and character-ngram checks do not
+  establish training eligibility.
+- Generated text must pass multi-view structural fingerprints,
+  concentration analysis, partition-family checks, and Slovenian linguistic
+  review before TTS or training.
+- Training and holdout must be disjoint by content and family, not merely by
+  ID; every acoustic variant of one underlying utterance remains in one
+  partition.
+- Synthetic holdout is diagnostic only. Real speech decides checkpoint
+  acceptance.
+- Hard-example selection operates only on an already accepted corpus and must
+  preserve template, source, domain, and voice diversity.
+- A privacy-safe data acceptance certificate is required before training.
+- The Round 1 v1 corpora identified in the training-data constitution are
+  permanently retired from training, steering, model comparison, and promotion.
+- Skipped, blocked, unknown, or unrun quality checks prevent
+  `TRAINING_ELIGIBLE` status.
 
 ## Model and dependency policy
 

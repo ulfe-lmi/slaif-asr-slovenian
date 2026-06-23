@@ -10,6 +10,14 @@ Status: **completed; synthetic-only; no accepted adapter**
 > complete-split quality evidence. ARTUR-J independently failed promotion and
 > remains unaffected.
 
+> **Training-data constitution qualification:** execution and
+> parameter-integrity evidence in this report remain historical evidence, and
+> both adapters remain rejected as checkpoint parents. ARTUR-J independently
+> demonstrated real-speech regression. Because the experiment reused the later
+> retired Round 1 v1 corpus, it is corpus-confounded and must not be cited as
+> proof that residual adapters, their placement, or added capacity are
+> intrinsically unsuitable.
+
 ## Purpose
 
 This experiment tests whether a Slovenian-specific residual adapter with more

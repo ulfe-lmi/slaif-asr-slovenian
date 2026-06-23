@@ -9,6 +9,13 @@ Status: **completed; challenger rejected**
 > not be used as complete-split quality evidence. ARTUR-J independently failed
 > promotion and remains unaffected.
 
+> **Training-data constitution qualification:** later review found the Round 1
+> v1 training corpus structurally repetitive, linguistically defective, and
+> unsuitable for real-generalization training. Its synthetic holdout was
+> ID-disjoint but not content-family-disjoint. The challenger rejection remains
+> valid, but this experiment must not be cited as evidence that a clean
+> Slovenian curriculum would fail.
+
 ## Purpose
 
 This experiment tests whether a broader project-generated Slovenian synthetic

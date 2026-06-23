@@ -117,6 +117,13 @@ but regressed FLEURS and ARTUR-J normalized WER/CER beyond promotion
 thresholds. This is classified as synthetic-only evidence, not real-speech
 generalization.
 
+Synthetic holdout scores are diagnostic even when the holdout is properly
+constructed. They must not be described as real-generalization evidence, and
+they cannot make a challenger an accepted parent without real-gate
+non-regression and the precommitted promotion rules. The Round 1 v1 synthetic
+corpora are additionally retired by the training-data constitution and must not
+be reused for future promotion-oriented experiments.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.
