@@ -1,6 +1,6 @@
 # Corpus-v2 Linguistic Review Admission
 
-Status: `DRAFT`
+Status: `TEXT_ACCEPTED`
 
 This privacy-safe report contains only aggregate review and validation evidence. It does not include generated sentences, candidate IDs, reviewer identity, raw comments, protected references, or local paths.
 
@@ -9,21 +9,21 @@ This privacy-safe report contains only aggregate review and validation evidence.
 - Source corpus ID: `sl-corpus-v2-gams-candidate-reservoir-v1`
 - Pre-review rows: 415
 - Pre-review SHA256: `5cb2520c27b3debd18a2f475368c2cdd8601fc5781ec541287092dbcd3ea0fe6`
-- Review sheet SHA256: `831ecbcf25da59f6e35147b520a0eb9cedc72daf8f18198c367a70e45f03fccf`
+- Review sheet SHA256: `b5ed25cb3aa81bb94741a7068f67be7c8a535ab7aab116b3ae80fc2613d749c7`
 
 ## Review Funnel
 
 - Review rows: 415
-- Coverage complete: false
+- Coverage complete: true
 - Accepted-outcome rows: 415
 - Rejected rows: 0
 - Revise and rereview rows: 0
-- Review issue counts: `{"blank_review_revision": 415}`
+- Review issue counts: `{}`
 
 ## Validator
 
-- Final status: `DRAFT`
-- Decision reasons: `blank_review_revision, missing_linguistic_review`
+- Final status: `TEXT_ACCEPTED`
+- Decision reasons: `all_required_text_checks_passed`
 
 ## Limitations
 
