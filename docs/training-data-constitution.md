@@ -1291,6 +1291,13 @@ configs/data_quality/<policy-version>.json
 tests/test_data_quality.py
 ```
 
+Implementation status: the repository now provides the text-stage validator in
+`slaif_asr/data_quality.py` and `scripts/validate_training_corpus.py` with
+policy `configs/data_quality/training_text_v1.json`. This implements structural
+text admission through `TEXT_ACCEPTED`; it does not implement acoustic
+validation, does not issue a data acceptance certificate, and cannot emit
+`TRAINING_ELIGIBLE`.
+
 The implementation MUST:
 
 - be deterministic;

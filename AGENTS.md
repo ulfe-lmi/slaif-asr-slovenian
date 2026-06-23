@@ -13,9 +13,9 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
 - **Current milestone:** M3 prompt-column proof is complete for one
-  micro-experiment. The training-data constitution is adopted, but reusable
-  corpus-validation tooling, corpus v2, and production ASR work remain
-  incomplete.
+  micro-experiment. The training-data constitution is adopted and text-stage
+  corpus-validation tooling exists, but corpus v2, acoustic acceptance,
+  `TRAINING_ELIGIBLE` certification, and production ASR work remain incomplete.
 
 ## Mission
 
@@ -147,6 +147,10 @@ Non-negotiable rules:
   permanently retired from training, steering, model comparison, and promotion.
 - Skipped, blocked, unknown, or unrun quality checks prevent
   `TRAINING_ELIGIBLE` status.
+- Use `scripts/validate_training_corpus.py` and
+  `configs/data_quality/training_text_v1.json` for new text-stage admission.
+  The legacy Round 1 validator is historical only and is not an admission
+  authority for new corpora.
 
 ## Model and dependency policy
 

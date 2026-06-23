@@ -74,6 +74,35 @@ class RepositoryValidationTests(unittest.TestCase):
 
             self.assertEqual(issues, [])
 
+    def test_retired_registry_hashes_are_enforced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / "configs" / "data_quality" / "retired_corpora.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(
+                '{"schema_version":"1.0","retired_corpora":[{"artifact":"candidate_pool","sha256":"bad"}]}\n',
+                encoding="utf-8",
+            )
+
+            issues = validate_repository(root, ["configs/data_quality/retired_corpora.json"])
+
+            self.assertTrue(any("retired registry hashes" in issue.message for issue in issues))
+
+    def test_training_eligible_certificate_requires_sections_and_no_raw_text(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / "docs" / "data-certificates" / "bad.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(
+                '{"schema_version":"1.0","corpus_id":"x","status":"TRAINING_ELIGIBLE","text":"raw"}\n',
+                encoding="utf-8",
+            )
+
+            issues = validate_repository(root, ["docs/data-certificates/bad.json"])
+
+            self.assertTrue(any("forbidden key: text" in issue.message for issue in issues))
+            self.assertTrue(any("TRAINING_ELIGIBLE certificate missing" in issue.message for issue in issues))
+
 
 if __name__ == "__main__":
     unittest.main()

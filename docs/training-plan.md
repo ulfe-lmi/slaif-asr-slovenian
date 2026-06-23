@@ -566,6 +566,15 @@ fingerprints, concentration analysis, cross-partition family checks, Slovenian
 linguistic review, and privacy-safe acceptance-certificate process. Skipped,
 blocked, unknown, or unrun quality checks prevent `TRAINING_ELIGIBLE` status.
 
+The text-stage validator is implemented as
+[`scripts/validate_training_corpus.py`](../scripts/validate_training_corpus.py)
+with policy
+[`configs/data_quality/training_text_v1.json`](../configs/data_quality/training_text_v1.json).
+It may emit `TEXT_ACCEPTED`, `TEXT_REJECTED`, `DRAFT`,
+`DIAGNOSTIC_ONLY`, or `RETIRED`; it cannot emit `TRAINING_ELIGIBLE`.
+Promotion-oriented training still requires later acoustic validation and a
+privacy-safe data acceptance certificate.
+
 ## 13. Text policy for the first adaptation
 
 The base model is trained to emit punctuation and capitalization. Match that style.

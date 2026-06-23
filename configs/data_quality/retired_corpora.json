@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "retired_corpora": [
+    {
+      "artifact": "candidate_pool",
+      "sha256": "0c92c60c58d60b629ef275527ed31b7eba5e3eab90fc988928666a121aa86b17",
+      "reason": "Round 1 v1 corpus was structurally repetitive, linguistically defective, and retired by the training-data constitution."
+    },
+    {
+      "artifact": "synthetic_holdout",
+      "sha256": "ed10fe7eb49e034d47857a9639a1022d4ad8ab70f6a8c741e6e2b12f1069bec9",
+      "reason": "Round 1 v1 synthetic holdout was ID-disjoint but not content-family-disjoint."
+    },
+    {
+      "artifact": "selected_training_manifest",
+      "sha256": "92b195e2cecb69ee3096ac6644eb65ae592ba60d8cf31d265c45c6eec9d781a4",
+      "reason": "Round 1 v1 selected training manifest inherited the retired corpus structure."
+    }
+  ]
+}

@@ -41,6 +41,8 @@ Present:
 - data, testing, evaluation, and release policies;
 - a training-data constitution governing corpus admission before TTS, scoring,
   selection, or training;
+- a fail-closed text-stage training-corpus validator, protected-gate hash-index
+  builder, and retired-corpus registry;
 - a detailed Nemotron/NeMo adaptation plan;
 - PR, issue, review, and work-order templates;
 - pinned baseline runtime configuration;
@@ -74,6 +76,7 @@ work order explicitly permits them.
 Not yet present:
 
 - model weights;
+- a `TRAINING_ELIGIBLE` corpus or data acceptance certificate;
 - a released Slovenian checkpoint.
 
 No accuracy or readiness claim should be inferred from the baseline runtime tooling.
@@ -102,7 +105,9 @@ manifest are permanently retired for future training, steering, model
 comparison, and promotion because later review found structural repetition,
 train/holdout template-family overlap, and pervasive Slovenian quality defects.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
-training-data constitution.
+training-data constitution. The current validator can reach `TEXT_ACCEPTED`
+only; acoustic validation and the first data certificate remain separate future
+work.
 
 ## Repository role
 
@@ -128,6 +133,7 @@ vendored into this repository.
 - [Detailed training plan](docs/training-plan.md)
 - [Data policy](docs/data-policy.md)
 - [Training-data constitution](docs/training-data-constitution.md)
+- [Training corpus text validator](docs/data-quality-validator.md)
 - [Testing strategy](docs/testing-strategy.md)
 - [Evaluation protocol](docs/evaluation-protocol.md)
 - [Evaluation datasets](docs/evaluation-datasets.md)
@@ -164,6 +170,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The fail-closed training-corpus validator task is defined by
+[`docs/work-orders/0012-fail-closed-training-corpus-validator.md`](docs/work-orders/0012-fail-closed-training-corpus-validator.md).
 The training-data constitution adoption task is defined by
 [`docs/work-orders/0011-adopt-training-data-constitution.md`](docs/work-orders/0011-adopt-training-data-constitution.md).
 The Slovenian residual-adapter proof is defined by
