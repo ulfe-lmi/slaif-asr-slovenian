@@ -60,7 +60,7 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **vertical slice complete; training-data constitution adopted; corpus v2 pending**
+Status: **vertical slice complete; text validator implemented; corpus v2 pending**
 
 Execution hardware policy: use exactly one process-visible GPU. Current
 project-owned helpers accept one visible A100 or RTX 2080 Ti and reject CPU
@@ -76,8 +76,9 @@ Deliverables:
 - provenance records;
 - partition and leakage checks;
 - synthetic text deduplication;
-- reusable training-data admission validator and data certificate:
-  **pending later work order**.
+- reusable text-stage training-data admission validator: **implemented**;
+- acoustic validator and privacy-safe data certificate: **pending later work
+  order**.
 
 Exit gate:
 
@@ -95,9 +96,11 @@ replay, or production training manifests.
 
 The training-data constitution is now a prerequisite for promotion-oriented
 data work. The retired Round 1 v1 corpus identities must not be reused for
-training, steering, model comparison, or promotion. The next data milestone is a
-corpus v2 work order that produces `TRAINING_ELIGIBLE` text/audio plus a
-privacy-safe acceptance certificate before any new model-training experiment.
+training, steering, model comparison, or promotion. The text-stage validator can
+produce `TEXT_ACCEPTED`, but it does not establish acoustic suitability. The
+next data milestone is a corpus v2 work order that uses the validator, then
+adds acoustic validation and a privacy-safe acceptance certificate before any
+new model-training experiment.
 
 ## Real Evaluation Gates
 

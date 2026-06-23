@@ -55,6 +55,43 @@ LOCAL_PATH_PATTERNS = (
 )
 MARKDOWN_INLINE_LINK = re.compile(r"!?\[[^\]]+\]\(([^)]+)\)")
 MARKDOWN_REFERENCE_LINK = re.compile(r"^\s*\[[^\]]+\]:\s*(\S+)", re.MULTILINE)
+RETIRED_CORPUS_HASHES = {
+    "candidate_pool": "0c92c60c58d60b629ef275527ed31b7eba5e3eab90fc988928666a121aa86b17",
+    "synthetic_holdout": "ed10fe7eb49e034d47857a9639a1022d4ad8ab70f6a8c741e6e2b12f1069bec9",
+    "selected_training_manifest": "92b195e2cecb69ee3096ac6644eb65ae592ba60d8cf31d265c45c6eec9d781a4",
+}
+DATA_CERTIFICATE_FORBIDDEN_KEYS = {
+    "text",
+    "spoken_text",
+    "target_text",
+    "reference",
+    "raw_reference",
+    "hypothesis",
+    "audio_filepath",
+    "local_path",
+}
+TRAINING_ELIGIBLE_REQUIRED_CERTIFICATE_KEYS = {
+    "schema_version",
+    "corpus_id",
+    "status",
+    "decision_date",
+    "partition_counts",
+    "partition_hashes",
+    "surface_unique_counts",
+    "number_masked_unique_counts",
+    "entity_masked_unique_counts",
+    "carrier_stripped_unique_counts",
+    "template_family_counts",
+    "within_partition_duplicate_counts",
+    "cross_partition_overlap_counts",
+    "fuzzy_review_counts",
+    "linguistic_review",
+    "audio_validation",
+    "protected_gate_overlap_count",
+    "validator_code_revision",
+    "config_sha256",
+    "limitations",
+}
 
 
 @dataclass(frozen=True)
@@ -114,6 +151,12 @@ def validate_repository(
         issues.extend(validate_text_file(relative, text))
         if suffix == ".json":
             issues.extend(validate_json(relative, text))
+            if relative == "configs/data_quality/retired_corpora.json":
+                issues.extend(validate_retired_corpora_registry(relative, text))
+            if relative.startswith("configs/data_quality/"):
+                issues.extend(validate_data_quality_config(relative, text))
+            if relative.startswith("docs/data-certificates/"):
+                issues.extend(validate_data_certificate(relative, text))
             if relative.startswith("docs/evaluation-gates/") and relative.endswith(".metadata.json"):
                 issues.extend(validate_real_gate_metadata(relative, text))
         elif suffix == ".jsonl":
@@ -155,6 +198,76 @@ def validate_json(relative: str, text: str) -> list[RepositoryIssue]:
     except json.JSONDecodeError as exc:
         return [RepositoryIssue(relative, f"invalid JSON: line {exc.lineno} column {exc.colno}")]
     return []
+
+
+def validate_data_quality_config(relative: str, text: str) -> list[RepositoryIssue]:
+    issues: list[RepositoryIssue] = []
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [RepositoryIssue(relative, f"invalid JSON: line {exc.lineno} column {exc.colno}")]
+    if not isinstance(payload, dict):
+        return [RepositoryIssue(relative, "data-quality configuration must be a JSON object")]
+    if relative.endswith("training_text_v1.json"):
+        if payload.get("validator_algorithm_version") != "training-text-validator-v1":
+            issues.append(RepositoryIssue(relative, "training_text_v1 has wrong validator algorithm version"))
+        impossible = set(payload.get("impossible_output_statuses", []))
+        if "TRAINING_ELIGIBLE" not in impossible:
+            issues.append(RepositoryIssue(relative, "text-stage config must make TRAINING_ELIGIBLE impossible"))
+        required = set(payload.get("protected_indexes", {}).get("required_gate_ids", []))
+        for gate_id in {"fleurs-sl-si-test-full-v2", "artur-j-public-gate-v1"} - required:
+            issues.append(RepositoryIssue(relative, f"missing required protected index gate {gate_id}"))
+    return issues
+
+
+def validate_retired_corpora_registry(relative: str, text: str) -> list[RepositoryIssue]:
+    issues: list[RepositoryIssue] = []
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [RepositoryIssue(relative, f"invalid JSON: line {exc.lineno} column {exc.colno}")]
+    entries = payload.get("retired_corpora") if isinstance(payload, dict) else None
+    if not isinstance(entries, list):
+        return [RepositoryIssue(relative, "retired registry must contain retired_corpora list")]
+    found = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            issues.append(RepositoryIssue(relative, "retired registry entry must be an object"))
+            continue
+        found[str(entry.get("artifact", ""))] = str(entry.get("sha256", ""))
+    if found != RETIRED_CORPUS_HASHES:
+        issues.append(RepositoryIssue(relative, "retired registry hashes must match the training-data constitution exactly"))
+    return issues
+
+
+def validate_data_certificate(relative: str, text: str) -> list[RepositoryIssue]:
+    issues: list[RepositoryIssue] = []
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [RepositoryIssue(relative, f"invalid JSON: line {exc.lineno} column {exc.colno}")]
+    if not isinstance(payload, dict):
+        return [RepositoryIssue(relative, "data certificate must be a JSON object")]
+
+    def walk(value: object, key: str = "") -> None:
+        if key in DATA_CERTIFICATE_FORBIDDEN_KEYS:
+            issues.append(RepositoryIssue(relative, f"data certificate contains forbidden key: {key}"))
+        if isinstance(value, dict):
+            for child_key, child_value in value.items():
+                walk(child_value, child_key)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+        elif isinstance(value, str):
+            if re.search(r"(^|[\"'\s])/(?:home|mnt/data|tmp)/", value):
+                issues.append(RepositoryIssue(relative, "data certificate contains local absolute path"))
+
+    walk(payload)
+    if payload.get("status") == "TRAINING_ELIGIBLE":
+        missing = sorted(TRAINING_ELIGIBLE_REQUIRED_CERTIFICATE_KEYS - set(payload))
+        if missing:
+            issues.append(RepositoryIssue(relative, f"TRAINING_ELIGIBLE certificate missing required keys: {missing}"))
+    return issues
 
 
 def validate_real_gate_metadata(relative: str, text: str) -> list[RepositoryIssue]:

@@ -52,6 +52,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   full-gate verifier, and v1 deprecation record.
 - Training-data constitution, data-admission ADR, and governance links for
   future corpus validation and acceptance certificates.
+- Fail-closed text-stage training-corpus validator, protected-gate hash-index
+  builder, retired-corpus registry, adversarial fixtures, and validator usage
+  documentation.
 
 ### Changed
 
@@ -88,3 +91,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   and public corpus-quality claims. Experiments 0004 and 0005 remain auditable
   historical evidence, but their architecture-level conclusions are narrowed by
   the corpus-confounding finding.
+- New corpus admission must use the text-stage validator rather than the
+  historical Round 1 schema/duplicate checker. The validator can produce
+  `TEXT_ACCEPTED`, but it does not prove acoustic suitability or issue
+  `TRAINING_ELIGIBLE`.

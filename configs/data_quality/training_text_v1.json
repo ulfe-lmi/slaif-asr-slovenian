@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "policy_name": "training_text_v1",
+  "validator_algorithm_version": "training-text-validator-v1",
+  "intended_use": "promotion_oriented_text_admission",
+  "record_contract": {
+    "record_schema_version": "2.0",
+    "spoken_text_must_equal_target_text": true,
+    "partition_roles": [
+      "synthetic_candidate",
+      "selected_training",
+      "synthetic_holdout",
+      "real_calibration_training"
+    ],
+    "source_types": [
+      "generated_text",
+      "authentic_text",
+      "real_speech_transcript"
+    ],
+    "length_limits": {
+      "min_words": 2,
+      "max_words": 40,
+      "min_characters": 6,
+      "max_characters": 240
+    },
+    "forbidden_symbols": [
+      "€",
+      "°"
+    ]
+  },
+  "protected_indexes": {
+    "required_gate_ids": [
+      "fleurs-sl-si-test-full-v2",
+      "artur-j-public-gate-v1"
+    ]
+  },
+  "carrier_detection": {
+    "max_fraction": 0.05,
+    "min_count": 3,
+    "min_tokens": 2,
+    "max_tokens": 6,
+    "prohibited_patterns": [
+      "\\bskupina\\s+<NUM>\\s+pove\\s+da\\b",
+      "\\bpri\\s+postaji\\s+<NUM>\\s+pri\\s+postaji\\s+<NUM>\\b",
+      "\\b(?:candidate|row|group|batch|sample)\\s+<NUM>\\b"
+    ]
+  },
+  "similarity": {
+    "token_jaccard_review_threshold": 0.72,
+    "character_jaccard_review_threshold": 0.8
+  },
+  "template_families": {
+    "max_undeclared_family_fraction": 0.05,
+    "min_undeclared_family_count": 3,
+    "max_declared_family_fraction": 0.05
+  },
+  "minimal_pair": {
+    "max_family_size": 8
+  },
+  "allowed_output_statuses": [
+    "DRAFT",
+    "TEXT_REJECTED",
+    "TEXT_ACCEPTED",
+    "DIAGNOSTIC_ONLY",
+    "RETIRED"
+  ],
+  "impossible_output_statuses": [
+    "AUDIO_REJECTED",
+    "AUDIO_ACCEPTED",
+    "TRAINING_ELIGIBLE"
+  ]
+}

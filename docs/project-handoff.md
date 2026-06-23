@@ -37,6 +37,11 @@
   `AGENTS.md`. Promotion-oriented training now requires `TRAINING_ELIGIBLE`
   data and a privacy-safe acceptance certificate; schema validity and literal
   duplicate checks are not enough.
+- The fail-closed text-stage corpus validator is implemented. It rejects the
+  retired corpus identities before parsing, enforces structural fingerprints
+  and protected-gate hash indexes, requires complete linguistic review, and can
+  emit `TEXT_ACCEPTED`. It does not validate audio or issue
+  `TRAINING_ELIGIBLE`.
 - The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
   unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -149,9 +154,10 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Implement the reusable fail-closed training-corpus validator and adversarial
-fixtures required by the training-data constitution. In parallel or afterward,
-run the governed A100 batched-streaming parity and throughput work order on
+Design corpus v2 against the fail-closed text-stage validator, then implement
+the later acoustic-validation and data-certificate work required for
+`TRAINING_ELIGIBLE`. In parallel or afterward, run the governed A100
+batched-streaming parity and throughput work order on
 `fleurs-sl-si-test-full-v2`, then establish fresh untouched-base FLEURS v2
 metrics before using FLEURS in promotion decisions again.
 

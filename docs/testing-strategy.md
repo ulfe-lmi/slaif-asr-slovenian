@@ -139,12 +139,15 @@ checks row count, unique sample IDs, unique audio paths, source-row index range,
 manifest hash, and WAV validity. Full FLEURS and ARTUR-J inference remains
 manual GPU evidence.
 
-Training-data admission requires a later reusable fail-closed validator. Its
-tests must include adversarial fixtures that reproduce the Round 1 v1 failure
-with safe synthetic strings: metadata identifiers embedded in speech, same
-template with different row numbers, same body with different artificial
-prefixes or suffixes, train/holdout body overlap with different IDs, suspicious
-threshold-boundary pairs, malformed Slovenian slot insertion, and acoustic
-variants of one utterance crossing partitions. Until that validator and a
-privacy-safe data acceptance certificate exist, a corpus cannot be reported as
-`TRAINING_ELIGIBLE`.
+Training-data admission now has a reusable fail-closed text-stage validator.
+Its CPU tests include adversarial fixtures that reproduce the Round 1 v1
+failure with safe synthetic strings: metadata identifiers embedded in speech,
+same template with different row numbers, same body with different artificial
+prefixes or suffixes, train/holdout body overlap with different IDs,
+suspicious threshold-boundary pairs, malformed Slovenian slot insertion, and
+acoustic variants of one utterance crossing partitions.
+
+The validator does not prove audio quality and cannot emit
+`TRAINING_ELIGIBLE`. Future test work must add adversarial fixtures for the
+audio-validation and certificate stages before any corpus can be used for
+promotion-oriented training.

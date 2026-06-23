@@ -107,6 +107,24 @@ The first implementation must make the trainable surface explicit and measurable
 
 Each stage requires its own work order and acceptance criteria.
 
+## Training-data admission tooling
+
+The reusable text-stage admission validator is implemented in
+[`slaif_asr/data_quality.py`](../slaif_asr/data_quality.py) and exposed through
+[`scripts/validate_training_corpus.py`](../scripts/validate_training_corpus.py).
+It enforces schema version `2.0`, retired-corpus rejection, structural
+fingerprints, carrier and template-family checks, cross-partition family
+independence, protected-gate hash-index checks, and complete linguistic-review
+coverage.
+
+This validator is deliberately upstream of TTS and GPU work. Its strongest
+successful status is `TEXT_ACCEPTED`; acoustic validation and a privacy-safe
+data acceptance certificate are still required before any corpus can become
+`TRAINING_ELIGIBLE`.
+
+The historical Round 1 validator remains only for reproducing Experiment 0004.
+It must not be used as the admission authority for new corpora.
+
 ## Trust boundaries
 
 ### Public GitHub repository
