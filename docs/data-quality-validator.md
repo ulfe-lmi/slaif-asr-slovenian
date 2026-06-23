@@ -114,6 +114,18 @@ review sidecar is supplied. It is not `TEXT_ACCEPTED`, cannot become
 training until later work orders complete review, acoustic validation, and data
 certification.
 
+`scripts/admit_reviewed_corpus_v2.py` ingests the local TSV review sheet,
+preserves the complete human decision record in ignored storage, writes an
+accepted-outcome subset, and reruns the text validator on that subset. It does
+not infer missing review metadata and does not correct generated text.
+
+Current post-review status: the local edited TSV contains 415 `ACCEPT`
+outcomes, but every row lacks the required `review_revision`. The admission
+command therefore reports `DRAFT` with reasons `blank_review_revision` and
+`missing_linguistic_review`. The reservoir is still not `TEXT_ACCEPTED`;
+the accepted-review sidecar is empty because the review metadata is incomplete.
+TTS, ASR scoring, selection, and training remain unauthorized.
+
 ## Status Boundaries
 
 This validator may emit only:

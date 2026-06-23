@@ -58,6 +58,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - GaMS corpus-v2 candidate-reservoir configuration, batched generation harness,
   native-speaker review-pack builder, CPU tests, and privacy-safe DRAFT data
   report.
+- Corpus-v2 linguistic-review admission command, local accepted-subset and
+  review-decision outputs, CPU tests, and privacy-safe aggregate post-review
+  report.
 
 ### Changed
 
@@ -101,3 +104,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - The first corpus-v2 GaMS reservoir is DRAFT only. It is not committed as raw
   generated text, has no fabricated linguistic review, and is not authorized
   for TTS, ASR scoring, selection, or training.
+- The current edited corpus-v2 review sheet records 415 `ACCEPT` outcomes but
+  omits the required `review_revision` on every row. Review admission therefore
+  remains `DRAFT`; no accepted review sidecar, data certificate, TTS, scoring,
+  selection, or training is authorized.
