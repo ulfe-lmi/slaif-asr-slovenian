@@ -1304,6 +1304,12 @@ report. It is not `TEXT_ACCEPTED`, no review approval has been fabricated, and
 it cannot be used for TTS, ASR scoring, selection, or training until the later
 review and certificate stages succeed.
 
+The first review-admission pass has also been implemented. The local edited
+review sheet records 415 `ACCEPT` outcomes, but every row lacks the required
+`review_revision`. Under this constitution, that is incomplete review metadata,
+so the reservoir remains `DRAFT`; its accepted-review sidecar is empty, and no
+TTS, scoring, selection, training, or certificate is authorized.
+
 The implementation MUST:
 
 - be deterministic;

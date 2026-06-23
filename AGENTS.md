@@ -15,7 +15,8 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Current milestone:** M3 prompt-column proof is complete for one
   micro-experiment. The training-data constitution is adopted, text-stage
   corpus-validation tooling exists, and the first GaMS corpus-v2 candidate
-  reservoir is DRAFT pending native-speaker review. Acoustic acceptance,
+  reservoir remains DRAFT after review admission because required
+  `review_revision` metadata is missing. Acoustic acceptance,
   `TRAINING_ELIGIBLE` certification, and production ASR work remain incomplete.
 
 ## Mission
@@ -153,9 +154,11 @@ Non-negotiable rules:
   The legacy Round 1 validator is historical only and is not an admission
   authority for new corpora.
 - The GaMS corpus-v2 candidate reservoir is a DRAFT source pool only. It has
-  not passed native-speaker linguistic review, TTS synthesis, acoustic
-  validation, or data certification, and it must not enter selection, scoring,
-  or training.
+  not passed review admission, TTS synthesis, acoustic validation, or data
+  certification, and it must not enter selection, scoring, or training. The
+  current local review sheet records `ACCEPT` outcomes but lacks required
+  `review_revision` metadata, so those outcomes are incomplete under the
+  training-data constitution.
 
 ## Model and dependency policy
 

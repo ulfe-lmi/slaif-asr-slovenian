@@ -45,10 +45,11 @@
 - The first GaMS corpus-v2 candidate reservoir has been generated as a local
   DRAFT source pool. It requested 480 candidates, retained 415 structurally
   admissible pre-review rows, produced a native-speaker review pack, and passed
-  protected-gate and structural validator checks with final status `DRAFT`
-  solely because linguistic review is missing. No raw generated text is
-  committed, no TTS or ASR scoring has run, and the reservoir is not authorized
-  for training.
+  protected-gate and structural validator checks. A local edited review sheet
+  now records 415 `ACCEPT` outcomes, but every row lacks the required
+  `review_revision`, so post-review admission remains `DRAFT`. No raw
+  generated text is committed, no TTS or ASR scoring has run, and the reservoir
+  is not authorized for training.
 - The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
   unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -161,11 +162,12 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Complete native-speaker linguistic review for the DRAFT corpus-v2 reservoir.
-Only after review can a later work order rerun text admission, decide whether
-the reservoir reaches `TEXT_ACCEPTED`, and then design the separate synthetic
-holdout, acoustic-validation, and data-certificate work required for
-`TRAINING_ELIGIBLE`. In parallel or afterward, run the governed A100
+Complete corpus-v2 review metadata by assigning a non-empty
+`review_revision` to every reviewed row, then rerun the review-admission
+command. Only after the reservoir reaches `TEXT_ACCEPTED` can a later work
+order design the separate synthetic holdout, acoustic-validation, and
+data-certificate work required for `TRAINING_ELIGIBLE`. In parallel or
+afterward, run the governed A100
 batched-streaming parity and throughput work order on
 `fleurs-sl-si-test-full-v2`, then establish fresh untouched-base FLEURS v2
 metrics before using FLEURS in promotion decisions again.

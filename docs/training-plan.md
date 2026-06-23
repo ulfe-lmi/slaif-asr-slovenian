@@ -577,8 +577,10 @@ privacy-safe data acceptance certificate.
 
 The first GaMS corpus-v2 candidate reservoir is implemented as a DRAFT source
 pool. Its raw generated text and review pack remain local ignored artifacts;
-only aggregate counts and hashes are committed. It awaits native-speaker
-linguistic review and must not be synthesized, scored, selected, or trained on.
+only aggregate counts and hashes are committed. The current edited review
+sheet contains 415 `ACCEPT` outcomes but omits the required `review_revision`
+on every row, so review admission remains `DRAFT`. It must not be synthesized,
+scored, selected, or trained on.
 
 ## 13. Text policy for the first adaptation
 

@@ -77,8 +77,8 @@ Deliverables:
 - partition and leakage checks;
 - synthetic text deduplication;
 - reusable text-stage training-data admission validator: **implemented**;
-- GaMS corpus-v2 candidate reservoir: **implemented as DRAFT pending
-  native-speaker linguistic review**;
+- GaMS corpus-v2 candidate reservoir: **implemented as DRAFT; review outcomes
+  ingested but required `review_revision` metadata is missing**;
 - acoustic validator and privacy-safe data certificate: **pending later work
   order**.
 
@@ -100,9 +100,10 @@ The training-data constitution is now a prerequisite for promotion-oriented
 data work. The retired Round 1 v1 corpus identities must not be reused for
 training, steering, model comparison, or promotion. The text-stage validator can
 produce `TEXT_ACCEPTED`, but it does not establish acoustic suitability. The
-first corpus-v2 GaMS reservoir is only DRAFT: human linguistic review remains
-outstanding, no synthetic holdout exists, no TTS or ASR scoring has run, and no
-data acceptance certificate exists.
+first corpus-v2 GaMS reservoir is only DRAFT: the current review sheet marks
+415 rows `ACCEPT` but lacks required `review_revision` metadata, no synthetic
+holdout exists, no TTS or ASR scoring has run, and no data acceptance
+certificate exists.
 
 ## Real Evaluation Gates
 

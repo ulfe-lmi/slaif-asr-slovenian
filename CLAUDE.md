@@ -16,6 +16,9 @@ The following rules are repeated because they are critical for any agent reading
 - Only `TRAINING_ELIGIBLE` data may enter promotion-oriented training.
 - The retired Round 1 v1 corpora identified in the training-data constitution
   must not be reused.
+- The GaMS corpus-v2 reservoir remains DRAFT: current local `ACCEPT` outcomes
+  lack required `review_revision` metadata and do not authorize TTS, scoring,
+  selection, or training.
 - Report passed, failed, skipped, not run, blocked, and out-of-scope work separately.
 - Do not publish model artifacts and do not merge your own pull request.
 - The remote repository and committed evidence are project truth.

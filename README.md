@@ -32,7 +32,9 @@ first immutable real Slovenian development gates establish the untouched
 Nemotron baseline, and the first project-generated curriculum round plus a
 residual-adapter capacity proof have both been rejected as accepted parents by
 the fixed real gates. The first GaMS corpus-v2 candidate reservoir now exists
-as a DRAFT source pool awaiting native-speaker linguistic review.
+as a DRAFT source pool. A human-edited review sheet has been ingested, but its
+rows lack required `review_revision` metadata, so the reservoir is not
+`TEXT_ACCEPTED`.
 
 Present:
 
@@ -46,6 +48,8 @@ Present:
   builder, and retired-corpus registry;
 - a governed GaMS corpus-v2 candidate-reservoir generator, local review-pack
   builder, and privacy-safe aggregate DRAFT report;
+- a corpus-v2 review-admission command and privacy-safe aggregate
+  post-review report;
 - a detailed Nemotron/NeMo adaptation plan;
 - PR, issue, review, and work-order templates;
 - pinned baseline runtime configuration;
@@ -112,8 +116,9 @@ training-data constitution. The current validator can reach `TEXT_ACCEPTED`
 only; acoustic validation and the first data certificate remain separate future
 work.
 The GaMS corpus-v2 reservoir is not committed as raw text and is not
-`TEXT_ACCEPTED`; it remains DRAFT until genuine native-speaker review is
-completed. No TTS, ASR scoring, selection, or training is authorized from it.
+`TEXT_ACCEPTED`. The current local review sheet marks 415 rows as `ACCEPT`,
+but all rows lack the required `review_revision`, so admission remains
+`DRAFT`. No TTS, ASR scoring, selection, or training is authorized from it.
 
 ## Repository role
 
@@ -176,6 +181,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The corpus-v2 linguistic-review admission task is defined by
+[`docs/work-orders/0014-corpus-v2-linguistic-review-admission.md`](docs/work-orders/0014-corpus-v2-linguistic-review-admission.md).
 The GaMS corpus-v2 candidate-reservoir task is defined by
 [`docs/work-orders/0013-gams-corpus-v2-candidate-reservoir.md`](docs/work-orders/0013-gams-corpus-v2-candidate-reservoir.md).
 The fail-closed training-corpus validator task is defined by
