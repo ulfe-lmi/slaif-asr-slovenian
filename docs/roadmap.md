@@ -60,7 +60,7 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **vertical slice complete; text validator implemented; corpus v2 reservoir DRAFT**
+Status: **vertical slice complete; text and audio validators implemented; corpus v2 reservoir AUDIO_ACCEPTED**
 
 Execution hardware policy: use exactly one process-visible GPU. Current
 project-owned helpers accept one visible A100 or RTX 2080 Ti and reject CPU
@@ -77,10 +77,10 @@ Deliverables:
 - partition and leakage checks;
 - synthetic text deduplication;
 - reusable text-stage training-data admission validator: **implemented**;
-- GaMS corpus-v2 candidate reservoir: **implemented as DRAFT; review outcomes
-  ingested but required `review_revision` metadata is missing**;
-- acoustic validator and privacy-safe data certificate: **pending later work
-  order**.
+- GaMS corpus-v2 candidate reservoir: **implemented and text-admitted as
+  `TEXT_ACCEPTED` after whole-file human review**;
+- acoustic validator and privacy-safe audio certificate: **implemented for the
+  415-row single-voice candidate reservoir as `AUDIO_ACCEPTED`**.
 
 Exit gate:
 
@@ -99,11 +99,11 @@ replay, or production training manifests.
 The training-data constitution is now a prerequisite for promotion-oriented
 data work. The retired Round 1 v1 corpus identities must not be reused for
 training, steering, model comparison, or promotion. The text-stage validator can
-produce `TEXT_ACCEPTED`, but it does not establish acoustic suitability. The
-first corpus-v2 GaMS reservoir is only DRAFT: the current review sheet marks
-415 rows `ACCEPT` but lacks required `review_revision` metadata, no synthetic
-holdout exists, no TTS or ASR scoring has run, and no data acceptance
-certificate exists.
+produce `TEXT_ACCEPTED`; the synthetic audio validator can produce
+`AUDIO_ACCEPTED`. The first corpus-v2 GaMS reservoir has reached both states
+for 415 reviewed, single-voice Piper-rendered candidates, but no independent
+synthetic holdout, selected-training partition, ASR scoring, or
+`TRAINING_ELIGIBLE` data certificate exists.
 
 ## Real Evaluation Gates
 

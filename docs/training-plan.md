@@ -575,12 +575,15 @@ It may emit `TEXT_ACCEPTED`, `TEXT_REJECTED`, `DRAFT`,
 Promotion-oriented training still requires later acoustic validation and a
 privacy-safe data acceptance certificate.
 
-The first GaMS corpus-v2 candidate reservoir is implemented as a DRAFT source
-pool. Its raw generated text and review pack remain local ignored artifacts;
-only aggregate counts and hashes are committed. The current edited review
-sheet contains 415 `ACCEPT` outcomes but omits the required `review_revision`
-on every row, so review admission remains `DRAFT`. It must not be synthesized,
-scored, selected, or trained on.
+The first GaMS corpus-v2 candidate reservoir has passed an explicit whole-file
+human review decision bound to the exact 415-row corpus hash and row count, and
+the text validator reports `TEXT_ACCEPTED`. It has also been synthesized with
+the external Piper boundary and waveform-validated as `AUDIO_ACCEPTED`.
+
+This does not make the reservoir training-eligible. It remains a single-voice
+candidate source pool with no independent synthetic holdout, no selected-
+training partition, no partition-level data certificate, no ASR scoring, and no
+authorization for hard-example selection or model training.
 
 ## 13. Text policy for the first adaptation
 

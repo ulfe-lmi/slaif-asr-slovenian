@@ -30,6 +30,7 @@ REVIEW_REPORT_SCHEMA_VERSION = "1.0"
 REVIEWED_CORPUS_ID = "sl-corpus-v2-gams-candidate-reservoir-v1-reviewed"
 EXPECTED_PRE_REVIEW_SHA256 = "5cb2520c27b3debd18a2f475368c2cdd8601fc5781ec541287092dbcd3ea0fe6"
 EXPECTED_REVIEW_TEMPLATE_SHA256 = "a22d87aa5e6913d2ceeaa1c61414ab946ef4c5c1bb1f8cc5b8063f984e454d84"
+WHOLE_FILE_DECISION_VERSION = "whole-file-review-decision-v1"
 
 ALLOWED_REVIEW_OUTCOMES = {
     "ACCEPT",
@@ -55,6 +56,7 @@ SAFE_PUBLIC_PATTERN = re.compile(
     + "|"
     + re.escape(MNT_DATA_PATTERN)
 )
+REVIEW_DECISION_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{1,127}$")
 
 
 @dataclass(frozen=True)
@@ -254,6 +256,52 @@ def read_tsv_rows_by_id(path: Path) -> dict[str, dict[str, str]]:
     return rows
 
 
+def build_whole_file_decisions(
+    *,
+    source_rows: Sequence[dict[str, Any]],
+    outcome: str,
+    review_revision: str,
+    decision_id: str,
+    expected_corpus_sha256: str,
+    expected_rows: int,
+    actual_corpus_sha256: str,
+) -> tuple[list[ReviewDecision], list[ReviewIssue]]:
+    issues: list[ReviewIssue] = []
+    outcome = outcome.strip()
+    review_revision = review_revision.strip()
+    decision_id = decision_id.strip()
+    if not outcome:
+        issues.append(ReviewIssue("blank_outcome"))
+    elif outcome not in ALLOWED_REVIEW_OUTCOMES:
+        issues.append(ReviewIssue("unsupported_outcome", detail=outcome))
+    if not review_revision:
+        issues.append(ReviewIssue("blank_review_revision"))
+    if not decision_id:
+        issues.append(ReviewIssue("blank_decision_id"))
+    elif not REVIEW_DECISION_ID_PATTERN.fullmatch(decision_id):
+        issues.append(ReviewIssue("unsafe_decision_id", detail=decision_id))
+    if not re.fullmatch(r"[0-9a-f]{64}", expected_corpus_sha256):
+        issues.append(ReviewIssue("malformed_expected_corpus_sha256"))
+    elif expected_corpus_sha256 != actual_corpus_sha256:
+        issues.append(ReviewIssue("unexpected_pre_review_reservoir_sha256", detail=actual_corpus_sha256))
+    if expected_rows != len(source_rows):
+        issues.append(ReviewIssue("unexpected_pre_review_row_count", detail=str(len(source_rows))))
+    if issues:
+        return [], issues
+    decisions = [
+        ReviewDecision(
+            candidate_id=str(row["candidate_id"]),
+            outcome=outcome,
+            review_revision=review_revision,
+            reason_codes=(),
+            minimal_pair_approved=False,
+            line_number=0,
+        )
+        for row in sorted(source_rows, key=lambda item: str(item["candidate_id"]))
+    ]
+    return decisions, []
+
+
 def accepted_records_and_reviews(
     source_rows: Sequence[dict[str, Any]],
     decisions: Sequence[ReviewDecision],
@@ -389,7 +437,7 @@ def build_public_report(
     source_count: int,
     source_hash: str,
     review_template_hash: str | None,
-    review_sheet_hash: str,
+    review_sheet_hash: str | None,
     decisions: Sequence[ReviewDecision],
     review_issues: Sequence[ReviewIssue],
     accepted_count: int,
@@ -398,6 +446,8 @@ def build_public_report(
     accepted_partition_hash: str | None,
     protected_index_identities: Sequence[dict[str, Any]],
     validation_report: dict[str, Any] | None,
+    review_mode: str = "row_tsv",
+    whole_file_decision: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     outcome_counts = Counter(decision.outcome or "BLANK" for decision in decisions)
     validator_status = validation_report.get("final_text_status") if validation_report else review_error_status(review_issues)
@@ -432,7 +482,9 @@ def build_public_report(
             "expected_review_template_sha256": EXPECTED_REVIEW_TEMPLATE_SHA256,
         },
         "review": {
+            "mode": review_mode,
             "review_sheet_sha256": review_sheet_hash,
+            "whole_file_decision": whole_file_decision,
             "total_review_rows": len(decisions),
             "review_coverage": {
                 "required": source_count,
@@ -497,6 +549,16 @@ def write_public_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "## Review Funnel",
         "",
+        f"- Review mode: `{review.get('mode', 'row_tsv')}`",
+        *(
+            [
+                f"- Whole-file decision ID: `{review['whole_file_decision']['decision_id']}`",
+                f"- Whole-file outcome: `{review['whole_file_decision']['outcome']}`",
+                f"- Whole-file review revision: `{review['whole_file_decision']['review_revision']}`",
+            ]
+            if review.get("whole_file_decision")
+            else []
+        ),
         f"- Review rows: {review['total_review_rows']}",
         f"- Coverage complete: {str(review['review_coverage']['complete']).lower()}",
         f"- Accepted-outcome rows: {review['accepted_count']}",
@@ -526,6 +588,11 @@ def run_review_admission(
     data_quality_config_path: Path,
     retired_registry_path: Path,
     require_status: str,
+    whole_file_outcome: str | None = None,
+    review_revision: str | None = None,
+    decision_id: str | None = None,
+    expected_corpus_sha256: str | None = None,
+    expected_rows: int | None = None,
 ) -> tuple[dict[str, Any], int]:
     generation_config = load_config(generation_config_path)
     paths = default_paths(generation_config)
@@ -534,8 +601,47 @@ def run_review_admission(
     if source_hash != EXPECTED_PRE_REVIEW_SHA256:
         raise ValueError(f"unexpected pre-review reservoir SHA256: {source_hash}")
     template_hash = sha256_file(paths["review_template"]) if paths["review_template"].exists() else None
-    decisions, read_issues, review_sheet_hash = read_review_tsv(paths["review_sheet"])
-    tsv_rows_by_id = read_tsv_rows_by_id(paths["review_sheet"])
+    whole_file_requested = any(
+        value is not None
+        for value in (whole_file_outcome, review_revision, decision_id, expected_corpus_sha256, expected_rows)
+    )
+    whole_file_decision: dict[str, Any] | None = None
+    if whole_file_requested:
+        missing = [
+            name
+            for name, value in (
+                ("whole_file_outcome", whole_file_outcome),
+                ("review_revision", review_revision),
+                ("decision_id", decision_id),
+                ("expected_corpus_sha256", expected_corpus_sha256),
+                ("expected_rows", expected_rows),
+            )
+            if value is None
+        ]
+        if missing:
+            raise ValueError(f"whole-file review mode requires: {', '.join(missing)}")
+        decisions, read_issues = build_whole_file_decisions(
+            source_rows=source_rows,
+            outcome=str(whole_file_outcome),
+            review_revision=str(review_revision),
+            decision_id=str(decision_id),
+            expected_corpus_sha256=str(expected_corpus_sha256),
+            expected_rows=int(expected_rows),
+            actual_corpus_sha256=source_hash,
+        )
+        review_sheet_hash = None
+        tsv_rows_by_id = None
+        whole_file_decision = {
+            "schema_version": WHOLE_FILE_DECISION_VERSION,
+            "decision_id": str(decision_id),
+            "outcome": str(whole_file_outcome),
+            "review_revision": str(review_revision),
+            "corpus_sha256": str(expected_corpus_sha256),
+            "row_count": int(expected_rows),
+        }
+    else:
+        decisions, read_issues, review_sheet_hash = read_review_tsv(paths["review_sheet"])
+        tsv_rows_by_id = read_tsv_rows_by_id(paths["review_sheet"])
     coverage_issues = validate_review_coverage(source_rows=source_rows, decisions=decisions, tsv_rows_by_id=tsv_rows_by_id)
     review_issues = [*read_issues, *coverage_issues]
     source_by_id = {str(row["candidate_id"]): row for row in source_rows}
@@ -591,6 +697,8 @@ def run_review_admission(
         accepted_partition_hash=accepted_hash,
         protected_index_identities=protected_index_identities,
         validation_report=validation_report,
+        review_mode="whole_file" if whole_file_requested else "row_tsv",
+        whole_file_decision=whole_file_decision,
     )
     atomic_write_json(paths["public_json"], public_payload)
     write_public_markdown(paths["public_markdown"], public_payload)

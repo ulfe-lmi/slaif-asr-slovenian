@@ -39,6 +39,11 @@ def main() -> int:
         default="TEXT_ACCEPTED",
         help="Required final status for zero exit. Defaults to TEXT_ACCEPTED.",
     )
+    parser.add_argument("--whole-file-outcome", help="Apply one explicit human review outcome to the exact source file.")
+    parser.add_argument("--review-revision", help="Human review revision for whole-file review mode.")
+    parser.add_argument("--decision-id", help="Human decision identifier for whole-file review mode.")
+    parser.add_argument("--expected-corpus-sha256", help="Required SHA256 of the reviewed source corpus.")
+    parser.add_argument("--expected-rows", type=int, help="Required reviewed source row count.")
     args = parser.parse_args()
 
     try:
@@ -47,6 +52,11 @@ def main() -> int:
             data_quality_config_path=args.data_quality_config,
             retired_registry_path=args.retired_registry,
             require_status=args.require_status,
+            whole_file_outcome=args.whole_file_outcome,
+            review_revision=args.review_revision,
+            decision_id=args.decision_id,
+            expected_corpus_sha256=args.expected_corpus_sha256,
+            expected_rows=args.expected_rows,
         )
     except Exception as exc:
         print(f"review admission failed before report completion: {exc}", file=sys.stderr)
@@ -57,6 +67,7 @@ def main() -> int:
         "corpus_id": report["corpus_id"],
         "decision_reasons": report["validator"]["decision_reasons"],
         "final_text_status": report["validator"]["status"],
+        "review_mode": report["review"]["mode"],
         "review_sheet_sha256": report["review"]["review_sheet_sha256"],
         "review_total": report["review"]["total_review_rows"],
     }

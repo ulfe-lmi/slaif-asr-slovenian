@@ -108,23 +108,25 @@ candidate-reservoir stage. The generator creates local schema-2.0
 output, builds a local review template, and writes a privacy-safe aggregate
 report.
 
-The reservoir remains `DRAFT` because no genuine native-speaker linguistic
-review sidecar is supplied. It is not `TEXT_ACCEPTED`, cannot become
-`TRAINING_ELIGIBLE`, and must not proceed to TTS, ASR scoring, selection, or
-training until later work orders complete review, acoustic validation, and data
-certification.
+The reservoir initially remained `DRAFT` until genuine native-speaker review
+metadata was supplied. `scripts/admit_reviewed_corpus_v2.py` now supports both
+row-level TSV review ingestion and an explicit whole-file human decision bound
+to an exact corpus SHA256 and row count. The whole-file mode expands the human
+decision into ordinary per-row review records so this validator remains the
+text-admission authority.
 
 `scripts/admit_reviewed_corpus_v2.py` ingests the local TSV review sheet,
 preserves the complete human decision record in ignored storage, writes an
 accepted-outcome subset, and reruns the text validator on that subset. It does
 not infer missing review metadata and does not correct generated text.
 
-Current post-review status: the local edited TSV contains 415 `ACCEPT`
-outcomes, but every row lacks the required `review_revision`. The admission
-command therefore reports `DRAFT` with reasons `blank_review_revision` and
-`missing_linguistic_review`. The reservoir is still not `TEXT_ACCEPTED`;
-the accepted-review sidecar is empty because the review metadata is incomplete.
-TTS, ASR scoring, selection, and training remain unauthorized.
+Current post-review status: the exact 415-row reservoir was accepted by a
+human whole-file decision with review revision `human-review-v1`, and the text
+validator reports `TEXT_ACCEPTED`. The subsequent audio work synthesized all
+415 rows with external Piper and produced an `AUDIO_ACCEPTED` certificate.
+`TRAINING_ELIGIBLE` was not produced; ASR scoring, hard-example selection, and
+model training remain unauthorized until a later partition-level certificate
+and work order exist.
 
 ## Status Boundaries
 

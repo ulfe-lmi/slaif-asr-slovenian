@@ -118,9 +118,9 @@ independence, protected-gate hash-index checks, and complete linguistic-review
 coverage.
 
 This validator is deliberately upstream of TTS and GPU work. Its strongest
-successful status is `TEXT_ACCEPTED`; acoustic validation and a privacy-safe
-data acceptance certificate are still required before any corpus can become
-`TRAINING_ELIGIBLE`.
+successful status is `TEXT_ACCEPTED`; the separate synthetic-audio validator
+can classify rendered audio as `AUDIO_ACCEPTED`. Neither stage can emit
+`TRAINING_ELIGIBLE` without a later partition-level certificate and work order.
 
 The historical Round 1 validator remains only for reproducing Experiment 0004.
 It must not be used as the admission authority for new corpora.

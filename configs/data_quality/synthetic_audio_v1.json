@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "validator_algorithm_version": "synthetic-audio-validator-v1",
+  "allowed_output_statuses": [
+    "AUDIO_REJECTED",
+    "AUDIO_ACCEPTED"
+  ],
+  "impossible_output_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "expected_format": {
+    "channels": 1,
+    "sample_rate": 16000,
+    "sample_width_bytes": 2,
+    "encoding": "signed-16-bit-pcm-wav"
+  },
+  "duration_bounds_seconds": {
+    "minimum": 0.2,
+    "maximum": 30.0
+  },
+  "waveform_thresholds": {
+    "silence_threshold_ratio": 0.001,
+    "minimum_peak_ratio": 0.002,
+    "minimum_rms_ratio": 0.0005,
+    "minimum_active_frame_fraction": 0.02,
+    "maximum_clipping_fraction": 0.01,
+    "maximum_leading_silence_seconds": 3.0,
+    "maximum_trailing_silence_seconds": 3.0
+  },
+  "tts": {
+    "required_execution_provider": "CUDAExecutionProvider",
+    "engine": "OHF-Voice/piper1-gpl",
+    "engine_revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6",
+    "voice": "sl_SI-artur-medium",
+    "voice_repository": "rhasspy/piper-voices",
+    "voice_revision": "217ddc79818708b078d0d14a8fae9608b9d77141",
+    "native_sample_rate": 22050,
+    "final_sample_rate": 16000
+  },
+  "concurrency": {
+    "benchmark_subset_rows": 32,
+    "worker_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "selection_within_best_fraction": 0.95,
+    "monitor_interval_seconds": 0.2
+  },
+  "limitations": [
+    "Waveform checks do not prove transcript correctness.",
+    "Waveform checks do not prove natural prosody.",
+    "Single-voice synthetic audio is not sufficient for TRAINING_ELIGIBLE status."
+  ]
+}
