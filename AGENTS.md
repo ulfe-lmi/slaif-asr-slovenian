@@ -18,9 +18,9 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   reservoir has reached `TEXT_ACCEPTED` and `AUDIO_ACCEPTED` as a single-voice
   synthetic candidate pool. A100 real-gate evaluation now has a parity-checked
   batch-1 policy and a valid untouched-base FLEURS-v2 baseline. An independent
-  synthetic holdout has been generated and structurally validated as `DRAFT`,
-  awaiting a whole-file human decision. `TRAINING_ELIGIBLE` certification and
-  production ASR work remain incomplete.
+  synthetic diagnostic holdout has reached `TEXT_ACCEPTED` after a whole-file
+  human decision. `TRAINING_ELIGIBLE` certification and production ASR work
+  remain incomplete.
 
 ## Mission
 
@@ -158,12 +158,11 @@ Non-negotiable rules:
   authority for new corpora.
 - The GaMS corpus-v2 candidate reservoir has passed whole-file human review
   expansion, text admission, Piper synthesis, and waveform validation through
-  `AUDIO_ACCEPTED`. It remains a source pool only: no independent synthetic
-  holdout has been accepted by human review, no selected-training partition,
-  acoustic diversity certificate, or `TRAINING_ELIGIBLE` decision exists, and it
-  must not enter selection, scoring, or training. The separate corpus-v2
-  independent holdout currently remains `DRAFT` until the human whole-file
-  decision is supplied.
+  `AUDIO_ACCEPTED`. The separately sourced 96-row corpus-v2 independent
+  synthetic diagnostic holdout has reached `TEXT_ACCEPTED` after whole-file
+  human review. These remain partition components only: no selected-training
+  partition, acoustic diversity certificate, or `TRAINING_ELIGIBLE` decision
+  exists, and they must not enter selection, scoring, or training.
 
 ## Model and dependency policy
 

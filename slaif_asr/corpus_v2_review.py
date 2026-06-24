@@ -502,6 +502,21 @@ def build_public_report(
                 ),
             }
         protected_counts = validation_report.get("protected_overlap_counts")
+    if generation_config.get("corpus_id") == "sl-corpus-v2-gams-candidate-reservoir-v1":
+        expected_pre_review_sha256 = EXPECTED_PRE_REVIEW_SHA256
+        expected_review_template_sha256 = EXPECTED_REVIEW_TEMPLATE_SHA256
+    else:
+        expected_pre_review_sha256 = whole_file_decision.get("corpus_sha256") if whole_file_decision else source_hash
+        expected_review_template_sha256 = None
+    limitations = [
+        "Text admission does not prove acoustic suitability.",
+        "No data acceptance certificate was issued.",
+        "TRAINING_ELIGIBLE cannot be produced by this text-stage admission step.",
+    ]
+    if partition_role == "synthetic_candidate":
+        limitations.insert(1, "No synthetic holdout exists in this work order.")
+    else:
+        limitations.insert(1, "No TTS synthesis, ASR scoring, selected-training construction, or model training was performed.")
     payload = {
         "schema_version": REVIEW_REPORT_SCHEMA_VERSION,
         "admission_version": REVIEW_ADMISSION_VERSION,
@@ -510,10 +525,10 @@ def build_public_report(
         "source_reservoir": {
             "corpus_id": generation_config["corpus_id"],
             "pre_review_sha256": source_hash,
-            "expected_pre_review_sha256": EXPECTED_PRE_REVIEW_SHA256,
+            "expected_pre_review_sha256": expected_pre_review_sha256,
             "pre_review_count": source_count,
             "review_template_sha256": review_template_hash,
-            "expected_review_template_sha256": EXPECTED_REVIEW_TEMPLATE_SHA256,
+            "expected_review_template_sha256": expected_review_template_sha256,
         },
         "review": {
             "mode": review_mode,
@@ -546,12 +561,7 @@ def build_public_report(
             "configuration_sha256": validation_report.get("configuration_sha256") if validation_report else None,
             "repository_revision": validation_report.get("repository_revision") if validation_report else git_revision(),
         },
-        "limitations": [
-            "Text admission does not prove acoustic suitability.",
-            "No synthetic holdout exists in this work order.",
-            "No data acceptance certificate was issued.",
-            "TRAINING_ELIGIBLE cannot be produced by this text-stage admission step.",
-        ],
+        "limitations": limitations,
     }
     assert_public_report_safe(payload)
     return payload
@@ -567,6 +577,8 @@ def write_public_markdown(path: Path, payload: dict[str, Any]) -> None:
     validator = payload["validator"]
     review = payload["review"]
     source = payload["source_reservoir"]
+    limitations = payload.get("limitations", [])
+    review_sheet_display = review["review_sheet_sha256"] or "not used (whole-file decision)"
     lines = [
         "# Corpus-v2 Linguistic Review Admission",
         "",
@@ -579,7 +591,7 @@ def write_public_markdown(path: Path, payload: dict[str, Any]) -> None:
         f"- Source corpus ID: `{source['corpus_id']}`",
         f"- Pre-review rows: {source['pre_review_count']}",
         f"- Pre-review SHA256: `{source['pre_review_sha256']}`",
-        f"- Review sheet SHA256: `{review['review_sheet_sha256']}`",
+        f"- Review sheet SHA256: `{review_sheet_display}`",
         "",
         "## Review Funnel",
         "",
@@ -607,10 +619,7 @@ def write_public_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "## Limitations",
         "",
-        "- Text admission does not prove acoustic suitability.",
-        "- No synthetic holdout exists.",
-        "- No data acceptance certificate was issued.",
-        "- `TRAINING_ELIGIBLE` was not produced.",
+        *[f"- {item}" for item in limitations],
         "",
     ]
     atomic_write_text(path, "\n".join(lines))

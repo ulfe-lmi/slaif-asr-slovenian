@@ -140,10 +140,9 @@ FLEURS-v2 and ARTUR-J hash indexes.
 
 The holdout stage writes a local review capsule and an exact whole-file review
 command bound to the fixed holdout SHA256 and row count. It does not fabricate
-acceptance. Current status: the 96-row holdout is structurally valid and
-`DRAFT` only because human linguistic review is outstanding. It has not been
-synthesized, scored, selected into training, certified, or marked
-`TRAINING_ELIGIBLE`.
+acceptance. The 96-row holdout has since reached `TEXT_ACCEPTED` through an
+explicit whole-file human decision. It has not been synthesized, scored,
+selected into training, certified, or marked `TRAINING_ELIGIBLE`.
 
 ## Status Boundaries
 
