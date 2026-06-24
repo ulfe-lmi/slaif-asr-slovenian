@@ -682,6 +682,22 @@ def state_dict_cpu(model: Any) -> dict[str, Any]:
     return {name: tensor.detach().cpu().clone() for name, tensor in model.state_dict().items()}
 
 
+def original_state_dict_from_prompt_delta_model(model: Any, selection: PromptColumnSelection) -> dict[str, Any]:
+    state: dict[str, Any] = {}
+    linear_prefix = selection.first_linear_name + ".linear."
+    delta_name = selection.first_linear_name + ".delta"
+    original_prefix = selection.first_linear_name + "."
+    for name, tensor in model.state_dict().items():
+        if name == delta_name:
+            continue
+        if name.startswith(linear_prefix):
+            original_name = original_prefix + name.removeprefix(linear_prefix)
+            state[original_name] = tensor.detach().cpu().clone()
+        else:
+            state[name] = tensor.detach().cpu().clone()
+    return state
+
+
 def first_linear_bias_name(selection: PromptColumnSelection, state: dict[str, Any]) -> str | None:
     candidate = selection.first_linear_name + ".bias"
     return candidate if candidate in state else None

@@ -18,6 +18,7 @@ from slaif_asr.corpus_v2_training import (
     deterministic_epoch_batches,
     git_tracked_and_clean_at_head,
     make_training_batch,
+    original_state_dict_from_prompt_delta_model,
     parameter_integrity_before_merge,
     select_probe_records,
     selection_from_benchmark,
@@ -136,6 +137,27 @@ class CorpusV2TrainingTests(unittest.TestCase):
         report = parameter_integrity_before_merge(base, current, selection=selection)
         self.assertFalse(report["pretrained_tensors_identical"])
         self.assertEqual(report["changed_pretrained_tensors"], ["encoder.weight"])
+
+    def test_prompt_delta_wrapped_state_maps_to_original_names(self) -> None:
+        selection = PromptColumnSelection(
+            prompt_name="sl-SI",
+            prompt_index=2,
+            encoder_width=3,
+            num_prompts=4,
+            selected_column=5,
+            first_linear_name="prompt_kernel.0",
+            first_linear_shape=(5, 7),
+            effective_trainable_parameters=5,
+        )
+        fake = mock.Mock()
+        fake.state_dict.return_value = {
+            "prompt_kernel.0.delta": torch.ones(5),
+            "prompt_kernel.0.linear.weight": torch.zeros(5, 7),
+            "prompt_kernel.0.linear.bias": torch.zeros(5),
+            "encoder.weight": torch.zeros(2, 2),
+        }
+        mapped = original_state_dict_from_prompt_delta_model(fake, selection)
+        self.assertEqual(sorted(mapped), ["encoder.weight", "prompt_kernel.0.bias", "prompt_kernel.0.weight"])
 
     def test_certificate_head_check_requires_exact_head_content(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_text:

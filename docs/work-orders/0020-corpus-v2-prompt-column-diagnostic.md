@@ -145,3 +145,20 @@ above 1, use GPUs 0, 2, or 3, run multi-GPU training, or merge the PR.
 - `accepted_parent` is `none`.
 - No raw data, predictions, model, delta, checkpoint, or monitor CSV is
   committed.
+
+## Outcome
+
+The diagnostic completed in PR with two valid arms:
+
+- `reference_batch1`, the scientific reference arm;
+- `a100_batched`, using the benchmark-selected batch size 8 training mechanic.
+
+Both arms trained only the 2,048-value `sl-SI` prompt-column delta. The
+scientific classification is
+`CORPUS_V2_PROMPT_COLUMN_SYNTHETIC_ONLY`: synthetic diagnostics improved, but
+real-gate non-regression failed. The batching classification is
+`A100_PROMPT_TRAINING_BATCH_NOT_EQUIVALENT`: batch size 8 improved throughput
+but did not preserve the precommitted scientific-equivalence limits.
+
+No checkpoint is accepted as a parent, `TRAINING_ELIGIBLE` was not issued, and
+batch-size-1 evaluation remains authoritative.

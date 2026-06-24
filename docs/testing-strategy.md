@@ -167,3 +167,10 @@ metrics, hard/control selection determinism, holdout exclusion, diversity
 constraint relaxation, selected-manifest hash stability, and public-report
 privacy. The actual candidate and holdout ASR scoring remains manual GPU
 evidence under the batch-1 A100 policy.
+
+The corpus-v2 prompt-column diagnostic adds CPU-only tests for diagnostic
+certificate gating, selected-training and holdout identity checks, padded audio
+and transcript batch construction, batch-loss correctness, batch-selection
+logic, prompt-column optimizer isolation, decision classification, and
+privacy-safe aggregate reports. The actual prompt-column training and
+batch-size-1 evaluation remain manual GPU evidence.

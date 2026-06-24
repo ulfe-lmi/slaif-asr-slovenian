@@ -39,8 +39,10 @@ after Piper synthesis plus waveform validation. A privacy-safe scoring
 authorization certificate permitted ASR scoring and selected-training
 construction; those steps have produced aggregate untouched-base scoring
 evidence and a selected-training manifest with
-`SELECTED_TRAINING_MANIFEST_READY` status. No corpus is
-`TRAINING_ELIGIBLE`.
+`SELECTED_TRAINING_MANIFEST_READY` status. A named `DIAGNOSTIC_ONLY`
+prompt-column experiment has now run on that selected-training manifest. It
+improved the synthetic diagnostic holdout but failed real-gate non-regression,
+so no checkpoint is accepted and no corpus is `TRAINING_ELIGIBLE`.
 
 Present:
 
@@ -69,6 +71,8 @@ Present:
   source and independent synthetic holdout;
 - a privacy-safe selected-training manifest certificate with
   `SELECTED_TRAINING_MANIFEST_READY` status;
+- a corpus-v2 prompt-column diagnostic report showing synthetic-only behavior
+  under the named `DIAGNOSTIC_ONLY` exception;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
   duration-bucketed sweeps, and a measured policy for future real-gate
   evaluation;
@@ -99,6 +103,10 @@ Present:
   experiment. Batch sizes above 1 were faster but not transcript-equivalent;
   batch size 1 without duration bucketing remains the selected A100 policy and
   the scientific reference mode.
+- a completed corpus-v2 prompt-column diagnostic. The batch-size-1 reference
+  and batch-8 training arm both trained only the 2,048-value `sl-SI` prompt
+  column; both remained unaccepted. True minibatch training improved throughput
+  but was not scientifically equivalent to the reference arm.
 
 Current GPU execution code supports exactly one visible NVIDIA A100 or RTX 2080
 Ti. The current A100 development host uses physical GPU 1 selected with
@@ -138,6 +146,10 @@ The Round 1 v1 candidate pool, synthetic holdout, and selected-training
 manifest are permanently retired for future training, steering, model
 comparison, and promotion because later review found structural repetition,
 train/holdout template-family overlap, and pervasive Slovenian quality defects.
+The corpus-v2 prompt-column diagnostic is also not a release or public-quality
+claim: its data status is `DIAGNOSTIC_ONLY`, the training audio is single-voice
+synthetic Piper output, evaluation still uses batch size 1, and the accepted
+parent remains the untouched NVIDIA Nemotron checkpoint.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
 training-data constitution. The corpus-v2 reservoir is not committed as raw
 text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and

@@ -40,6 +40,7 @@ from slaif_asr.corpus_v2_training import (
     make_training_batch,
     metric_pair,
     optimizer_parameter_ids,
+    original_state_dict_from_prompt_delta_model,
     parameter_integrity_before_merge,
     repo_path,
     rnnt_loss,
@@ -186,7 +187,7 @@ def benchmark_one(config: dict[str, Any], batch_size: int) -> dict[str, Any]:
     wall = time.perf_counter() - start
     reserved_mib = torch.cuda.max_memory_reserved(0) / 1024 / 1024
     allocated_mib = torch.cuda.max_memory_allocated(0) / 1024 / 1024
-    pre_merge = parameter_integrity_before_merge(base_state, state_dict_cpu(model), selection=selection)
+    pre_merge = parameter_integrity_before_merge(base_state, original_state_dict_from_prompt_delta_model(model, selection), selection=selection)
     status = "PASSED"
     if not finite or not grad_finite or reserved_mib > float(config["batch_benchmark"]["max_peak_reserved_mib"]):
         status = "FAILED"
@@ -226,7 +227,8 @@ def run_benchmark(config: dict[str, Any], config_path: Path) -> dict[str, Any]:
         if completed.returncode != 0:
             rows.append({"batch_size": batch_size, "status": "FAILED", "log": f"batch-{batch_size}.log"})
         else:
-            rows.append(json.loads(completed.stdout))
+            summary_path = run_dir(config) / "batch-benchmark" / f"batch-{batch_size}.local.json"
+            rows.append(json.loads(summary_path.read_text(encoding="utf-8")))
         if rows[-1].get("status") != "PASSED" and "out of memory" in completed.stdout.lower():
             break
         if float(rows[-1].get("peak_reserved_mib", 0.0)) > float(config["batch_benchmark"]["max_peak_reserved_mib"]):
@@ -297,7 +299,7 @@ def train_arm(config: dict[str, Any], config_path: Path, *, arm_name: str, batch
     wall = time.perf_counter() - start
     final_probe = mean_loss(model, selection, probe_records, device="cuda")
     final_full = mean_loss(model, selection, records, device="cuda")
-    pre_merge = parameter_integrity_before_merge(base_state, state_dict_cpu(model), selection=selection)
+    pre_merge = parameter_integrity_before_merge(base_state, original_state_dict_from_prompt_delta_model(model, selection), selection=selection)
     delta_path = arm_dir / "artifacts" / "prompt-column-delta.pt"
     delta_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save({"schema_version": "1.0", "selection": selection.__dict__, "delta": wrapper.delta.detach().cpu()}, delta_path)
@@ -311,7 +313,10 @@ def train_arm(config: dict[str, Any], config_path: Path, *, arm_name: str, batch
     (arm_dir / "verify-checkpoint.log").write_text(completed.stdout, encoding="utf-8")
     if completed.returncode != 0:
         raise RuntimeError(f"{arm_name}: restored checkpoint integrity failed")
-    restored_integrity = json.loads(completed.stdout)
+    restored_report_path = arm_dir / "restore-integrity.local.json"
+    if not restored_report_path.exists():
+        raise RuntimeError(f"{arm_name}: restored checkpoint integrity report is missing")
+    restored_integrity = json.loads(restored_report_path.read_text(encoding="utf-8"))
     monitor = parse_monitor_csv(monitor_path)
     payload = {
         "arm": arm_name,
@@ -410,7 +415,7 @@ def evaluate_all(config: dict[str, Any], config_path: Path) -> dict[str, Any]:
             "batch_size": 1,
             "duration_bucketing": False,
             "att_context_size": ATT_CONTEXT_SIZE,
-            "target_lang": TARGET_LANG,
+            "target_lang": config["evaluation"]["target_lang"],
             "normalizer": NORMALIZER_VERSION,
         },
     }

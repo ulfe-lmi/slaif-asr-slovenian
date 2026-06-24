@@ -1,0 +1,1472 @@
+{
+  "accepted_parent": "none",
+  "authorization": {
+    "sha256": "ac201abe6ea59624fa386cde4c48e2dbaaa2e6eba21a3af0ddbe42f17a488e8c",
+    "status": "DIAGNOSTIC_ONLY",
+    "tracked_before_training": {
+      "clean": true,
+      "head_sha256": "ac201abe6ea59624fa386cde4c48e2dbaaa2e6eba21a3af0ddbe42f17a488e8c",
+      "matches_head": true,
+      "path": "docs/data-certificates/sl-corpus-v2-prompt-column-diagnostic-v1.json",
+      "tracked": true
+    },
+    "work_order_id": "0020"
+  },
+  "batch_benchmark": {
+    "arms": [
+      {
+        "audio_seconds": 44.849187,
+        "audio_seconds_per_wall_second": 33.46026,
+        "batch_size": 1,
+        "correctness": {
+          "batch_loss": 45.000542,
+          "finite": true,
+          "individual_mean_loss": 45.000542,
+          "passed": true,
+          "relative_difference": 0.0,
+          "rows": 1
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 20,
+        "examples_per_second": 14.921234,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 107.83,
+          "mean_utilization_percent": 16.4,
+          "median_utilization_percent": 0.0,
+          "p95_power_watts": 128.2,
+          "p95_utilization_percent": 53.0,
+          "peak_memory_mib": 5997.0,
+          "sample_count": 5
+        },
+        "padding_ratio": 1.0,
+        "peak_allocated_mib": 2679.592,
+        "peak_reserved_mib": 5466.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 1.340372
+      },
+      {
+        "audio_seconds": 112.152004,
+        "audio_seconds_per_wall_second": 76.085045,
+        "batch_size": 2,
+        "correctness": {
+          "batch_loss": 50.535347,
+          "finite": true,
+          "individual_mean_loss": 50.535322,
+          "passed": true,
+          "relative_difference": 4.9e-07,
+          "rows": 2
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 40,
+        "examples_per_second": 27.136401,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 132.942,
+          "mean_utilization_percent": 28.2,
+          "median_utilization_percent": 16.0,
+          "p95_power_watts": 202.03,
+          "p95_utilization_percent": 63.0,
+          "peak_memory_mib": 7041.0,
+          "sample_count": 5
+        },
+        "padding_ratio": 1.015255,
+        "peak_allocated_mib": 3173.141,
+        "peak_reserved_mib": 7430.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 1.474035
+      },
+      {
+        "audio_seconds": 201.687628,
+        "audio_seconds_per_wall_second": 189.333343,
+        "batch_size": 4,
+        "correctness": {
+          "batch_loss": 57.868843,
+          "finite": true,
+          "individual_mean_loss": 57.868852,
+          "passed": true,
+          "relative_difference": 1.5e-07,
+          "rows": 4
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 80,
+        "examples_per_second": 75.099636,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 161.895,
+          "mean_utilization_percent": 40.5,
+          "median_utilization_percent": 50.5,
+          "p95_power_watts": 278.37,
+          "p95_utilization_percent": 75.0,
+          "peak_memory_mib": 7999.0,
+          "sample_count": 6
+        },
+        "padding_ratio": 1.056507,
+        "peak_allocated_mib": 3440.9,
+        "peak_reserved_mib": 7468.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 1.065252
+      },
+      {
+        "audio_seconds": 413.174259,
+        "audio_seconds_per_wall_second": 269.557655,
+        "batch_size": 8,
+        "correctness": {
+          "batch_loss": 48.979294,
+          "finite": true,
+          "individual_mean_loss": 48.979278,
+          "passed": true,
+          "relative_difference": 3.3e-07,
+          "rows": 8
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 160,
+        "examples_per_second": 104.385072,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.25,
+          "mean_power_watts": 153.7225,
+          "mean_utilization_percent": 61.125,
+          "median_utilization_percent": 75.0,
+          "p95_power_watts": 206.68,
+          "p95_utilization_percent": 81.0,
+          "peak_memory_mib": 8239.0,
+          "sample_count": 8
+        },
+        "padding_ratio": 1.134428,
+        "peak_allocated_mib": 3843.756,
+        "peak_reserved_mib": 7708.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 1.532786
+      },
+      {
+        "audio_seconds": 810.547205,
+        "audio_seconds_per_wall_second": 214.049499,
+        "batch_size": 16,
+        "correctness": {
+          "batch_loss": 48.856289,
+          "finite": true,
+          "individual_mean_loss": 48.856285,
+          "passed": true,
+          "relative_difference": 7e-08,
+          "rows": 16
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 320,
+        "examples_per_second": 84.505676,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.384615,
+          "mean_power_watts": 222.006154,
+          "mean_utilization_percent": 66.615385,
+          "median_utilization_percent": 77.0,
+          "p95_power_watts": 310.53,
+          "p95_utilization_percent": 91.0,
+          "peak_memory_mib": 8585.0,
+          "sample_count": 13
+        },
+        "padding_ratio": 1.276514,
+        "peak_allocated_mib": 4525.703,
+        "peak_reserved_mib": 8054.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 3.786728
+      },
+      {
+        "audio_seconds": 1621.09441,
+        "audio_seconds_per_wall_second": 262.917387,
+        "batch_size": 32,
+        "correctness": {
+          "batch_loss": 50.777607,
+          "finite": true,
+          "individual_mean_loss": 50.777602,
+          "passed": true,
+          "relative_difference": 1e-07,
+          "rows": 32
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 640,
+        "examples_per_second": 103.798475,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.307692,
+          "mean_power_watts": 260.016923,
+          "mean_utilization_percent": 65.692308,
+          "median_utilization_percent": 73.0,
+          "p95_power_watts": 344.83,
+          "p95_utilization_percent": 89.0,
+          "peak_memory_mib": 10101.0,
+          "sample_count": 13
+        },
+        "padding_ratio": 1.62716,
+        "peak_allocated_mib": 5262.92,
+        "peak_reserved_mib": 9570.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 6.165794
+      },
+      {
+        "audio_seconds": 3242.18882,
+        "audio_seconds_per_wall_second": 242.264278,
+        "batch_size": 64,
+        "correctness": {
+          "batch_loss": 46.742966,
+          "finite": true,
+          "individual_mean_loss": 46.742965,
+          "passed": true,
+          "relative_difference": 1e-08,
+          "rows": 64
+        },
+        "cycles": {
+          "timed": 20,
+          "warmup": 5
+        },
+        "examples": 1280,
+        "examples_per_second": 95.64473,
+        "finite_gradients": true,
+        "finite_loss": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.733333,
+          "mean_power_watts": 285.839333,
+          "mean_utilization_percent": 87.333333,
+          "median_utilization_percent": 91.0,
+          "p95_power_watts": 345.31,
+          "p95_utilization_percent": 100.0,
+          "peak_memory_mib": 9583.0,
+          "sample_count": 30
+        },
+        "padding_ratio": 2.401785,
+        "peak_allocated_mib": 5950.367,
+        "peak_reserved_mib": 9052.0,
+        "pre_merge_integrity": {
+          "changed_pretrained_tensors": [],
+          "pretrained_tensors_identical": true,
+          "selection": {
+            "effective_trainable_parameters": 2048,
+            "encoder_width": 1024,
+            "first_linear_name": "prompt_kernel.0",
+            "first_linear_shape": [
+              2048,
+              1152
+            ],
+            "num_prompts": 128,
+            "prompt_index": 62,
+            "prompt_name": "sl-SI",
+            "selected_column": 1086
+          },
+          "unexpected_tensors": []
+        },
+        "status": "PASSED",
+        "wall_time_seconds": 13.38286
+      }
+    ],
+    "selection": {
+      "best_audio_seconds_per_wall_second": 269.557655,
+      "selected_audio_seconds_per_wall_second": 269.557655,
+      "selected_batch_size": 8,
+      "within_best_fraction": 0.95
+    },
+    "status": "PASSED"
+  },
+  "decisions": {
+    "batching": {
+      "batched_examples_per_second": 55.861403,
+      "classification": "A100_PROMPT_TRAINING_BATCH_NOT_EQUIVALENT",
+      "equivalent": false,
+      "reference_examples_per_second": 22.264505,
+      "throughput_ratio": 2.508989
+    },
+    "scientific": {
+      "accepted_parent": "none",
+      "arm_decisions": [
+        {
+          "arm": "reference_batch1",
+          "real_improvement": false,
+          "real_non_regression": false,
+          "synthetic_gain": true,
+          "synthetic_holdout_cer_relative_gain": 30.349931,
+          "synthetic_holdout_wer_relative_gain": 6.445912
+        },
+        {
+          "arm": "a100_batched",
+          "real_improvement": true,
+          "real_non_regression": false,
+          "synthetic_gain": true,
+          "synthetic_holdout_cer_relative_gain": 41.909293,
+          "synthetic_holdout_wer_relative_gain": 13.259485
+        }
+      ],
+      "classification": "CORPUS_V2_PROMPT_COLUMN_SYNTHETIC_ONLY"
+    }
+  },
+  "evaluation": {
+    "evaluation_policy": {
+      "att_context_size": [
+        56,
+        3
+      ],
+      "batch_size": 1,
+      "duration_bucketing": false,
+      "normalizer": "sl-asr-normalization-v1",
+      "target_lang": "sl-SI"
+    },
+    "models": {
+      "a100_batched": {
+        "checkpoint_sha256": "c123aae314888f98338b26425bff4e82dcf5e5ed51eefb6dd1b8c06fe4b184eb",
+        "splits": {
+          "artur_j": {
+            "audio_duration_seconds": 1049.59,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 107.984047,
+              "mean_utilization_percent": 27.552529,
+              "median_utilization_percent": 37.0,
+              "p95_power_watts": 124.14,
+              "p95_utilization_percent": 39.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 257
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 25.796,
+                "corpus_wer": 71.123,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 29.525,
+                "mean_utterance_wer": 80.593,
+                "median_utterance_cer": 22.049,
+                "median_utterance_wer": 72.727,
+                "total_character_edits": 3645,
+                "total_reference_characters": 14130,
+                "total_reference_words": 2289,
+                "total_word_edits": 1628
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 28.936,
+                "corpus_wer": 77.729,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 33.237,
+                "mean_utterance_wer": 88.266,
+                "median_utterance_cer": 24.742,
+                "median_utterance_wer": 80.0,
+                "total_character_edits": 4203,
+                "total_reference_characters": 14525,
+                "total_reference_words": 2290,
+                "total_word_edits": 1780
+              }
+            },
+            "prediction_count": 256,
+            "real_time_factor": 0.151269,
+            "rows": 256,
+            "wall_time_seconds": 158.770711
+          },
+          "fleurs_v2": {
+            "audio_duration_seconds": 8173.14,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 120.179573,
+              "mean_utilization_percent": 36.784431,
+              "median_utilization_percent": 39.0,
+              "p95_power_watts": 125.34,
+              "p95_utilization_percent": 40.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 1336
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 20.347,
+                "corpus_wer": 61.47,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 20.785,
+                "mean_utterance_wer": 62.179,
+                "median_utterance_cer": 18.64,
+                "median_utterance_wer": 61.538,
+                "total_character_edits": 21096,
+                "total_reference_characters": 103679,
+                "total_reference_words": 16517,
+                "total_word_edits": 10153
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 23.279,
+                "corpus_wer": 69.693,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 23.83,
+                "mean_utterance_wer": 70.624,
+                "median_utterance_cer": 21.517,
+                "median_utterance_wer": 69.231,
+                "total_character_edits": 24156,
+                "total_reference_characters": 103768,
+                "total_reference_words": 16468,
+                "total_word_edits": 11477
+              }
+            },
+            "prediction_count": 834,
+            "real_time_factor": 0.101389,
+            "rows": 834,
+            "wall_time_seconds": 828.665689
+          },
+          "selected_training": {
+            "audio_duration_seconds": 437.078876,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 100.689167,
+              "mean_utilization_percent": 20.961538,
+              "median_utilization_percent": 28.5,
+              "p95_power_watts": 123.06,
+              "p95_utilization_percent": 39.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 156
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 26.405,
+                "corpus_wer": 69.955,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 28.903,
+                "mean_utterance_wer": 72.721,
+                "median_utterance_cer": 25.187,
+                "median_utterance_wer": 72.078,
+                "total_character_edits": 1663,
+                "total_reference_characters": 6298,
+                "total_reference_words": 1105,
+                "total_word_edits": 773
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 27.795,
+                "corpus_wer": 71.702,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 30.188,
+                "mean_utterance_wer": 74.981,
+                "median_utterance_cer": 26.365,
+                "median_utterance_wer": 74.167,
+                "total_character_edits": 1810,
+                "total_reference_characters": 6512,
+                "total_reference_words": 1099,
+                "total_word_edits": 788
+              }
+            },
+            "prediction_count": 160,
+            "real_time_factor": 0.218711,
+            "rows": 160,
+            "wall_time_seconds": 95.594026
+          },
+          "synthetic_holdout": {
+            "audio_duration_seconds": 246.350743,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 94.999829,
+              "mean_utilization_percent": 15.264957,
+              "median_utilization_percent": 0.0,
+              "p95_power_watts": 123.67,
+              "p95_utilization_percent": 40.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 117
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 27.474,
+                "corpus_wer": 73.137,
+                "empty_hypothesis_count": 2,
+                "mean_utterance_cer": 32.25,
+                "mean_utterance_wer": 77.918,
+                "median_utterance_cer": 27.842,
+                "median_utterance_wer": 76.389,
+                "total_character_edits": 980,
+                "total_reference_characters": 3567,
+                "total_reference_words": 644,
+                "total_word_edits": 471
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 29.726,
+                "corpus_wer": 76.791,
+                "empty_hypothesis_count": 2,
+                "mean_utterance_cer": 34.325,
+                "mean_utterance_wer": 81.516,
+                "median_utterance_cer": 29.865,
+                "median_utterance_wer": 80.0,
+                "total_character_edits": 1096,
+                "total_reference_characters": 3687,
+                "total_reference_words": 642,
+                "total_word_edits": 493
+              }
+            },
+            "prediction_count": 96,
+            "real_time_factor": 0.289523,
+            "rows": 96,
+            "wall_time_seconds": 71.324324
+          }
+        }
+      },
+      "base": {
+        "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+        "splits": {
+          "artur_j": {
+            "audio_duration_seconds": 1049.59,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 102.280717,
+              "mean_utilization_percent": 23.465798,
+              "median_utilization_percent": 37.0,
+              "p95_power_watts": 123.33,
+              "p95_utilization_percent": 40.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 307
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 29.016,
+                "corpus_wer": 67.453,
+                "empty_hypothesis_count": 12,
+                "mean_utterance_cer": 33.831,
+                "mean_utterance_wer": 76.555,
+                "median_utterance_cer": 22.642,
+                "median_utterance_wer": 75.0,
+                "total_character_edits": 4100,
+                "total_reference_characters": 14130,
+                "total_reference_words": 2289,
+                "total_word_edits": 1544
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 32.234,
+                "corpus_wer": 74.585,
+                "empty_hypothesis_count": 12,
+                "mean_utterance_cer": 37.563,
+                "mean_utterance_wer": 84.095,
+                "median_utterance_cer": 25.944,
+                "median_utterance_wer": 82.576,
+                "total_character_edits": 4682,
+                "total_reference_characters": 14525,
+                "total_reference_words": 2290,
+                "total_word_edits": 1708
+              }
+            },
+            "prediction_count": 256,
+            "real_time_factor": 0.18053,
+            "rows": 256,
+            "wall_time_seconds": 189.482203
+          },
+          "fleurs_v2": {
+            "audio_duration_seconds": 8173.14,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 118.210918,
+              "mean_utilization_percent": 35.382948,
+              "median_utilization_percent": 39.0,
+              "p95_power_watts": 125.19,
+              "p95_utilization_percent": 40.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 1384
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 16.423,
+                "corpus_wer": 52.703,
+                "empty_hypothesis_count": 1,
+                "mean_utterance_cer": 17.067,
+                "mean_utterance_wer": 53.532,
+                "median_utterance_cer": 13.875,
+                "median_utterance_wer": 52.941,
+                "total_character_edits": 17027,
+                "total_reference_characters": 103679,
+                "total_reference_words": 16517,
+                "total_word_edits": 8705
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 19.659,
+                "corpus_wer": 62.722,
+                "empty_hypothesis_count": 1,
+                "mean_utterance_cer": 20.392,
+                "mean_utterance_wer": 63.832,
+                "median_utterance_cer": 17.391,
+                "median_utterance_wer": 62.963,
+                "total_character_edits": 20400,
+                "total_reference_characters": 103768,
+                "total_reference_words": 16468,
+                "total_word_edits": 10329
+              }
+            },
+            "prediction_count": 834,
+            "real_time_factor": 0.105283,
+            "rows": 834,
+            "wall_time_seconds": 860.495114
+          },
+          "selected_training": {
+            "audio_duration_seconds": 437.078876,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 94.361902,
+              "mean_utilization_percent": 15.04878,
+              "median_utilization_percent": 0.0,
+              "p95_power_watts": 121.54,
+              "p95_utilization_percent": 39.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 205
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 61.623,
+                "corpus_wer": 93.032,
+                "empty_hypothesis_count": 41,
+                "mean_utterance_cer": 63.068,
+                "mean_utterance_wer": 96.664,
+                "median_utterance_cer": 59.545,
+                "median_utterance_wer": 100.0,
+                "total_character_edits": 3881,
+                "total_reference_characters": 6298,
+                "total_reference_words": 1105,
+                "total_word_edits": 1028
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 62.715,
+                "corpus_wer": 93.267,
+                "empty_hypothesis_count": 41,
+                "mean_utterance_cer": 64.254,
+                "mean_utterance_wer": 96.772,
+                "median_utterance_cer": 63.212,
+                "median_utterance_wer": 100.0,
+                "total_character_edits": 4084,
+                "total_reference_characters": 6512,
+                "total_reference_words": 1099,
+                "total_word_edits": 1025
+              }
+            },
+            "prediction_count": 160,
+            "real_time_factor": 0.289059,
+            "rows": 160,
+            "wall_time_seconds": 126.341673
+          },
+          "synthetic_holdout": {
+            "audio_duration_seconds": 246.350743,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 88.038075,
+              "mean_utilization_percent": 10.745342,
+              "median_utilization_percent": 0.0,
+              "p95_power_watts": 121.21,
+              "p95_utilization_percent": 39.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 161
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 47.295,
+                "corpus_wer": 84.317,
+                "empty_hypothesis_count": 17,
+                "mean_utterance_cer": 53.842,
+                "mean_utterance_wer": 88.501,
+                "median_utterance_cer": 45.227,
+                "median_utterance_wer": 88.194,
+                "total_character_edits": 1687,
+                "total_reference_characters": 3567,
+                "total_reference_words": 644,
+                "total_word_edits": 543
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 48.956,
+                "corpus_wer": 85.67,
+                "empty_hypothesis_count": 17,
+                "mean_utterance_cer": 55.321,
+                "mean_utterance_wer": 89.762,
+                "median_utterance_cer": 47.81,
+                "median_utterance_wer": 100.0,
+                "total_character_edits": 1805,
+                "total_reference_characters": 3687,
+                "total_reference_words": 642,
+                "total_word_edits": 550
+              }
+            },
+            "prediction_count": 96,
+            "real_time_factor": 0.405741,
+            "rows": 96,
+            "wall_time_seconds": 99.954514
+          }
+        }
+      },
+      "reference_batch1": {
+        "checkpoint_sha256": "f609a40570131980c0e5eac91ce71b47b15adf1fa696c445a6b85c174e9833da",
+        "splits": {
+          "artur_j": {
+            "audio_duration_seconds": 1049.59,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 108.244542,
+              "mean_utilization_percent": 27.992366,
+              "median_utilization_percent": 38.0,
+              "p95_power_watts": 123.94,
+              "p95_utilization_percent": 39.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 262
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 28.655,
+                "corpus_wer": 74.443,
+                "empty_hypothesis_count": 1,
+                "mean_utterance_cer": 31.975,
+                "mean_utterance_wer": 81.34,
+                "median_utterance_cer": 25.79,
+                "median_utterance_wer": 75.0,
+                "total_character_edits": 4049,
+                "total_reference_characters": 14130,
+                "total_reference_words": 2289,
+                "total_word_edits": 1704
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 31.793,
+                "corpus_wer": 80.524,
+                "empty_hypothesis_count": 1,
+                "mean_utterance_cer": 35.667,
+                "mean_utterance_wer": 88.168,
+                "median_utterance_cer": 30.572,
+                "median_utterance_wer": 83.333,
+                "total_character_edits": 4618,
+                "total_reference_characters": 14525,
+                "total_reference_words": 2290,
+                "total_word_edits": 1844
+              }
+            },
+            "prediction_count": 256,
+            "real_time_factor": 0.153242,
+            "rows": 256,
+            "wall_time_seconds": 160.841605
+          },
+          "fleurs_v2": {
+            "audio_duration_seconds": 8173.14,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 119.704154,
+              "mean_utilization_percent": 36.354213,
+              "median_utilization_percent": 39.0,
+              "p95_power_watts": 125.19,
+              "p95_utilization_percent": 40.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 1341
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 23.729,
+                "corpus_wer": 66.229,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 24.116,
+                "mean_utterance_wer": 66.842,
+                "median_utterance_cer": 21.89,
+                "median_utterance_wer": 66.667,
+                "total_character_edits": 24602,
+                "total_reference_characters": 103679,
+                "total_reference_words": 16517,
+                "total_word_edits": 10939
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 26.849,
+                "corpus_wer": 74.205,
+                "empty_hypothesis_count": 0,
+                "mean_utterance_cer": 27.32,
+                "mean_utterance_wer": 75.023,
+                "median_utterance_cer": 25.0,
+                "median_utterance_wer": 75.0,
+                "total_character_edits": 27861,
+                "total_reference_characters": 103768,
+                "total_reference_words": 16468,
+                "total_word_edits": 12220
+              }
+            },
+            "prediction_count": 834,
+            "real_time_factor": 0.10194,
+            "rows": 834,
+            "wall_time_seconds": 833.173071
+          },
+          "selected_training": {
+            "audio_duration_seconds": 437.078876,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 100.646795,
+              "mean_utilization_percent": 20.814103,
+              "median_utilization_percent": 28.0,
+              "p95_power_watts": 123.33,
+              "p95_utilization_percent": 40.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 156
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 31.153,
+                "corpus_wer": 78.19,
+                "empty_hypothesis_count": 1,
+                "mean_utterance_cer": 34.586,
+                "mean_utterance_wer": 81.82,
+                "median_utterance_cer": 30.602,
+                "median_utterance_wer": 83.333,
+                "total_character_edits": 1962,
+                "total_reference_characters": 6298,
+                "total_reference_words": 1105,
+                "total_word_edits": 864
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 32.402,
+                "corpus_wer": 79.345,
+                "empty_hypothesis_count": 1,
+                "mean_utterance_cer": 35.744,
+                "mean_utterance_wer": 83.41,
+                "median_utterance_cer": 31.181,
+                "median_utterance_wer": 83.333,
+                "total_character_edits": 2110,
+                "total_reference_characters": 6512,
+                "total_reference_words": 1099,
+                "total_word_edits": 872
+              }
+            },
+            "prediction_count": 160,
+            "real_time_factor": 0.218183,
+            "rows": 160,
+            "wall_time_seconds": 95.363245
+          },
+          "synthetic_holdout": {
+            "audio_duration_seconds": 246.350743,
+            "gpu_monitor": {
+              "fraction_at_or_above_80_percent": 0.0,
+              "mean_power_watts": 94.359912,
+              "mean_utilization_percent": 16.429825,
+              "median_utilization_percent": 2.0,
+              "p95_power_watts": 121.93,
+              "p95_utilization_percent": 39.0,
+              "peak_memory_mib": 5517.0,
+              "sample_count": 114
+            },
+            "metrics": {
+              "normalized": {
+                "corpus_cer": 32.941,
+                "corpus_wer": 78.882,
+                "empty_hypothesis_count": 3,
+                "mean_utterance_cer": 38.522,
+                "mean_utterance_wer": 82.088,
+                "median_utterance_cer": 34.514,
+                "median_utterance_wer": 83.333,
+                "total_character_edits": 1175,
+                "total_reference_characters": 3567,
+                "total_reference_words": 644,
+                "total_word_edits": 508
+              },
+              "normalizer": "sl-asr-normalization-v1",
+              "raw": {
+                "corpus_cer": 34.934,
+                "corpus_wer": 81.308,
+                "empty_hypothesis_count": 3,
+                "mean_utterance_cer": 40.153,
+                "mean_utterance_wer": 84.644,
+                "median_utterance_cer": 35.52,
+                "median_utterance_wer": 87.5,
+                "total_character_edits": 1288,
+                "total_reference_characters": 3687,
+                "total_reference_words": 642,
+                "total_word_edits": 522
+              }
+            },
+            "prediction_count": 96,
+            "real_time_factor": 0.282044,
+            "rows": 96,
+            "wall_time_seconds": 69.48176
+          }
+        }
+      }
+    },
+    "status": "PASSED"
+  },
+  "experiment_id": "corpus-v2-prompt-column-diagnostic-v1",
+  "input_integrity": {
+    "candidate_holdout_overlap_counts": {
+      "audio_hash_overlap": 0,
+      "id_overlap": 0,
+      "template_family_overlap": 0,
+      "text_hash_overlap": 0,
+      "utterance_family_overlap": 0
+    },
+    "selected_training": {
+      "control": 40,
+      "hard": 120,
+      "rows": 160,
+      "selected_audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+      "selected_manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13"
+    },
+    "synthetic_holdout_audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "synthetic_holdout_rows": 96
+  },
+  "limitations": [
+    "Single-voice synthetic training.",
+    "No real training or calibration speech.",
+    "Synthetic holdout is not real-generalization evidence.",
+    "Development real gates are not a final blind test."
+  ],
+  "model": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "repository_commit": "657a3d823cabb8899164fd4b24ee71bf2a944ddd",
+  "runtime": {
+    "cuda_runtime": "12.6",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "host": "neumann",
+    "logical_device": "cuda:0",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "physical_selector": "1",
+    "precision": "fp32",
+    "python": "3.12.13",
+    "pytorch": "2.7.1+cu126",
+    "tf32": false,
+    "visible_gpu_count": 1
+  },
+  "schema_version": "1.0",
+  "status": "completed in PR; pending strategic review",
+  "training": {
+    "a100_batched": {
+      "audio_seconds_per_wall_second": 152.598994,
+      "batch_size": 8,
+      "delta_norm_curve": [
+        {
+          "delta_norm": 2.292044,
+          "epoch": 1
+        },
+        {
+          "delta_norm": 2.882255,
+          "epoch": 2
+        },
+        {
+          "delta_norm": 3.180929,
+          "epoch": 3
+        },
+        {
+          "delta_norm": 3.390321,
+          "epoch": 4
+        },
+        {
+          "delta_norm": 3.567353,
+          "epoch": 5
+        },
+        {
+          "delta_norm": 3.719451,
+          "epoch": 6
+        },
+        {
+          "delta_norm": 3.816555,
+          "epoch": 7
+        },
+        {
+          "delta_norm": 3.928315,
+          "epoch": 8
+        },
+        {
+          "delta_norm": 4.009705,
+          "epoch": 9
+        },
+        {
+          "delta_norm": 4.089167,
+          "epoch": 10
+        },
+        {
+          "delta_norm": 4.166299,
+          "epoch": 11
+        },
+        {
+          "delta_norm": 4.230916,
+          "epoch": 12
+        }
+      ],
+      "duration_bucketing": true,
+      "epochs": 12,
+      "examples_per_second": 55.861403,
+      "final_full_training_loss": 23.20146,
+      "final_probe_loss": 22.44438,
+      "full_loss_reduction_percent": 54.22353,
+      "gpu_monitor": {
+        "fraction_at_or_above_80_percent": 0.263158,
+        "mean_power_watts": 201.420877,
+        "mean_utilization_percent": 65.421053,
+        "median_utilization_percent": 73.0,
+        "p95_power_watts": 303.87,
+        "p95_utilization_percent": 88.0,
+        "peak_memory_mib": 10201.0,
+        "sample_count": 57
+      },
+      "gradient_norm": {
+        "final": 27.506531,
+        "max": 59.656839,
+        "min": 20.411757
+      },
+      "initial_full_training_loss": 50.68425,
+      "initial_probe_loss": 50.777602,
+      "integrity": {
+        "bias_bitwise_identical": true,
+        "changed_tensors": [
+          "prompt_kernel.0.weight"
+        ],
+        "effective_trainable_parameters": 2048,
+        "other_columns_bitwise_identical": true,
+        "passed": true,
+        "prompt_index": 62,
+        "selected_column": 1086,
+        "selected_column_changed": true,
+        "selected_prompt": "sl-SI",
+        "tensor_shapes_match": true,
+        "unexpected_changed_elements": 0,
+        "unexpected_changed_tensors": []
+      },
+      "learning_rate": 0.01,
+      "optimizer_steps": 240,
+      "peak_allocated_mib": 4778.079,
+      "peak_reserved_mib": 9670.0,
+      "pre_merge_integrity": {
+        "changed_pretrained_tensors": [],
+        "pretrained_tensors_identical": true,
+        "selection": {
+          "effective_trainable_parameters": 2048,
+          "encoder_width": 1024,
+          "first_linear_name": "prompt_kernel.0",
+          "first_linear_shape": [
+            2048,
+            1152
+          ],
+          "num_prompts": 128,
+          "prompt_index": 62,
+          "prompt_name": "sl-SI",
+          "selected_column": 1086
+        },
+        "unexpected_tensors": []
+      },
+      "probe_curve": [
+        {
+          "epoch": 0,
+          "mean_loss": 50.777602
+        },
+        {
+          "epoch": 1,
+          "mean_loss": 29.06509
+        },
+        {
+          "epoch": 2,
+          "mean_loss": 25.648867
+        },
+        {
+          "epoch": 3,
+          "mean_loss": 24.48527
+        },
+        {
+          "epoch": 4,
+          "mean_loss": 23.927912
+        },
+        {
+          "epoch": 5,
+          "mean_loss": 23.428675
+        },
+        {
+          "epoch": 6,
+          "mean_loss": 23.354532
+        },
+        {
+          "epoch": 7,
+          "mean_loss": 22.564909
+        },
+        {
+          "epoch": 8,
+          "mean_loss": 22.140234
+        },
+        {
+          "epoch": 9,
+          "mean_loss": 22.425453
+        },
+        {
+          "epoch": 10,
+          "mean_loss": 22.788432
+        },
+        {
+          "epoch": 11,
+          "mean_loss": 22.616893
+        },
+        {
+          "epoch": 12,
+          "mean_loss": 22.44438
+        }
+      ],
+      "restored_checkpoint_integrity": {
+        "bias_bitwise_identical": true,
+        "changed_tensors": [
+          "prompt_kernel.0.weight"
+        ],
+        "checkpoint_restored": true,
+        "effective_trainable_parameters": 2048,
+        "other_columns_bitwise_identical": true,
+        "passed": true,
+        "prompt_index": 62,
+        "selected_column": 1086,
+        "selected_column_changed": true,
+        "selected_prompt": "sl-SI",
+        "tensor_shapes_match": true,
+        "unexpected_changed_elements": 0,
+        "unexpected_changed_tensors": []
+      },
+      "sample_exposures": 1920,
+      "selection": {
+        "effective_trainable_parameters": 2048,
+        "encoder_width": 1024,
+        "first_linear_name": "prompt_kernel.0",
+        "first_linear_shape": [
+          2048,
+          1152
+        ],
+        "num_prompts": 128,
+        "prompt_index": 62,
+        "prompt_name": "sl-SI",
+        "selected_column": 1086
+      },
+      "status": "PASSED",
+      "trainable_parameter_count": 2048,
+      "wall_time_seconds": 34.37078
+    },
+    "reference_batch1": {
+      "audio_seconds_per_wall_second": 60.820906,
+      "batch_size": 1,
+      "delta_norm_curve": [
+        {
+          "delta_norm": 3.758347,
+          "epoch": 1
+        },
+        {
+          "delta_norm": 4.326834,
+          "epoch": 2
+        },
+        {
+          "delta_norm": 4.658807,
+          "epoch": 3
+        },
+        {
+          "delta_norm": 4.997845,
+          "epoch": 4
+        },
+        {
+          "delta_norm": 5.282959,
+          "epoch": 5
+        },
+        {
+          "delta_norm": 5.496833,
+          "epoch": 6
+        },
+        {
+          "delta_norm": 5.622603,
+          "epoch": 7
+        },
+        {
+          "delta_norm": 5.775091,
+          "epoch": 8
+        },
+        {
+          "delta_norm": 5.940754,
+          "epoch": 9
+        },
+        {
+          "delta_norm": 6.097208,
+          "epoch": 10
+        },
+        {
+          "delta_norm": 6.223815,
+          "epoch": 11
+        },
+        {
+          "delta_norm": 6.325366,
+          "epoch": 12
+        }
+      ],
+      "duration_bucketing": false,
+      "epochs": 12,
+      "examples_per_second": 22.264505,
+      "final_full_training_loss": 28.447681,
+      "final_probe_loss": 27.852969,
+      "full_loss_reduction_percent": 43.87274,
+      "gpu_monitor": {
+        "fraction_at_or_above_80_percent": 0.0,
+        "mean_power_watts": 144.75507,
+        "mean_utilization_percent": 52.584507,
+        "median_utilization_percent": 53.0,
+        "p95_power_watts": 175.95,
+        "p95_utilization_percent": 61.0,
+        "peak_memory_mib": 6569.0,
+        "sample_count": 142
+      },
+      "gradient_norm": {
+        "final": 93.246994,
+        "max": 207.836023,
+        "min": 24.229184
+      },
+      "initial_full_training_loss": 50.68425,
+      "initial_probe_loss": 50.777602,
+      "integrity": {
+        "bias_bitwise_identical": true,
+        "changed_tensors": [
+          "prompt_kernel.0.weight"
+        ],
+        "effective_trainable_parameters": 2048,
+        "other_columns_bitwise_identical": true,
+        "passed": true,
+        "prompt_index": 62,
+        "selected_column": 1086,
+        "selected_column_changed": true,
+        "selected_prompt": "sl-SI",
+        "tensor_shapes_match": true,
+        "unexpected_changed_elements": 0,
+        "unexpected_changed_tensors": []
+      },
+      "learning_rate": 0.01,
+      "optimizer_steps": 1920,
+      "peak_allocated_mib": 3043.305,
+      "peak_reserved_mib": 6038.0,
+      "pre_merge_integrity": {
+        "changed_pretrained_tensors": [],
+        "pretrained_tensors_identical": true,
+        "selection": {
+          "effective_trainable_parameters": 2048,
+          "encoder_width": 1024,
+          "first_linear_name": "prompt_kernel.0",
+          "first_linear_shape": [
+            2048,
+            1152
+          ],
+          "num_prompts": 128,
+          "prompt_index": 62,
+          "prompt_name": "sl-SI",
+          "selected_column": 1086
+        },
+        "unexpected_tensors": []
+      },
+      "probe_curve": [
+        {
+          "epoch": 0,
+          "mean_loss": 50.777602
+        },
+        {
+          "epoch": 1,
+          "mean_loss": 30.082181
+        },
+        {
+          "epoch": 2,
+          "mean_loss": 28.856756
+        },
+        {
+          "epoch": 3,
+          "mean_loss": 27.193122
+        },
+        {
+          "epoch": 4,
+          "mean_loss": 27.585113
+        },
+        {
+          "epoch": 5,
+          "mean_loss": 27.221512
+        },
+        {
+          "epoch": 6,
+          "mean_loss": 26.89458
+        },
+        {
+          "epoch": 7,
+          "mean_loss": 27.257934
+        },
+        {
+          "epoch": 8,
+          "mean_loss": 27.484863
+        },
+        {
+          "epoch": 9,
+          "mean_loss": 27.026524
+        },
+        {
+          "epoch": 10,
+          "mean_loss": 26.125493
+        },
+        {
+          "epoch": 11,
+          "mean_loss": 26.317486
+        },
+        {
+          "epoch": 12,
+          "mean_loss": 27.852969
+        }
+      ],
+      "restored_checkpoint_integrity": {
+        "bias_bitwise_identical": true,
+        "changed_tensors": [
+          "prompt_kernel.0.weight"
+        ],
+        "checkpoint_restored": true,
+        "effective_trainable_parameters": 2048,
+        "other_columns_bitwise_identical": true,
+        "passed": true,
+        "prompt_index": 62,
+        "selected_column": 1086,
+        "selected_column_changed": true,
+        "selected_prompt": "sl-SI",
+        "tensor_shapes_match": true,
+        "unexpected_changed_elements": 0,
+        "unexpected_changed_tensors": []
+      },
+      "sample_exposures": 1920,
+      "selection": {
+        "effective_trainable_parameters": 2048,
+        "encoder_width": 1024,
+        "first_linear_name": "prompt_kernel.0",
+        "first_linear_shape": [
+          2048,
+          1152
+        ],
+        "num_prompts": 128,
+        "prompt_index": 62,
+        "prompt_name": "sl-SI",
+        "selected_column": 1086
+      },
+      "status": "PASSED",
+      "trainable_parameter_count": 2048,
+      "wall_time_seconds": 86.235915
+    }
+  }
+}

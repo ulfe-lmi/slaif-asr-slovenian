@@ -67,6 +67,17 @@
   `SELECTED_TRAINING_MANIFEST_READY` certificate. It does not authorize model
   training, checkpoint promotion, public performance claims, or
   `TRAINING_ELIGIBLE`.
+- Work Order 0020 used that selected-training manifest once under a named
+  `DIAGNOSTIC_ONLY` exception for prompt-column evidence. Both valid
+  prompt-column arms trained only the 2,048-value `sl-SI` prompt-column delta
+  and improved the synthetic holdout, but they failed real-gate
+  non-regression. The result is
+  `CORPUS_V2_PROMPT_COLUMN_SYNTHETIC_ONLY`; no checkpoint is accepted, and the
+  untouched Nemotron checkpoint remains the only parent.
+- The A100 prompt-column training benchmark selected batch size 8 for
+  throughput, but the resulting batched arm was not scientifically equivalent
+  to the batch-size-1 reference arm. Future training work should not assume
+  minibatch equivalence without a new bounded proof.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without
@@ -184,10 +195,10 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Prepare a bounded training work order using the selected-training manifest, the
-independent synthetic holdout for diagnostics, and the real gates for
-acceptance or rollback. Do not train until a later certificate explicitly
-authorizes that training status.
+Do not prepare another prompt-column training rerun from the current
+single-voice corpus as if it were promotion-eligible. The next scientific work
+should address the acoustic/domain mismatch before any promotion-oriented
+training authorization.
 
 Use the rejected Round 1 and residual-adapter aggregate evidence to design the
 next controlled work order. The accepted parent remains the untouched Nemotron
