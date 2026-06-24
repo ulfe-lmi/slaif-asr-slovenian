@@ -72,7 +72,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   Experiment 0006 report.
 - GaMS-9B independent corpus-v2 synthetic holdout generator, deterministic
   12-per-cell selection, joint candidate/holdout validation, local whole-file
-  review capsule, and privacy-safe DRAFT data report.
+  review capsule, privacy-safe DRAFT generation report, and privacy-safe
+  `TEXT_ACCEPTED` review-admission report.
 
 ### Changed
 
@@ -127,6 +128,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   scientific reference mode.
 - The corpus-v2 candidate reservoir now has a structurally independent 96-row
   synthetic diagnostic holdout generated from separately pinned GaMS-9B. The
-  holdout is `DRAFT` pending a whole-file human decision; no TTS, ASR scoring,
-  selected-training construction, certificate, or `TRAINING_ELIGIBLE` status
-  exists for it.
+  holdout reached `TEXT_ACCEPTED` after a whole-file human decision; no TTS,
+  ASR scoring, selected-training construction, certificate, or
+  `TRAINING_ELIGIBLE` status exists for it.
