@@ -9,7 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
 
-from slaif_asr.corpus_v2_generation import config_sha256, load_config, run_dir
+from slaif_asr.corpus_v2_generation import config_sha256, load_config as load_reservoir_config, run_dir
+from slaif_asr.corpus_v2_holdout import load_config as load_holdout_config
 from slaif_asr.data_quality import (
     ALGORITHM_VERSION,
     assert_privacy_safe_report,
@@ -51,6 +52,7 @@ LOCAL_HOME_PATTERN = "/" + "home" + "/"
 MNT_DATA_PATTERN = "/" + "mnt" + "/" + "data"
 SAFE_PUBLIC_PATTERN = re.compile(
     r"\b(?:spoken_text|target_text|gamsv2-cell\d{2}-a\d{2}-o\d{3}|reviewer_identity)\b"
+    + r"|\bgams9holdout-hcell\d{2}-a\d{2}-o\d{3}\b"
     + "|"
     + re.escape(LOCAL_HOME_PATTERN)
     + "|"
@@ -112,9 +114,36 @@ def resolve_repo_path(path_text: str | Path) -> Path:
     return path if path.is_absolute() else repo_root() / path
 
 
+def load_review_config(path: Path) -> dict[str, Any]:
+    try:
+        return load_reservoir_config(path)
+    except Exception:
+        return load_holdout_config(path)
+
+
 def default_paths(config: dict[str, Any]) -> dict[str, Path]:
     root = repo_root()
     base = run_dir(config)
+    if config.get("corpus_id") == "sl-corpus-v2-independent-synthetic-holdout-v1":
+        return {
+            "pre_review": base / "fixed-holdout.local.jsonl",
+            "review_sheet": base / "review-capsule.local.tsv",
+            "review_template": base / "review-capsule.local.tsv",
+            "decisions": base / "holdout-review-decisions.local.jsonl",
+            "accepted_candidates": base / "accepted-holdout.local.jsonl",
+            "accepted_review": base / "accepted-holdout-linguistic-review.local.jsonl",
+            "post_review_validation": base / "post-review-validation.local.json",
+            "post_review_local_review": base / "post-review-review.local.jsonl",
+            "rejected_by_human": base / "rejected-holdout-by-human.local.jsonl",
+            "public_json": root / "docs/data-reports/0005-corpus-v2-holdout-review-admission.json",
+            "public_markdown": root / "docs/data-reports/0005-corpus-v2-holdout-review-admission.md",
+            "fleurs_manifest": root / "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+            "fleurs_metadata": root / "docs/evaluation-gates/fleurs-sl-si-test-full-v2.metadata.json",
+            "fleurs_index": root / "runs/data-quality/protected/fleurs-v2.hash-index.json",
+            "artur_manifest": root / "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+            "artur_metadata": root / "docs/evaluation-gates/artur-j-public-gate-v1.metadata.json",
+            "artur_index": root / "runs/data-quality/protected/artur-j.hash-index.json",
+        }
     return {
         "pre_review": base / "pre-review-candidates.local.jsonl",
         "review_sheet": base / "linguistic-review-sheet.local.tsv",
@@ -394,15 +423,17 @@ def validate_accepted_subset(
     output_report_path: Path,
     local_review_output_path: Path,
     retired_registry_path: Path,
+    partition_role: str = "synthetic_candidate",
+    corpus_id: str = REVIEWED_CORPUS_ID,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     config = load_json(data_quality_config_path)
     retired_registry = load_json(retired_registry_path)
     report, local_review = validate_corpus(
-        corpus_id=REVIEWED_CORPUS_ID,
+        corpus_id=corpus_id,
         config=config,
         config_sha256=canonical_json_sha256(config),
         retired_registry=retired_registry,
-        partitions={"synthetic_candidate": accepted_candidates_path},
+        partitions={partition_role: accepted_candidates_path},
         linguistic_review_path=accepted_review_path,
         protected_index_paths=list(protected_index_paths),
         repository_revision=git_revision(),
@@ -448,6 +479,8 @@ def build_public_report(
     validation_report: dict[str, Any] | None,
     review_mode: str = "row_tsv",
     whole_file_decision: dict[str, Any] | None = None,
+    partition_role: str = "synthetic_candidate",
+    reviewed_corpus_id: str = REVIEWED_CORPUS_ID,
 ) -> dict[str, Any]:
     outcome_counts = Counter(decision.outcome or "BLANK" for decision in decisions)
     validator_status = validation_report.get("final_text_status") if validation_report else review_error_status(review_issues)
@@ -456,8 +489,8 @@ def build_public_report(
     family_summary: dict[str, Any] | None = None
     protected_counts: dict[str, int] | None = None
     if validation_report:
-        fingerprint_counts = validation_report.get("fingerprint_unique_counts", {}).get("synthetic_candidate")
-        family_counts = validation_report.get("template_family_counts", {}).get("synthetic_candidate", {})
+        fingerprint_counts = validation_report.get("fingerprint_unique_counts", {}).get(partition_role)
+        family_counts = validation_report.get("template_family_counts", {}).get(partition_role, {})
         if family_counts:
             family_summary = {
                 "declared_family_count": family_counts.get("declared_family_count"),
@@ -472,7 +505,8 @@ def build_public_report(
     payload = {
         "schema_version": REVIEW_REPORT_SCHEMA_VERSION,
         "admission_version": REVIEW_ADMISSION_VERSION,
-        "corpus_id": REVIEWED_CORPUS_ID,
+        "corpus_id": reviewed_corpus_id,
+        "partition_role": partition_role,
         "source_reservoir": {
             "corpus_id": generation_config["corpus_id"],
             "pre_review_sha256": source_hash,
@@ -594,11 +628,11 @@ def run_review_admission(
     expected_corpus_sha256: str | None = None,
     expected_rows: int | None = None,
 ) -> tuple[dict[str, Any], int]:
-    generation_config = load_config(generation_config_path)
+    generation_config = load_review_config(generation_config_path)
     paths = default_paths(generation_config)
     source_rows = load_jsonl(paths["pre_review"])
     source_hash = sha256_file(paths["pre_review"])
-    if source_hash != EXPECTED_PRE_REVIEW_SHA256:
+    if generation_config.get("corpus_id") == "sl-corpus-v2-gams-candidate-reservoir-v1" and source_hash != EXPECTED_PRE_REVIEW_SHA256:
         raise ValueError(f"unexpected pre-review reservoir SHA256: {source_hash}")
     template_hash = sha256_file(paths["review_template"]) if paths["review_template"].exists() else None
     whole_file_requested = any(
@@ -670,6 +704,8 @@ def run_review_admission(
         output_report_path=paths["post_review_validation"],
         local_review_output_path=paths["post_review_local_review"],
         retired_registry_path=retired_registry_path,
+        partition_role=str(generation_config.get("partition_role", "synthetic_candidate")),
+        corpus_id=f"{generation_config['corpus_id']}-reviewed",
     )
     if review_issues:
         status = review_error_status(review_issues) or "DRAFT"
@@ -699,6 +735,8 @@ def run_review_admission(
         validation_report=validation_report,
         review_mode="whole_file" if whole_file_requested else "row_tsv",
         whole_file_decision=whole_file_decision,
+        partition_role=str(generation_config.get("partition_role", "synthetic_candidate")),
+        reviewed_corpus_id=f"{generation_config['corpus_id']}-reviewed",
     )
     atomic_write_json(paths["public_json"], public_payload)
     write_public_markdown(paths["public_markdown"], public_payload)

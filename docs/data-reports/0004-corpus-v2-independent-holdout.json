@@ -1,0 +1,143 @@
+{
+  "candidate_source": {
+    "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+    "rows": 415,
+    "sha256": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6"
+  },
+  "configuration_sha256": "1bc1f9bd7c4a7f5490a80d8b3aceb63944738dbce5a23a21a694f61c9ee83a21",
+  "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1",
+  "cross_partition_overlap_counts": {},
+  "family_summary": {
+    "declared_family_count": 0,
+    "discovered_family_count": 96,
+    "largest_family_fraction": 0.010417,
+    "largest_family_size": 1
+  },
+  "fingerprint_unique_counts": {
+    "carrier_stripped": 96,
+    "entity_masked": 96,
+    "number_masked": 96,
+    "surface": 96
+  },
+  "fixed_holdout_rows": 96,
+  "generated_count": 356,
+  "generation_performance": {
+    "generated_rows_per_minute": 116.117,
+    "prompt_batch_size_used": 4,
+    "retained_rows_per_minute": 31.313,
+    "wall_time_seconds": 183.952
+  },
+  "generator_version": "gams-corpus-v2-independent-holdout-v1",
+  "gpu_monitor": {
+    "fraction_at_or_above_80_percent": 0.994358,
+    "mean_power_watts": 246.896,
+    "mean_utilization_percent": 88.055,
+    "median_utilization_percent": 88.0,
+    "p95_power_watts": 262.89,
+    "p95_utilization_percent": 91.0,
+    "peak_memory_mib": 9465.0,
+    "sample_count": 709
+  },
+  "holdout_file_hashes": {
+    "fixed_holdout_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "generated_all_sha256": "a42e681ee79838f22f380581c26b16b2337994b4a9dc5cbfb637e30188ef1849"
+  },
+  "limitations": [
+    "Whole-file human holdout review is outstanding.",
+    "No TTS synthesis, ASR scoring, selected-training construction, data certificate, or training was performed.",
+    "The holdout is a synthetic diagnostic partition only and is not real-generalization evidence."
+  ],
+  "model": {
+    "license": "Gemma Terms of Use",
+    "repository": "cjvt/GaMS-9B-Instruct",
+    "revision": "292744023fa0b7ccc7ae2c3c885a67468e49fa03"
+  },
+  "per_cell_counts": {
+    "fixed": {
+      "holdout-cell01": 12,
+      "holdout-cell02": 12,
+      "holdout-cell03": 12,
+      "holdout-cell04": 12,
+      "holdout-cell05": 12,
+      "holdout-cell06": 12,
+      "holdout-cell07": 12,
+      "holdout-cell08": 12
+    },
+    "generated": {
+      "holdout-cell01": 44,
+      "holdout-cell02": 46,
+      "holdout-cell03": 44,
+      "holdout-cell04": 44,
+      "holdout-cell05": 44,
+      "holdout-cell06": 45,
+      "holdout-cell07": 45,
+      "holdout-cell08": 44
+    }
+  },
+  "prompt_cells": 8,
+  "prompt_revision": "sl-corpus-v2-independent-holdout-v1",
+  "protected_indexes": [
+    {
+      "algorithm_version": "training-text-validator-v1",
+      "gate_id": "fleurs-sl-si-test-full-v2",
+      "manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "metadata_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "metadata_reference_manifest_sha256": "483961a368bb92cd3fcabe1649cde9655402ff2572bb54eceb26223aaa11ce83",
+      "normalizer": "sl-asr-normalization-v1",
+      "number_masked_hash_count": 347,
+      "reference_manifest_sha256": "483961a368bb92cd3fcabe1649cde9655402ff2572bb54eceb26223aaa11ce83",
+      "row_count": 834,
+      "surface_hash_count": 347
+    },
+    {
+      "algorithm_version": "training-text-validator-v1",
+      "gate_id": "artur-j-public-gate-v1",
+      "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "metadata_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "metadata_reference_manifest_sha256": "227b41f6e02a0d3a924b58eb051694678d7ac6fc9216952634b3c05967ffec4b",
+      "normalizer": "sl-asr-normalization-v1",
+      "number_masked_hash_count": 251,
+      "reference_manifest_sha256": "227b41f6e02a0d3a924b58eb051694678d7ac6fc9216952634b3c05967ffec4b",
+      "row_count": 256,
+      "surface_hash_count": 251
+    }
+  ],
+  "protected_overlap_counts": {
+    "number_masked_overlaps": 0,
+    "surface_overlaps": 0
+  },
+  "rejected_count": 260,
+  "rejection_counts_by_reason": {
+    "deterministic_selection_overflow": 145,
+    "schema_invalid": 3,
+    "surface_duplicate": 15,
+    "token_ngram_concentration": 97
+  },
+  "requested_generation_rows": 160,
+  "review_capsule": {
+    "outcome_prefilled": false,
+    "rows": 96,
+    "whole_file_decision_required": true
+  },
+  "schema_version": "1.0",
+  "status": "DRAFT — awaiting whole-file human holdout decision",
+  "validator": {
+    "checks": {
+      "carrier_detection": "PASSED",
+      "cross_partition": "PASSED",
+      "fingerprints": "PASSED",
+      "fuzzy_similarity": "PASSED",
+      "linguistic_review": "REVIEW_REQUIRED",
+      "metadata_leakage": "PASSED",
+      "protected_indexes": "PASSED",
+      "record_schema": "PASSED",
+      "retired_hash_checks": "PASSED",
+      "template_family_discovery": "PASSED"
+    },
+    "decision_reasons": [
+      "missing_linguistic_review"
+    ],
+    "fuzzy_review_pairs": 0,
+    "status": "DRAFT"
+  }
+}

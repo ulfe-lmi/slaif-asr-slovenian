@@ -81,6 +81,8 @@ Deliverables:
   `TEXT_ACCEPTED` after whole-file human review**;
 - acoustic validator and privacy-safe audio certificate: **implemented for the
   415-row single-voice candidate reservoir as `AUDIO_ACCEPTED`**.
+- independent synthetic diagnostic holdout: **implemented as a 96-row GaMS-9B
+  `DRAFT` partition pending whole-file human review**.
 
 Exit gate:
 
@@ -102,8 +104,10 @@ training, steering, model comparison, or promotion. The text-stage validator can
 produce `TEXT_ACCEPTED`; the synthetic audio validator can produce
 `AUDIO_ACCEPTED`. The first corpus-v2 GaMS reservoir has reached both states
 for 415 reviewed, single-voice Piper-rendered candidates, but no independent
-synthetic holdout, selected-training partition, ASR scoring, or
-`TRAINING_ELIGIBLE` data certificate exists.
+synthetic holdout has been human-accepted yet, and no selected-training
+partition, ASR scoring, or `TRAINING_ELIGIBLE` data certificate exists. The
+separate 96-row holdout is structurally validated as `DRAFT` and awaits a
+whole-file human decision.
 
 ## Real Evaluation Gates
 
