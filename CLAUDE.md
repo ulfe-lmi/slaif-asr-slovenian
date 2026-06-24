@@ -16,9 +16,10 @@ The following rules are repeated because they are critical for any agent reading
 - Only `TRAINING_ELIGIBLE` data may enter promotion-oriented training.
 - The retired Round 1 v1 corpora identified in the training-data constitution
   must not be reused.
-- The GaMS corpus-v2 reservoir has reached `AUDIO_ACCEPTED` as a single-voice
-  synthetic candidate pool, but it is still not `TRAINING_ELIGIBLE` and does
-  not authorize ASR scoring, selection, or training.
+- The GaMS corpus-v2 reservoir and independent synthetic holdout have reached
+  `AUDIO_ACCEPTED` as single-voice synthetic partitions. The scoring
+  certificate authorizes ASR scoring and selected-training construction only;
+  the data is still not `TRAINING_ELIGIBLE` and does not authorize training.
 - Report passed, failed, skipped, not run, blocked, and out-of-scope work separately.
 - Do not publish model artifacts and do not merge your own pull request.
 - The remote repository and committed evidence are project truth.

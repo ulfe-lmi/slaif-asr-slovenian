@@ -48,17 +48,23 @@
   `TEXT_ACCEPTED`; all 415 rows were then rendered through the external Piper
   boundary and waveform-validated as `AUDIO_ACCEPTED`. Raw generated text,
   audio, manifests, logs, and monitoring CSVs remain ignored. The reservoir is
-  still not `TRAINING_ELIGIBLE`: the independent synthetic holdout has text
-  admission only, and there is no selected-training partition, holdout audio,
-  ASR scoring, partition-level certificate, or training authorization.
+  still not `TRAINING_ELIGIBLE`: the independent synthetic holdout now has text
+  and audio admission, and scoring is authorized, but there is no
+  selected-training partition, `TRAINING_ELIGIBLE` certificate, or training
+  authorization.
 - The independent corpus-v2 synthetic holdout
   `sl-corpus-v2-independent-synthetic-holdout-v1` was generated with separately
   pinned `cjvt/GaMS-9B-Instruct`, fixed to 96 rows by deterministic 12-per-cell
   selection, and validated jointly against the accepted 415-row candidate
   source plus the FLEURS-v2 and ARTUR-J protected indexes. Its SHA256 is
   `078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5`. A
-  whole-file human `ACCEPT` decision advanced it to `TEXT_ACCEPTED`. No TTS,
-  ASR scoring, selection, certificate, or training has been performed from it.
+  whole-file human `ACCEPT` decision advanced it to `TEXT_ACCEPTED`; Piper
+  synthesis and waveform validation advanced it to `AUDIO_ACCEPTED`.
+- The candidate source and independent synthetic holdout now have
+  `SCORING_AUTHORIZED` evidence. The authorization permits ASR scoring and
+  selected-training construction in a later work order. It does not authorize
+  model training, checkpoint promotion, public performance claims, or
+  `TRAINING_ELIGIBLE`.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without
@@ -176,12 +182,11 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Create the selected-training partition and partition-level certificate before
-ASR scoring or training. The current 415-row corpus-v2 reservoir has
-`TEXT_ACCEPTED` and `AUDIO_ACCEPTED` evidence only as a single-voice candidate
-source pool, and the 96-row independent synthetic holdout has `TEXT_ACCEPTED`
-text-stage evidence only. The A100 scoring substrate and FLEURS-v2 baseline are
-ready for a later, separately authorized candidate-scoring work order.
+Run ASR scoring for the accepted candidate source and independent synthetic
+holdout, then construct a selected-training manifest under the
+`SCORING_AUTHORIZED` certificate. The A100 scoring substrate and FLEURS-v2
+baseline are ready for that separate scoring work order. Do not train until a
+later certificate explicitly reaches the required training status.
 
 Use the rejected Round 1 and residual-adapter aggregate evidence to design the
 next controlled work order. The accepted parent remains the untouched Nemotron

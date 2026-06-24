@@ -34,8 +34,10 @@ residual-adapter capacity proof have both been rejected as accepted parents by
 the fixed real gates. The first GaMS corpus-v2 candidate reservoir has reached
 `TEXT_ACCEPTED` and `AUDIO_ACCEPTED` as a reviewed, single-voice synthetic
 candidate pool. A separately generated 96-row synthetic diagnostic holdout has
-reached `TEXT_ACCEPTED` after a whole-file human decision. No corpus is
-`TRAINING_ELIGIBLE`.
+reached `TEXT_ACCEPTED` after a whole-file human decision and `AUDIO_ACCEPTED`
+after Piper synthesis plus waveform validation. A privacy-safe scoring
+authorization certificate permits ASR scoring and selected-training
+construction in a later work order. No corpus is `TRAINING_ELIGIBLE`.
 
 Present:
 
@@ -57,6 +59,9 @@ Present:
 - a GaMS-9B independent synthetic holdout generator, privacy-safe DRAFT
   generation report, and privacy-safe `TEXT_ACCEPTED` review-admission report
   for the 96-row holdout;
+- privacy-safe `AUDIO_ACCEPTED` evidence for the 96-row holdout and a
+  `SCORING_AUTHORIZED` certificate for candidate-source and synthetic-holdout
+  ASR scoring;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
   duration-bucketed sweeps, and a measured policy for future real-gate
   evaluation;
@@ -131,9 +136,11 @@ training-data constitution. The corpus-v2 reservoir is not committed as raw
 text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and
 `AUDIO_ACCEPTED` evidence for 415 reviewed Piper-rendered items, and the
 separately generated 96-row GaMS-9B synthetic diagnostic holdout has reached
-`TEXT_ACCEPTED` after whole-file human review. There is still no selected-
-training partition, holdout audio, partition-level data certificate, ASR
-scoring authorization, or `TRAINING_ELIGIBLE` corpus.
+`TEXT_ACCEPTED` and `AUDIO_ACCEPTED`. The partition-level scoring certificate
+authorizes ASR scoring of both partitions and selected-training construction
+from the accepted candidate source in a later work order. There is still no
+selected-training partition, model-training authorization, or
+`TRAINING_ELIGIBLE` corpus.
 
 ## Repository role
 

@@ -1,0 +1,161 @@
+{
+  "certificate": {
+    "audio_manifest_hashes": {
+      "candidate_source": "c1d366e1d05b6f728af51b3350556b6d915fabf5a6b584a6aa2f9fdc0df538bc",
+      "synthetic_holdout": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d"
+    },
+    "audio_statuses": {
+      "candidate_source": "AUDIO_ACCEPTED",
+      "synthetic_holdout": "AUDIO_ACCEPTED"
+    },
+    "authorized_next_actions": [
+      "ASR scoring of the accepted candidate source",
+      "ASR scoring of the accepted synthetic holdout",
+      "selected-training construction from the accepted candidate source",
+      "diversity-preserving hard-example selection in a later work order"
+    ],
+    "candidate_source": {
+      "audio_certificate_sha256": "25737f59397d5c5acdd99e6af83e1129587199cb1a184eaec43dd27139bb1692",
+      "audio_manifest_sha256": "c1d366e1d05b6f728af51b3350556b6d915fabf5a6b584a6aa2f9fdc0df538bc",
+      "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+      "review_sidecar_sha256": "4dc16336dc9404d48cab196b862e4aa2a4558b20d2728fc954dd7fbb88fed732",
+      "rows": 415,
+      "text_partition_sha256": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6"
+    },
+    "certificate_id": "sl-corpus-v2-scoring-authorization-v1",
+    "config_hashes": {
+      "audio_quality": "41414ea05674c329bd71dcef877b8784274abe0cd098ebe89004aee2e1d0a722",
+      "text_quality": "1ec084569b4d0129606d1c062e2b45418e6f50829bb1a6e944e57fd9c1a05705"
+    },
+    "cross_partition_overlap_counts": {
+      "audio": {
+        "audio_path_overlaps": 0,
+        "audio_sha256_overlaps": 0
+      },
+      "fuzzy_review_pairs": 0,
+      "text_fingerprint": {}
+    },
+    "decision_date": "2026-06-24",
+    "duration_distribution": {
+      "candidate_source": {
+        "count": 415,
+        "maximum": 8.045687,
+        "mean": 3.046248,
+        "median": 2.751562,
+        "minimum": 0.963625,
+        "p95": 6.072
+      },
+      "synthetic_holdout": {
+        "count": 96,
+        "maximum": 7.929625,
+        "mean": 2.566154,
+        "median": 2.287156,
+        "minimum": 0.708187,
+        "p95": 4.783313
+      }
+    },
+    "generator_revisions": {
+      "candidate_source": {
+        "repository": "cjvt/GaMS3-12B-Instruct",
+        "revision": "1d0b27af5748784482600d24779409e7e1dc9adc"
+      },
+      "synthetic_holdout": {
+        "repository": "cjvt/GaMS-9B-Instruct",
+        "revision": "292744023fa0b7ccc7ae2c3c885a67468e49fa03"
+      }
+    },
+    "limitations": [
+      "This is not a training certificate.",
+      "Both partitions are single-voice Piper synthetic audio.",
+      "Synthetic holdout evidence is diagnostic only and not real-speech generalization evidence.",
+      "ASR scoring and selected-training construction require a later work order."
+    ],
+    "partition_hashes": {
+      "candidate_source_text": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6",
+      "synthetic_holdout_text": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5"
+    },
+    "piper_revisions": {
+      "engine": {
+        "name": "OHF-Voice/piper1-gpl",
+        "revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6"
+      },
+      "voice": {
+        "count": 1,
+        "holdout_total_duration_seconds": 246.35075,
+        "name": "sl_SI-artur-medium",
+        "repository": "rhasspy/piper-voices",
+        "revision": "217ddc79818708b078d0d14a8fae9608b9d77141",
+        "total_duration_seconds": 1264.192812
+      }
+    },
+    "prohibited_actions": [
+      "model training",
+      "TRAINING_ELIGIBLE certification",
+      "checkpoint promotion",
+      "public performance claims",
+      "use as real-speech generalization evidence"
+    ],
+    "protected_gate_overlap_counts": {
+      "number_masked_overlaps": 0,
+      "surface_overlaps": 0
+    },
+    "review_decisions": {
+      "candidate_source": {
+        "corpus_sha256": "5cb2520c27b3debd18a2f475368c2cdd8601fc5781ec541287092dbcd3ea0fe6",
+        "decision_id": "human-corpus-decision-v1",
+        "outcome": "ACCEPT",
+        "review_revision": "human-review-v1",
+        "row_count": 415,
+        "schema_version": "whole-file-review-decision-v1"
+      },
+      "synthetic_holdout": {
+        "corpus_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+        "decision_id": "human-holdout-decision-v1",
+        "outcome": "ACCEPT",
+        "review_revision": "human-holdout-review-v1",
+        "row_count": 96,
+        "schema_version": "whole-file-review-decision-v1"
+      }
+    },
+    "schema_version": "1.0",
+    "status": "SCORING_AUTHORIZED",
+    "synthetic_holdout": {
+      "audio_certificate_sha256": "d5c1660b8b11b8b250d04034dfb2abe14a96dda33d48560875a51d7168865297",
+      "audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+      "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1",
+      "review_sidecar_sha256": "f09fe275911134c9ce1bfd76358035d4ead2678cc85960a4335f85ad9681e471",
+      "rows": 96,
+      "text_partition_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5"
+    },
+    "text_statuses": {
+      "candidate_source": "TEXT_ACCEPTED",
+      "joint_partition_validation": "TEXT_ACCEPTED",
+      "synthetic_holdout": "TEXT_ACCEPTED"
+    },
+    "validator_versions": {
+      "audio": "synthetic-audio-validator-v1",
+      "text_stage": "training-text-validator-v1"
+    },
+    "voice_distribution": {
+      "candidate_source_audio_count": 415,
+      "single_voice": true,
+      "synthetic_holdout_audio_count": 96,
+      "total_duration_seconds": 1510.543562,
+      "voice_count": 1
+    }
+  },
+  "partition_validation": {
+    "cross_partition_overlap_counts": {},
+    "decision_reasons": [
+      "all_required_text_checks_passed"
+    ],
+    "fuzzy_review_pairs": 0,
+    "protected_overlap_counts": {
+      "number_masked_overlaps": 0,
+      "surface_overlaps": 0
+    },
+    "status": "TEXT_ACCEPTED"
+  },
+  "report": "corpus-v2-scoring-authorization",
+  "schema_version": "1.0"
+}

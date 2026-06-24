@@ -74,6 +74,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   12-per-cell selection, joint candidate/holdout validation, local whole-file
   review capsule, privacy-safe DRAFT generation report, and privacy-safe
   `TEXT_ACCEPTED` review-admission report.
+- Holdout Piper synthesis and acoustic admission for the accepted 96-row
+  corpus-v2 synthetic holdout, plus a privacy-safe
+  `SCORING_AUTHORIZED` certificate for later ASR scoring and selected-training
+  construction.
 
 ### Changed
 
@@ -128,6 +132,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   scientific reference mode.
 - The corpus-v2 candidate reservoir now has a structurally independent 96-row
   synthetic diagnostic holdout generated from separately pinned GaMS-9B. The
-  holdout reached `TEXT_ACCEPTED` after a whole-file human decision; no TTS,
-  ASR scoring, selected-training construction, certificate, or
-  `TRAINING_ELIGIBLE` status exists for it.
+  holdout reached `TEXT_ACCEPTED` after a whole-file human decision and
+  `AUDIO_ACCEPTED` after deterministic Piper synthesis and waveform
+  validation.
+- Corpus-v2 scoring is now authorized for the accepted 415-row candidate source
+  and the accepted 96-row synthetic holdout. This authorization permits ASR
+  scoring and later selected-training construction only; it does not authorize
+  model training, checkpoint promotion, public performance claims, or
+  `TRAINING_ELIGIBLE`.

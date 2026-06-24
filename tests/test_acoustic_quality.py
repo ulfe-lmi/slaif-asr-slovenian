@@ -9,6 +9,7 @@ from unittest import mock
 
 from slaif_asr.acoustic_quality import (
     assert_public_audio_payload_safe,
+    audio_partition_overlap_counts,
     load_corpus_v2_tts_items,
     read_audio_stats,
     select_worker_count,
@@ -26,14 +27,14 @@ def write_wav(path: Path, *, frames: int = 1600, sample_rate: int = 16000, ampli
         wav.writeframes((int(amplitude).to_bytes(2, "little", signed=True)) * frames)
 
 
-def text_record(candidate_id: str, text: str) -> dict:
+def text_record(candidate_id: str, text: str, *, partition_role: str = "synthetic_candidate") -> dict:
     return {
         "schema_version": "2.0",
         "candidate_id": candidate_id,
         "language": "sl-SI",
         "spoken_text": text,
         "target_text": text,
-        "partition_role": "synthetic_candidate",
+        "partition_role": partition_role,
         "source_type": "generated_text",
         "source_id": f"source-{candidate_id}",
         "source_family_id": f"family-{candidate_id}",
@@ -56,6 +57,21 @@ class AcousticQualityTests(unittest.TestCase):
             items = load_corpus_v2_tts_items(path)
             self.assertEqual(len(items), 1)
             self.assertEqual(items[0].candidate_id, "row-001")
+
+    def test_corpus_v2_bridge_accepts_holdout_role(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_text:
+            path = Path(tmp_text) / "accepted-holdout.jsonl"
+            atomic_write_jsonl(path, [text_record("row-001", "Danes je miren dan.", partition_role="synthetic_holdout")])
+            items = load_corpus_v2_tts_items(path, expected_partition_role="synthetic_holdout")
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0].partition_role, "synthetic_holdout")
+
+    def test_corpus_v2_bridge_rejects_wrong_role(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_text:
+            path = Path(tmp_text) / "accepted-holdout.jsonl"
+            atomic_write_jsonl(path, [text_record("row-001", "Danes je miren dan.", partition_role="synthetic_holdout")])
+            with self.assertRaisesRegex(ValueError, "expected synthetic_candidate partition"):
+                load_corpus_v2_tts_items(path)
 
     def test_corpus_v2_bridge_rejects_text_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_text:
@@ -129,6 +145,28 @@ class AcousticQualityTests(unittest.TestCase):
             self.assertEqual(return_code, 1)
             self.assertEqual(payload["status"], "AUDIO_REJECTED")
             self.assertEqual(payload["failures_by_reason"]["duplicate_audio_sha256"], 1)
+
+    def test_audio_partition_overlap_counts_paths_and_hashes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_text:
+            tmp = Path(tmp_text)
+            candidate = tmp / "candidate.jsonl"
+            holdout = tmp / "holdout.jsonl"
+            shared_path = str(tmp / "shared.wav")
+            atomic_write_jsonl(
+                candidate,
+                [
+                    {"audio_filepath": shared_path, "audio_sha256": "aaa"},
+                    {"audio_filepath": str(tmp / "candidate-only.wav"), "audio_sha256": "bbb"},
+                ],
+            )
+            atomic_write_jsonl(
+                holdout,
+                [
+                    {"audio_filepath": shared_path, "audio_sha256": "ccc"},
+                    {"audio_filepath": str(tmp / "holdout-only.wav"), "audio_sha256": "bbb"},
+                ],
+            )
+            self.assertEqual(audio_partition_overlap_counts(candidate, holdout), {"audio_path_overlaps": 1, "audio_sha256_overlaps": 1})
 
     def test_public_audio_payload_rejects_raw_text_and_paths(self) -> None:
         with self.assertRaisesRegex(ValueError, "forbidden key"):

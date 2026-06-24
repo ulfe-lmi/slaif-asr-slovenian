@@ -1,0 +1,121 @@
+{
+  "accepted_text_partition_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+  "audio_count": 96,
+  "audio_format": {
+    "channels": 1,
+    "encoding": "signed-16-bit-pcm-wav",
+    "sample_rate": 16000,
+    "sample_width_bytes": 2
+  },
+  "audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+  "concurrency_benchmark": [],
+  "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1",
+  "duplicate_counts": {
+    "audio_path_duplicates": 0,
+    "audio_sha256_duplicates": 0
+  },
+  "duration_distribution": {
+    "count": 96,
+    "maximum": 7.929625,
+    "mean": 2.566154,
+    "median": 2.287156,
+    "minimum": 0.708187,
+    "p95": 4.783313
+  },
+  "engine": {
+    "name": "OHF-Voice/piper1-gpl",
+    "revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6"
+  },
+  "failures_by_reason": {},
+  "gpu_utilization": {
+    "fraction_at_or_above_80_percent": 0.0,
+    "mean_power_watts": 76.196188,
+    "mean_utilization_percent": 1.898172,
+    "median_utilization_percent": 1.0,
+    "p95_power_watts": 79.82,
+    "p95_utilization_percent": 6.0,
+    "peak_memory_mib": 705.0,
+    "sample_count": 766
+  },
+  "limitations": [
+    "This certificate is AUDIO_ACCEPTED or AUDIO_REJECTED only; it is never TRAINING_ELIGIBLE.",
+    "The corpus remains single-voice synthetic audio.",
+    "Waveform checks do not prove transcript correctness or natural prosody.",
+    "This synthetic holdout is diagnostic only and is not real-speech generalization evidence.",
+    "TTS and audio validation do not authorize model training."
+  ],
+  "partition_role": "synthetic_holdout",
+  "review_decision": {
+    "corpus_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "decision_id": "human-holdout-decision-v1",
+    "outcome": "ACCEPT",
+    "review_revision": "human-holdout-review-v1",
+    "row_count": 96,
+    "schema_version": "whole-file-review-decision-v1"
+  },
+  "row_count": 96,
+  "schema_version": "1.0",
+  "selected_worker_count": 1,
+  "status": "AUDIO_ACCEPTED",
+  "validator": {
+    "algorithm_version": "synthetic-audio-validator-v1",
+    "config_sha256": "41414ea05674c329bd71dcef877b8784274abe0cd098ebe89004aee2e1d0a722"
+  },
+  "voice": {
+    "count": 1,
+    "name": "sl_SI-artur-medium",
+    "repository": "rhasspy/piper-voices",
+    "revision": "217ddc79818708b078d0d14a8fae9608b9d77141",
+    "total_duration_seconds": 246.35075
+  },
+  "waveform_validation": {
+    "active_frame_fraction": {
+      "count": 96,
+      "maximum": 0.965175,
+      "mean": 0.906386,
+      "median": 0.912236,
+      "minimum": 0.774777,
+      "p95": 0.95072
+    },
+    "clipping_fraction": {
+      "count": 96,
+      "maximum": 6.1e-05,
+      "mean": 1e-06,
+      "median": 0.0,
+      "minimum": 0.0,
+      "p95": 0.0
+    },
+    "leading_silence_seconds": {
+      "count": 96,
+      "maximum": 0.063937,
+      "mean": 0.022679,
+      "median": 0.026125,
+      "minimum": 0.0,
+      "p95": 0.048875
+    },
+    "peak_ratio": {
+      "count": 96,
+      "maximum": 0.999969,
+      "mean": 0.988453,
+      "median": 0.991409,
+      "minimum": 0.955475,
+      "p95": 0.999603
+    },
+    "rms_ratio": {
+      "count": 96,
+      "maximum": 0.224085,
+      "mean": 0.178517,
+      "median": 0.179336,
+      "minimum": 0.127893,
+      "p95": 0.210945
+    },
+    "trailing_silence_seconds": {
+      "count": 96,
+      "maximum": 0.257875,
+      "mean": 0.084944,
+      "median": 0.074969,
+      "minimum": 6.3e-05,
+      "p95": 0.177375
+    }
+  }
+}
