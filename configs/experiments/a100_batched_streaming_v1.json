@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "a100-batched-streaming-v1",
+  "run_directory": "runs/evaluation-benchmarks/a100-batched-streaming-v1",
+  "base_model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74"
+  },
+  "nemo": {
+    "source_tree": ".external/NeMo",
+    "revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "streaming_script": ".external/NeMo/examples/asr/asr_cache_aware_streaming/speech_to_text_cache_aware_streaming_infer.py"
+  },
+  "gates": {
+    "fleurs": {
+      "gate_id": "fleurs-sl-si-test-full-v2",
+      "manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+      "manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "expected_rows": 834
+    },
+    "artur_j": {
+      "gate_id": "artur-j-public-gate-v1",
+      "manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+      "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "expected_rows": 256
+    }
+  },
+  "inference": {
+    "att_context_size": [56, 3],
+    "target_lang": "sl-SI",
+    "strip_lang_tags": true,
+    "precision": "fp32",
+    "tf32": false,
+    "cuda_logical_device": 0
+  },
+  "hardware": {
+    "required_cuda_visible_devices": "1",
+    "allowed_gpu_name_fragment": "A100",
+    "max_peak_memory_mib": 73728,
+    "idle_memory_mib_max": 1024,
+    "idle_utilization_percent_max": 10
+  },
+  "official_parity": {
+    "subset_size": 32,
+    "selection": "smallest-sha256-sample-id"
+  },
+  "sweep": {
+    "batch_sizes": [1, 2, 4, 8, 16, 32, 64, 128],
+    "conditional_batch_256": true,
+    "conditional_batch_256_max_memory_mib": 57344,
+    "conditional_batch_256_min_gain_over_64": 1.05
+  },
+  "selection": {
+    "throughput_metric": "end_to_end_audio_seconds_per_wall_second",
+    "within_best_fraction": 0.95,
+    "support_min_speedup": 1.25
+  },
+  "monitor": {
+    "sample_interval_seconds": 0.2,
+    "physical_gpu_index": "1"
+  }
+}

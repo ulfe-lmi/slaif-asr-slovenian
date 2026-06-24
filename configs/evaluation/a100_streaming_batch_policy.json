@@ -1,0 +1,35 @@
+{
+  "artur_j_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+  "att_context_size": [
+    56,
+    3
+  ],
+  "base_model_revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+  "batch_size": 1,
+  "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+  "duration_bucketing": false,
+  "experiment_report": "docs/experiments/0006-a100-batched-streaming-evaluation.json",
+  "fleurs_v2_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+  "hardware": "NVIDIA A100-SXM4-80GB",
+  "logical_cuda_device": "cuda:0",
+  "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+  "physical_gpu_selector": "1",
+  "policy_id": "a100-streaming-batch-policy-v1",
+  "precision": "fp32",
+  "reference_mode": {
+    "batch_size": 1,
+    "duration_bucketing": false
+  },
+  "schema_version": "1.0",
+  "selection_reason": {
+    "batch_size": 1,
+    "bucketed_throughput": 9.426266,
+    "classification": "A100_BATCHED_STREAMING_NOT_EQUIVALENT",
+    "duration_bucketing": false,
+    "speedup_vs_batch_1": 1.042892,
+    "unbucketed_throughput": 9.830573
+  },
+  "status": "measured",
+  "target_lang": "sl-SI",
+  "tf32": false
+}

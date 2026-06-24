@@ -67,6 +67,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Corpus-v2 Piper synthesis bridge, bounded worker benchmark, acoustic
   waveform validator, synthetic audio configuration, and privacy-safe
   `AUDIO_ACCEPTED` certificate.
+- A100 batched streaming evaluation substrate, duration-bucketed benchmark
+  runner, batch-policy configuration, CPU tests, and privacy-safe aggregate
+  Experiment 0006 report.
 
 ### Changed
 
@@ -115,3 +118,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   scoring, hard-example selection, or training because there is no independent
   synthetic holdout, selected-training partition, partition-level certificate,
   or `TRAINING_ELIGIBLE` status.
+- FLEURS-v2 now has a valid untouched-base ASR baseline. A100 batch sizes above
+  1 were faster but not transcript-equivalent, so the selected measured policy
+  is batch size 1 without duration bucketing; batch size 1 remains the
+  scientific reference mode.

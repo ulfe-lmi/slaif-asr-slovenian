@@ -15,8 +15,8 @@
 - The canonical FLEURS development gate is now `fleurs-sl-si-test-full-v2`,
   built from all 834 pinned Slovenian test occurrences with unique
   occurrence-index sample IDs. Historical FLEURS v1 metrics are deprecated
-  because v1 represented only 347 unique sample identities. FLEURS v2 ASR
-  metrics have not yet been rerun.
+  because v1 represented only 347 unique sample identities. FLEURS v2 now has
+  a valid untouched-base ASR baseline from Experiment 0006.
 - The deterministic ARTUR-J public-speech gate remains valid and unaffected.
 - Project-generated Slovenian curriculum Round 1 has run without GaMS or an
   external LLM. Its prompt-column challenger is rejected: it improved selected
@@ -51,6 +51,11 @@
   still not `TRAINING_ELIGIBLE`: it has no independent synthetic holdout,
   selected-training partition, ASR scoring, partition-level certificate, or
   training authorization.
+- A100 batched streaming evaluation has been measured on physical GPU 1 with
+  FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
+  but changed transcripts, so the selected policy is batch size 1 without
+  duration bucketing. ARTUR-J confirms batch-1 parity. The corpus-v2 candidate
+  reservoir was not scored.
 - The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
   unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -167,10 +172,8 @@ Create an independent synthetic holdout and selected-training partition under
 the training-data constitution, then issue a partition-level certificate before
 ASR scoring or training. The current 415-row corpus-v2 reservoir has
 `TEXT_ACCEPTED` and `AUDIO_ACCEPTED` evidence only as a single-voice candidate
-source pool. In parallel or afterward, run the governed A100
-batched-streaming parity and throughput work order on
-`fleurs-sl-si-test-full-v2`, then establish fresh untouched-base FLEURS v2
-metrics before using FLEURS in promotion decisions again.
+source pool. The A100 scoring substrate and FLEURS-v2 baseline are ready for a
+later, separately authorized candidate-scoring work order.
 
 Use the rejected Round 1 and residual-adapter aggregate evidence to design the
 next controlled work order. The accepted parent remains the untouched Nemotron

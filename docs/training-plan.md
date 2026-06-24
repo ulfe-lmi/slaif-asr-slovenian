@@ -585,6 +585,13 @@ candidate source pool with no independent synthetic holdout, no selected-
 training partition, no partition-level data certificate, no ASR scoring, and no
 authorization for hard-example selection or model training.
 
+The A100 batched streaming substrate is now available for future authorized
+real-gate evaluation and accepted-candidate scoring. Its measured policy is
+batch size 1 without duration bucketing because larger tested FLEURS-v2 batches
+changed transcripts. Do not use it to score the corpus-v2 reservoir until a
+separate work order creates an independent holdout and partition-level
+authorization.
+
 ## 13. Text policy for the first adaptation
 
 The base model is trained to emit punctuation and capitalization. Match that style.
@@ -1579,6 +1586,13 @@ acceptance evaluation
 ```
 
 A 600M model fits comfortably. Start without model parallelism.
+
+For real-gate evaluation, use
+[`configs/evaluation/a100_streaming_batch_policy.json`](../configs/evaluation/a100_streaming_batch_policy.json).
+Experiment 0006 found that duration-bucketed batches larger than 1 improved
+throughput but did not preserve exact transcript parity, so batch size 1
+without duration bucketing remains the selected A100 policy and scientific
+reference mode.
 
 ---
 

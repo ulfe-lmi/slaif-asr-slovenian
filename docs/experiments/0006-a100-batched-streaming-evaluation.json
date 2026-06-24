@@ -1,0 +1,1304 @@
+{
+  "artur_j_confirmation": {
+    "batch_1": {
+      "active_audio_seconds_per_wall_second": 10.208033,
+      "active_real_time_factor": 0.097962,
+      "audio_duration_seconds": 1049.59,
+      "batch_size": 1,
+      "bucketed": true,
+      "end_to_end_audio_seconds_per_wall_second": 6.301819,
+      "end_to_end_real_time_factor": 0.158684,
+      "execution": {
+        "active_wall_time_seconds": 102.82,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 98.546423,
+          "mean_utilization_percent": 24.078467,
+          "median_utilization_percent": 38.0,
+          "p95_power_watts": 123.06,
+          "p95_utilization_percent": 40.0,
+          "peak_memory_mib": 5517.0,
+          "sample_count": 548
+        },
+        "wall_time_seconds": 166.553487
+      },
+      "layout": {
+        "actual_audio_seconds": 1049.59,
+        "batch_count": 256,
+        "final_partial_batch_size": 0,
+        "full_batch_count": 256,
+        "max_padded_batch_duration": 10.25,
+        "padded_audio_seconds": 1049.59,
+        "padding_ratio": 1.0
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 29.016,
+          "corpus_wer": 67.453,
+          "empty_hypothesis_count": 12,
+          "mean_utterance_cer": 33.831,
+          "mean_utterance_wer": 76.555,
+          "median_utterance_cer": 22.642,
+          "median_utterance_wer": 75.0,
+          "total_character_edits": 4100,
+          "total_reference_characters": 14130,
+          "total_reference_words": 2289,
+          "total_word_edits": 1544
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 32.234,
+          "corpus_wer": 74.585,
+          "empty_hypothesis_count": 12,
+          "mean_utterance_cer": 37.563,
+          "mean_utterance_wer": 84.095,
+          "median_utterance_cer": 25.944,
+          "median_utterance_wer": 82.576,
+          "total_character_edits": 4682,
+          "total_reference_characters": 14525,
+          "total_reference_words": 2290,
+          "total_word_edits": 1708
+        }
+      },
+      "parity_eligible": true,
+      "prediction_count": 256,
+      "rows": 256,
+      "status": "PASSED",
+      "utterances_per_second": 1.537044
+    },
+    "candidate_arms": [],
+    "selected": {
+      "active_audio_seconds_per_wall_second": 10.208033,
+      "active_real_time_factor": 0.097962,
+      "audio_duration_seconds": 1049.59,
+      "batch_size": 1,
+      "bucketed": true,
+      "end_to_end_audio_seconds_per_wall_second": 6.301819,
+      "end_to_end_real_time_factor": 0.158684,
+      "execution": {
+        "active_wall_time_seconds": 102.82,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 98.546423,
+          "mean_utilization_percent": 24.078467,
+          "median_utilization_percent": 38.0,
+          "p95_power_watts": 123.06,
+          "p95_utilization_percent": 40.0,
+          "peak_memory_mib": 5517.0,
+          "sample_count": 548
+        },
+        "wall_time_seconds": 166.553487
+      },
+      "layout": {
+        "actual_audio_seconds": 1049.59,
+        "batch_count": 256,
+        "final_partial_batch_size": 0,
+        "full_batch_count": 256,
+        "max_padded_batch_duration": 10.25,
+        "padded_audio_seconds": 1049.59,
+        "padding_ratio": 1.0
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 29.016,
+          "corpus_wer": 67.453,
+          "empty_hypothesis_count": 12,
+          "mean_utterance_cer": 33.831,
+          "mean_utterance_wer": 76.555,
+          "median_utterance_cer": 22.642,
+          "median_utterance_wer": 75.0,
+          "total_character_edits": 4100,
+          "total_reference_characters": 14130,
+          "total_reference_words": 2289,
+          "total_word_edits": 1544
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 32.234,
+          "corpus_wer": 74.585,
+          "empty_hypothesis_count": 12,
+          "mean_utterance_cer": 37.563,
+          "mean_utterance_wer": 84.095,
+          "median_utterance_cer": 25.944,
+          "median_utterance_wer": 82.576,
+          "total_character_edits": 4682,
+          "total_reference_characters": 14525,
+          "total_reference_words": 2290,
+          "total_word_edits": 1708
+        }
+      },
+      "parity_eligible": true,
+      "prediction_count": 256,
+      "rows": 256,
+      "status": "PASSED",
+      "utterances_per_second": 1.537044
+    }
+  },
+  "configuration_sha256": "768c58ab51b68e65688165329332f3077da7362c0136f37e4e2f5c3f5b031f57",
+  "experiment_id": "a100-batched-streaming-v1",
+  "fleurs_v2_sweep": [
+    {
+      "active_audio_seconds_per_wall_second": 10.190821,
+      "active_real_time_factor": 0.098128,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 1,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 9.426266,
+      "end_to_end_real_time_factor": 0.106087,
+      "exact_mismatch_count": 0,
+      "execution": {
+        "active_wall_time_seconds": 802.01,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 113.961364,
+          "mean_utilization_percent": 37.057838,
+          "median_utilization_percent": 39.0,
+          "p95_power_watts": 122.14,
+          "p95_utilization_percent": 40.0,
+          "peak_memory_mib": 5517.0,
+          "sample_count": 2507
+        },
+        "wall_time_seconds": 867.06015
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 834,
+        "final_partial_batch_size": 0,
+        "full_batch_count": 834,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 8173.14,
+        "padding_ratio": 1.0
+      },
+      "metric_differences": {},
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.423,
+          "corpus_wer": 52.703,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.067,
+          "mean_utterance_wer": 53.532,
+          "median_utterance_cer": 13.875,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17027,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8705
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.659,
+          "corpus_wer": 62.722,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.392,
+          "mean_utterance_wer": 63.832,
+          "median_utterance_cer": 17.391,
+          "median_utterance_wer": 62.963,
+          "total_character_edits": 20400,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10329
+        }
+      },
+      "normalized_mismatch_count": 0,
+      "parity_eligible": true,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 0.961871
+    },
+    {
+      "active_audio_seconds_per_wall_second": 19.75238,
+      "active_real_time_factor": 0.050627,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 2,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 17.120046,
+      "end_to_end_real_time_factor": 0.058411,
+      "exact_mismatch_count": 15,
+      "execution": {
+        "active_wall_time_seconds": 413.78,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 129.076126,
+          "mean_utilization_percent": 61.108142,
+          "median_utilization_percent": 70.0,
+          "p95_power_watts": 142.95,
+          "p95_utilization_percent": 73.0,
+          "peak_memory_mib": 5525.0,
+          "sample_count": 1572
+        },
+        "wall_time_seconds": 477.401751
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 417,
+        "final_partial_batch_size": 0,
+        "full_batch_count": 417,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 8186.04,
+        "padding_ratio": 1.001578
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.419
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.709
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.064
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.535
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.854
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17023
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8706
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.669
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 62.776
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.403
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 63.896
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.158
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20410
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10338
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.419,
+          "corpus_wer": 52.709,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.064,
+          "mean_utterance_wer": 53.535,
+          "median_utterance_cer": 13.854,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17023,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8706
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.669,
+          "corpus_wer": 62.776,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.403,
+          "mean_utterance_wer": 63.896,
+          "median_utterance_cer": 17.391,
+          "median_utterance_wer": 63.158,
+          "total_character_edits": 20410,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10338
+        }
+      },
+      "normalized_mismatch_count": 3,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 1.746956
+    },
+    {
+      "active_audio_seconds_per_wall_second": 39.156518,
+      "active_real_time_factor": 0.025539,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 4,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 29.980714,
+      "end_to_end_real_time_factor": 0.033355,
+      "exact_mismatch_count": 34,
+      "execution": {
+        "active_wall_time_seconds": 208.73,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 138.034783,
+          "mean_utilization_percent": 56.930881,
+          "median_utilization_percent": 74.0,
+          "p95_power_watts": 167.43,
+          "p95_utilization_percent": 77.0,
+          "peak_memory_mib": 5541.0,
+          "sample_count": 897
+        },
+        "wall_time_seconds": 272.613252
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 209,
+        "final_partial_batch_size": 2,
+        "full_batch_count": 208,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 8210.4,
+        "padding_ratio": 1.004559
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.412
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.697
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.058
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.523
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.854
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17016
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8704
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.679
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 62.837
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.418
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 63.974
+        },
+        "raw.median_utterance_cer": {
+          "baseline": 17.391,
+          "candidate": 17.417
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.158
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20421
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10348
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.412,
+          "corpus_wer": 52.697,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.058,
+          "mean_utterance_wer": 53.523,
+          "median_utterance_cer": 13.854,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17016,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8704
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.679,
+          "corpus_wer": 62.837,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.418,
+          "mean_utterance_wer": 63.974,
+          "median_utterance_cer": 17.417,
+          "median_utterance_wer": 63.158,
+          "total_character_edits": 20421,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10348
+        }
+      },
+      "normalized_mismatch_count": 5,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 3.059279
+    },
+    {
+      "active_audio_seconds_per_wall_second": 70.276354,
+      "active_real_time_factor": 0.01423,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 8,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 45.612474,
+      "end_to_end_real_time_factor": 0.021924,
+      "exact_mismatch_count": 63,
+      "execution": {
+        "active_wall_time_seconds": 116.3,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.616949,
+          "mean_power_watts": 149.670915,
+          "mean_utilization_percent": 57.140678,
+          "median_utilization_percent": 88.0,
+          "p95_power_watts": 210.66,
+          "p95_utilization_percent": 92.0,
+          "peak_memory_mib": 5605.0,
+          "sample_count": 590
+        },
+        "wall_time_seconds": 179.18651
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 105,
+        "final_partial_batch_size": 2,
+        "full_batch_count": 104,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 8256.24,
+        "padding_ratio": 1.010167
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.41
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.685
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.056
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.507
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.854
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17014
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8702
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.705
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 62.904
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.448
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 64.048
+        },
+        "raw.median_utterance_cer": {
+          "baseline": 17.391,
+          "candidate": 17.46
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.158
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20447
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10359
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.41,
+          "corpus_wer": 52.685,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.056,
+          "mean_utterance_wer": 53.507,
+          "median_utterance_cer": 13.854,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17014,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8702
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.705,
+          "corpus_wer": 62.904,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.448,
+          "mean_utterance_wer": 64.048,
+          "median_utterance_cer": 17.46,
+          "median_utterance_wer": 63.158,
+          "total_character_edits": 20447,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10359
+        }
+      },
+      "normalized_mismatch_count": 7,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 4.654368
+    },
+    {
+      "active_audio_seconds_per_wall_second": 93.664222,
+      "active_real_time_factor": 0.010676,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 16,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 53.865312,
+      "end_to_end_real_time_factor": 0.018565,
+      "exact_mismatch_count": 89,
+      "execution": {
+        "active_wall_time_seconds": 87.26,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.535714,
+          "mean_power_watts": 154.863571,
+          "mean_utilization_percent": 52.468254,
+          "median_utilization_percent": 83.0,
+          "p95_power_watts": 237.37,
+          "p95_utilization_percent": 95.0,
+          "peak_memory_mib": 5705.0,
+          "sample_count": 504
+        },
+        "wall_time_seconds": 151.732899
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 53,
+        "final_partial_batch_size": 2,
+        "full_batch_count": 52,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 8354.64,
+        "padding_ratio": 1.022207
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.407
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.685
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.053
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.507
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.846
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17011
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8702
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.723
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 62.977
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.47
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 64.141
+        },
+        "raw.median_utterance_cer": {
+          "baseline": 17.391,
+          "candidate": 17.48
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.246
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20466
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10371
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.407,
+          "corpus_wer": 52.685,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.053,
+          "mean_utterance_wer": 53.507,
+          "median_utterance_cer": 13.846,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17011,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8702
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.723,
+          "corpus_wer": 62.977,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.47,
+          "mean_utterance_wer": 64.141,
+          "median_utterance_cer": 17.48,
+          "median_utterance_wer": 63.246,
+          "total_character_edits": 20466,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10371
+        }
+      },
+      "normalized_mismatch_count": 9,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 5.496501
+    },
+    {
+      "active_audio_seconds_per_wall_second": 119.875917,
+      "active_real_time_factor": 0.008342,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 32,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 62.388048,
+      "end_to_end_real_time_factor": 0.016029,
+      "exact_mismatch_count": 116,
+      "execution": {
+        "active_wall_time_seconds": 68.18,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.450346,
+          "mean_power_watts": 158.217575,
+          "mean_utilization_percent": 47.614319,
+          "median_utilization_percent": 69.0,
+          "p95_power_watts": 269.58,
+          "p95_utilization_percent": 97.0,
+          "peak_memory_mib": 5889.0,
+          "sample_count": 433
+        },
+        "wall_time_seconds": 131.004901
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 27,
+        "final_partial_batch_size": 2,
+        "full_batch_count": 26,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 8567.76,
+        "padding_ratio": 1.048283
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.406
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.685
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.052
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.507
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.846
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17010
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8702
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.747
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 63.062
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.5
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 64.251
+        },
+        "raw.median_utterance_cer": {
+          "baseline": 17.391,
+          "candidate": 17.568
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.333
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20491
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10385
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.406,
+          "corpus_wer": 52.685,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.052,
+          "mean_utterance_wer": 53.507,
+          "median_utterance_cer": 13.846,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17010,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8702
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.747,
+          "corpus_wer": 63.062,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.5,
+          "mean_utterance_wer": 64.251,
+          "median_utterance_cer": 17.568,
+          "median_utterance_wer": 63.333,
+          "total_character_edits": 20491,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10385
+        }
+      },
+      "normalized_mismatch_count": 10,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 6.366174
+    },
+    {
+      "active_audio_seconds_per_wall_second": 126.597584,
+      "active_real_time_factor": 0.007899,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 64,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 63.713473,
+      "end_to_end_real_time_factor": 0.015695,
+      "exact_mismatch_count": 117,
+      "execution": {
+        "active_wall_time_seconds": 64.56,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.452607,
+          "mean_power_watts": 159.54609,
+          "mean_utilization_percent": 46.218009,
+          "median_utilization_percent": 36.0,
+          "p95_power_watts": 279.88,
+          "p95_utilization_percent": 98.0,
+          "peak_memory_mib": 6423.0,
+          "sample_count": 422
+        },
+        "wall_time_seconds": 128.279618
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 14,
+        "final_partial_batch_size": 2,
+        "full_batch_count": 13,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 9018.96,
+        "padding_ratio": 1.103488
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.406
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.685
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.052
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.507
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.846
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17010
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8702
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.748
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 63.068
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.502
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 64.263
+        },
+        "raw.median_utterance_cer": {
+          "baseline": 17.391,
+          "candidate": 17.568
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.485
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20492
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10386
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.406,
+          "corpus_wer": 52.685,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.052,
+          "mean_utterance_wer": 53.507,
+          "median_utterance_cer": 13.846,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17010,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8702
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.748,
+          "corpus_wer": 63.068,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.502,
+          "mean_utterance_wer": 64.263,
+          "median_utterance_cer": 17.568,
+          "median_utterance_wer": 63.485,
+          "total_character_edits": 20492,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10386
+        }
+      },
+      "normalized_mismatch_count": 10,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 6.501423
+    },
+    {
+      "active_audio_seconds_per_wall_second": 133.330179,
+      "active_real_time_factor": 0.0075,
+      "audio_duration_seconds": 8173.14,
+      "batch_size": 128,
+      "bucketed": true,
+      "empty_hypothesis_difference": 0,
+      "end_to_end_audio_seconds_per_wall_second": 65.698951,
+      "end_to_end_real_time_factor": 0.015221,
+      "exact_mismatch_count": 119,
+      "execution": {
+        "active_wall_time_seconds": 61.3,
+        "exit_status": 0,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.453659,
+          "mean_power_watts": 164.565146,
+          "mean_utilization_percent": 44.77561,
+          "median_utilization_percent": 10.0,
+          "p95_power_watts": 291.72,
+          "p95_utilization_percent": 98.0,
+          "peak_memory_mib": 7935.0,
+          "sample_count": 410
+        },
+        "wall_time_seconds": 124.402899
+      },
+      "layout": {
+        "actual_audio_seconds": 8173.14,
+        "batch_count": 7,
+        "final_partial_batch_size": 66,
+        "full_batch_count": 6,
+        "max_padded_batch_duration": 28.2,
+        "padded_audio_seconds": 9487.44,
+        "padding_ratio": 1.160807
+      },
+      "metric_differences": {
+        "normalized.corpus_cer": {
+          "baseline": 16.423,
+          "candidate": 16.406
+        },
+        "normalized.corpus_wer": {
+          "baseline": 52.703,
+          "candidate": 52.685
+        },
+        "normalized.mean_utterance_cer": {
+          "baseline": 17.067,
+          "candidate": 17.052
+        },
+        "normalized.mean_utterance_wer": {
+          "baseline": 53.532,
+          "candidate": 53.507
+        },
+        "normalized.median_utterance_cer": {
+          "baseline": 13.875,
+          "candidate": 13.846
+        },
+        "normalized.total_character_edits": {
+          "baseline": 17027,
+          "candidate": 17010
+        },
+        "normalized.total_word_edits": {
+          "baseline": 8705,
+          "candidate": 8702
+        },
+        "raw.corpus_cer": {
+          "baseline": 19.659,
+          "candidate": 19.75
+        },
+        "raw.corpus_wer": {
+          "baseline": 62.722,
+          "candidate": 63.068
+        },
+        "raw.mean_utterance_cer": {
+          "baseline": 20.392,
+          "candidate": 20.504
+        },
+        "raw.mean_utterance_wer": {
+          "baseline": 63.832,
+          "candidate": 64.263
+        },
+        "raw.median_utterance_cer": {
+          "baseline": 17.391,
+          "candidate": 17.568
+        },
+        "raw.median_utterance_wer": {
+          "baseline": 62.963,
+          "candidate": 63.485
+        },
+        "raw.total_character_edits": {
+          "baseline": 20400,
+          "candidate": 20494
+        },
+        "raw.total_word_edits": {
+          "baseline": 10329,
+          "candidate": 10386
+        }
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 16.406,
+          "corpus_wer": 52.685,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 17.052,
+          "mean_utterance_wer": 53.507,
+          "median_utterance_cer": 13.846,
+          "median_utterance_wer": 52.941,
+          "total_character_edits": 17010,
+          "total_reference_characters": 103679,
+          "total_reference_words": 16517,
+          "total_word_edits": 8702
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 19.75,
+          "corpus_wer": 63.068,
+          "empty_hypothesis_count": 1,
+          "mean_utterance_cer": 20.504,
+          "mean_utterance_wer": 64.263,
+          "median_utterance_cer": 17.568,
+          "median_utterance_wer": 63.485,
+          "total_character_edits": 20494,
+          "total_reference_characters": 103768,
+          "total_reference_words": 16468,
+          "total_word_edits": 10386
+        }
+      },
+      "normalized_mismatch_count": 10,
+      "parity_eligible": false,
+      "prediction_count": 834,
+      "rows": 834,
+      "status": "PASSED",
+      "utterances_per_second": 6.704024
+    }
+  ],
+  "fleurs_v2_untouched_base_metrics": {
+    "att_context_size": [
+      56,
+      3
+    ],
+    "audio_duration_seconds": 8173.14,
+    "batch_size": 1,
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "duration_bucketing": false,
+    "empty_hypotheses": 1,
+    "mean_utterance_cer": 20.392,
+    "mean_utterance_wer": 63.832,
+    "median_utterance_cer": 17.391,
+    "median_utterance_wer": 62.963,
+    "normalized_corpus_cer": 16.423,
+    "normalized_corpus_wer": 52.703,
+    "raw_corpus_cer": 19.659,
+    "raw_corpus_wer": 62.722,
+    "real_time_factor": 0.101723,
+    "rows": 834,
+    "target_lang": "sl-SI",
+    "wall_time_seconds": 831.400186
+  },
+  "host": "neumann",
+  "input_integrity": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "gates": {
+      "artur_j": {
+        "audio_duration_seconds": 1049.59,
+        "gate_id": "artur-j-public-gate-v1",
+        "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+        "rows": 256
+      },
+      "fleurs": {
+        "audio_duration_seconds": 8173.14,
+        "gate_id": "fleurs-sl-si-test-full-v2",
+        "manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+        "rows": 834
+      }
+    },
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
+  },
+  "limitations": [
+    "Batch size 1 remains the scientific reference mode.",
+    "The selected A100 policy is not an RTX 2080 Ti policy.",
+    "The corpus-v2 candidate reservoir was not scored in this work order.",
+    "Raw references, hypotheses, local manifests, logs, and monitor CSVs remain ignored local artifacts."
+  ],
+  "official_batch_1_parity": {
+    "duplicate_ids": 0,
+    "exact_mismatches": 0,
+    "metric_differences": {},
+    "missing_ids": 0,
+    "new_path_predictions": 32,
+    "normalized_mismatches": 0,
+    "old_path_predictions": 32,
+    "result": "PASSED",
+    "rows": 32
+  },
+  "repository_commit": "8a198ecb1cf93ed05dbce8264128b5cbd6dbbd66",
+  "runtime": {
+    "gpu": {
+      "logical": {
+        "capability": [
+          8,
+          0
+        ],
+        "cuda_visible_devices": "1",
+        "device_name": "NVIDIA A100-SXM4-80GB",
+        "logical_device": "cuda:0",
+        "physical_selector": "1",
+        "pytorch_cuda": "12.6",
+        "total_vram_mib": 81153,
+        "visible_device_count": 1
+      },
+      "physical": {
+        "index": "1",
+        "memory_total_mib": 81920.0,
+        "memory_used_mib": 4.0,
+        "name": "NVIDIA A100-SXM4-80GB",
+        "power_watts": 69.58,
+        "utilization_percent": 0.0
+      }
+    },
+    "normalizer": "sl-asr-normalization-v1",
+    "precision": "FP32",
+    "python": "3.12.13",
+    "tf32": false
+  },
+  "schema_version": "1.0",
+  "selected_policy": {
+    "batch_size": 1,
+    "bucketed_throughput": 9.426266,
+    "classification": "A100_BATCHED_STREAMING_NOT_EQUIVALENT",
+    "duration_bucketing": false,
+    "speedup_vs_batch_1": 1.042892,
+    "unbucketed_throughput": 9.830573
+  },
+  "status": "completed in PR; pending strategic review",
+  "unbucketed_diagnostic": {
+    "active_audio_seconds_per_wall_second": 10.658069,
+    "active_real_time_factor": 0.093826,
+    "audio_duration_seconds": 8173.14,
+    "batch_size": 1,
+    "bucketed": false,
+    "empty_hypothesis_difference": 0,
+    "end_to_end_audio_seconds_per_wall_second": 9.830573,
+    "end_to_end_real_time_factor": 0.101723,
+    "exact_mismatch_count": 0,
+    "execution": {
+      "active_wall_time_seconds": 766.85,
+      "exit_status": 0,
+      "monitor": {
+        "fraction_at_or_above_80_percent": 0.0,
+        "mean_power_watts": 117.501662,
+        "mean_utilization_percent": 36.313135,
+        "median_utilization_percent": 39.0,
+        "p95_power_watts": 126.06,
+        "p95_utilization_percent": 41.0,
+        "peak_memory_mib": 5517.0,
+        "sample_count": 2756
+      },
+      "wall_time_seconds": 831.400186
+    },
+    "layout": {
+      "actual_audio_seconds": 8173.14,
+      "batch_count": 834,
+      "final_partial_batch_size": 0,
+      "full_batch_count": 834,
+      "max_padded_batch_duration": 28.2,
+      "padded_audio_seconds": 8173.14,
+      "padding_ratio": 1.0
+    },
+    "metric_differences": {},
+    "metrics": {
+      "normalized": {
+        "corpus_cer": 16.423,
+        "corpus_wer": 52.703,
+        "empty_hypothesis_count": 1,
+        "mean_utterance_cer": 17.067,
+        "mean_utterance_wer": 53.532,
+        "median_utterance_cer": 13.875,
+        "median_utterance_wer": 52.941,
+        "total_character_edits": 17027,
+        "total_reference_characters": 103679,
+        "total_reference_words": 16517,
+        "total_word_edits": 8705
+      },
+      "normalizer": "sl-asr-normalization-v1",
+      "raw": {
+        "corpus_cer": 19.659,
+        "corpus_wer": 62.722,
+        "empty_hypothesis_count": 1,
+        "mean_utterance_cer": 20.392,
+        "mean_utterance_wer": 63.832,
+        "median_utterance_cer": 17.391,
+        "median_utterance_wer": 62.963,
+        "total_character_edits": 20400,
+        "total_reference_characters": 103768,
+        "total_reference_words": 16468,
+        "total_word_edits": 10329
+      }
+    },
+    "normalized_mismatch_count": 0,
+    "parity_eligible": true,
+    "prediction_count": 834,
+    "rows": 834,
+    "status": "PASSED",
+    "utterances_per_second": 1.003127
+  }
+}

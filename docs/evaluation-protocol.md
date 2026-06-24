@@ -73,6 +73,14 @@ Track:
 - real-time factor;
 - peak GPU memory.
 
+Current A100 development-gate execution uses the measured policy in
+[`configs/evaluation/a100_streaming_batch_policy.json`](../configs/evaluation/a100_streaming_batch_policy.json):
+batch size 1, no duration bucketing, FP32 cache-aware inference, and TF32
+disabled. Batch size 1 remains the scientific reference mode. Experiment 0006
+tested duration-bucketed batch sizes 1 through 128 on FLEURS-v2; all sizes
+above 1 changed at least some transcripts and are not eligible canonical
+comparison modes.
+
 ## Data roles
 
 Separate reports for:
@@ -99,6 +107,11 @@ Current immutable Slovenian development gates:
 These are not final blind tests. Raw references and hypotheses remain local
 ignored artifacts. Future challengers must evaluate both gates before any
 accepted-parent decision.
+
+The untouched-base FLEURS-v2 baseline is recorded in
+[`docs/experiments/0006-a100-batched-streaming-evaluation.md`](experiments/0006-a100-batched-streaming-evaluation.md).
+Historical FLEURS-v1 numbers in Experiment 0003 remain deprecated audit
+evidence only.
 
 Historical `fleurs-sl-si-test-full-v1` evidence is deprecated. It used the
 non-unique FLEURS source ID for manifest sample IDs and WAV filenames, causing

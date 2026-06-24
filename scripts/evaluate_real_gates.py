@@ -103,6 +103,9 @@ def evaluate_gate(args: argparse.Namespace, manifest: Path, gate_id: str) -> dic
         "att_context_size": [56, 3],
         "target_lang": "sl-SI",
         "batch_size": args.batch_size,
+        "duration_bucketing": False,
+        "batch_policy": args.batch_policy_payload,
+        "reference_mode": bool(args.no_duration_bucketing and args.batch_size == 1),
         "wall_time_seconds": round(wall_time, 3),
         "audio_duration_seconds": audio_duration,
         "real_time_factor": round(wall_time / audio_duration, 6) if audio_duration else None,
@@ -126,7 +129,29 @@ def main() -> int:
     parser.add_argument("--nemo-root", type=Path, default=repo_path("nemo.source_tree"))
     parser.add_argument("--output-root", type=Path, default=Path("runs/evaluation-baselines/real-gates"))
     parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument(
+        "--batch-policy",
+        type=Path,
+        help="Privacy-safe batch policy JSON to record with aggregate results. The legacy evaluator remains unbucketed.",
+    )
+    parser.add_argument(
+        "--no-duration-bucketing",
+        action="store_true",
+        help="Record this run as explicit source-order reference mode.",
+    )
     args = parser.parse_args()
+    args.batch_policy_payload = None
+    if args.batch_policy:
+        with args.batch_policy.open("r", encoding="utf-8") as fp:
+            args.batch_policy_payload = json.load(fp)
+        if "batch_size" in args.batch_policy_payload and args.batch_size == 1:
+            args.batch_size = int(args.batch_policy_payload["batch_size"])
+        if args.batch_policy_payload.get("duration_bucketing"):
+            print(
+                "Warning: evaluate_real_gates.py records the batch policy but does not apply duration bucketing; "
+                "use scripts/run_a100_batched_streaming_benchmark.py for the measured A100 substrate.",
+                file=sys.stderr,
+            )
     if not args.fleurs_manifest and not args.artur_manifest:
         parser.error("at least one manifest is required")
     summaries = []
