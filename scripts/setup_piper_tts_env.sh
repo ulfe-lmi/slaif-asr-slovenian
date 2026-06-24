@@ -78,6 +78,17 @@ fi
 
 "${VENV_DIR}/bin/python" -m pip check
 
+PY_SITE="$("${VENV_DIR}/bin/python" - <<'PY'
+import site
+
+print(site.getsitepackages()[0])
+PY
+)"
+NVIDIA_LIB_DIRS="$(find "${PY_SITE}/nvidia" -type d -name lib -print 2>/dev/null | paste -sd: -)"
+if [[ -n "${NVIDIA_LIB_DIRS}" ]]; then
+  export LD_LIBRARY_PATH="${NVIDIA_LIB_DIRS}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+fi
+
 if [[ -z "${CUDA_VISIBLE_DEVICES:-}" || "${CUDA_VISIBLE_DEVICES}" == *","* ]]; then
   echo "Set CUDA_VISIBLE_DEVICES to exactly one physical GPU before verifying Piper." >&2
   exit 1

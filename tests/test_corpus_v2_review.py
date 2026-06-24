@@ -9,6 +9,7 @@ from pathlib import Path
 from slaif_asr.corpus_v2_review import (
     ReviewDecision,
     accepted_records_and_reviews,
+    build_whole_file_decisions,
     build_public_report,
     parse_bool,
     parse_reason_codes,
@@ -149,6 +150,87 @@ class CorpusV2ReviewAdmissionTests(unittest.TestCase):
             self.assertEqual(len(accepted_reviews), 2)
             self.assertEqual(rejected, [])
             self.assertEqual(counts["ACCEPT"], 2)
+
+    def test_bulk_accept_builds_per_row_review_decisions(self) -> None:
+        decisions, issues = build_whole_file_decisions(
+            source_rows=self.rows,
+            outcome="ACCEPT",
+            review_revision="human-review-v1",
+            decision_id="human-corpus-decision-v1",
+            expected_corpus_sha256="a" * 64,
+            expected_rows=2,
+            actual_corpus_sha256="a" * 64,
+        )
+        self.assertEqual(issues, [])
+        self.assertEqual([decision.candidate_id for decision in decisions], ["row-001", "row-002"])
+        self.assertEqual({decision.outcome for decision in decisions}, {"ACCEPT"})
+        accepted, accepted_reviews, rejected, counts = accepted_records_and_reviews(self.rows, decisions, review_errors=[])
+        self.assertEqual(len(accepted), 2)
+        self.assertEqual(len(accepted_reviews), 2)
+        self.assertEqual(rejected, [])
+        self.assertEqual(counts["ACCEPT"], 2)
+
+    def test_bulk_rejection_and_revise_do_not_create_accepted_subset(self) -> None:
+        for outcome in ("REJECT_GRAMMAR", "REVISE_AND_REREVIEW"):
+            decisions, issues = build_whole_file_decisions(
+                source_rows=self.rows,
+                outcome=outcome,
+                review_revision="human-review-v1",
+                decision_id=f"decision-{outcome.lower().replace('_', '-')}",
+                expected_corpus_sha256="a" * 64,
+                expected_rows=2,
+                actual_corpus_sha256="a" * 64,
+            )
+            self.assertEqual(issues, [])
+            accepted, accepted_reviews, rejected, counts = accepted_records_and_reviews(self.rows, decisions, review_errors=[])
+            self.assertEqual(accepted, [])
+            self.assertEqual(accepted_reviews, [])
+            self.assertEqual(len(rejected), 2)
+            self.assertEqual(counts[outcome], 2)
+
+    def test_bulk_decision_requires_nondefault_human_metadata(self) -> None:
+        decisions, issues = build_whole_file_decisions(
+            source_rows=self.rows,
+            outcome="",
+            review_revision="",
+            decision_id="",
+            expected_corpus_sha256="bad",
+            expected_rows=99,
+            actual_corpus_sha256="a" * 64,
+        )
+        self.assertEqual(decisions, [])
+        self.assertIn("blank_outcome", [issue.code for issue in issues])
+        self.assertIn("blank_review_revision", [issue.code for issue in issues])
+        self.assertIn("blank_decision_id", [issue.code for issue in issues])
+        self.assertIn("malformed_expected_corpus_sha256", [issue.code for issue in issues])
+        self.assertIn("unexpected_pre_review_row_count", [issue.code for issue in issues])
+
+    def test_bulk_decision_rejects_wrong_hash(self) -> None:
+        _decisions, issues = build_whole_file_decisions(
+            source_rows=self.rows,
+            outcome="ACCEPT",
+            review_revision="human-review-v1",
+            decision_id="human-corpus-decision-v1",
+            expected_corpus_sha256="b" * 64,
+            expected_rows=2,
+            actual_corpus_sha256="a" * 64,
+        )
+        self.assertIn("unexpected_pre_review_reservoir_sha256", [issue.code for issue in issues])
+
+    def test_bulk_sidecar_is_deterministic_after_source_reordering(self) -> None:
+        kwargs = {
+            "outcome": "ACCEPT",
+            "review_revision": "human-review-v1",
+            "decision_id": "human-corpus-decision-v1",
+            "expected_corpus_sha256": "a" * 64,
+            "expected_rows": 2,
+            "actual_corpus_sha256": "a" * 64,
+        }
+        first, first_issues = build_whole_file_decisions(source_rows=self.rows, **kwargs)
+        second, second_issues = build_whole_file_decisions(source_rows=list(reversed(self.rows)), **kwargs)
+        self.assertEqual(first_issues, [])
+        self.assertEqual(second_issues, [])
+        self.assertEqual([decision.validator_record() for decision in first], [decision.validator_record() for decision in second])
 
     def test_missing_review_row(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_text:

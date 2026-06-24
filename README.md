@@ -31,10 +31,9 @@ prompt-column micro-proof is complete, active-curriculum tooling exists, the
 first immutable real Slovenian development gates establish the untouched
 Nemotron baseline, and the first project-generated curriculum round plus a
 residual-adapter capacity proof have both been rejected as accepted parents by
-the fixed real gates. The first GaMS corpus-v2 candidate reservoir now exists
-as a DRAFT source pool. A human-edited review sheet has been ingested, but its
-rows lack required `review_revision` metadata, so the reservoir is not
-`TEXT_ACCEPTED`.
+the fixed real gates. The first GaMS corpus-v2 candidate reservoir has reached
+`TEXT_ACCEPTED` and `AUDIO_ACCEPTED` as a reviewed, single-voice synthetic
+candidate pool, but it is still not `TRAINING_ELIGIBLE`.
 
 Present:
 
@@ -50,6 +49,9 @@ Present:
   builder, and privacy-safe aggregate DRAFT report;
 - a corpus-v2 review-admission command and privacy-safe aggregate
   post-review report;
+- a whole-file human review-decision mode for exact-hash bounded corpora;
+- a corpus-v2 Piper synthesis bridge, bounded worker benchmark, acoustic
+  validator, and privacy-safe `AUDIO_ACCEPTED` certificate;
 - a detailed Nemotron/NeMo adaptation plan;
 - PR, issue, review, and work-order templates;
 - pinned baseline runtime configuration;
@@ -112,13 +114,12 @@ manifest are permanently retired for future training, steering, model
 comparison, and promotion because later review found structural repetition,
 train/holdout template-family overlap, and pervasive Slovenian quality defects.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
-training-data constitution. The current validator can reach `TEXT_ACCEPTED`
-only; acoustic validation and the first data certificate remain separate future
-work.
-The GaMS corpus-v2 reservoir is not committed as raw text and is not
-`TEXT_ACCEPTED`. The current local review sheet marks 415 rows as `ACCEPT`,
-but all rows lack the required `review_revision`, so admission remains
-`DRAFT`. No TTS, ASR scoring, selection, or training is authorized from it.
+training-data constitution. The corpus-v2 reservoir is not committed as raw
+text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and
+`AUDIO_ACCEPTED` evidence for 415 reviewed Piper-rendered items, but it has no
+independent synthetic holdout, selected-training partition, or final
+training-data certificate. No ASR scoring, selection, or training is authorized
+from it.
 
 ## Repository role
 
@@ -181,6 +182,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The bulk review and acoustic admission task is defined by
+[`docs/work-orders/0015-bulk-review-and-acoustic-admission.md`](docs/work-orders/0015-bulk-review-and-acoustic-admission.md).
 The corpus-v2 linguistic-review admission task is defined by
 [`docs/work-orders/0014-corpus-v2-linguistic-review-admission.md`](docs/work-orders/0014-corpus-v2-linguistic-review-admission.md).
 The GaMS corpus-v2 candidate-reservoir task is defined by

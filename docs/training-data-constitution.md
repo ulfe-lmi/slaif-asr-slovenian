@@ -630,6 +630,12 @@ For larger corpora, a human-approved sampling and escalation plan MAY be used, b
 - the plan must estimate residual error;
 - a corpus with systematic generator errors is rejected, not repaired by sampling.
 
+For a bounded corpus that the human judges uniformly good or uniformly bad, the
+human MAY issue one explicit whole-corpus decision bound to the exact corpus
+SHA256 and row count. Tooling may expand that decision into per-row review
+records for the validator. This is a genuine human decision, not automatic
+review. Mixed-quality corpora still require row-level decisions.
+
 ### Stage 8 — Synthesize or ingest audio
 
 Only `TEXT_ACCEPTED` partitions may enter TTS.
@@ -1298,17 +1304,16 @@ text admission through `TEXT_ACCEPTED`; it does not implement acoustic
 validation, does not issue a data acceptance certificate, and cannot emit
 `TRAINING_ELIGIBLE`.
 
-The first GaMS corpus-v2 candidate reservoir has been generated as a DRAFT
-source pool with a local native-speaker review pack and privacy-safe aggregate
-report. It is not `TEXT_ACCEPTED`, no review approval has been fabricated, and
-it cannot be used for TTS, ASR scoring, selection, or training until the later
-review and certificate stages succeed.
+The first GaMS corpus-v2 candidate reservoir has been generated as a source
+pool with a local native-speaker review pack and privacy-safe aggregate report.
+It subsequently received an explicit whole-file human `ACCEPT` decision bound
+to the exact 415-row corpus hash and row count. The text validator reports
+`TEXT_ACCEPTED`.
 
-The first review-admission pass has also been implemented. The local edited
-review sheet records 415 `ACCEPT` outcomes, but every row lacks the required
-`review_revision`. Under this constitution, that is incomplete review metadata,
-so the reservoir remains `DRAFT`; its accepted-review sidecar is empty, and no
-TTS, scoring, selection, training, or certificate is authorized.
+The same reservoir has also passed Piper synthesis and waveform validation as
+`AUDIO_ACCEPTED`. This is not `TRAINING_ELIGIBLE`: no independent synthetic
+holdout, selected-training partition, partition-level certificate, ASR scoring,
+selection, or training authorization exists.
 
 The implementation MUST:
 

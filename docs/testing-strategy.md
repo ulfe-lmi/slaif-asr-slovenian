@@ -147,7 +147,9 @@ prefixes or suffixes, train/holdout body overlap with different IDs,
 suspicious threshold-boundary pairs, malformed Slovenian slot insertion, and
 acoustic variants of one utterance crossing partitions.
 
-The validator does not prove audio quality and cannot emit
-`TRAINING_ELIGIBLE`. Future test work must add adversarial fixtures for the
-audio-validation and certificate stages before any corpus can be used for
-promotion-oriented training.
+The text validator does not prove audio quality and cannot emit
+`TRAINING_ELIGIBLE`. The synthetic-audio validator now adds CPU-testable
+waveform checks for manifest linkage, duplicate audio paths and hashes,
+sample-rate/channel/sample-width constraints, non-silence, clipping, and
+privacy-safe audio certificates. These checks still do not prove transcript
+correctness, natural prosody, acoustic diversity, or training eligibility.

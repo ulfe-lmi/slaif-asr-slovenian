@@ -61,6 +61,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Corpus-v2 linguistic-review admission command, local accepted-subset and
   review-decision outputs, CPU tests, and privacy-safe aggregate post-review
   report.
+- Whole-file human review-decision mode for exact-hash bounded corpora, plus
+  refreshed corpus-v2 text-admission reports for the 415-row accepted source
+  reservoir.
+- Corpus-v2 Piper synthesis bridge, bounded worker benchmark, acoustic
+  waveform validator, synthetic audio configuration, and privacy-safe
+  `AUDIO_ACCEPTED` certificate.
 
 ### Changed
 
@@ -101,10 +107,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   historical Round 1 schema/duplicate checker. The validator can produce
   `TEXT_ACCEPTED`, but it does not prove acoustic suitability or issue
   `TRAINING_ELIGIBLE`.
-- The first corpus-v2 GaMS reservoir is DRAFT only. It is not committed as raw
-  generated text, has no fabricated linguistic review, and is not authorized
-  for TTS, ASR scoring, selection, or training.
-- The current edited corpus-v2 review sheet records 415 `ACCEPT` outcomes but
-  omits the required `review_revision` on every row. Review admission therefore
-  remains `DRAFT`; no accepted review sidecar, data certificate, TTS, scoring,
-  selection, or training is authorized.
+- The first corpus-v2 GaMS reservoir now has a human whole-file `ACCEPT`
+  decision bound to the exact 415-row corpus hash and row count. Text admission
+  is `TEXT_ACCEPTED`.
+- The same 415-row reservoir now has single-voice Piper audio and waveform
+  validation classified as `AUDIO_ACCEPTED`. It remains unauthorized for ASR
+  scoring, hard-example selection, or training because there is no independent
+  synthetic holdout, selected-training partition, partition-level certificate,
+  or `TRAINING_ELIGIBLE` status.

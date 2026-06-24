@@ -49,21 +49,28 @@
   },
   "review": {
     "accepted_count": 415,
+    "mode": "whole_file",
     "outcome_counts": {
       "ACCEPT": 415
     },
     "rejected_count": 0,
     "review_coverage": {
-      "complete": false,
+      "complete": true,
       "provided": 415,
       "required": 415
     },
-    "review_issue_counts": {
-      "blank_review_revision": 415
-    },
-    "review_sheet_sha256": "831ecbcf25da59f6e35147b520a0eb9cedc72daf8f18198c367a70e45f03fccf",
+    "review_issue_counts": {},
+    "review_sheet_sha256": null,
     "revise_and_rereview_count": 0,
-    "total_review_rows": 415
+    "total_review_rows": 415,
+    "whole_file_decision": {
+      "corpus_sha256": "5cb2520c27b3debd18a2f475368c2cdd8601fc5781ec541287092dbcd3ea0fe6",
+      "decision_id": "human-corpus-decision-v1",
+      "outcome": "ACCEPT",
+      "review_revision": "human-review-v1",
+      "row_count": 415,
+      "schema_version": "whole-file-review-decision-v1"
+    }
   },
   "schema_version": "1.0",
   "source_reservoir": {
@@ -78,10 +85,9 @@
     "algorithm_version": "training-text-validator-v1",
     "configuration_sha256": "1ec084569b4d0129606d1c062e2b45418e6f50829bb1a6e944e57fd9c1a05705",
     "decision_reasons": [
-      "blank_review_revision",
-      "missing_linguistic_review"
+      "all_required_text_checks_passed"
     ],
-    "repository_revision": "00b59b002edc0fef6401ea8ed2e8665aab70be44",
-    "status": "DRAFT"
+    "repository_revision": "7713943f094c415eaf3743b95cafea93df7bfffe",
+    "status": "TEXT_ACCEPTED"
   }
 }

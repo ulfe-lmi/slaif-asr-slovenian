@@ -42,14 +42,15 @@
   and protected-gate hash indexes, requires complete linguistic review, and can
   emit `TEXT_ACCEPTED`. It does not validate audio or issue
   `TRAINING_ELIGIBLE`.
-- The first GaMS corpus-v2 candidate reservoir has been generated as a local
-  DRAFT source pool. It requested 480 candidates, retained 415 structurally
-  admissible pre-review rows, produced a native-speaker review pack, and passed
-  protected-gate and structural validator checks. A local edited review sheet
-  now records 415 `ACCEPT` outcomes, but every row lacks the required
-  `review_revision`, so post-review admission remains `DRAFT`. No raw
-  generated text is committed, no TTS or ASR scoring has run, and the reservoir
-  is not authorized for training.
+- The first GaMS corpus-v2 candidate reservoir requested 480 candidates and
+  retained 415 structurally admissible rows. A human whole-file `ACCEPT`
+  decision bound to the exact corpus hash and row count reproduced
+  `TEXT_ACCEPTED`; all 415 rows were then rendered through the external Piper
+  boundary and waveform-validated as `AUDIO_ACCEPTED`. Raw generated text,
+  audio, manifests, logs, and monitoring CSVs remain ignored. The reservoir is
+  still not `TRAINING_ELIGIBLE`: it has no independent synthetic holdout,
+  selected-training partition, ASR scoring, partition-level certificate, or
+  training authorization.
 - The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
   unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -162,12 +163,11 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Complete corpus-v2 review metadata by assigning a non-empty
-`review_revision` to every reviewed row, then rerun the review-admission
-command. Only after the reservoir reaches `TEXT_ACCEPTED` can a later work
-order design the separate synthetic holdout, acoustic-validation, and
-data-certificate work required for `TRAINING_ELIGIBLE`. In parallel or
-afterward, run the governed A100
+Create an independent synthetic holdout and selected-training partition under
+the training-data constitution, then issue a partition-level certificate before
+ASR scoring or training. The current 415-row corpus-v2 reservoir has
+`TEXT_ACCEPTED` and `AUDIO_ACCEPTED` evidence only as a single-voice candidate
+source pool. In parallel or afterward, run the governed A100
 batched-streaming parity and throughput work order on
 `fleurs-sl-si-test-full-v2`, then establish fresh untouched-base FLEURS v2
 metrics before using FLEURS in promotion decisions again.

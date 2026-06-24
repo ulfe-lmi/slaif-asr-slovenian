@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import unicodedata
@@ -191,6 +192,8 @@ def validate_wav(path: Path, *, sample_rate: int, channels: int = 1, sample_widt
 
 
 def sox_version() -> str:
+    if shutil.which("sox") is None:
+        return f"python-audioop-ratecv {sys.version_info.major}.{sys.version_info.minor}"
     completed = subprocess.run(
         ["sox", "--version"],
         text=True,
@@ -204,10 +207,30 @@ def sox_version() -> str:
 
 
 def convert_to_16k_pcm(native_wav: Path, final_wav: Path) -> None:
-    if shutil.which("sox") is None:
-        raise RuntimeError("SoX is required for deterministic audio conversion")
     final_wav.parent.mkdir(parents=True, exist_ok=True)
     temp_path = final_wav.with_name(final_wav.stem + ".part" + final_wav.suffix)
+    if shutil.which("sox") is None:
+        import audioop
+
+        with wave.open(str(native_wav), "rb") as source:
+            channels = source.getnchannels()
+            sample_width = source.getsampwidth()
+            sample_rate = source.getframerate()
+            comptype = source.getcomptype()
+            frames = source.getnframes()
+            raw = source.readframes(frames)
+        if comptype != "NONE":
+            raise ValueError(f"{native_wav}: expected PCM WAV, got {comptype}")
+        if channels != 1 or sample_width != 2:
+            raise ValueError(f"{native_wav}: fallback converter requires mono 16-bit PCM")
+        converted, _state = audioop.ratecv(raw, sample_width, channels, sample_rate, 16000, None)
+        with wave.open(str(temp_path), "wb") as target:
+            target.setnchannels(1)
+            target.setsampwidth(2)
+            target.setframerate(16000)
+            target.writeframes(converted)
+        os.replace(temp_path, final_wav)
+        return
     command = [
         "sox",
         str(native_wav),

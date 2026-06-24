@@ -1,0 +1,209 @@
+{
+  "certificate": {
+    "accepted_text_partition_sha256": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6",
+    "audio_count": 415,
+    "audio_format": {
+      "channels": 1,
+      "encoding": "signed-16-bit-pcm-wav",
+      "sample_rate": 16000,
+      "sample_width_bytes": 2
+    },
+    "audio_manifest_sha256": "c1d366e1d05b6f728af51b3350556b6d915fabf5a6b584a6aa2f9fdc0df538bc",
+    "concurrency_benchmark": [
+      {
+        "audio_seconds_per_wall_second": 0.402622,
+        "failed": 0,
+        "hash_parity_with_worker_1": true,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 84.717427,
+          "mean_utilization_percent": 1.211618,
+          "median_utilization_percent": 0.0,
+          "p95_power_watts": 90.82,
+          "p95_utilization_percent": 6.0,
+          "peak_memory_mib": 577.0,
+          "sample_count": 241
+        },
+        "successful": 32,
+        "utterances_per_minute": 16.299718,
+        "valid": true,
+        "wall_time_seconds": 117.793452,
+        "worker_count": 1
+      },
+      {
+        "audio_seconds_per_wall_second": 0.739621,
+        "failed": 0,
+        "hash_parity_with_worker_1": false,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 86.076889,
+          "mean_utilization_percent": 2.866667,
+          "median_utilization_percent": 3.0,
+          "p95_power_watts": 91.74,
+          "p95_utilization_percent": 8.0,
+          "peak_memory_mib": 1083.0,
+          "sample_count": 135
+        },
+        "successful": 32,
+        "utterances_per_minute": 29.637974,
+        "valid": false,
+        "wall_time_seconds": 64.781756,
+        "worker_count": 2
+      },
+      {
+        "audio_seconds_per_wall_second": 1.165793,
+        "failed": 0,
+        "hash_parity_with_worker_1": false,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 87.7924,
+          "mean_utilization_percent": 9.226667,
+          "median_utilization_percent": 4.0,
+          "p95_power_watts": 92.67,
+          "p95_utilization_percent": 45.0,
+          "peak_memory_mib": 2287.0,
+          "sample_count": 75
+        },
+        "successful": 32,
+        "utterances_per_minute": 47.509931,
+        "valid": false,
+        "wall_time_seconds": 40.412603,
+        "worker_count": 4
+      },
+      {
+        "audio_seconds_per_wall_second": 1.562242,
+        "failed": 0,
+        "hash_parity_with_worker_1": false,
+        "monitor": {
+          "fraction_at_or_above_80_percent": 0.0,
+          "mean_power_watts": 90.102917,
+          "mean_utilization_percent": 13.145833,
+          "median_utilization_percent": 6.0,
+          "p95_power_watts": 98.72,
+          "p95_utilization_percent": 57.0,
+          "peak_memory_mib": 4505.0,
+          "sample_count": 48
+        },
+        "successful": 32,
+        "utterances_per_minute": 64.492927,
+        "valid": false,
+        "wall_time_seconds": 29.770707,
+        "worker_count": 8
+      }
+    ],
+    "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+    "duplicate_counts": {
+      "audio_path_duplicates": 0,
+      "audio_sha256_duplicates": 0
+    },
+    "duration_distribution": {
+      "count": 415,
+      "maximum": 8.045687,
+      "mean": 3.046248,
+      "median": 2.751562,
+      "minimum": 0.963625,
+      "p95": 6.072
+    },
+    "engine": {
+      "name": "OHF-Voice/piper1-gpl",
+      "revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6"
+    },
+    "failures_by_reason": {},
+    "gpu_utilization": {
+      "fraction_at_or_above_80_percent": 0.0,
+      "mean_power_watts": 85.010628,
+      "mean_utilization_percent": 1.355728,
+      "median_utilization_percent": 0.0,
+      "p95_power_watts": 90.54,
+      "p95_utilization_percent": 6.0,
+      "peak_memory_mib": 707.0,
+      "sample_count": 3230
+    },
+    "limitations": [
+      "This certificate is AUDIO_ACCEPTED or AUDIO_REJECTED only; it is never TRAINING_ELIGIBLE.",
+      "The corpus has one Piper voice and no independent synthetic holdout.",
+      "Waveform checks do not prove transcript correctness or natural prosody.",
+      "TTS and audio validation do not authorize ASR scoring, selection, or model training."
+    ],
+    "review_decision": {
+      "corpus_sha256": "5cb2520c27b3debd18a2f475368c2cdd8601fc5781ec541287092dbcd3ea0fe6",
+      "decision_id": "human-corpus-decision-v1",
+      "outcome": "ACCEPT",
+      "review_revision": "human-review-v1",
+      "row_count": 415,
+      "schema_version": "whole-file-review-decision-v1"
+    },
+    "row_count": 415,
+    "schema_version": "1.0",
+    "selected_worker_count": 1,
+    "status": "AUDIO_ACCEPTED",
+    "validator": {
+      "algorithm_version": "synthetic-audio-validator-v1",
+      "config_sha256": "41414ea05674c329bd71dcef877b8784274abe0cd098ebe89004aee2e1d0a722"
+    },
+    "voice": {
+      "count": 1,
+      "name": "sl_SI-artur-medium",
+      "repository": "rhasspy/piper-voices",
+      "revision": "217ddc79818708b078d0d14a8fae9608b9d77141",
+      "total_duration_seconds": 1264.192812
+    },
+    "waveform_validation": {
+      "active_frame_fraction": {
+        "count": 415,
+        "maximum": 0.977256,
+        "mean": 0.912039,
+        "median": 0.917049,
+        "minimum": 0.769123,
+        "p95": 0.953011
+      },
+      "clipping_fraction": {
+        "count": 415,
+        "maximum": 4.5e-05,
+        "mean": 0.0,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p95": 0.0
+      },
+      "leading_silence_seconds": {
+        "count": 415,
+        "maximum": 0.0775,
+        "mean": 0.028249,
+        "median": 0.032188,
+        "minimum": 0.0,
+        "p95": 0.052812
+      },
+      "peak_ratio": {
+        "count": 415,
+        "maximum": 0.999969,
+        "mean": 0.988364,
+        "median": 0.990906,
+        "minimum": 0.93631,
+        "p95": 0.999481
+      },
+      "rms_ratio": {
+        "count": 415,
+        "maximum": 0.237255,
+        "mean": 0.173344,
+        "median": 0.173744,
+        "minimum": 0.121085,
+        "p95": 0.207094
+      },
+      "trailing_silence_seconds": {
+        "count": 415,
+        "maximum": 0.256063,
+        "mean": 0.081168,
+        "median": 0.070813,
+        "minimum": 0.0,
+        "p95": 0.185938
+      }
+    }
+  },
+  "report": "corpus-v2-acoustic-admission",
+  "schema_version": "1.0",
+  "text_admission": {
+    "accepted_count": 415,
+    "accepted_partition_sha256": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6",
+    "status": "TEXT_ACCEPTED"
+  }
+}
