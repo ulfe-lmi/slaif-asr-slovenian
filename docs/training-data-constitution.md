@@ -417,6 +417,13 @@ Requirements:
 - not used for training, selection, early stopping, or prompt steering;
 - never treated as real-generalization evidence.
 
+Current corpus-v2 status: `sl-corpus-v2-independent-synthetic-holdout-v1` is a
+96-row GaMS-9B-generated diagnostic holdout that has passed structural and
+protected-index validation against the accepted candidate source. It remains
+`DRAFT` until the human whole-file holdout decision is supplied. It must not be
+synthesized, scored, used for selection, or treated as training-eligible until
+a later work order explicitly advances its status.
+
 ### 6.4 Real development gates
 
 Purpose:

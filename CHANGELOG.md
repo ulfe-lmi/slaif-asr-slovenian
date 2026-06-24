@@ -70,6 +70,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A100 batched streaming evaluation substrate, duration-bucketed benchmark
   runner, batch-policy configuration, CPU tests, and privacy-safe aggregate
   Experiment 0006 report.
+- GaMS-9B independent corpus-v2 synthetic holdout generator, deterministic
+  12-per-cell selection, joint candidate/holdout validation, local whole-file
+  review capsule, and privacy-safe DRAFT data report.
 
 ### Changed
 
@@ -122,3 +125,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   1 were faster but not transcript-equivalent, so the selected measured policy
   is batch size 1 without duration bucketing; batch size 1 remains the
   scientific reference mode.
+- The corpus-v2 candidate reservoir now has a structurally independent 96-row
+  synthetic diagnostic holdout generated from separately pinned GaMS-9B. The
+  holdout is `DRAFT` pending a whole-file human decision; no TTS, ASR scoring,
+  selected-training construction, certificate, or `TRAINING_ELIGIBLE` status
+  exists for it.

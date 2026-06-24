@@ -83,6 +83,13 @@ adapter is accepted as a parent. This suggests that increasing prompt-side
 capacity against the same single-voice synthetic corpus is not sufficient
 evidence for real-speech generalization.
 
+The corpus-v2 candidate reservoir now has `TEXT_ACCEPTED` and `AUDIO_ACCEPTED`
+evidence for 415 single-voice synthetic candidate items. A separately sourced
+96-row GaMS-9B synthetic diagnostic holdout has been generated and structurally
+validated as `DRAFT`, with no cross-partition or protected-gate overlap, but it
+still requires a whole-file human decision. Until that decision, selected
+training construction, ASR scoring, and model training remain unauthorized.
+
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
 ---
@@ -581,8 +588,9 @@ the text validator reports `TEXT_ACCEPTED`. It has also been synthesized with
 the external Piper boundary and waveform-validated as `AUDIO_ACCEPTED`.
 
 This does not make the reservoir training-eligible. It remains a single-voice
-candidate source pool with no independent synthetic holdout, no selected-
-training partition, no partition-level data certificate, no ASR scoring, and no
+candidate source pool. The independent 96-row synthetic holdout is currently
+only `DRAFT` pending whole-file human review, and there is still no selected-
+training partition, partition-level data certificate, ASR scoring, or
 authorization for hard-example selection or model training.
 
 The A100 batched streaming substrate is now available for future authorized
