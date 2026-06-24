@@ -16,8 +16,10 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   micro-experiment. The training-data constitution is adopted, text-stage
   corpus-validation tooling exists, and the first GaMS corpus-v2 candidate
   reservoir has reached `TEXT_ACCEPTED` and `AUDIO_ACCEPTED` as a single-voice
-  synthetic candidate pool. Independent holdout construction,
-  `TRAINING_ELIGIBLE` certification, and production ASR work remain incomplete.
+  synthetic candidate pool. A100 real-gate evaluation now has a parity-checked
+  batch-1 policy and a valid untouched-base FLEURS-v2 baseline. Independent
+  holdout construction, `TRAINING_ELIGIBLE` certification, and production ASR
+  work remain incomplete.
 
 ## Mission
 
@@ -194,6 +196,10 @@ Current development hardware policy:
   selector is zero.
 - Other physical GPUs remain unused unless a later work order explicitly
   permits them.
+- A100 real-gate evaluation currently uses the measured batch policy in
+  `configs/evaluation/a100_streaming_batch_policy.json`: batch size 1,
+  no duration bucketing, FP32, TF32 disabled. Batch size 1 remains the
+  scientific reference mode because larger tested batches changed transcripts.
 - Cache-aware inference uses FP32 under the pinned NeMo implementation.
 - RTX 2080 Ti remains a supported smaller development platform. Future 2080 Ti
   training should use FP16 AMP rather than BF16 unless a later work order

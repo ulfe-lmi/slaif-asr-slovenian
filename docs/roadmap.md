@@ -107,17 +107,19 @@ synthetic holdout, selected-training partition, ASR scoring, or
 
 ## Real Evaluation Gates
 
-Status: **FLEURS v2 integrity complete; ARTUR-J baseline complete; FLEURS v2 ASR pending**
+Status: **FLEURS v2 and ARTUR-J untouched-base baselines complete; A100 batch policy measured**
 
 Deliverables:
 
 - complete FLEURS Slovenian test gate: **implemented as
-  `fleurs-sl-si-test-full-v2` with 834 unique occurrences; ASR baseline
-  pending**;
+  `fleurs-sl-si-test-full-v2` with 834 unique occurrences and a valid
+  untouched-base ASR baseline**;
 - deterministic ARTUR-J public-speech gate: **implemented and baseline-evaluated**;
 - Slovenian normalizer `sl-asr-normalization-v1`: **implemented**;
-- untouched Nemotron aggregate baseline: **recorded for ARTUR-J; historical
-  FLEURS-v1 baseline is deprecated**;
+- untouched Nemotron aggregate baseline: **recorded for FLEURS-v2 and ARTUR-J;
+  historical FLEURS-v1 baseline is deprecated**;
+- A100 batch policy: **measured as batch size 1 without duration bucketing;
+  larger tested batches are not transcript-equivalent**;
 - unaccepted micro-proof diagnostic on ARTUR-J: **recorded; regressed**.
 
 These are immutable development gates, not final blind tests or release
@@ -128,6 +130,8 @@ quality evidence.
 
 Report:
 [`experiments/0003-real-slovenian-baseline.md`](experiments/0003-real-slovenian-baseline.md)
+and
+[`experiments/0006-a100-batched-streaming-evaluation.md`](experiments/0006-a100-batched-streaming-evaluation.md)
 
 Work order:
 [`work-orders/0007-real-slovenian-evaluation-suite.md`](work-orders/0007-real-slovenian-evaluation-suite.md)

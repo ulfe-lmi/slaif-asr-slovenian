@@ -153,3 +153,10 @@ waveform checks for manifest linkage, duplicate audio paths and hashes,
 sample-rate/channel/sample-width constraints, non-silence, clipping, and
 privacy-safe audio certificates. These checks still do not prove transcript
 correctness, natural prosody, acoustic diversity, or training eligibility.
+
+The A100 batched streaming substrate adds CPU-only tests for deterministic
+duration sorting, batch partitioning, prediction-to-sample restoration, missing
+or duplicate prediction rejection, exact and normalized parity comparisons,
+padding-ratio calculation, selected-batch policy decisions, conditional
+batch-256 eligibility, GPU-monitor CSV parsing, and privacy-safe aggregate
+reporting. Full FLEURS-v2 and ARTUR-J inference remains manual GPU evidence.

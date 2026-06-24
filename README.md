@@ -52,6 +52,9 @@ Present:
 - a whole-file human review-decision mode for exact-hash bounded corpora;
 - a corpus-v2 Piper synthesis bridge, bounded worker benchmark, acoustic
   validator, and privacy-safe `AUDIO_ACCEPTED` certificate;
+- an A100 batched streaming evaluation substrate with batch-1 parity checks,
+  duration-bucketed sweeps, and a measured policy for future real-gate
+  evaluation;
 - a detailed Nemotron/NeMo adaptation plan;
 - PR, issue, review, and work-order templates;
 - pinned baseline runtime configuration;
@@ -75,6 +78,10 @@ Present:
 - a completed Slovenian residual-adapter proof on one A100 logical GPU. Rank 16
   and rank 64 adapters both improved the fixed synthetic holdout but regressed
   FLEURS and ARTUR-J, so neither is an accepted parent.
+- a valid untouched-base FLEURS-v2 ASR baseline and A100 batch-policy
+  experiment. Batch sizes above 1 were faster but not transcript-equivalent;
+  batch size 1 without duration bucketing remains the selected A100 policy and
+  the scientific reference mode.
 
 Current GPU execution code supports exactly one visible NVIDIA A100 or RTX 2080
 Ti. The current A100 development host uses physical GPU 1 selected with
@@ -105,7 +112,8 @@ manifests, hypotheses, and per-sample outputs remain ignored local artifacts.
 Historical FLEURS v1 aggregate metrics are deprecated because v1 used
 non-unique upstream source IDs for sample IDs and WAV filenames; its 834
 manifest rows represented only 347 unique sample identities. ARTUR-J evidence is
-unaffected. FLEURS v2 has not yet been ASR-evaluated.
+unaffected. FLEURS v2 now has a valid untouched-base baseline in
+[`docs/experiments/0006-a100-batched-streaming-evaluation.md`](docs/experiments/0006-a100-batched-streaming-evaluation.md).
 The Round 1 curriculum text, audio, hypotheses, delta, checkpoint, residual
 adapter artifacts, and raw reports are also ignored local artifacts and are not
 published by this repository.

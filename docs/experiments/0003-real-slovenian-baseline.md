@@ -9,6 +9,11 @@ Status: **completed for untouched-base development-gate baseline**
 > FLEURS numbers below are preserved for auditability but must not be used as
 > complete-split quality evidence. ARTUR-J measurements are unaffected.
 
+> **FLEURS v2 replacement:** the valid untouched-base FLEURS-v2 ASR baseline is
+> recorded separately in
+> [`0006-a100-batched-streaming-evaluation.md`](0006-a100-batched-streaming-evaluation.md).
+> Do not overwrite the v1 tables below; they describe the historical run.
+
 ## Purpose
 
 This experiment establishes immutable real-speech development gates and the
@@ -75,6 +80,12 @@ gate measurements, not benchmark or production-readiness claims.
 |---|---:|---:|---:|---:|---:|---:|---:|
 | FLEURS full test (deprecated v1) | 62.679 | 52.734 | 19.599 | 16.423 | 53.541 | 52.941 | 0 |
 | ARTUR-J gate | 74.585 | 67.453 | 32.234 | 29.016 | 76.555 | 75.000 | 12 |
+
+FLEURS-v2 untouched-base metrics from Experiment 0006:
+
+| Gate | Raw corpus WER | Normalized corpus WER | Raw corpus CER | Normalized corpus CER | Mean utterance WER | Median utterance WER | Empty hypotheses |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| FLEURS full test v2 | 62.722 | 52.703 | 19.659 | 16.423 | 63.832 | 62.963 | 1 |
 
 Runtime:
 
