@@ -19,9 +19,10 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   synthetic candidate pool. A100 real-gate evaluation now has a parity-checked
   batch-1 policy and a valid untouched-base FLEURS-v2 baseline. An independent
   synthetic diagnostic holdout has reached `TEXT_ACCEPTED` and
-  `AUDIO_ACCEPTED`, and scoring is authorized for both partitions. Selected-
-  training construction, `TRAINING_ELIGIBLE` certification, model training, and
-  production ASR work remain incomplete.
+  `AUDIO_ACCEPTED`, scoring has run on both synthetic partitions, and a
+  selected-training manifest is ready under
+  `SELECTED_TRAINING_MANIFEST_READY`. `TRAINING_ELIGIBLE` certification, model
+  training, and production ASR work remain incomplete.
 
 ## Mission
 
@@ -161,10 +162,11 @@ Non-negotiable rules:
   expansion, text admission, Piper synthesis, and waveform validation through
   `AUDIO_ACCEPTED`. The separately sourced 96-row corpus-v2 independent
   synthetic diagnostic holdout has reached `TEXT_ACCEPTED` and
-  `AUDIO_ACCEPTED`. The scoring certificate permits ASR scoring and selected-
-  training construction only. No selected-training partition, acoustic
-  diversity certificate, or `TRAINING_ELIGIBLE` decision exists, and model
-  training remains prohibited.
+  `AUDIO_ACCEPTED`. The scoring certificate permitted ASR scoring and
+  selected-training construction only; that scoring is complete and a
+  selected-training manifest now has `SELECTED_TRAINING_MANIFEST_READY`
+  status. No acoustic-diversity certificate or `TRAINING_ELIGIBLE` decision
+  exists, and model training remains prohibited.
 
 ## Model and dependency policy
 

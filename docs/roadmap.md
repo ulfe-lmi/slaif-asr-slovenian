@@ -60,7 +60,7 @@ self-hosted evidence.
 
 ## M2 — Data and TTS ingestion
 
-Status: **vertical slice complete; text and audio validators implemented; corpus v2 scoring authorized**
+Status: **vertical slice complete; text and audio validators implemented; corpus v2 selected-training manifest ready**
 
 Execution hardware policy: use exactly one process-visible GPU. Current
 project-owned helpers accept one visible A100 or RTX 2080 Ti and reject CPU
@@ -84,9 +84,11 @@ Deliverables:
 - independent synthetic diagnostic holdout: **implemented as a 96-row GaMS-9B
   partition and text-admitted as `TEXT_ACCEPTED` after whole-file human
   review, then waveform-validated as `AUDIO_ACCEPTED`**.
-- scoring authorization certificate: **implemented as `SCORING_AUTHORIZED` for
-  ASR scoring and later selected-training construction; model training remains
-  prohibited**.
+- scoring authorization certificate: **implemented as `SCORING_AUTHORIZED`;
+  ASR scoring and selected-training construction have run under that boundary,
+  and model training remains prohibited**.
+- selected-training manifest: **implemented as
+  `SELECTED_TRAINING_MANIFEST_READY` for 160 candidate-source rows**.
 
 Exit gate:
 
@@ -110,8 +112,9 @@ produce `TEXT_ACCEPTED`; the synthetic audio validator can produce
 for 415 reviewed, single-voice Piper-rendered candidates, and the separate
 96-row GaMS-9B diagnostic holdout has reached both states. A scoring
 authorization certificate permits ASR scoring of both partitions and
-selected-training construction from the candidate source in a later work order.
-No selected-training partition or `TRAINING_ELIGIBLE` data certificate exists.
+selected-training construction from the candidate source. Scoring and
+selected-training construction are complete, with 160 candidate-source rows in
+the selected-training manifest. No `TRAINING_ELIGIBLE` data certificate exists.
 
 ## Real Evaluation Gates
 

@@ -81,6 +81,9 @@ Used only for major release decisions. It must not influence training, prompts, 
 ### Synthetic holdouts
 
 Hold out templates, lexical families, minimal-pair groups, and TTS conditions where possible.
+The current corpus-v2 independent synthetic holdout is diagnostic only. It has
+been scored with the untouched base model but must not enter selected training
+or be cited as real-speech generalization evidence.
 
 ### Multilingual regression
 

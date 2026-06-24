@@ -139,9 +139,11 @@ be reused for future promotion-oriented experiments.
 
 The corpus-v2 candidate source and independent synthetic holdout have reached
 text and audio admission, and a privacy-safe `SCORING_AUTHORIZED` certificate
-permits ASR scoring plus selected-training construction in a later work order.
-This authorization does not permit model training or `TRAINING_ELIGIBLE`, and
-the synthetic holdout remains diagnostic rather than real-speech evidence.
+permitted ASR scoring plus selected-training construction. Those steps now
+produce aggregate-only scoring evidence and a selected-training manifest with
+`SELECTED_TRAINING_MANIFEST_READY` status. This does not permit model training
+or `TRAINING_ELIGIBLE`, and the synthetic holdout remains diagnostic rather
+than real-speech evidence.
 
 ## Acceptance comparison
 

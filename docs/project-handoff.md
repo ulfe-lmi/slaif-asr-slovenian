@@ -49,9 +49,9 @@
   boundary and waveform-validated as `AUDIO_ACCEPTED`. Raw generated text,
   audio, manifests, logs, and monitoring CSVs remain ignored. The reservoir is
   still not `TRAINING_ELIGIBLE`: the independent synthetic holdout now has text
-  and audio admission, and scoring is authorized, but there is no
-  selected-training partition, `TRAINING_ELIGIBLE` certificate, or training
-  authorization.
+  and audio admission, scoring has run on both synthetic partitions, and a
+  selected-training manifest is ready, but there is no `TRAINING_ELIGIBLE`
+  certificate or training authorization.
 - The independent corpus-v2 synthetic holdout
   `sl-corpus-v2-independent-synthetic-holdout-v1` was generated with separately
   pinned `cjvt/GaMS-9B-Instruct`, fixed to 96 rows by deterministic 12-per-cell
@@ -60,16 +60,18 @@
   `078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5`. A
   whole-file human `ACCEPT` decision advanced it to `TEXT_ACCEPTED`; Piper
   synthesis and waveform validation advanced it to `AUDIO_ACCEPTED`.
-- The candidate source and independent synthetic holdout now have
-  `SCORING_AUTHORIZED` evidence. The authorization permits ASR scoring and
-  selected-training construction in a later work order. It does not authorize
-  model training, checkpoint promotion, public performance claims, or
+- The candidate source and independent synthetic holdout have
+  `SCORING_AUTHORIZED` evidence, and untouched-base ASR scoring has been run
+  on both partitions under the batch-1 A100 policy. Selected-training
+  construction selected 160 candidate-source rows and produced a
+  `SELECTED_TRAINING_MANIFEST_READY` certificate. It does not authorize model
+  training, checkpoint promotion, public performance claims, or
   `TRAINING_ELIGIBLE`.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without
-  duration bucketing. ARTUR-J confirms batch-1 parity. The corpus-v2 candidate
-  reservoir was not scored.
+  duration bucketing. ARTUR-J confirms batch-1 parity. Corpus-v2 scoring used
+  this batch-1 policy.
 - The ignored M3 micro-proof checkpoint regressed on ARTUR-J and remains
   unaccepted. Its FLEURS-v1 component is deprecated.
 - The repository has a CPU-only GitHub Actions baseline for tracked-file hygiene,
@@ -182,11 +184,10 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
-Run ASR scoring for the accepted candidate source and independent synthetic
-holdout, then construct a selected-training manifest under the
-`SCORING_AUTHORIZED` certificate. The A100 scoring substrate and FLEURS-v2
-baseline are ready for that separate scoring work order. Do not train until a
-later certificate explicitly reaches the required training status.
+Prepare a bounded training work order using the selected-training manifest, the
+independent synthetic holdout for diagnostics, and the real gates for
+acceptance or rollback. Do not train until a later certificate explicitly
+authorizes that training status.
 
 Use the rejected Round 1 and residual-adapter aggregate evidence to design the
 next controlled work order. The accepted parent remains the untouched Nemotron

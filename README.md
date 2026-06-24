@@ -36,8 +36,11 @@ the fixed real gates. The first GaMS corpus-v2 candidate reservoir has reached
 candidate pool. A separately generated 96-row synthetic diagnostic holdout has
 reached `TEXT_ACCEPTED` after a whole-file human decision and `AUDIO_ACCEPTED`
 after Piper synthesis plus waveform validation. A privacy-safe scoring
-authorization certificate permits ASR scoring and selected-training
-construction in a later work order. No corpus is `TRAINING_ELIGIBLE`.
+authorization certificate permitted ASR scoring and selected-training
+construction; those steps have produced aggregate untouched-base scoring
+evidence and a selected-training manifest with
+`SELECTED_TRAINING_MANIFEST_READY` status. No corpus is
+`TRAINING_ELIGIBLE`.
 
 Present:
 
@@ -62,6 +65,10 @@ Present:
 - privacy-safe `AUDIO_ACCEPTED` evidence for the 96-row holdout and a
   `SCORING_AUTHORIZED` certificate for candidate-source and synthetic-holdout
   ASR scoring;
+- aggregate untouched-base ASR scoring reports for the accepted candidate
+  source and independent synthetic holdout;
+- a privacy-safe selected-training manifest certificate with
+  `SELECTED_TRAINING_MANIFEST_READY` status;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
   duration-bucketed sweeps, and a measured policy for future real-gate
   evaluation;
@@ -137,10 +144,11 @@ text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and
 `AUDIO_ACCEPTED` evidence for 415 reviewed Piper-rendered items, and the
 separately generated 96-row GaMS-9B synthetic diagnostic holdout has reached
 `TEXT_ACCEPTED` and `AUDIO_ACCEPTED`. The partition-level scoring certificate
-authorizes ASR scoring of both partitions and selected-training construction
-from the accepted candidate source in a later work order. There is still no
-selected-training partition, model-training authorization, or
-`TRAINING_ELIGIBLE` corpus.
+authorized ASR scoring of both partitions and selected-training construction
+from the accepted candidate source. Aggregate scoring and selected-training
+construction are now complete, with the selected manifest classified as
+`SELECTED_TRAINING_MANIFEST_READY`. There is still no model-training
+authorization or `TRAINING_ELIGIBLE` corpus.
 
 ## Repository role
 
@@ -203,6 +211,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 ## Current validation task
 
+The corpus-v2 ASR scoring and selected-training construction task is defined by
+[`docs/work-orders/0019-corpus-v2-asr-scoring-and-selection.md`](docs/work-orders/0019-corpus-v2-asr-scoring-and-selection.md).
 The bulk review and acoustic admission task is defined by
 [`docs/work-orders/0015-bulk-review-and-acoustic-admission.md`](docs/work-orders/0015-bulk-review-and-acoustic-admission.md).
 The independent corpus-v2 holdout task is defined by

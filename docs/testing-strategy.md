@@ -160,3 +160,10 @@ or duplicate prediction rejection, exact and normalized parity comparisons,
 padding-ratio calculation, selected-batch policy decisions, conditional
 batch-256 eligibility, GPU-monitor CSV parsing, and privacy-safe aggregate
 reporting. Full FLEURS-v2 and ARTUR-J inference remains manual GPU evidence.
+
+Corpus-v2 scoring and selected-training construction add CPU-only tests for
+authorization-certificate identity, prediction association, summed corpus
+metrics, hard/control selection determinism, holdout exclusion, diversity
+constraint relaxation, selected-manifest hash stability, and public-report
+privacy. The actual candidate and holdout ASR scoring remains manual GPU
+evidence under the batch-1 A100 policy.

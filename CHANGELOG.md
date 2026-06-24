@@ -78,6 +78,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   corpus-v2 synthetic holdout, plus a privacy-safe
   `SCORING_AUTHORIZED` certificate for later ASR scoring and selected-training
   construction.
+- Untouched-base ASR scoring for the accepted corpus-v2 candidate source and
+  independent synthetic holdout, plus privacy-safe aggregate reports.
+- Diversity-constrained selected-training construction from the accepted
+  candidate source, local selected manifests, and a privacy-safe
+  `SELECTED_TRAINING_MANIFEST_READY` certificate.
 
 ### Changed
 
@@ -140,3 +145,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   scoring and later selected-training construction only; it does not authorize
   model training, checkpoint promotion, public performance claims, or
   `TRAINING_ELIGIBLE`.
+- Corpus-v2 ASR scoring has now been executed under the batch-1 A100 policy for
+  the accepted 415-row candidate source and accepted 96-row synthetic holdout.
+  The selected-training manifest contains 160 candidate-source rows, but it is
+  not `TRAINING_ELIGIBLE` and does not authorize model training.

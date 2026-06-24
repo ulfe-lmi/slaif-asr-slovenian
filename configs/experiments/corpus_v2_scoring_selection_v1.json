@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "corpus-v2-base-scoring-and-selection-v1",
+  "status": "completed in PR; pending strategic review",
+  "scoring_authorization": {
+    "certificate": "docs/data-certificates/sl-corpus-v2-scoring-authorization-v1.json",
+    "expected_sha256": "42c57975a77594d68cd1b1250a8edc17643bbc254e29642364fc9e4be680664b",
+    "required_status": "SCORING_AUTHORIZED"
+  },
+  "candidate_source": {
+    "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+    "partition_role": "synthetic_candidate",
+    "expected_rows": 415,
+    "accepted_text_sha256": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6",
+    "accepted_review_sidecar_sha256": "4dc16336dc9404d48cab196b862e4aa2a4558b20d2728fc954dd7fbb88fed732",
+    "audio_manifest_sha256": "c1d366e1d05b6f728af51b3350556b6d915fabf5a6b584a6aa2f9fdc0df538bc",
+    "audio_certificate_sha256": "25737f59397d5c5acdd99e6af83e1129587199cb1a184eaec43dd27139bb1692",
+    "required_text_status": "TEXT_ACCEPTED",
+    "required_audio_status": "AUDIO_ACCEPTED"
+  },
+  "synthetic_holdout": {
+    "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1",
+    "partition_role": "synthetic_holdout",
+    "expected_rows": 96,
+    "accepted_text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "audio_certificate_sha256": "d5c1660b8b11b8b250d04034dfb2abe14a96dda33d48560875a51d7168865297",
+    "required_text_status": "TEXT_ACCEPTED",
+    "required_audio_status": "AUDIO_ACCEPTED"
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "att_context_size": [
+      56,
+      3
+    ],
+    "target_lang": "sl-SI"
+  },
+  "batch_policy": {
+    "path": "configs/evaluation/a100_streaming_batch_policy.json",
+    "required_batch_size": 1,
+    "required_duration_bucketing": false,
+    "reference_mode": true
+  },
+  "selection": {
+    "policy_version": "corpus-v2-selected-training-policy-v1",
+    "target_total": 160,
+    "target_hard": 120,
+    "target_control": 40,
+    "hard_score": "empty_bonus + normalized_wer + 0.25 * normalized_cer",
+    "empty_bonus": 1000,
+    "tie_breakers": [
+      "higher normalized CER",
+      "longer duration",
+      "SHA256(candidate_id) ascending"
+    ],
+    "relaxation_order": [
+      "domain cap",
+      "source-family cap",
+      "cell minimum",
+      "discovered-family cap"
+    ],
+    "forbidden_relaxations": [
+      "holdout exclusion",
+      "exact duplicate text or audio",
+      "utterance-family duplicate"
+    ]
+  },
+  "outputs": {
+    "run_directory": "runs/scoring/sl-corpus-v2-v1",
+    "scoring_report_json": "docs/data-reports/0008-corpus-v2-asr-scoring.json",
+    "selected_training_report_json": "docs/data-reports/0009-corpus-v2-selected-training.json",
+    "selected_training_certificate": "docs/data-certificates/sl-corpus-v2-selected-training-v1.json",
+    "experiment_report_json": "docs/experiments/0007-corpus-v2-base-scoring-and-selection.json"
+  },
+  "prohibited_outputs": [
+    "TRAINING_ELIGIBLE",
+    "model checkpoint",
+    "trained adapter",
+    "checkpoint promotion",
+    "public performance claim"
+  ]
+}
