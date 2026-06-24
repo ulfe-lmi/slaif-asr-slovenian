@@ -86,9 +86,11 @@ evidence for real-speech generalization.
 The corpus-v2 candidate reservoir now has `TEXT_ACCEPTED` and `AUDIO_ACCEPTED`
 evidence for 415 single-voice synthetic candidate items. A separately sourced
 96-row GaMS-9B synthetic diagnostic holdout has reached `TEXT_ACCEPTED` and
-`AUDIO_ACCEPTED`. A privacy-safe `SCORING_AUTHORIZED` certificate permits ASR
+`AUDIO_ACCEPTED`. A privacy-safe `SCORING_AUTHORIZED` certificate permitted ASR
 scoring of both partitions and selected-training construction from the
-candidate source in a later work order. Model training remains unauthorized.
+candidate source. Those steps are complete, and the selected-training manifest
+has `SELECTED_TRAINING_MANIFEST_READY` status. Model training remains
+unauthorized.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -589,17 +591,17 @@ the external Piper boundary and waveform-validated as `AUDIO_ACCEPTED`.
 
 This does not make the reservoir training-eligible. It remains a single-voice
 candidate source pool. The independent 96-row synthetic holdout has reached
-`TEXT_ACCEPTED` and `AUDIO_ACCEPTED`, and a partition-level
-`SCORING_AUTHORIZED` certificate now permits ASR scoring and selected-training
-construction in a later work order. There is still no selected-training
-partition, `TRAINING_ELIGIBLE` certificate, or authorization for model
-training.
+`TEXT_ACCEPTED` and `AUDIO_ACCEPTED`, the partition-level
+`SCORING_AUTHORIZED` certificate permitted ASR scoring, and the selected-
+training manifest now has `SELECTED_TRAINING_MANIFEST_READY` status. There is
+still no `TRAINING_ELIGIBLE` certificate or authorization for model training.
 
 The A100 batched streaming substrate is now available for future authorized
 real-gate evaluation and accepted-candidate scoring. Its measured policy is
 batch size 1 without duration bucketing because larger tested FLEURS-v2 batches
-changed transcripts. Do not use it to score the corpus-v2 reservoir until a
-separate work order executes scoring under the committed scoring authorization.
+changed transcripts. Corpus-v2 candidate and holdout scoring used this batch-1
+policy; future training work orders must not change the policy without a new
+parity experiment.
 
 ## 13. Text policy for the first adaptation
 

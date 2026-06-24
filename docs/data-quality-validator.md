@@ -124,9 +124,10 @@ Current post-review status: the exact 415-row reservoir was accepted by a
 human whole-file decision with review revision `human-review-v1`, and the text
 validator reports `TEXT_ACCEPTED`. The subsequent audio work synthesized all
 415 rows with external Piper and produced an `AUDIO_ACCEPTED` certificate.
-`TRAINING_ELIGIBLE` was not produced; ASR scoring, hard-example selection, and
-model training remain unauthorized until a later partition-level certificate
-and work order exist.
+`TRAINING_ELIGIBLE` was not produced. ASR scoring and selected-training
+construction have since run under the `SCORING_AUTHORIZED` certificate, but
+model training remains unauthorized until a later certificate and work order
+explicitly permit it.
 
 ## Independent Synthetic Holdout Workflow
 
@@ -147,9 +148,10 @@ external Piper and waveform-validation boundary used for the candidate source.
 `scripts/authorize_corpus_v2_scoring.py` verifies the accepted candidate source
 and synthetic holdout together, checks text and audio partition independence,
 and writes a privacy-safe `SCORING_AUTHORIZED` certificate. That status permits
-ASR scoring and selected-training construction in a later work order. It is not
-`TRAINING_ELIGIBLE`, does not authorize model training, and does not turn the
-single-voice synthetic holdout into real-generalization evidence.
+ASR scoring and selected-training construction only. The selected-training
+manifest now has `SELECTED_TRAINING_MANIFEST_READY` status, but the certificate
+is not `TRAINING_ELIGIBLE`, does not authorize model training, and does not
+turn the single-voice synthetic holdout into real-generalization evidence.
 
 ## Status Boundaries
 

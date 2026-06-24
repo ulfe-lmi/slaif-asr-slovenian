@@ -1,0 +1,991 @@
+{
+  "certificate": {
+    "control_count": 40,
+    "hard_count": 120,
+    "selected_audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+    "selected_manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13",
+    "selected_row_count": 160,
+    "status": "SELECTED_TRAINING_MANIFEST_READY"
+  },
+  "experiment_id": "corpus-v2-base-scoring-and-selection-v1",
+  "limitations": [
+    "Selected training is single-voice synthetic Piper audio.",
+    "Selected training is not real-speech evidence.",
+    "Training remains unauthorized until a later training work order.",
+    "The untouched Nemotron base remains the only accepted parent."
+  ],
+  "model": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "repository_commit": "85fb873dafea190b9c527bff474bf5eb35414993",
+  "schema_version": "1.0",
+  "scoring": {
+    "candidate_source": {
+      "audio_duration_seconds": 1264.192804,
+      "cer_distribution_buckets": {
+        "normalized": {
+          "0": 1,
+          "0-25": 175,
+          "25-50": 137,
+          "50-75": 33,
+          "75-100": 68,
+          "over-100": 1
+        },
+        "raw": {
+          "0": 1,
+          "0-25": 163,
+          "25-50": 140,
+          "50-75": 43,
+          "75-100": 67,
+          "over-100": 1
+        }
+      },
+      "character_edit_counts": {
+        "normalized": {
+          "deletions": 3752,
+          "distance": 6665,
+          "insertions": 654,
+          "substitutions": 2259
+        },
+        "raw": {
+          "deletions": 4030,
+          "distance": 7131,
+          "insertions": 668,
+          "substitutions": 2433
+        }
+      },
+      "domain_aggregates": {
+        "Slovenian people, places and inflected named entities": {
+          "count": 33,
+          "duration_seconds": 147.817688,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 31.056,
+          "normalized_corpus_wer": 64.444,
+          "raw_corpus_cer": 33.191,
+          "raw_corpus_wer": 68.642
+        },
+        "case government, agreement and morphology": {
+          "count": 35,
+          "duration_seconds": 74.036502,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 51.326,
+          "normalized_corpus_wer": 82.759,
+          "raw_corpus_cer": 51.73,
+          "raw_corpus_wer": 81.773
+        },
+        "dates, times, quantities, measurements and addresses": {
+          "count": 39,
+          "duration_seconds": 114.485437,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 50.0,
+          "normalized_corpus_wer": 83.071,
+          "raw_corpus_cer": 50.847,
+          "raw_corpus_wer": 84.677
+        },
+        "dual forms, clitics and function words": {
+          "count": 39,
+          "duration_seconds": 84.171813,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 42.936,
+          "normalized_corpus_wer": 81.579,
+          "raw_corpus_cer": 44.36,
+          "raw_corpus_wer": 81.955
+        },
+        "everyday conversational Slovenian": {
+          "count": 39,
+          "duration_seconds": 61.717938,
+          "empty_hypotheses": 4,
+          "normalized_corpus_cer": 40.93,
+          "normalized_corpus_wer": 84.831,
+          "raw_corpus_cer": 42.731,
+          "raw_corpus_wer": 86.517
+        },
+        "everyday informational Slovenian": {
+          "count": 27,
+          "duration_seconds": 91.637185,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 35.872,
+          "normalized_corpus_wer": 76.518,
+          "raw_corpus_cer": 37.327,
+          "raw_corpus_wer": 79.757
+        },
+        "longer natural informational utterances": {
+          "count": 37,
+          "duration_seconds": 214.238309,
+          "empty_hypotheses": 0,
+          "normalized_corpus_cer": 27.487,
+          "normalized_corpus_wer": 67.784,
+          "raw_corpus_cer": 27.984,
+          "raw_corpus_wer": 67.97
+        },
+        "natural questions and requests": {
+          "count": 36,
+          "duration_seconds": 83.31281,
+          "empty_hypotheses": 3,
+          "normalized_corpus_cer": 36.089,
+          "normalized_corpus_wer": 79.412,
+          "raw_corpus_cer": 39.65,
+          "raw_corpus_wer": 83.613
+        },
+        "practical commands and instructions": {
+          "count": 40,
+          "duration_seconds": 70.727373,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 36.936,
+          "normalized_corpus_wer": 81.818,
+          "raw_corpus_cer": 37.776,
+          "raw_corpus_wer": 81.818
+        },
+        "prepared public speech and interview-style statements": {
+          "count": 40,
+          "duration_seconds": 152.844811,
+          "empty_hypotheses": 4,
+          "normalized_corpus_cer": 31.681,
+          "normalized_corpus_wer": 75.723,
+          "raw_corpus_cer": 32.555,
+          "raw_corpus_wer": 75.145
+        },
+        "public services, institutions and administrative situations": {
+          "count": 10,
+          "duration_seconds": 43.130938,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 33.636,
+          "normalized_corpus_wer": 67.593,
+          "raw_corpus_cer": 35.067,
+          "raw_corpus_wer": 71.296
+        },
+        "technical, scientific and carefully bounded code-switching": {
+          "count": 40,
+          "duration_seconds": 126.072,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 39.539,
+          "normalized_corpus_wer": 85.441,
+          "raw_corpus_cer": 40.484,
+          "raw_corpus_wer": 84.942
+        }
+      },
+      "duration_buckets": {
+        "long_gt_5s": 41,
+        "medium_2_to_5s": 265,
+        "short_lt_2s": 109
+      },
+      "hard_signal_counts": {
+        "empty_hypotheses": 41,
+        "normalized_cer_ge_50": 107,
+        "normalized_wer_ge_100": 147,
+        "normalized_wer_ge_75": 251
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 36.182,
+          "corpus_wer": 76.114,
+          "empty_hypothesis_count": 41,
+          "mean_utterance_cer": 39.466,
+          "mean_utterance_wer": 79.37,
+          "median_utterance_cer": 29.63,
+          "median_utterance_wer": 80.0,
+          "total_character_edits": 6665,
+          "total_reference_characters": 18421,
+          "total_reference_words": 3186,
+          "total_word_edits": 2425
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 37.502,
+          "corpus_wer": 77.439,
+          "empty_hypothesis_count": 41,
+          "mean_utterance_cer": 40.787,
+          "mean_utterance_wer": 80.684,
+          "median_utterance_cer": 31.25,
+          "median_utterance_wer": 83.333,
+          "total_character_edits": 7131,
+          "total_reference_characters": 19015,
+          "total_reference_words": 3178,
+          "total_word_edits": 2461
+        }
+      },
+      "phenomenon_aggregates": {
+        "address": {
+          "count": 39,
+          "duration_seconds": 114.485437,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 50.0,
+          "normalized_corpus_wer": 83.071,
+          "raw_corpus_cer": 50.847,
+          "raw_corpus_wer": 84.677
+        },
+        "administrative_context": {
+          "count": 10,
+          "duration_seconds": 43.130938,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 33.636,
+          "normalized_corpus_wer": 67.593,
+          "raw_corpus_cer": 35.067,
+          "raw_corpus_wer": 71.296
+        },
+        "agreement": {
+          "count": 35,
+          "duration_seconds": 74.036502,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 51.326,
+          "normalized_corpus_wer": 82.759,
+          "raw_corpus_cer": 51.73,
+          "raw_corpus_wer": 81.773
+        },
+        "bounded_code_switching": {
+          "count": 40,
+          "duration_seconds": 126.072,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 39.539,
+          "normalized_corpus_wer": 85.441,
+          "raw_corpus_cer": 40.484,
+          "raw_corpus_wer": 84.942
+        },
+        "case_government": {
+          "count": 35,
+          "duration_seconds": 74.036502,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 51.326,
+          "normalized_corpus_wer": 82.759,
+          "raw_corpus_cer": 51.73,
+          "raw_corpus_wer": 81.773
+        },
+        "clitic": {
+          "count": 39,
+          "duration_seconds": 84.171813,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 42.936,
+          "normalized_corpus_wer": 81.579,
+          "raw_corpus_cer": 44.36,
+          "raw_corpus_wer": 81.955
+        },
+        "command": {
+          "count": 40,
+          "duration_seconds": 70.727373,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 36.936,
+          "normalized_corpus_wer": 81.818,
+          "raw_corpus_cer": 37.776,
+          "raw_corpus_wer": 81.818
+        },
+        "date": {
+          "count": 39,
+          "duration_seconds": 114.485437,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 50.0,
+          "normalized_corpus_wer": 83.071,
+          "raw_corpus_cer": 50.847,
+          "raw_corpus_wer": 84.677
+        },
+        "dual": {
+          "count": 39,
+          "duration_seconds": 84.171813,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 42.936,
+          "normalized_corpus_wer": 81.579,
+          "raw_corpus_cer": 44.36,
+          "raw_corpus_wer": 81.955
+        },
+        "entity_inflection": {
+          "count": 33,
+          "duration_seconds": 147.817688,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 31.056,
+          "normalized_corpus_wer": 64.444,
+          "raw_corpus_cer": 33.191,
+          "raw_corpus_wer": 68.642
+        },
+        "everyday_conversation": {
+          "count": 39,
+          "duration_seconds": 61.717938,
+          "empty_hypotheses": 4,
+          "normalized_corpus_cer": 40.93,
+          "normalized_corpus_wer": 84.831,
+          "raw_corpus_cer": 42.731,
+          "raw_corpus_wer": 86.517
+        },
+        "everyday_information": {
+          "count": 27,
+          "duration_seconds": 91.637185,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 35.872,
+          "normalized_corpus_wer": 76.518,
+          "raw_corpus_cer": 37.327,
+          "raw_corpus_wer": 79.757
+        },
+        "function_word": {
+          "count": 39,
+          "duration_seconds": 84.171813,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 42.936,
+          "normalized_corpus_wer": 81.579,
+          "raw_corpus_cer": 44.36,
+          "raw_corpus_wer": 81.955
+        },
+        "institution": {
+          "count": 10,
+          "duration_seconds": 43.130938,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 33.636,
+          "normalized_corpus_wer": 67.593,
+          "raw_corpus_cer": 35.067,
+          "raw_corpus_wer": 71.296
+        },
+        "instruction": {
+          "count": 40,
+          "duration_seconds": 70.727373,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 36.936,
+          "normalized_corpus_wer": 81.818,
+          "raw_corpus_cer": 37.776,
+          "raw_corpus_wer": 81.818
+        },
+        "interview_statement": {
+          "count": 40,
+          "duration_seconds": 152.844811,
+          "empty_hypotheses": 4,
+          "normalized_corpus_cer": 31.681,
+          "normalized_corpus_wer": 75.723,
+          "raw_corpus_cer": 32.555,
+          "raw_corpus_wer": 75.145
+        },
+        "long_informational": {
+          "count": 37,
+          "duration_seconds": 214.238309,
+          "empty_hypotheses": 0,
+          "normalized_corpus_cer": 27.487,
+          "normalized_corpus_wer": 67.784,
+          "raw_corpus_cer": 27.984,
+          "raw_corpus_wer": 67.97
+        },
+        "measurement": {
+          "count": 39,
+          "duration_seconds": 114.485437,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 50.0,
+          "normalized_corpus_wer": 83.071,
+          "raw_corpus_cer": 50.847,
+          "raw_corpus_wer": 84.677
+        },
+        "medium_utterance": {
+          "count": 27,
+          "duration_seconds": 91.637185,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 35.872,
+          "normalized_corpus_wer": 76.518,
+          "raw_corpus_cer": 37.327,
+          "raw_corpus_wer": 79.757
+        },
+        "morphology": {
+          "count": 35,
+          "duration_seconds": 74.036502,
+          "empty_hypotheses": 6,
+          "normalized_corpus_cer": 51.326,
+          "normalized_corpus_wer": 82.759,
+          "raw_corpus_cer": 51.73,
+          "raw_corpus_wer": 81.773
+        },
+        "named_entity": {
+          "count": 33,
+          "duration_seconds": 147.817688,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 31.056,
+          "normalized_corpus_wer": 64.444,
+          "raw_corpus_cer": 33.191,
+          "raw_corpus_wer": 68.642
+        },
+        "public_service": {
+          "count": 10,
+          "duration_seconds": 43.130938,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 33.636,
+          "normalized_corpus_wer": 67.593,
+          "raw_corpus_cer": 35.067,
+          "raw_corpus_wer": 71.296
+        },
+        "public_speech": {
+          "count": 40,
+          "duration_seconds": 152.844811,
+          "empty_hypotheses": 4,
+          "normalized_corpus_cer": 31.681,
+          "normalized_corpus_wer": 75.723,
+          "raw_corpus_cer": 32.555,
+          "raw_corpus_wer": 75.145
+        },
+        "quantity": {
+          "count": 39,
+          "duration_seconds": 114.485437,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 50.0,
+          "normalized_corpus_wer": 83.071,
+          "raw_corpus_cer": 50.847,
+          "raw_corpus_wer": 84.677
+        },
+        "question": {
+          "count": 36,
+          "duration_seconds": 83.31281,
+          "empty_hypotheses": 3,
+          "normalized_corpus_cer": 36.089,
+          "normalized_corpus_wer": 79.412,
+          "raw_corpus_cer": 39.65,
+          "raw_corpus_wer": 83.613
+        },
+        "request": {
+          "count": 36,
+          "duration_seconds": 83.31281,
+          "empty_hypotheses": 3,
+          "normalized_corpus_cer": 36.089,
+          "normalized_corpus_wer": 79.412,
+          "raw_corpus_cer": 39.65,
+          "raw_corpus_wer": 83.613
+        },
+        "scientific": {
+          "count": 40,
+          "duration_seconds": 126.072,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 39.539,
+          "normalized_corpus_wer": 85.441,
+          "raw_corpus_cer": 40.484,
+          "raw_corpus_wer": 84.942
+        },
+        "short_utterance": {
+          "count": 39,
+          "duration_seconds": 61.717938,
+          "empty_hypotheses": 4,
+          "normalized_corpus_cer": 40.93,
+          "normalized_corpus_wer": 84.831,
+          "raw_corpus_cer": 42.731,
+          "raw_corpus_wer": 86.517
+        },
+        "slovenian_places": {
+          "count": 33,
+          "duration_seconds": 147.817688,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 31.056,
+          "normalized_corpus_wer": 64.444,
+          "raw_corpus_cer": 33.191,
+          "raw_corpus_wer": 68.642
+        },
+        "syntax_variety": {
+          "count": 37,
+          "duration_seconds": 214.238309,
+          "empty_hypotheses": 0,
+          "normalized_corpus_cer": 27.487,
+          "normalized_corpus_wer": 67.784,
+          "raw_corpus_cer": 27.984,
+          "raw_corpus_wer": 67.97
+        },
+        "technical": {
+          "count": 40,
+          "duration_seconds": 126.072,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 39.539,
+          "normalized_corpus_wer": 85.441,
+          "raw_corpus_cer": 40.484,
+          "raw_corpus_wer": 84.942
+        },
+        "time": {
+          "count": 39,
+          "duration_seconds": 114.485437,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 50.0,
+          "normalized_corpus_wer": 83.071,
+          "raw_corpus_cer": 50.847,
+          "raw_corpus_wer": 84.677
+        }
+      },
+      "rows": 415,
+      "wer_distribution_buckets": {
+        "normalized": {
+          "0": 1,
+          "0-25": 5,
+          "25-50": 66,
+          "50-75": 112,
+          "75-100": 203,
+          "over-100": 28
+        },
+        "raw": {
+          "0": 1,
+          "0-25": 4,
+          "25-50": 58,
+          "50-75": 114,
+          "75-100": 212,
+          "over-100": 26
+        }
+      },
+      "word_edit_counts": {
+        "normalized": {
+          "deletions": 622,
+          "distance": 2425,
+          "insertions": 206,
+          "substitutions": 1597
+        },
+        "raw": {
+          "deletions": 619,
+          "distance": 2461,
+          "insertions": 185,
+          "substitutions": 1657
+        }
+      }
+    },
+    "synthetic_holdout": {
+      "audio_duration_seconds": 246.350743,
+      "cer_distribution_buckets": {
+        "normalized": {
+          "0-25": 26,
+          "25-50": 28,
+          "50-75": 12,
+          "75-100": 29,
+          "over-100": 1
+        },
+        "raw": {
+          "0-25": 24,
+          "25-50": 27,
+          "50-75": 13,
+          "75-100": 31,
+          "over-100": 1
+        }
+      },
+      "character_edit_counts": {
+        "normalized": {
+          "deletions": 920,
+          "distance": 1687,
+          "insertions": 111,
+          "substitutions": 656
+        },
+        "raw": {
+          "deletions": 982,
+          "distance": 1805,
+          "insertions": 119,
+          "substitutions": 704
+        }
+      },
+      "domain_aggregates": {
+        "dates, times, quantities, appointments, and addresses": {
+          "count": 12,
+          "duration_seconds": 24.578249,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 58.466,
+          "normalized_corpus_wer": 94.737,
+          "raw_corpus_cer": 58.967,
+          "raw_corpus_wer": 100.0
+        },
+        "education, culture, and public information": {
+          "count": 12,
+          "duration_seconds": 44.616875,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 32.885,
+          "normalized_corpus_wer": 71.287,
+          "raw_corpus_cer": 35.088,
+          "raw_corpus_wer": 75.248
+        },
+        "household, food, leisure, and daily planning": {
+          "count": 12,
+          "duration_seconds": 23.161747,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 54.706,
+          "normalized_corpus_wer": 93.75,
+          "raw_corpus_cer": 57.386,
+          "raw_corpus_wer": 95.312
+        },
+        "longer prepared informational speech": {
+          "count": 12,
+          "duration_seconds": 49.864562,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 51.531,
+          "normalized_corpus_wer": 80.303,
+          "raw_corpus_cer": 52.326,
+          "raw_corpus_wer": 80.769
+        },
+        "short personal and event narratives": {
+          "count": 12,
+          "duration_seconds": 30.882374,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 38.936,
+          "normalized_corpus_wer": 76.842,
+          "raw_corpus_cer": 39.588,
+          "raw_corpus_wer": 77.895
+        },
+        "spontaneous conversational turns": {
+          "count": 12,
+          "duration_seconds": 12.828874,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 79.878,
+          "normalized_corpus_wer": 102.273,
+          "raw_corpus_cer": 82.682,
+          "raw_corpus_wer": 100.0
+        },
+        "travel and mobility situations": {
+          "count": 12,
+          "duration_seconds": 33.575874,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 47.879,
+          "normalized_corpus_wer": 85.542,
+          "raw_corpus_cer": 49.901,
+          "raw_corpus_wer": 84.337
+        },
+        "weather, environment, and ordinary observations": {
+          "count": 12,
+          "duration_seconds": 26.842188,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 43.836,
+          "normalized_corpus_wer": 91.176,
+          "raw_corpus_cer": 45.358,
+          "raw_corpus_wer": 92.647
+        }
+      },
+      "duration_buckets": {
+        "long_gt_5s": 4,
+        "medium_2_to_5s": 64,
+        "short_lt_2s": 28
+      },
+      "hard_signal_counts": {
+        "empty_hypotheses": 17,
+        "normalized_cer_ge_50": 43,
+        "normalized_wer_ge_100": 47,
+        "normalized_wer_ge_75": 69
+      },
+      "metrics": {
+        "normalized": {
+          "corpus_cer": 47.295,
+          "corpus_wer": 84.317,
+          "empty_hypothesis_count": 17,
+          "mean_utterance_cer": 53.842,
+          "mean_utterance_wer": 88.501,
+          "median_utterance_cer": 45.227,
+          "median_utterance_wer": 88.194,
+          "total_character_edits": 1687,
+          "total_reference_characters": 3567,
+          "total_reference_words": 644,
+          "total_word_edits": 543
+        },
+        "normalizer": "sl-asr-normalization-v1",
+        "raw": {
+          "corpus_cer": 48.956,
+          "corpus_wer": 85.67,
+          "empty_hypothesis_count": 17,
+          "mean_utterance_cer": 55.321,
+          "mean_utterance_wer": 89.762,
+          "median_utterance_cer": 47.81,
+          "median_utterance_wer": 100.0,
+          "total_character_edits": 1805,
+          "total_reference_characters": 3687,
+          "total_reference_words": 642,
+          "total_word_edits": 550
+        }
+      },
+      "phenomenon_aggregates": {
+        "address": {
+          "count": 12,
+          "duration_seconds": 24.578249,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 58.466,
+          "normalized_corpus_wer": 94.737,
+          "raw_corpus_cer": 58.967,
+          "raw_corpus_wer": 100.0
+        },
+        "appointment": {
+          "count": 12,
+          "duration_seconds": 24.578249,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 58.466,
+          "normalized_corpus_wer": 94.737,
+          "raw_corpus_cer": 58.967,
+          "raw_corpus_wer": 100.0
+        },
+        "culture": {
+          "count": 12,
+          "duration_seconds": 44.616875,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 32.885,
+          "normalized_corpus_wer": 71.287,
+          "raw_corpus_cer": 35.088,
+          "raw_corpus_wer": 75.248
+        },
+        "daily_planning": {
+          "count": 12,
+          "duration_seconds": 23.161747,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 54.706,
+          "normalized_corpus_wer": 93.75,
+          "raw_corpus_cer": 57.386,
+          "raw_corpus_wer": 95.312
+        },
+        "date": {
+          "count": 12,
+          "duration_seconds": 24.578249,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 58.466,
+          "normalized_corpus_wer": 94.737,
+          "raw_corpus_cer": 58.967,
+          "raw_corpus_wer": 100.0
+        },
+        "education": {
+          "count": 12,
+          "duration_seconds": 44.616875,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 32.885,
+          "normalized_corpus_wer": 71.287,
+          "raw_corpus_cer": 35.088,
+          "raw_corpus_wer": 75.248
+        },
+        "environment": {
+          "count": 12,
+          "duration_seconds": 26.842188,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 43.836,
+          "normalized_corpus_wer": 91.176,
+          "raw_corpus_cer": 45.358,
+          "raw_corpus_wer": 92.647
+        },
+        "event_sequence": {
+          "count": 12,
+          "duration_seconds": 30.882374,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 38.936,
+          "normalized_corpus_wer": 76.842,
+          "raw_corpus_cer": 39.588,
+          "raw_corpus_wer": 77.895
+        },
+        "food": {
+          "count": 12,
+          "duration_seconds": 23.161747,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 54.706,
+          "normalized_corpus_wer": 93.75,
+          "raw_corpus_cer": 57.386,
+          "raw_corpus_wer": 95.312
+        },
+        "household": {
+          "count": 12,
+          "duration_seconds": 23.161747,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 54.706,
+          "normalized_corpus_wer": 93.75,
+          "raw_corpus_cer": 57.386,
+          "raw_corpus_wer": 95.312
+        },
+        "longer_utterance": {
+          "count": 12,
+          "duration_seconds": 49.864562,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 51.531,
+          "normalized_corpus_wer": 80.303,
+          "raw_corpus_cer": 52.326,
+          "raw_corpus_wer": 80.769
+        },
+        "mobility": {
+          "count": 12,
+          "duration_seconds": 33.575874,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 47.879,
+          "normalized_corpus_wer": 85.542,
+          "raw_corpus_cer": 49.901,
+          "raw_corpus_wer": 84.337
+        },
+        "ordinary_observation": {
+          "count": 12,
+          "duration_seconds": 26.842188,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 43.836,
+          "normalized_corpus_wer": 91.176,
+          "raw_corpus_cer": 45.358,
+          "raw_corpus_wer": 92.647
+        },
+        "personal_narrative": {
+          "count": 12,
+          "duration_seconds": 30.882374,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 38.936,
+          "normalized_corpus_wer": 76.842,
+          "raw_corpus_cer": 39.588,
+          "raw_corpus_wer": 77.895
+        },
+        "prepared_information": {
+          "count": 12,
+          "duration_seconds": 49.864562,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 51.531,
+          "normalized_corpus_wer": 80.303,
+          "raw_corpus_cer": 52.326,
+          "raw_corpus_wer": 80.769
+        },
+        "public_information": {
+          "count": 12,
+          "duration_seconds": 44.616875,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 32.885,
+          "normalized_corpus_wer": 71.287,
+          "raw_corpus_cer": 35.088,
+          "raw_corpus_wer": 75.248
+        },
+        "quantity": {
+          "count": 12,
+          "duration_seconds": 24.578249,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 58.466,
+          "normalized_corpus_wer": 94.737,
+          "raw_corpus_cer": 58.967,
+          "raw_corpus_wer": 100.0
+        },
+        "short_turn": {
+          "count": 12,
+          "duration_seconds": 12.828874,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 79.878,
+          "normalized_corpus_wer": 102.273,
+          "raw_corpus_cer": 82.682,
+          "raw_corpus_wer": 100.0
+        },
+        "spontaneous_conversation": {
+          "count": 12,
+          "duration_seconds": 12.828874,
+          "empty_hypotheses": 5,
+          "normalized_corpus_cer": 79.878,
+          "normalized_corpus_wer": 102.273,
+          "raw_corpus_cer": 82.682,
+          "raw_corpus_wer": 100.0
+        },
+        "time": {
+          "count": 12,
+          "duration_seconds": 24.578249,
+          "empty_hypotheses": 1,
+          "normalized_corpus_cer": 58.466,
+          "normalized_corpus_wer": 94.737,
+          "raw_corpus_cer": 58.967,
+          "raw_corpus_wer": 100.0
+        },
+        "travel": {
+          "count": 12,
+          "duration_seconds": 33.575874,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 47.879,
+          "normalized_corpus_wer": 85.542,
+          "raw_corpus_cer": 49.901,
+          "raw_corpus_wer": 84.337
+        },
+        "weather": {
+          "count": 12,
+          "duration_seconds": 26.842188,
+          "empty_hypotheses": 2,
+          "normalized_corpus_cer": 43.836,
+          "normalized_corpus_wer": 91.176,
+          "raw_corpus_cer": 45.358,
+          "raw_corpus_wer": 92.647
+        }
+      },
+      "rows": 96,
+      "wer_distribution_buckets": {
+        "normalized": {
+          "0-25": 1,
+          "25-50": 9,
+          "50-75": 21,
+          "75-100": 50,
+          "over-100": 15
+        },
+        "raw": {
+          "0-25": 1,
+          "25-50": 4,
+          "50-75": 23,
+          "75-100": 55,
+          "over-100": 13
+        }
+      },
+      "word_edit_counts": {
+        "normalized": {
+          "deletions": 153,
+          "distance": 543,
+          "insertions": 42,
+          "substitutions": 348
+        },
+        "raw": {
+          "deletions": 154,
+          "distance": 550,
+          "insertions": 38,
+          "substitutions": 358
+        }
+      }
+    }
+  },
+  "selection": {
+    "control": 40,
+    "hard": 120,
+    "holdout_exclusion": {
+      "selected_holdout_audio_hash_overlaps": 0,
+      "selected_holdout_id_overlaps": 0,
+      "selected_holdout_text_hash_overlaps": 0
+    },
+    "metric_distribution": {
+      "duration": {
+        "long_gt_5s": 8,
+        "medium_2_to_5s": 98,
+        "short_lt_2s": 54
+      },
+      "normalized_cer": {
+        "0-25": 23,
+        "25-50": 43,
+        "50-75": 26,
+        "75-100": 67,
+        "over-100": 1
+      },
+      "normalized_wer": {
+        "0-25": 1,
+        "25-50": 12,
+        "50-75": 14,
+        "75-100": 105,
+        "over-100": 28
+      }
+    },
+    "selected_vs_source_metric_distribution": {
+      "selected": {
+        "duration": {
+          "long_gt_5s": 8,
+          "medium_2_to_5s": 98,
+          "short_lt_2s": 54
+        },
+        "normalized_cer": {
+          "0-25": 23,
+          "25-50": 43,
+          "50-75": 26,
+          "75-100": 67,
+          "over-100": 1
+        },
+        "normalized_wer": {
+          "0-25": 1,
+          "25-50": 12,
+          "50-75": 14,
+          "75-100": 105,
+          "over-100": 28
+        }
+      },
+      "source": {
+        "duration": {
+          "long_gt_5s": 41,
+          "medium_2_to_5s": 265,
+          "short_lt_2s": 109
+        },
+        "normalized_cer": {
+          "0": 1,
+          "0-25": 175,
+          "25-50": 137,
+          "50-75": 33,
+          "75-100": 68,
+          "over-100": 1
+        },
+        "normalized_wer": {
+          "0": 1,
+          "0-25": 5,
+          "25-50": 66,
+          "50-75": 112,
+          "75-100": 203,
+          "over-100": 28
+        }
+      }
+    },
+    "total_selected": 160
+  },
+  "status": "completed in PR; pending strategic review"
+}

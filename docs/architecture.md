@@ -121,6 +121,9 @@ This validator is deliberately upstream of TTS and GPU work. Its strongest
 successful status is `TEXT_ACCEPTED`; the separate synthetic-audio validator
 can classify rendered audio as `AUDIO_ACCEPTED`. Neither stage can emit
 `TRAINING_ELIGIBLE` without a later partition-level certificate and work order.
+The current corpus-v2 flow has also produced aggregate ASR scoring and a
+selected-training manifest classified as `SELECTED_TRAINING_MANIFEST_READY`;
+that status still does not authorize model training.
 
 The historical Round 1 validator remains only for reproducing Experiment 0004.
 It must not be used as the admission authority for new corpora.
