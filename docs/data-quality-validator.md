@@ -141,8 +141,15 @@ FLEURS-v2 and ARTUR-J hash indexes.
 The holdout stage writes a local review capsule and an exact whole-file review
 command bound to the fixed holdout SHA256 and row count. It does not fabricate
 acceptance. The 96-row holdout has since reached `TEXT_ACCEPTED` through an
-explicit whole-file human decision. It has not been synthesized, scored,
-selected into training, certified, or marked `TRAINING_ELIGIBLE`.
+explicit whole-file human decision and `AUDIO_ACCEPTED` through the same
+external Piper and waveform-validation boundary used for the candidate source.
+
+`scripts/authorize_corpus_v2_scoring.py` verifies the accepted candidate source
+and synthetic holdout together, checks text and audio partition independence,
+and writes a privacy-safe `SCORING_AUTHORIZED` certificate. That status permits
+ASR scoring and selected-training construction in a later work order. It is not
+`TRAINING_ELIGIBLE`, does not authorize model training, and does not turn the
+single-voice synthetic holdout into real-generalization evidence.
 
 ## Status Boundaries
 

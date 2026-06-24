@@ -144,6 +144,12 @@ records, audio, manifests, hypotheses, deltas, and checkpoints remain ignored
 unless a later publication work order and rights review explicitly authorize
 release.
 
+The corpus-v2 candidate source and independent synthetic holdout now have
+privacy-safe text and audio admission evidence plus a `SCORING_AUTHORIZED`
+certificate. That certificate permits ASR scoring and selected-training
+construction only; it does not authorize model training, data publication,
+checkpoint promotion, or `TRAINING_ELIGIBLE`.
+
 The Round 1 v1 candidate pool
 `0c92c60c58d60b629ef275527ed31b7eba5e3eab90fc988928666a121aa86b17`,
 synthetic holdout

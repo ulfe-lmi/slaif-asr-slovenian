@@ -14,9 +14,15 @@ from slaif_asr.acoustic_quality import validate_audio_manifest
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate corpus-v2 synthetic audio before acoustic admission.")
     parser.add_argument("--require-status", choices=("AUDIO_ACCEPTED", "AUDIO_REJECTED"), default=None)
+    parser.add_argument(
+        "--corpus-role",
+        choices=("synthetic_candidate", "synthetic_holdout"),
+        default="synthetic_candidate",
+        help="Corpus partition role to validate.",
+    )
     args = parser.parse_args()
 
-    payload, return_code = validate_audio_manifest(require_status=args.require_status)
+    payload, return_code = validate_audio_manifest(require_status=args.require_status, corpus_role=args.corpus_role)
     summary = {
         "audio_manifest_sha256": payload["audio_manifest_sha256"],
         "failures_by_reason": payload["failures_by_reason"],

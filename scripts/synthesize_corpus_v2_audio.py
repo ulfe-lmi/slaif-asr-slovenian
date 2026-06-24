@@ -23,16 +23,22 @@ def main() -> int:
         choices=("verify", "benchmark-workers", "synthesize", "summarize"),
         required=True,
     )
+    parser.add_argument(
+        "--corpus-role",
+        choices=("synthetic_candidate", "synthetic_holdout"),
+        default="synthetic_candidate",
+        help="Corpus partition role to synthesize or summarize.",
+    )
     args = parser.parse_args()
 
     if args.stage == "verify":
-        payload = verify_piper_runtime()
+        payload = verify_piper_runtime(args.corpus_role)
     elif args.stage == "benchmark-workers":
-        payload = run_worker_benchmark()
+        payload = run_worker_benchmark(args.corpus_role)
     elif args.stage == "synthesize":
-        payload = run_full_synthesis()
+        payload = run_full_synthesis(args.corpus_role)
     else:
-        payload = build_audio_certificate_and_reports()
+        payload = build_audio_certificate_and_reports(args.corpus_role)
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

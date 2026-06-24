@@ -1318,9 +1318,16 @@ to the exact 415-row corpus hash and row count. The text validator reports
 `TEXT_ACCEPTED`.
 
 The same reservoir has also passed Piper synthesis and waveform validation as
-`AUDIO_ACCEPTED`. This is not `TRAINING_ELIGIBLE`: no independent synthetic
-holdout, selected-training partition, partition-level certificate, ASR scoring,
-selection, or training authorization exists.
+`AUDIO_ACCEPTED`. A separately sourced 96-row synthetic diagnostic holdout has
+passed whole-file human text review and Piper waveform validation as
+`TEXT_ACCEPTED` and `AUDIO_ACCEPTED`.
+
+The candidate source and synthetic holdout now have a privacy-safe
+`SCORING_AUTHORIZED` certificate for ASR scoring and selected-training
+construction in a later work order. This is not `TRAINING_ELIGIBLE`: no
+selected-training partition exists, no training certificate has been issued, and
+model training, checkpoint promotion, and public performance claims remain
+prohibited.
 
 The implementation MUST:
 

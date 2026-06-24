@@ -137,6 +137,12 @@ non-regression and the precommitted promotion rules. The Round 1 v1 synthetic
 corpora are additionally retired by the training-data constitution and must not
 be reused for future promotion-oriented experiments.
 
+The corpus-v2 candidate source and independent synthetic holdout have reached
+text and audio admission, and a privacy-safe `SCORING_AUTHORIZED` certificate
+permits ASR scoring plus selected-training construction in a later work order.
+This authorization does not permit model training or `TRAINING_ELIGIBLE`, and
+the synthetic holdout remains diagnostic rather than real-speech evidence.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.
