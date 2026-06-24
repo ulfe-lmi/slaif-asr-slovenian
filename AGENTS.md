@@ -21,8 +21,11 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   synthetic diagnostic holdout has reached `TEXT_ACCEPTED` and
   `AUDIO_ACCEPTED`, scoring has run on both synthetic partitions, and a
   selected-training manifest is ready under
-  `SELECTED_TRAINING_MANIFEST_READY`. `TRAINING_ELIGIBLE` certification, model
-  training, and production ASR work remain incomplete.
+  `SELECTED_TRAINING_MANIFEST_READY`. A named `DIAGNOSTIC_ONLY` corpus-v2
+  prompt-column experiment has run and is synthetic-only: no checkpoint is
+  accepted, and true A100 minibatch training was not scientifically equivalent
+  to the batch-size-1 reference. `TRAINING_ELIGIBLE` certification,
+  promotion-eligible model training, and production ASR work remain incomplete.
 
 ## Mission
 
@@ -165,8 +168,11 @@ Non-negotiable rules:
   `AUDIO_ACCEPTED`. The scoring certificate permitted ASR scoring and
   selected-training construction only; that scoring is complete and a
   selected-training manifest now has `SELECTED_TRAINING_MANIFEST_READY`
-  status. No acoustic-diversity certificate or `TRAINING_ELIGIBLE` decision
-  exists, and model training remains prohibited.
+  status. That manifest was used once under the Work Order 0020
+  `DIAGNOSTIC_ONLY` exception for prompt-column evidence; the result was
+  synthetic-only and did not accept a checkpoint. No acoustic-diversity
+  certificate or `TRAINING_ELIGIBLE` decision exists, and promotion-oriented
+  model training remains prohibited.
 
 ## Model and dependency policy
 
@@ -206,6 +212,10 @@ Current development hardware policy:
   `configs/evaluation/a100_streaming_batch_policy.json`: batch size 1,
   no duration bucketing, FP32, TF32 disabled. Batch size 1 remains the
   scientific reference mode because larger tested batches changed transcripts.
+- Work Order 0020 measured true prompt-column training minibatches on A100.
+  Batch size 8 improved throughput but was not scientifically equivalent to
+  the batch-size-1 reference arm, so future training work must not assume
+  minibatch equivalence without a new work order.
 - Cache-aware inference uses FP32 under the pinned NeMo implementation.
 - RTX 2080 Ti remains a supported smaller development platform. Future 2080 Ti
   training should use FP16 AMP rather than BF16 unless a later work order

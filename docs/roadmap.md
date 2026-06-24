@@ -149,7 +149,7 @@ Work order:
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; Round 1 and residual-adapter generalization rejected**
+Status: **prompt-column micro-proof complete; corpus-v2 prompt-column diagnostic synthetic-only**
 
 Historical prompt-specific evidence first attempted one RTX 2080 Ti. Current
 A100-hosted experiments still use exactly one visible logical GPU and do not use
@@ -177,6 +177,14 @@ the selected prompt column. It does not validate release quality. ARTUR-J
 regressed for the ignored micro-proof checkpoint, and the historical
 FLEURS-v1 component is deprecated, so it remains unaccepted and is not a valid
 parent.
+
+The corpus-v2 prompt-column diagnostic used the reviewed selected-training
+manifest once under a named `DIAGNOSTIC_ONLY` exception. The batch-size-1
+reference arm and the throughput-selected batch-8 arm improved synthetic
+diagnostics but failed real-gate non-regression. The scientific classification
+is `CORPUS_V2_PROMPT_COLUMN_SYNTHETIC_ONLY`, the batching classification is
+`A100_PROMPT_TRAINING_BATCH_NOT_EQUIVALENT`, and the accepted parent remains
+the untouched Nemotron checkpoint.
 
 Work order:
 [`work-orders/0005-m3-prompt-column-adaptation-proof.md`](work-orders/0005-m3-prompt-column-adaptation-proof.md)

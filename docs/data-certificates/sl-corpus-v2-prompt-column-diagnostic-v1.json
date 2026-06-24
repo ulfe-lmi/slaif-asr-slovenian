@@ -1,0 +1,97 @@
+{
+  "authorized_actions": [
+    "run one batch-size-1 prompt-column arm",
+    "run at most one throughput-selected minibatch prompt-column arm",
+    "evaluate both arms on selected training, synthetic holdout, FLEURS-v2, and ARTUR-J",
+    "write privacy-safe aggregate evidence"
+  ],
+  "candidate_and_holdout_certificates": {
+    "candidate_audio_certificate_sha256": "25737f59397d5c5acdd99e6af83e1129587199cb1a184eaec43dd27139bb1692",
+    "holdout_audio_certificate_sha256": "d5c1660b8b11b8b250d04034dfb2abe14a96dda33d48560875a51d7168865297"
+  },
+  "candidate_holdout_exclusion_evidence": {
+    "audio_hash_overlap": 0,
+    "id_overlap": 0,
+    "template_family_overlap": 0,
+    "text_hash_overlap": 0,
+    "utterance_family_overlap": 0
+  },
+  "certificate_id": "sl-corpus-v2-prompt-column-diagnostic-v1",
+  "decision_date": "2026-06-24",
+  "expected_trainable_count": 2048,
+  "experiment_config_sha256": "67eff85db4e38d16238a2c8b67d973a7bdc345adc626ce27d53157925594d7c9",
+  "generator_revisions": {
+    "candidate_source": "cjvt/GaMS3-12B-Instruct@1d0b27af5748784482600d24779409e7e1dc9adc",
+    "synthetic_holdout": "cjvt/GaMS-9B-Instruct@292744023fa0b7ccc7ae2c3c885a67468e49fa03"
+  },
+  "holdout": {
+    "audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "rows": 96,
+    "text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5"
+  },
+  "human_approved_exception_statement": "This certificate authorizes only the named Work Order 0020 prompt-column diagnostic on single-voice synthetic selected-training data. It does not issue TRAINING_ELIGIBLE and cannot be reused by another experiment.",
+  "maximum_permitted_arms": 2,
+  "maximum_permitted_epochs": 12,
+  "maximum_sample_exposures": 1920,
+  "model": {
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "named_exception": "corpus-v2 prompt-column diagnostic exception",
+  "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+  "permitted_evaluation_sets": [
+    "selected_training",
+    "synthetic_holdout",
+    "fleurs_v2",
+    "artur_j"
+  ],
+  "piper": {
+    "engine": "OHF-Voice/piper1-gpl",
+    "engine_revision": "b4bdd9ebeaea68cbc7a9c4ac907afcb13e7378b6",
+    "voice": "sl_SI-artur-medium",
+    "voice_concentration": "single voice synthetic audio",
+    "voice_revision": "217ddc79818708b078d0d14a8fae9608b9d77141"
+  },
+  "prohibited_actions": [
+    "training any residual adapter",
+    "training prompt-kernel shared parameters",
+    "training decoder, joint, or encoder parameters",
+    "using synthetic holdout for steering",
+    "accepting any checkpoint as a parent",
+    "issuing TRAINING_ELIGIBLE",
+    "model publication",
+    "public quality or real-speaker generalization claims",
+    "reusing the certificate for another experiment"
+  ],
+  "schema_version": "1.0",
+  "scientific_limitations": [
+    "Data status is DIAGNOSTIC_ONLY, not TRAINING_ELIGIBLE.",
+    "Selected training and synthetic holdout are single-voice synthetic Piper audio.",
+    "Synthetic holdout improvement is diagnostic only and is not real-speech generalization evidence.",
+    "No checkpoint from this experiment may become an accepted parent."
+  ],
+  "selected_training": {
+    "audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+    "control_rows": 40,
+    "hard_rows": 120,
+    "manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13",
+    "rows": 160
+  },
+  "selected_training_certificate": {
+    "path": "docs/data-certificates/sl-corpus-v2-selected-training-v1.json",
+    "sha256": "a561ee4c76ddbc5baacca1d5f10aa3beb1749dded7f2f6a1b8fd0e893ab79602",
+    "status": "SELECTED_TRAINING_MANIFEST_READY"
+  },
+  "status": "DIAGNOSTIC_ONLY",
+  "trainable_surface": {
+    "expected_trainable_parameters": 2048,
+    "prompt_index": "derive_at_runtime",
+    "selected_column": "derive_at_runtime",
+    "target_prompt": "sl-SI",
+    "type": "sl-si-prompt-column-delta"
+  },
+  "work_order_id": "0020"
+}

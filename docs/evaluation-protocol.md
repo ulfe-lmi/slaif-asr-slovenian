@@ -145,6 +145,12 @@ produce aggregate-only scoring evidence and a selected-training manifest with
 or `TRAINING_ELIGIBLE`, and the synthetic holdout remains diagnostic rather
 than real-speech evidence.
 
+Work Order 0020 used that manifest once under a named `DIAGNOSTIC_ONLY`
+exception. The corpus-v2 prompt-column arms were evaluated with batch size 1,
+no duration bucketing, and the fixed FLEURS-v2 and ARTUR-J gates. The outcome
+was synthetic-only, no checkpoint was accepted, and the result is not a public
+quality or real-speaker generalization claim.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.

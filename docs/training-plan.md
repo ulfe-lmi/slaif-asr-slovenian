@@ -90,7 +90,10 @@ evidence for 415 single-voice synthetic candidate items. A separately sourced
 scoring of both partitions and selected-training construction from the
 candidate source. Those steps are complete, and the selected-training manifest
 has `SELECTED_TRAINING_MANIFEST_READY` status. Model training remains
-unauthorized.
+unauthorized. Work Order 0020 used the selected-training manifest once under a
+named `DIAGNOSTIC_ONLY` exception for prompt-column evidence; it did not issue
+`TRAINING_ELIGIBLE`, did not accept a checkpoint, and found synthetic-only
+behavior.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -595,6 +598,9 @@ candidate source pool. The independent 96-row synthetic holdout has reached
 `SCORING_AUTHORIZED` certificate permitted ASR scoring, and the selected-
 training manifest now has `SELECTED_TRAINING_MANIFEST_READY` status. There is
 still no `TRAINING_ELIGIBLE` certificate or authorization for model training.
+The Work Order 0020 prompt-column diagnostic is an exception record rather
+than training-data promotion: the accepted parent remains the untouched
+Nemotron checkpoint.
 
 The A100 batched streaming substrate is now available for future authorized
 real-gate evaluation and accepted-candidate scoring. Its measured policy is
@@ -1604,6 +1610,13 @@ Experiment 0006 found that duration-bucketed batches larger than 1 improved
 throughput but did not preserve exact transcript parity, so batch size 1
 without duration bucketing remains the selected A100 policy and scientific
 reference mode.
+
+Work Order 0020 measured prompt-column training minibatches on A100. Batch
+size 8 improved training throughput relative to the batch-size-1 reference
+arm, but the resulting model behavior was not scientifically equivalent under
+the precommitted limits. Treat batch-size-1 prompt-column training as the
+current reference mechanic unless a later work order proves a new minibatch
+policy.
 
 ---
 

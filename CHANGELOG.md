@@ -83,6 +83,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Diversity-constrained selected-training construction from the accepted
   candidate source, local selected manifests, and a privacy-safe
   `SELECTED_TRAINING_MANIFEST_READY` certificate.
+- Corpus-v2 prompt-column diagnostic authorization tooling, batch-benchmark
+  harness, training runner, CPU tests, and privacy-safe Experiment 0008
+  report.
 
 ### Changed
 
@@ -149,3 +152,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   the accepted 415-row candidate source and accepted 96-row synthetic holdout.
   The selected-training manifest contains 160 candidate-source rows, but it is
   not `TRAINING_ELIGIBLE` and does not authorize model training.
+- The corpus-v2 selected-training manifest was used once under a named
+  `DIAGNOSTIC_ONLY` exception for a prompt-column diagnostic. The 2,048-scalar
+  prompt-column arms improved the synthetic holdout but failed real-gate
+  non-regression, so the result is synthetic-only and no checkpoint is accepted.
+- A100 prompt-column minibatch training selected batch size 8 for throughput,
+  but the batched arm was not scientifically equivalent to the batch-size-1
+  reference arm. Batch-size-1 evaluation remains authoritative.

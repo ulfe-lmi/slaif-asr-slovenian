@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "a100-prompt-column-batch-policy-v1",
+  "hardware": "NVIDIA A100-SXM4-80GB",
+  "physical_gpu_selector": "1",
+  "logical_cuda_device": "cuda:0",
+  "precision": "fp32",
+  "tf32": false,
+  "candidate_batch_sizes": [1, 2, 4, 8, 16, 32, 64],
+  "loss_correctness_relative_tolerance": 0.005,
+  "max_peak_reserved_mib": 65536,
+  "selection": {
+    "minimum_batch_size": 2,
+    "within_best_fraction": 0.95,
+    "metric": "actual_audio_seconds_per_wall_second"
+  },
+  "reference_arm": {
+    "batch_size": 1,
+    "duration_bucketing": false
+  }
+}
