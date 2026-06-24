@@ -1,0 +1,94 @@
+{
+  "accepted_partition": {
+    "rows": 96,
+    "sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5"
+  },
+  "admission_version": "corpus-v2-review-admission-v1",
+  "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1-reviewed",
+  "family_summary": {
+    "declared_family_count": 0,
+    "discovered_family_count": 96,
+    "largest_family_fraction": 0.010417,
+    "largest_family_size": 1
+  },
+  "fingerprint_unique_counts": {
+    "carrier_stripped": 96,
+    "entity_masked": 96,
+    "number_masked": 96,
+    "surface": 96
+  },
+  "limitations": [
+    "Text admission does not prove acoustic suitability.",
+    "No TTS synthesis, ASR scoring, selected-training construction, or model training was performed.",
+    "No data acceptance certificate was issued.",
+    "TRAINING_ELIGIBLE cannot be produced by this text-stage admission step."
+  ],
+  "partition_role": "synthetic_holdout",
+  "protected_indexes": [
+    {
+      "gate_id": "fleurs-sl-si-test-full-v2",
+      "index_sha256": "be9032471fe73ac208c03ec91d8773a3a38540ef15010b1614d9e17c71dcd601",
+      "manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "number_masked_hash_count": 347,
+      "reference_manifest_sha256": "483961a368bb92cd3fcabe1649cde9655402ff2572bb54eceb26223aaa11ce83",
+      "row_count": 834,
+      "surface_hash_count": 347
+    },
+    {
+      "gate_id": "artur-j-public-gate-v1",
+      "index_sha256": "00b5160bfb16422cf418ee5aeac87314e85ba984e958869a5416503cc9ab1974",
+      "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "number_masked_hash_count": 251,
+      "reference_manifest_sha256": "227b41f6e02a0d3a924b58eb051694678d7ac6fc9216952634b3c05967ffec4b",
+      "row_count": 256,
+      "surface_hash_count": 251
+    }
+  ],
+  "protected_overlap_counts": {
+    "number_masked_overlaps": 0,
+    "surface_overlaps": 0
+  },
+  "review": {
+    "accepted_count": 96,
+    "mode": "whole_file",
+    "outcome_counts": {
+      "ACCEPT": 96
+    },
+    "rejected_count": 0,
+    "review_coverage": {
+      "complete": true,
+      "provided": 96,
+      "required": 96
+    },
+    "review_issue_counts": {},
+    "review_sheet_sha256": null,
+    "revise_and_rereview_count": 0,
+    "total_review_rows": 96,
+    "whole_file_decision": {
+      "corpus_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+      "decision_id": "human-holdout-decision-v1",
+      "outcome": "ACCEPT",
+      "review_revision": "human-holdout-review-v1",
+      "row_count": 96,
+      "schema_version": "whole-file-review-decision-v1"
+    }
+  },
+  "schema_version": "1.0",
+  "source_reservoir": {
+    "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1",
+    "expected_pre_review_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "expected_review_template_sha256": null,
+    "pre_review_count": 96,
+    "pre_review_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "review_template_sha256": "e8120c203d4df1fa98bd7716aee55c2492a9976240455378909076307c12745a"
+  },
+  "validator": {
+    "algorithm_version": "training-text-validator-v1",
+    "configuration_sha256": "1ec084569b4d0129606d1c062e2b45418e6f50829bb1a6e944e57fd9c1a05705",
+    "decision_reasons": [
+      "all_required_text_checks_passed"
+    ],
+    "repository_revision": "def77bb55a33c17e0e742990ee16ab0d87e898ad",
+    "status": "TEXT_ACCEPTED"
+  }
+}

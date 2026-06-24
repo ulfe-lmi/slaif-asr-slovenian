@@ -128,6 +128,22 @@ validator reports `TEXT_ACCEPTED`. The subsequent audio work synthesized all
 model training remain unauthorized until a later partition-level certificate
 and work order exist.
 
+## Independent Synthetic Holdout Workflow
+
+`scripts/generate_corpus_v2_holdout.py` implements the separately sourced
+corpus-v2 synthetic diagnostic holdout stage. It uses pinned
+`cjvt/GaMS-9B-Instruct` text generation, writes schema-2.0
+`synthetic_holdout` rows, deterministically selects 12 rows from each of eight
+prompt cells by `SHA256(candidate_id)`, and validates the fixed holdout jointly
+against the accepted 415-row `synthetic_candidate` source and the protected
+FLEURS-v2 and ARTUR-J hash indexes.
+
+The holdout stage writes a local review capsule and an exact whole-file review
+command bound to the fixed holdout SHA256 and row count. It does not fabricate
+acceptance. The 96-row holdout has since reached `TEXT_ACCEPTED` through an
+explicit whole-file human decision. It has not been synthesized, scored,
+selected into training, certified, or marked `TRAINING_ELIGIBLE`.
+
 ## Status Boundaries
 
 This validator may emit only:

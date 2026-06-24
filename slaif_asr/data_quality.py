@@ -854,6 +854,10 @@ def validate_cross_partition(
                     )
                 )
 
+    comparison_pairs = [
+        ("selected_training", training, "synthetic_holdout", holdout),
+        ("synthetic_candidate", candidates, "synthetic_holdout", holdout),
+    ]
     comparisons = (
         ("candidate_id", lambda record: record.candidate_id),
         ("source_id", lambda record: record.source_id),
@@ -867,25 +871,28 @@ def validate_cross_partition(
         ("carrier_stripped", lambda record: fingerprints[record.candidate_id].carrier_stripped),
         ("source_recording_id", lambda record: str(record.optional_metadata.get("source_recording_id", ""))),
     )
-    for name, key_fn in comparisons:
-        holdout_index: dict[str, TextRecord] = {}
-        for record in holdout:
-            key = str(key_fn(record))
-            if key:
-                holdout_index[key] = record
-        for record in training:
-            key = str(key_fn(record))
-            if key and key in holdout_index:
-                issues.append(
-                    DataQualityIssue(
-                        code=f"cross_partition_{name}_overlap",
-                        severity="failed",
-                        check="cross_partition",
-                        partition_role="selected_training/synthetic_holdout",
-                        candidate_id=record.candidate_id,
-                        related_candidate_id=holdout_index[key].candidate_id,
+    for left_role, left_records, right_role, right_records in comparison_pairs:
+        if not left_records or not right_records:
+            continue
+        for name, key_fn in comparisons:
+            right_index: dict[str, TextRecord] = {}
+            for record in right_records:
+                key = str(key_fn(record))
+                if key:
+                    right_index[key] = record
+            for record in left_records:
+                key = str(key_fn(record))
+                if key and key in right_index:
+                    issues.append(
+                        DataQualityIssue(
+                            code=f"cross_partition_{name}_overlap",
+                            severity="failed",
+                            check="cross_partition",
+                            partition_role=f"{left_role}/{right_role}",
+                            candidate_id=record.candidate_id,
+                            related_candidate_id=right_index[key].candidate_id,
+                        )
                     )
-                )
     return issues
 
 

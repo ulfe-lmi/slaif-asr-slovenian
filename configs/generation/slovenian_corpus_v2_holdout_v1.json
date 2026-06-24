@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "sl-corpus-v2-independent-synthetic-holdout-v1",
+  "status": "DRAFT",
+  "prompt_revision": "sl-corpus-v2-independent-holdout-v1",
+  "record_schema_version": "2.0",
+  "partition_role": "synthetic_holdout",
+  "source_type": "generated_text",
+  "requested_generation_rows": 160,
+  "fixed_holdout_rows": 96,
+  "run_directory": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1",
+  "config_path_for_command": "configs/generation/slovenian_corpus_v2_holdout_v1.json",
+  "data_quality_config": "configs/data_quality/training_text_v1.json",
+  "retired_registry": "configs/data_quality/retired_corpora.json",
+  "candidate_source": {
+    "corpus_id": "sl-corpus-v2-gams-candidate-reservoir-v1",
+    "accepted_candidates_path": "runs/data-quality/sl-corpus-v2-gams-candidate-reservoir-v1/accepted-candidates.local.jsonl",
+    "accepted_review_path": "runs/data-quality/sl-corpus-v2-gams-candidate-reservoir-v1/accepted-linguistic-review.local.jsonl",
+    "sha256": "b8a5e4769ef881e90e94f45e36cb4bdbabd24feac0ebcb804fcf5fe760a301d6",
+    "rows": 415,
+    "status": "AUDIO_ACCEPTED"
+  },
+  "validation": {
+    "joint_corpus_id": "sl-corpus-v2-candidate-plus-independent-holdout-v1",
+    "expected_status": "DRAFT",
+    "expected_unresolved_reason": "missing_linguistic_review"
+  },
+  "protected_sources": [
+    {
+      "gate_id": "fleurs-sl-si-test-full-v2",
+      "manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+      "metadata": "docs/evaluation-gates/fleurs-sl-si-test-full-v2.metadata.json",
+      "index": "runs/data-quality/protected/fleurs-v2.hash-index.json"
+    },
+    {
+      "gate_id": "artur-j-public-gate-v1",
+      "manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+      "metadata": "docs/evaluation-gates/artur-j-public-gate-v1.metadata.json",
+      "index": "runs/data-quality/protected/artur-j.hash-index.json"
+    }
+  ],
+  "public_reports": {
+    "markdown": "docs/data-reports/0004-corpus-v2-independent-holdout.md",
+    "json": "docs/data-reports/0004-corpus-v2-independent-holdout.json"
+  },
+  "model": {
+    "repository": "cjvt/GaMS-9B-Instruct",
+    "revision": "292744023fa0b7ccc7ae2c3c885a67468e49fa03",
+    "license": "Gemma Terms of Use"
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "double_quantization": true,
+    "compute_dtype": "bfloat16",
+    "policy": "4bit-nf4-double-quant-bf16"
+  },
+  "device_policy": {
+    "cuda_visible_devices": "1",
+    "visible_gpu_count": 1,
+    "logical_device": "cuda:0",
+    "cpu_offload": false,
+    "disk_offload": false,
+    "max_memory_gib": 76
+  },
+  "generation": {
+    "prompt_batch_size": 4,
+    "allowed_prompt_batch_sizes": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "batch_fallback_order": [
+      4,
+      2,
+      1
+    ],
+    "max_new_tokens": 620,
+    "temperature": 0.72,
+    "top_p": 0.91,
+    "seed_base": 910000,
+    "monitor_interval_seconds": 0.2
+  },
+  "filtering": {
+    "forbid_numbered_or_bulleted_lines": true,
+    "forbid_metadata_tokens": true,
+    "reject_surface_duplicates": true,
+    "reject_number_masked_collisions": true,
+    "reject_entity_masked_collisions": true,
+    "reject_prohibited_carriers": true,
+    "reject_protected_surface_overlaps": true,
+    "reject_candidate_source_overlaps": true,
+    "max_repeated_token_ngram_count": 4,
+    "token_jaccard_reject_threshold": 0.72,
+    "character_jaccard_reject_threshold": 0.8
+  },
+  "prompt_requirements": [
+    "natural standalone Slovenian",
+    "correct morphology, agreement, cases, and prepositions",
+    "natural spoken semantics",
+    "lexical and syntactic diversity",
+    "no numbering, bullets, labels, JSON, or explanations",
+    "no artificial wrappers or repeated tails",
+    "no corpus identifiers in text",
+    "no quota filling by repeated sentence frames"
+  ],
+  "prompt_cells": [
+    {
+      "cell_id": "holdout-cell01",
+      "domain": "spontaneous conversational turns",
+      "register": "natural informal spoken Slovenian",
+      "length_target": "short utterances, 4 to 12 words",
+      "phenomena": [
+        "spontaneous_conversation",
+        "short_turn"
+      ],
+      "source_family_id": "gams9-holdout-spontaneous-conversation",
+      "prompt_revision": "sl-corpus-v2-holdout-cell01-v1",
+      "seed_sequence": [
+        910101,
+        910102,
+        910103
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell02",
+      "domain": "short personal and event narratives",
+      "register": "ordinary spoken narrative Slovenian",
+      "length_target": "short to medium utterances, 6 to 18 words",
+      "phenomena": [
+        "personal_narrative",
+        "event_sequence"
+      ],
+      "source_family_id": "gams9-holdout-personal-event-narratives",
+      "prompt_revision": "sl-corpus-v2-holdout-cell02-v1",
+      "seed_sequence": [
+        910201,
+        910202,
+        910203
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell03",
+      "domain": "travel and mobility situations",
+      "register": "practical spoken Slovenian",
+      "length_target": "short to medium utterances, 5 to 17 words",
+      "phenomena": [
+        "travel",
+        "mobility"
+      ],
+      "source_family_id": "gams9-holdout-travel-mobility",
+      "prompt_revision": "sl-corpus-v2-holdout-cell03-v1",
+      "seed_sequence": [
+        910301,
+        910302,
+        910303
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell04",
+      "domain": "household, food, leisure, and daily planning",
+      "register": "ordinary everyday spoken Slovenian",
+      "length_target": "short to medium utterances, 5 to 18 words",
+      "phenomena": [
+        "household",
+        "food",
+        "daily_planning"
+      ],
+      "source_family_id": "gams9-holdout-household-leisure-planning",
+      "prompt_revision": "sl-corpus-v2-holdout-cell04-v1",
+      "seed_sequence": [
+        910401,
+        910402,
+        910403
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell05",
+      "domain": "education, culture, and public information",
+      "register": "neutral public-information Slovenian",
+      "length_target": "medium utterances, 7 to 20 words",
+      "phenomena": [
+        "education",
+        "culture",
+        "public_information"
+      ],
+      "source_family_id": "gams9-holdout-education-culture-public-info",
+      "prompt_revision": "sl-corpus-v2-holdout-cell05-v1",
+      "seed_sequence": [
+        910501,
+        910502,
+        910503
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell06",
+      "domain": "weather, environment, and ordinary observations",
+      "register": "natural descriptive spoken Slovenian",
+      "length_target": "short to medium utterances, 5 to 18 words",
+      "phenomena": [
+        "weather",
+        "environment",
+        "ordinary_observation"
+      ],
+      "source_family_id": "gams9-holdout-weather-environment-observations",
+      "prompt_revision": "sl-corpus-v2-holdout-cell06-v1",
+      "seed_sequence": [
+        910601,
+        910602,
+        910603
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell07",
+      "domain": "dates, times, quantities, appointments, and addresses",
+      "register": "practical spoken Slovenian",
+      "length_target": "short to medium utterances, 5 to 18 words",
+      "phenomena": [
+        "date",
+        "time",
+        "quantity",
+        "appointment",
+        "address"
+      ],
+      "source_family_id": "gams9-holdout-dates-appointments-addresses",
+      "prompt_revision": "sl-corpus-v2-holdout-cell07-v1",
+      "seed_sequence": [
+        910701,
+        910702,
+        910703
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "holdout-cell08",
+      "domain": "longer prepared informational speech",
+      "register": "prepared but natural informational Slovenian",
+      "length_target": "longer utterances, 12 to 28 words",
+      "phenomena": [
+        "prepared_information",
+        "longer_utterance"
+      ],
+      "source_family_id": "gams9-holdout-long-informational",
+      "prompt_revision": "sl-corpus-v2-holdout-cell08-v1",
+      "seed_sequence": [
+        910801,
+        910802,
+        910803
+      ],
+      "requested_rows": 20,
+      "selected_rows": 12,
+      "maximum_retries": 2
+    }
+  ]
+}

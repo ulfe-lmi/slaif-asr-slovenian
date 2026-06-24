@@ -33,7 +33,9 @@ Nemotron baseline, and the first project-generated curriculum round plus a
 residual-adapter capacity proof have both been rejected as accepted parents by
 the fixed real gates. The first GaMS corpus-v2 candidate reservoir has reached
 `TEXT_ACCEPTED` and `AUDIO_ACCEPTED` as a reviewed, single-voice synthetic
-candidate pool, but it is still not `TRAINING_ELIGIBLE`.
+candidate pool. A separately generated 96-row synthetic diagnostic holdout has
+reached `TEXT_ACCEPTED` after a whole-file human decision. No corpus is
+`TRAINING_ELIGIBLE`.
 
 Present:
 
@@ -52,6 +54,9 @@ Present:
 - a whole-file human review-decision mode for exact-hash bounded corpora;
 - a corpus-v2 Piper synthesis bridge, bounded worker benchmark, acoustic
   validator, and privacy-safe `AUDIO_ACCEPTED` certificate;
+- a GaMS-9B independent synthetic holdout generator, privacy-safe DRAFT
+  generation report, and privacy-safe `TEXT_ACCEPTED` review-admission report
+  for the 96-row holdout;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
   duration-bucketed sweeps, and a measured policy for future real-gate
   evaluation;
@@ -124,10 +129,11 @@ train/holdout template-family overlap, and pervasive Slovenian quality defects.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
 training-data constitution. The corpus-v2 reservoir is not committed as raw
 text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and
-`AUDIO_ACCEPTED` evidence for 415 reviewed Piper-rendered items, but it has no
-independent synthetic holdout, selected-training partition, or final
-training-data certificate. No ASR scoring, selection, or training is authorized
-from it.
+`AUDIO_ACCEPTED` evidence for 415 reviewed Piper-rendered items, and the
+separately generated 96-row GaMS-9B synthetic diagnostic holdout has reached
+`TEXT_ACCEPTED` after whole-file human review. There is still no selected-
+training partition, holdout audio, partition-level data certificate, ASR
+scoring authorization, or `TRAINING_ELIGIBLE` corpus.
 
 ## Repository role
 
@@ -192,6 +198,8 @@ Names are project decisions, not claims of ownership over NVIDIA technology.
 
 The bulk review and acoustic admission task is defined by
 [`docs/work-orders/0015-bulk-review-and-acoustic-admission.md`](docs/work-orders/0015-bulk-review-and-acoustic-admission.md).
+The independent corpus-v2 holdout task is defined by
+[`docs/work-orders/0017-corpus-v2-independent-holdout.md`](docs/work-orders/0017-corpus-v2-independent-holdout.md).
 The corpus-v2 linguistic-review admission task is defined by
 [`docs/work-orders/0014-corpus-v2-linguistic-review-admission.md`](docs/work-orders/0014-corpus-v2-linguistic-review-admission.md).
 The GaMS corpus-v2 candidate-reservoir task is defined by
