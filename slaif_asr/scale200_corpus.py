@@ -11,6 +11,7 @@ import time
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
@@ -1120,7 +1121,7 @@ def build_text_certificate(
         "certificate_id": "sl-corpus-v3-gams-1600-text-v1",
         "corpus_id": config["corpus_id"],
         "status": status,
-        "decision_date": "2026-06-25",
+        "decision_date": date.today().isoformat(),
         "work_order_id": "0025",
         "partition_role": config["partition_role"],
         "row_count": len(rows),
@@ -1163,6 +1164,12 @@ def build_text_certificate(
 
 def write_text_public_reports(config: dict[str, Any], certificate: dict[str, Any], *, validator_report: dict[str, Any]) -> dict[str, Any]:
     rows = load_jsonl(fixed_text_path(config)) if fixed_text_path(config).exists() else []
+    certificate_validator = certificate.get("validator", {}) if isinstance(certificate.get("validator"), dict) else {}
+    validator_status = (
+        certificate_validator.get("status")
+        or validator_report.get("final_text_status")
+        or validator_report.get("status")
+    )
     payload = {
         "schema_version": PUBLIC_REPORT_SCHEMA_VERSION,
         "report_id": "0011-gams1600-text-admission",
@@ -1175,8 +1182,8 @@ def write_text_public_reports(config: dict[str, Any], certificate: dict[str, Any
         "per_cell_fixed_counts": fixed_counts_by_cell(rows),
         "fingerprint_unique_counts": fingerprint_counts(rows) if rows else {},
         "family_summary": family_summary(rows) if rows else {},
-        "validator_status": validator_report.get("final_text_status") or validator_report.get("status"),
-        "validator_decision_reasons": validator_report.get("decision_reasons", []),
+        "validator_status": validator_status,
+        "validator_decision_reasons": [] if validator_status == "TEXT_ACCEPTED" else validator_report.get("decision_reasons", []),
         "configuration_sha256": canonical_json_sha256(config),
         "review": certificate.get("whole_file_decision"),
         "limitations": certificate.get("limitations", []),
