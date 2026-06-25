@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "corpus-v2-speaker-range-resampling-v1",
+  "status": "diagnostic_policy",
+  "transform": {
+    "algorithm": "scipy.signal.resample_poly",
+    "sample_rate_hz": 16000,
+    "encoding": "mono-signed-16-bit-pcm-wav",
+    "rms_match": true,
+    "peak_safety_limit": 0.98,
+    "forbidden_transforms": [
+      "independent_pitch_shift",
+      "phase_vocoder_time_stretch",
+      "vtlp",
+      "noise",
+      "reverberation",
+      "gain_perturbation",
+      "filtering",
+      "codec_simulation",
+      "specaugment"
+    ]
+  },
+  "profiles": [
+    {
+      "profile_id": "child_like_proxy",
+      "resampling_rate": 0.8,
+      "up": 4,
+      "down": 5,
+      "intended_proxy": "higher spectral scale and faster speech"
+    },
+    {
+      "profile_id": "high_voice_proxy",
+      "resampling_rate": 0.9,
+      "up": 9,
+      "down": 10,
+      "intended_proxy": "moderately higher spectral scale"
+    },
+    {
+      "profile_id": "clean",
+      "resampling_rate": 1.0,
+      "up": 1,
+      "down": 1,
+      "intended_proxy": "original admitted Piper waveform"
+    },
+    {
+      "profile_id": "low_voice_proxy",
+      "resampling_rate": 1.1,
+      "up": 11,
+      "down": 10,
+      "intended_proxy": "moderately lower spectral scale"
+    },
+    {
+      "profile_id": "elder_like_proxy",
+      "resampling_rate": 1.2,
+      "up": 6,
+      "down": 5,
+      "intended_proxy": "lower spectral scale and slower speech"
+    }
+  ],
+  "expected_counts": {
+    "source_rows": 160,
+    "non_clean_generated_files": 640,
+    "total_profile_records": 800,
+    "epochs": 12,
+    "scheduled_exposures": 1920,
+    "exposures_per_profile": 384,
+    "exposures_per_profile_per_epoch": 32
+  },
+  "validation": {
+    "duration_ratio_tolerance_fraction": 0.005,
+    "rms_tolerance_db": 0.5,
+    "maximum_peak_ratio": 0.9801
+  },
+  "local_outputs": {
+    "run_root": "runs/augmentation/corpus-v2-speaker-range-v1",
+    "manifest": "runs/augmentation/corpus-v2-speaker-range-v1/augmentation-manifest.local.jsonl",
+    "exposure_schedule": "runs/augmentation/corpus-v2-speaker-range-v1/exposure-schedule.local.jsonl",
+    "validation": "runs/augmentation/corpus-v2-speaker-range-v1/acoustic-validation.local.json",
+    "summary": "runs/augmentation/corpus-v2-speaker-range-v1/summary.local.json",
+    "listening_pack": "runs/augmentation/corpus-v2-speaker-range-v1/listening-pack.local.tsv"
+  },
+  "limitations": [
+    "Profile labels are acoustic proxies only.",
+    "Variants remain derived from one Piper voice family.",
+    "The policy does not establish child, elderly, gender, or multi-speaker coverage."
+  ]
+}
