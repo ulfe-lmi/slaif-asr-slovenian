@@ -103,6 +103,12 @@ another `DIAGNOSTIC_ONLY` exception and trained only one NeMo-native RNNT
 joint-hidden adapter while every pretrained Nemotron tensor stayed frozen. It
 did not issue `TRAINING_ELIGIBLE`, did not accept an adapter or checkpoint, and
 classified the result as synthetic-only.
+Work Order 0023 used the same selected-training texts under a separate
+`DIAGNOSTIC_ONLY` exception and replaced the one Piper training voice with
+eight Supertonic 3 preset training voice styles. It did not use Piper audio for
+training, did not train on M5/F5 held-out styles, did not accept an adapter or
+checkpoint, and classified the result as
+`SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -1639,6 +1645,14 @@ Nemotron tensors remained frozen, evaluation used batch size 1, and shared
 progress reporting now keeps long-running training and evaluation visibly
 active. The adapter improved synthetic diagnostics but regressed real gates, so
 it is not an accepted parent.
+
+Work Order 0023 fixed batch size 8 and tested the same frozen-base
+joint-adapter surface on Supertonic 3 preset multi-voice synthetic training
+audio. Evaluation still used batch size 1. Eight Supertonic styles trained the
+adapter, M5/F5 remained held out, and Piper audio was used only for diagnostic
+cross-engine evaluation. The intervention reduced the Piper joint-adapter
+real-regression burden but did not remove real-gate regression, so no adapter
+or checkpoint is accepted.
 
 ---
 

@@ -1,6 +1,6 @@
 # Work Order 0023: Supertonic 3 Multi-voice Diagnostic
 
-Status: in progress
+Status: completed in PR; pending strategic review
 
 ## Scope
 
@@ -60,3 +60,16 @@ validated locally, authorization predates Nemotron loading, one fixed
 joint-adapter arm completes, both synthetic engines and both real gates are
 evaluated, one scientific classification is issued, `accepted_parent` remains
 `none`, required checks pass, and the PR remains unmerged.
+
+## Result
+
+- Audio status: `AUDIO_ACCEPTED`.
+- Diagnostic status: `DIAGNOSTIC_ONLY`.
+- Scientific classification:
+  `SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`.
+- Accepted parent: `none`.
+- Summary: eight Supertonic preset training styles improved the synthetic
+  diagnostics and reduced the Piper joint-adapter real-gate regression burden,
+  but did not eliminate real-gate regression. Generated audio, manifests,
+  predictions, adapter artifacts, and checkpoints remain ignored local
+  evidence.

@@ -50,7 +50,12 @@ the accepted parent remains the untouched Nemotron checkpoint. A frozen-base
 Slovenian RNNT joint-adapter diagnostic then trained one NeMo-native adapter in
 `model.joint` while every pretrained Nemotron tensor remained frozen. It also
 learned the synthetic holdout but regressed the real gates, so it is
-synthetic-only and no adapter or checkpoint is accepted.
+synthetic-only and no adapter or checkpoint is accepted. A Supertonic 3
+multi-voice diagnostic then replaced the single Piper training voice with eight
+preset Supertonic voice styles for the same frozen-base joint adapter. It
+improved synthetic diagnostics and reduced the Piper joint-adapter real-gate
+regression burden, but did not eliminate real-gate regression; it remains
+`DIAGNOSTIC_ONLY` and accepted no adapter or checkpoint.
 
 Present:
 
@@ -86,6 +91,9 @@ Present:
 - a corpus-v2 Slovenian joint-adapter diagnostic report showing that one
   frozen-base RNNT joint-hidden adapter learned synthetic diagnostics but
   regressed real gates;
+- a Supertonic 3 multi-voice diagnostic report showing that eight preset
+  synthetic training voice styles mitigated, but did not eliminate, the Piper
+  joint-adapter real-gate regression burden;
 - shared privacy-safe live progress infrastructure used by long-running
   training and evaluation commands;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
@@ -129,6 +137,11 @@ Present:
   one RNNT joint-hidden adapter with batch size 8 on the original clean Piper
   audio, evaluated with batch size 1, emitted live progress, and classified the
   result as synthetic-only.
+- a completed Supertonic 3 multi-voice joint-adapter diagnostic. It used the
+  same selected-training texts, trained exactly one RNNT joint-hidden adapter
+  with batch size 8 on eight Supertonic preset voice styles, kept M5/F5 styles
+  held out, evaluated with batch size 1, and classified the result as
+  `SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`.
 
 Current GPU execution code supports exactly one visible NVIDIA A100 or RTX 2080
 Ti. The current A100 development host uses physical GPU 1 selected with
@@ -180,6 +193,12 @@ The Slovenian joint-adapter diagnostic is also not a release or public-quality
 claim. It preserved the encoder, tokenizer, prompt kernel, decoder, and RNNT
 joint base weights, trained only the named adapter, used the original clean
 single-voice Piper audio, and did not accept or publish an adapter.
+The Supertonic 3 multi-voice diagnostic is also not a release or public-quality
+claim. Supertonic preset styles are synthetic voice styles, not verified
+speakers or demographic coverage. The run used internal generated audio only,
+kept the held-out Supertonic styles out of training, accepted no adapter or
+checkpoint, and does not authorize publication of generated audio or trained
+artifacts.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
 training-data constitution. The corpus-v2 reservoir is not committed as raw
 text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and

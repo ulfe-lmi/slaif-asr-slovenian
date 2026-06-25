@@ -188,3 +188,10 @@ enablement, non-Slovenian disablement, trainable-parameter isolation,
 adapter-only save/restore, selected-training and holdout exclusion,
 classification logic, and live progress event behavior. The actual joint
 adapter training and batch-size-1 evaluation remain manual GPU evidence.
+
+The Supertonic 3 multi-voice diagnostic adds CPU-only tests for pinned package
+and model revision handling, voice-style allocation, no M5/F5 training leakage,
+manifest and exposure-count invariants, acoustic-validation privacy, fixed
+joint-adapter configuration, scientific classification, and live progress
+behavior. Actual Supertonic synthesis, joint-adapter training, and batch-size-1
+evaluation remain manual governed runtime evidence.
