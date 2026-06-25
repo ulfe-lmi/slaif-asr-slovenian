@@ -193,7 +193,13 @@ def validate_wav(path: Path, *, sample_rate: int, channels: int = 1, sample_widt
 
 def sox_version() -> str:
     if shutil.which("sox") is None:
-        return f"python-audioop-ratecv {sys.version_info.major}.{sys.version_info.minor}"
+        try:
+            from importlib import metadata
+
+            audioop_version = metadata.version("audioop-lts")
+            return f"python-audioop-lts-ratecv {audioop_version}"
+        except metadata.PackageNotFoundError:
+            return f"python-audioop-ratecv {sys.version_info.major}.{sys.version_info.minor}"
     completed = subprocess.run(
         ["sox", "--version"],
         text=True,
