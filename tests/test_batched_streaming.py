@@ -11,6 +11,7 @@ from slaif_asr.batched_streaming import (
     make_batches,
     parse_monitor_csv,
     parse_sentinel_predictions,
+    privacy_safe_child_stream_line,
     privacy_safe_arm_summary,
     scientific_classification,
     select_batch_policy,
@@ -154,6 +155,16 @@ class BatchedStreamingTests(unittest.TestCase):
         )
         serialized = json.dumps(summary)
         self.assertNotIn("/home/user", serialized)
+
+    def test_privacy_safe_child_stream_suppresses_raw_paths_ids_and_hypotheses(self) -> None:
+        self.assertIsNone(privacy_safe_child_stream_line("dataset_manifest=/home/user/private/manifest.jsonl\n"))
+        self.assertIsNone(privacy_safe_child_stream_line("Added this sample gamsv2-cell01-a00-o001\n"))
+        self.assertIsNone(privacy_safe_child_stream_line("Final streaming transcriptions: skrivni izpis\n"))
+        self.assertIsNone(privacy_safe_child_stream_line("pred_text: zaupno\n"))
+        self.assertEqual(
+            privacy_safe_child_stream_line("The whole streaming process took: 12.3s\n"),
+            "The whole streaming process took: 12.3s\n",
+        )
 
 
 if __name__ == "__main__":

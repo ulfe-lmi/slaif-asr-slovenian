@@ -28,6 +28,34 @@ OOM_PATTERNS = (
     "out of memory",
     "CUBLAS_STATUS_ALLOC_FAILED",
 )
+RAW_CHILD_STREAM_MARKERS = (
+    SENTINEL_PREFIX,
+    "gamsv2-",
+    "gams9holdout-",
+    "fleurs-sl-si-test-occ-",
+    "artur-j-public-",
+    "Final streaming transcriptions",
+    "Added this sample",
+    "audio_filepath",
+    "dataset_manifest",
+    "model_path",
+    "output_path",
+    "pred_text",
+    "reference",
+    "hypothesis",
+    "/home/",
+    "/mnt/",
+    "/tmp/",
+    ".wav",
+    ".jsonl",
+    ".nemo",
+)
+SAFE_CHILD_STREAM_PREFIXES = (
+    "[NeMo I",
+    "[NeMo W",
+    "The whole streaming process took:",
+    "WER% of streaming mode",
+)
 
 
 @dataclass(frozen=True)
@@ -471,6 +499,26 @@ def ensure_gpu_idle(*, physical_gpu_index: str, max_memory_mib: float, max_utili
     return row
 
 
+def privacy_safe_child_stream_line(line: str) -> str | None:
+    """Return a terminal-safe child-process line, or None when it may expose data."""
+    stripped = line.strip()
+    if not stripped:
+        return None
+    if any(marker in stripped for marker in RAW_CHILD_STREAM_MARKERS):
+        return None
+    if re.search(r"(^|\s)/(?:home|mnt|tmp|var|run|sata-ssd)\S*", stripped):
+        return None
+    if re.search(r"\b(?:text|reference|hypothesis|pred_text)\s*[:=]", stripped, flags=re.IGNORECASE):
+        return None
+    if any(stripped.startswith(prefix) for prefix in SAFE_CHILD_STREAM_PREFIXES):
+        return line
+    if stripped.startswith(("  ", "\t", "-", "{", "}", "[", "]")):
+        return None
+    if "streaming" in stripped.lower() or "transcribe" in stripped.lower():
+        return line
+    return None
+
+
 def run_subprocess_with_monitor(
     command: Sequence[str],
     *,
@@ -491,6 +539,7 @@ def run_subprocess_with_monitor(
     monitor.start()
     completed_output: list[str] = []
     return_code = 1
+    process: subprocess.Popen[str] | None = None
     try:
         process = subprocess.Popen(
             list(command),
@@ -504,9 +553,21 @@ def run_subprocess_with_monitor(
         with log_path.open("w", encoding="utf-8") as log_fp:
             for line in process.stdout:
                 completed_output.append(line)
+                safe_line = privacy_safe_child_stream_line(line)
+                if safe_line is not None:
+                    print(safe_line, end="", file=sys.stderr, flush=True)
                 log_fp.write(line)
                 log_fp.flush()
         return_code = process.wait(timeout=timeout_seconds)
+    except BaseException:
+        if process is not None and process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=10)
+        raise
     finally:
         monitor.stop()
     wall = time.perf_counter() - start

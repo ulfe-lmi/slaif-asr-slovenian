@@ -158,6 +158,23 @@ class CorpusV2TrainingTests(unittest.TestCase):
         self.assertFalse(report["pretrained_tensors_identical"])
         self.assertEqual(report["changed_pretrained_tensors"], ["encoder.weight"])
 
+    def test_joint_adapter_fixed_batch_size_and_exposure_count(self) -> None:
+        rows = [record(index) for index in range(160)]
+        total = 0
+        for epoch in range(1, 13):
+            layout = deterministic_epoch_batches(rows, batch_size=8, epoch=epoch, seed=1234, bucketed=True)
+            assert_epoch_covers_once(layout, len(rows))
+            self.assertEqual(len(layout.batches), 20)
+            total += sum(len(batch) for batch in layout.batches)
+        self.assertEqual(total, 1920)
+
+    def test_no_holdout_row_in_training_batches_by_identity(self) -> None:
+        rows = [record(index) for index in range(8)]
+        holdout_ids = {"selected-999", "gams9holdout-example"}
+        layout = deterministic_epoch_batches(rows, batch_size=4, epoch=1, seed=1234, bucketed=True)
+        selected = {rows[index].selected_training_id for batch in layout.batches for index in batch}
+        self.assertFalse(selected & holdout_ids)
+
     def test_prompt_delta_wrapped_state_maps_to_original_names(self) -> None:
         selection = PromptColumnSelection(
             prompt_name="sl-SI",
