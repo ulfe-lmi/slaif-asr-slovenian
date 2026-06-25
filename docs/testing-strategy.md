@@ -174,3 +174,10 @@ and transcript batch construction, batch-loss correctness, batch-selection
 logic, prompt-column optimizer isolation, decision classification, and
 privacy-safe aggregate reports. The actual prompt-column training and
 batch-size-1 evaluation remain manual GPU evidence.
+
+The speaker-range augmentation diagnostic adds CPU-only tests for the exact
+five-profile resampling policy, rational factors, deterministic exposure
+schedule, RMS and peak-safety behavior, family and partition preservation,
+fixed batch membership based on clean durations, regression-burden
+classification, and public-report privacy. The actual augmented prompt-column
+training and batch-size-1 evaluation remain manual GPU evidence.

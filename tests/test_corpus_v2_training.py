@@ -24,6 +24,7 @@ from slaif_asr.corpus_v2_training import (
     selection_from_benchmark,
 )
 from slaif_asr.prompt_column import PromptColumnSelection
+from slaif_asr.speaker_range_augmentation import training_records_for_epoch
 
 
 def record(index: int, *, duration: float | None = None) -> TrainingRecord:
@@ -112,6 +113,25 @@ class CorpusV2TrainingTests(unittest.TestCase):
             within_best_fraction=0.95,
         )
         self.assertIsNone(selected["selected_batch_size"])
+
+    def test_augmented_epoch_records_do_not_change_clean_batch_membership(self) -> None:
+        rows = [record(index, duration=10.0 - index / 10.0) for index in range(8)]
+        clean_layout = deterministic_epoch_batches(rows, batch_size=4, epoch=1, seed=1234, bucketed=True)
+        schedule = [
+            {
+                "epoch": 1,
+                "selected_training_id": row.selected_training_id,
+                "profile_id": "low_voice_proxy",
+                "audio_filepath": f"/augmented/{index}.wav",
+                "audio_sha256": f"augmented-{index}",
+                "duration": 100.0 + index,
+            }
+            for index, row in enumerate(rows)
+        ]
+        augmented = training_records_for_epoch(rows, schedule, epoch=1)
+        self.assertEqual(augmented[rows[0].selected_training_id].text, rows[0].text)
+        repeated_layout = deterministic_epoch_batches(rows, batch_size=4, epoch=1, seed=1234, bucketed=True)
+        self.assertEqual(clean_layout.batches, repeated_layout.batches)
 
     def test_public_report_rejects_raw_ids_text_and_paths(self) -> None:
         with self.assertRaisesRegex(ValueError, "forbidden key"):

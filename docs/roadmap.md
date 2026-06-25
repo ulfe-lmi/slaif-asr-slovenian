@@ -149,7 +149,7 @@ Work order:
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; corpus-v2 prompt-column diagnostic synthetic-only**
+Status: **prompt-column micro-proof complete; corpus-v2 speaker-range diagnostic not supported**
 
 Historical prompt-specific evidence first attempted one RTX 2080 Ti. Current
 A100-hosted experiments still use exactly one visible logical GPU and do not use
@@ -185,6 +185,13 @@ diagnostics but failed real-gate non-regression. The scientific classification
 is `CORPUS_V2_PROMPT_COLUMN_SYNTHETIC_ONLY`, the batching classification is
 `A100_PROMPT_TRAINING_BATCH_NOT_EQUIVALENT`, and the accepted parent remains
 the untouched Nemotron checkpoint.
+
+The corpus-v2 speaker-range augmentation diagnostic reused the clean batch-8
+protocol and changed only deterministic resampling of selected-training audio.
+It improved the synthetic holdout but increased the real-regression burden
+from 16.361 to 17.572, so the scientific classification is
+`SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED` and the accepted parent remains the
+untouched Nemotron checkpoint.
 
 Work order:
 [`work-orders/0005-m3-prompt-column-adaptation-proof.md`](work-orders/0005-m3-prompt-column-adaptation-proof.md)

@@ -86,6 +86,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Corpus-v2 prompt-column diagnostic authorization tooling, batch-benchmark
   harness, training runner, CPU tests, and privacy-safe Experiment 0008
   report.
+- Corpus-v2 speaker-range resampling augmentation policy, diagnostic
+  authorization certificate, augmentation builder, fixed batch-8 runner, CPU
+  tests, and privacy-safe Experiment 0009 report.
 
 ### Changed
 
@@ -159,3 +162,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A100 prompt-column minibatch training selected batch size 8 for throughput,
   but the batched arm was not scientifically equivalent to the batch-size-1
   reference arm. Batch-size-1 evaluation remains authoritative.
+- Speaker-range resampling augmentation did not mitigate the corpus-v2
+  prompt-column real-gate regression. The augmented arm remained
+  synthetic-only, classified as `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`,
+  and no checkpoint was accepted.

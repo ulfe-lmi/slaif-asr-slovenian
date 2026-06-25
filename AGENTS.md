@@ -24,7 +24,9 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   `SELECTED_TRAINING_MANIFEST_READY`. A named `DIAGNOSTIC_ONLY` corpus-v2
   prompt-column experiment has run and is synthetic-only: no checkpoint is
   accepted, and true A100 minibatch training was not scientifically equivalent
-  to the batch-size-1 reference. `TRAINING_ELIGIBLE` certification,
+  to the batch-size-1 reference. A follow-up speaker-range resampling
+  diagnostic also remained unsupported: it improved the synthetic holdout but
+  did not mitigate real-gate regression. `TRAINING_ELIGIBLE` certification,
   promotion-eligible model training, and production ASR work remain incomplete.
 
 ## Mission
