@@ -119,6 +119,20 @@ class _BatchedStyle:
     dp: Any
 
 
+@dataclass(frozen=True)
+class _ListArray:
+    rows: tuple[tuple[Any, ...], ...]
+
+    @property
+    def shape(self) -> tuple[int, int]:
+        if not self.rows:
+            return (0, 0)
+        return (len(self.rows), len(self.rows[0]))
+
+    def tolist(self) -> list[list[Any]]:
+        return [list(row) for row in self.rows]
+
+
 def repo_path(path_text: str | Path) -> Path:
     path = Path(path_text)
     if path.is_absolute():
@@ -554,11 +568,24 @@ def deterministic_batch_seed(*, experiment_seed: int, batch_index: int, identity
 
 
 def _style_batch(styles: dict[str, Any], voice_styles: Sequence[str]) -> _BatchedStyle:
-    import numpy as np
+    values_ttl = [styles[style].ttl for style in voice_styles]
+    values_dp = [styles[style].dp for style in voice_styles]
+
+    try:
+        import numpy as np
+    except ModuleNotFoundError:
+        def concat(values: Sequence[Any]) -> _ListArray:
+            rows: list[tuple[Any, ...]] = []
+            for value in values:
+                raw_rows = value.tolist() if hasattr(value, "tolist") else value
+                rows.extend(tuple(row) for row in raw_rows)
+            return _ListArray(tuple(rows))
+
+        return _BatchedStyle(ttl=concat(values_ttl), dp=concat(values_dp))
 
     return _BatchedStyle(
-        ttl=np.concatenate([styles[style].ttl for style in voice_styles], axis=0),
-        dp=np.concatenate([styles[style].dp for style in voice_styles], axis=0),
+        ttl=np.concatenate(values_ttl, axis=0),
+        dp=np.concatenate(values_dp, axis=0),
     )
 
 

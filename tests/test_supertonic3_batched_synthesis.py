@@ -4,8 +4,6 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import numpy as np
-
 from slaif_asr.real_eval import atomic_write_json
 from slaif_asr.supertonic3_tts import (
     HELD_OUT_STYLES,
@@ -23,8 +21,13 @@ from tests.test_supertonic3_tts import Supertonic3TtsTests
 
 class FakeStyle:
     def __init__(self, value: float) -> None:
-        self.ttl = np.full((1, 2), value, dtype=np.float32)
-        self.dp = np.full((1, 3), value + 10.0, dtype=np.float32)
+        self.ttl = [[value, value]]
+        self.dp = [[value + 10.0, value + 10.0, value + 10.0]]
+
+
+def first_column(value: object) -> list[float]:
+    rows = value.tolist() if hasattr(value, "tolist") else value
+    return [float(row[0]) for row in rows]  # type: ignore[index]
 
 
 class Supertonic3BatchedSynthesisTests(unittest.TestCase):
@@ -77,8 +80,8 @@ class Supertonic3BatchedSynthesisTests(unittest.TestCase):
         batched = _style_batch(styles, ["A", "C", "B"])
         self.assertEqual(batched.ttl.shape, (3, 2))
         self.assertEqual(batched.dp.shape, (3, 3))
-        self.assertEqual(batched.ttl[:, 0].tolist(), [1.0, 3.0, 2.0])
-        self.assertEqual(batched.dp[:, 0].tolist(), [11.0, 13.0, 12.0])
+        self.assertEqual(first_column(batched.ttl), [1.0, 3.0, 2.0])
+        self.assertEqual(first_column(batched.dp), [11.0, 13.0, 12.0])
 
     def test_oom_detector_is_narrow(self) -> None:
         self.assertTrue(_is_oom_error(RuntimeError("CUDA out of memory while allocating tensor")))

@@ -9,8 +9,6 @@ from typing import Any, Sequence
 
 from slaif_asr.batched_streaming import StreamingRecord, file_sha256, metrics_for, run_batched_arm
 from slaif_asr.config import REPO_ROOT
-from slaif_asr.corpus_v2_scoring import ATT_CONTEXT_SIZE, checkpoint_path, nemo_streaming_script, runtime_environment
-from slaif_asr.corpus_v2_training import load_real_gate_eval_records, load_synthetic_eval_records, repo_path
 from slaif_asr.real_eval import NORMALIZER_VERSION, atomic_write_json, atomic_write_jsonl
 from slaif_asr.supertonic3_tts import HELD_OUT_STYLES, load_holdout_items, load_supertonic_config, read_jsonl, supertonic_paths
 from slaif_asr.tts import validate_wav
@@ -46,6 +44,13 @@ class DirectionalModel:
 
 def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def repo_path(path_text: str | Path) -> Path:
+    path = Path(path_text)
+    if path.is_absolute():
+        return path
+    return REPO_ROOT / path
 
 
 def git_blob_sha(path: Path) -> str:
@@ -94,6 +99,8 @@ def verify_model_artifacts(config: dict[str, Any]) -> dict[str, Any]:
 
 
 def directional_models(config: dict[str, Any], *, include_replay: bool) -> list[DirectionalModel]:
+    from slaif_asr.corpus_v2_scoring import checkpoint_path
+
     artifacts = config["historical_artifacts"]
     models = [
         DirectionalModel("base", checkpoint_path(), None, "untouched_base"),
@@ -165,6 +172,8 @@ def load_supertonic_heldout_records(config: dict[str, Any]) -> list[StreamingRec
 
 
 def load_directional_suite(config: dict[str, Any]) -> tuple[list[StreamingRecord], dict[str, list[StreamingRecord]]]:
+    from slaif_asr.corpus_v2_training import load_real_gate_eval_records, load_synthetic_eval_records
+
     split_records = {
         "piper_synthetic_holdout": load_synthetic_eval_records(config, "synthetic_holdout"),
         "supertonic_heldout_voice_holdout": load_supertonic_heldout_records(config),
@@ -217,6 +226,8 @@ def run_directional_model(
     run_dir: Path,
     python_executable: Path,
 ) -> dict[str, Any]:
+    from slaif_asr.corpus_v2_scoring import nemo_streaming_script, runtime_environment
+
     if model.expected_sha256 and file_sha256(model.checkpoint) != model.expected_sha256:
         raise RuntimeError(f"checkpoint SHA mismatch for {model.model_id}")
     arm = run_batched_arm(
@@ -395,4 +406,3 @@ def metric_table_from_summaries(summaries: dict[str, dict[str, Any]]) -> dict[st
         }
         for model_id, model_summary in summaries.items()
     }
-
