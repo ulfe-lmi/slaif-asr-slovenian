@@ -42,7 +42,11 @@ evidence and a selected-training manifest with
 `SELECTED_TRAINING_MANIFEST_READY` status. A named `DIAGNOSTIC_ONLY`
 prompt-column experiment has now run on that selected-training manifest. It
 improved the synthetic diagnostic holdout but failed real-gate non-regression,
-so no checkpoint is accepted and no corpus is `TRAINING_ELIGIBLE`.
+so no checkpoint is accepted and no corpus is `TRAINING_ELIGIBLE`. A follow-up
+speaker-range resampling diagnostic changed only deterministic training-audio
+resampling against the same batch-8 prompt-column protocol. It still improved
+the synthetic holdout but did not prevent or mitigate real-gate regression, so
+the accepted parent remains the untouched Nemotron checkpoint.
 
 Present:
 
@@ -73,6 +77,8 @@ Present:
   `SELECTED_TRAINING_MANIFEST_READY` status;
 - a corpus-v2 prompt-column diagnostic report showing synthetic-only behavior
   under the named `DIAGNOSTIC_ONLY` exception;
+- a corpus-v2 speaker-range augmentation diagnostic report showing that
+  deterministic resampling proxies did not mitigate real-gate regression;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
   duration-bucketed sweeps, and a measured policy for future real-gate
   evaluation;
@@ -107,6 +113,9 @@ Present:
   and batch-8 training arm both trained only the 2,048-value `sl-SI` prompt
   column; both remained unaccepted. True minibatch training improved throughput
   but was not scientifically equivalent to the reference arm.
+- a completed corpus-v2 speaker-range augmentation diagnostic. It used fixed
+  batch size 8, did not sweep hyperparameters or batches, evaluated with
+  batch size 1, and classified the resampling intervention as not supported.
 
 Current GPU execution code supports exactly one visible NVIDIA A100 or RTX 2080
 Ti. The current A100 development host uses physical GPU 1 selected with
@@ -150,6 +159,10 @@ The corpus-v2 prompt-column diagnostic is also not a release or public-quality
 claim: its data status is `DIAGNOSTIC_ONLY`, the training audio is single-voice
 synthetic Piper output, evaluation still uses batch size 1, and the accepted
 parent remains the untouched NVIDIA Nemotron checkpoint.
+The speaker-range augmentation diagnostic is likewise not a release or
+public-quality claim. Its five resampling profiles are acoustic proxies only,
+not real child, elderly, gender, or multi-speaker coverage. It did not accept a
+checkpoint and did not authorize publication of augmented audio.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
 training-data constitution. The corpus-v2 reservoir is not committed as raw
 text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and

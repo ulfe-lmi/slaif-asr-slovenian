@@ -37,3 +37,8 @@ training, independent synthetic holdout, FLEURS-v2, and ARTUR-J using the
 canonical batch-size-1 evaluation policy. Raw audio, generated variants,
 references, hypotheses, local manifests, model deltas, checkpoints, and monitor
 CSVs remain ignored local artifacts.
+
+Outcome: the diagnostic completed and was classified as
+`SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`. Synthetic-holdout gain remained,
+but the real-regression burden increased relative to the clean batch-8 arm. No
+checkpoint is accepted.

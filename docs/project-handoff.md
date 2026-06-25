@@ -78,6 +78,11 @@
   throughput, but the resulting batched arm was not scientifically equivalent
   to the batch-size-1 reference arm. Future training work should not assume
   minibatch equivalence without a new bounded proof.
+- Work Order 0021 tested deterministic speaker-range resampling proxies as the
+  only change relative to the clean batch-8 prompt-column arm. The synthetic
+  holdout still improved, but real-gate regression was not prevented or
+  mitigated. The result is `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`; no
+  checkpoint is accepted.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without

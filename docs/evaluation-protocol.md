@@ -151,6 +151,12 @@ no duration bucketing, and the fixed FLEURS-v2 and ARTUR-J gates. The outcome
 was synthetic-only, no checkpoint was accepted, and the result is not a public
 quality or real-speaker generalization claim.
 
+Work Order 0021 kept the same evaluation policy and tested only deterministic
+speaker-range resampling of training audio. It did not augment evaluation
+audio. The outcome was `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`; no
+checkpoint was accepted and the result is not evidence of real-speaker,
+multi-speaker, child, elderly, or gender coverage.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.

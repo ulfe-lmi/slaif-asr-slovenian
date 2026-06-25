@@ -94,6 +94,10 @@ unauthorized. Work Order 0020 used the selected-training manifest once under a
 named `DIAGNOSTIC_ONLY` exception for prompt-column evidence; it did not issue
 `TRAINING_ELIGIBLE`, did not accept a checkpoint, and found synthetic-only
 behavior.
+Work Order 0021 reused the same selected-training manifest under a separate
+`DIAGNOSTIC_ONLY` exception and changed only deterministic speaker-range
+resampling of training waveforms. It did not issue `TRAINING_ELIGIBLE`, did not
+accept a checkpoint, and did not mitigate real-gate regression.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -1617,6 +1621,12 @@ arm, but the resulting model behavior was not scientifically equivalent under
 the precommitted limits. Treat batch-size-1 prompt-column training as the
 current reference mechanic unless a later work order proves a new minibatch
 policy.
+
+Work Order 0021 fixed batch size 8 and tested only deterministic speaker-range
+resampling proxies against the Experiment 0008 clean batch-8 arm. The
+intervention improved the synthetic holdout but increased the real-regression
+burden, so future work should not widen this resampling range as a substitute
+for genuinely distinct acoustic sources.
 
 ---
 
