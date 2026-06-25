@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "fast-batched-directional-replay-v1",
+  "work_order_id": "0024",
+  "status": "directional_replay",
+  "target_lang": "sl-SI",
+  "tts_config": "configs/tts/supertonic3_sl_multivoice_batched_replay_v1.json",
+  "adapter": {
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
+    "name": "sl-si-joint-adapter-v1",
+    "target_module": "model.joint",
+    "bottleneck_dimension": 32
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
+  },
+  "data": {
+    "selected_training_certificate": "docs/data-certificates/sl-corpus-v2-selected-training-v1.json",
+    "selected_training_certificate_sha256": "a561ee4c76ddbc5baacca1d5f10aa3beb1749dded7f2f6a1b8fd0e893ab79602",
+    "selected_training_manifest": "runs/scoring/sl-corpus-v2-v1/selected-training/selected-training-manifest.local.jsonl",
+    "selected_training_manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13",
+    "selected_training_audio_manifest": "runs/scoring/sl-corpus-v2-v1/selected-training/selected-training-audio-manifest.local.jsonl",
+    "selected_training_audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+    "selected_rows": 160,
+    "hard_rows": 120,
+    "control_rows": 40,
+    "synthetic_holdout_text": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/accepted-holdout.local.jsonl",
+    "synthetic_holdout_text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "synthetic_holdout_audio_manifest": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/audio-manifest.local.jsonl",
+    "synthetic_holdout_audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "synthetic_holdout_rows": 96,
+    "fleurs_v2_manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+    "fleurs_v2_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+    "fleurs_v2_rows": 834,
+    "artur_j_manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+    "artur_j_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+    "artur_j_rows": 256
+  },
+  "supertonic_audio": {
+    "audio_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/audio-manifest.local.jsonl",
+    "training_audio_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/training-audio-manifest.local.jsonl",
+    "holdout_audio_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/holdout-audio-manifest.local.jsonl",
+    "training_probe_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/training-voice-probe.local.jsonl",
+    "exposure_schedule": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/exposure-schedule.local.jsonl"
+  },
+  "trainable_surface": {
+    "type": "sl-si-rnnt-joint-linear-residual-adapter",
+    "target_prompt": "sl-SI",
+    "adapter_name": "sl-si-joint-adapter-v1",
+    "joint_hidden": "derive_at_runtime",
+    "bottleneck_dimension": 32,
+    "expected_trainable_parameters": 42240
+  },
+  "training": {
+    "arm": "fast_batched_replay_supertonic3_joint_adapter_dim32",
+    "seed": 1234,
+    "epochs": 12,
+    "rows_per_epoch": 160,
+    "sample_exposures": 1920,
+    "batch_size": 8,
+    "optimizer_steps": 240,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "gradient_accumulation": "none",
+    "gradient_clipping": "none",
+    "precision": "fp32",
+    "tf32": false,
+    "spec_augment": false,
+    "waveform_augmentation": false,
+    "dropout_in_trainable_surface": false,
+    "probe_rows": 32
+  },
+  "directional_evaluation": {
+    "policy": "configs/evaluation/a100-directional-batch32-v1.json",
+    "batch_size": 32,
+    "duration_bucketing": true,
+    "att_context_size": [56, 3],
+    "target_lang": "sl-SI",
+    "precision": "fp32",
+    "tf32": false,
+    "suite_rows": 1378
+  },
+  "protected_training_files": [
+    {
+      "path": "slaif_asr/corpus_v2_training.py",
+      "git_blob_sha": "10615fa86d996d17b8945817a10bf658233c69e3",
+      "byte_sha256": "6a2c2d5128d1cd0821b8f0d8114efcd7f592a4f98505934e2e5be44d40f0eefe"
+    },
+    {
+      "path": "slaif_asr/slovenian_joint_adapter.py",
+      "git_blob_sha": "49988728f2389d334678d9b45bbd48806a64bd0b",
+      "byte_sha256": "b75f4424b9c7835bfb5c54501f485283c36917cab3fbb253b481b18c9e36be9d"
+    },
+    {
+      "path": "scripts/run_supertonic3_joint_adapter_diagnostic.py",
+      "git_blob_sha": "60a87b460a1d98f2dd8447be33faad37e98b6836",
+      "byte_sha256": "2bde7c71f0080f52fe70d5a5b735fa95e237d18db2796a5e35a816fe4f2ca857"
+    }
+  ],
+  "historical_reports": {
+    "piper_joint_adapter": {
+      "path": "docs/experiments/0010-corpus-v2-slovenian-joint-adapter-diagnostic.json",
+      "sha256": "e956154e2a6a2012b7a852a8bd8bb90ba3a794911df0bfd29267f2d7df3b2e0e"
+    },
+    "supertonic3_joint_adapter": {
+      "path": "docs/experiments/0011-corpus-v2-supertonic3-multivoice-joint-adapter.json",
+      "sha256": "f83841d03590e104120cd169068c22cd9f6b7bcc22f29b178ae94bbf670aaae0"
+    }
+  },
+  "historical_artifacts": {
+    "piper_joint_adapter": {
+      "checkpoint": "runs/experiments/corpus-v2-joint-adapter-diagnostic-v1/sl_si_joint_adapter_dim32/artifacts/sl_si_joint_adapter_dim32-enabled.local.nemo",
+      "sha256": "6cd29c20e1571b4b33847b4cc67af794fd0724e480fb975c663517834058008b"
+    },
+    "supertonic3_joint_adapter": {
+      "checkpoint": "runs/experiments/corpus-v2-supertonic3-joint-adapter-v1/supertonic3_multivoice_joint_adapter_dim32/artifacts/supertonic3_multivoice_joint_adapter_dim32-enabled.local.nemo",
+      "sha256": "33c5aa672c07afabc58963d689e3f293e16fdb8d7b14af9652c00891d212f90a"
+    }
+  },
+  "replay_artifact": {
+    "checkpoint": "runs/experiments/fast-batched-directional-replay-v1/fast_batched_replay_supertonic3_joint_adapter_dim32/artifacts/fast_batched_replay_supertonic3_joint_adapter_dim32-enabled.local.nemo"
+  },
+  "run_dir": "runs/experiments/fast-batched-directional-replay-v1",
+  "reports": {
+    "json": "docs/experiments/0012-fast-batched-directional-replay.json",
+    "markdown": "docs/experiments/0012-fast-batched-directional-replay.md"
+  },
+  "authorization": {
+    "status": "DIAGNOSTIC_ONLY",
+    "canonical": false,
+    "promotion_eligible": false,
+    "accepted_parent": "none"
+  }
+}

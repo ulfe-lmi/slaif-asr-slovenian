@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "a100-directional-batch32-v1",
+  "policy_type": "directional_only",
+  "canonical": false,
+  "promotion_eligible": false,
+  "batch_size": 32,
+  "duration_bucketing": true,
+  "att_context_size": [56, 3],
+  "target_lang": "sl-SI",
+  "precision": "fp32",
+  "tf32": false,
+  "exact_transcript_parity_required": false,
+  "notes": [
+    "Directional replay metrics are not canonical acceptance evidence.",
+    "No batch-1 replay is authorized by this policy."
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "tts_id": "supertonic3-sl-multivoice-batched-replay-v1",
+  "package": {
+    "name": "supertonic",
+    "version": "1.3.1",
+    "license": "MIT",
+    "environment": ".venv-supertonic"
+  },
+  "model": {
+    "repository": "Supertone/supertonic-3",
+    "name": "supertonic-3",
+    "revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "license": "BigScience OpenRAIL-M",
+    "local_dir": "models/tts/supertonic-3/724fb5abbf5502583fb520898d45929e62f02c0b",
+    "auto_download": false
+  },
+  "language": {
+    "code": "sl",
+    "fallback_na_allowed": false
+  },
+  "runtime": {
+    "execution_device": "cuda",
+    "cuda_visible_devices": "1",
+    "required_provider": "CUDAExecutionProvider",
+    "cpu_provider_fallback_allowed": false,
+    "human_override": "2026-06-25 Supertonic synthesis GPU override"
+  },
+  "voice_styles": {
+    "available": ["M1", "M2", "M3", "M4", "M5", "F1", "F2", "F3", "F4", "F5"],
+    "training": ["M1", "M2", "M3", "M4", "F1", "F2", "F3", "F4"],
+    "held_out": ["M5", "F5"],
+    "style_labels_are_presets_only": true
+  },
+  "synthesis": {
+    "total_steps": 8,
+    "speed": 1.05,
+    "max_chunk_length": 300,
+    "silence_duration": 0.3,
+    "expression_tags_allowed": false,
+    "custom_voice_builder_allowed": false,
+    "native_sample_rate": 44100,
+    "final_sample_rate": 16000
+  },
+  "batch_synthesis": {
+    "enabled": true,
+    "batch_size": 32,
+    "oom_fallback_batch_size": 16,
+    "seed": 1234,
+    "sort_key": ["preprocessed_text_length", "partition", "source_key_hash", "voice_style_id"]
+  },
+  "conversion": {
+    "max_workers": 16,
+    "bounded_queue_multiplier": 2
+  },
+  "inputs": {
+    "selected_training_manifest": "runs/scoring/sl-corpus-v2-v1/selected-training/selected-training-manifest.local.jsonl",
+    "selected_training_audio_manifest": "runs/scoring/sl-corpus-v2-v1/selected-training/selected-training-audio-manifest.local.jsonl",
+    "selected_training_manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13",
+    "selected_training_audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+    "selected_rows": 160,
+    "synthetic_holdout_text": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/accepted-holdout.local.jsonl",
+    "synthetic_holdout_text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "synthetic_holdout_rows": 96
+  },
+  "local_outputs": {
+    "run_root": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1",
+    "native_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/native-manifest.local.jsonl",
+    "audio_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/audio-manifest.local.jsonl",
+    "training_audio_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/training-audio-manifest.local.jsonl",
+    "holdout_audio_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/holdout-audio-manifest.local.jsonl",
+    "training_probe_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/training-voice-probe.local.jsonl",
+    "exposure_schedule": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/exposure-schedule.local.jsonl",
+    "validation": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/audio-validation.local.json",
+    "summary": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/summary.local.json",
+    "progress_dir": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/progress",
+    "logs_dir": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/logs"
+  }
+}
