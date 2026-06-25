@@ -181,3 +181,10 @@ schedule, RMS and peak-safety behavior, family and partition preservation,
 fixed batch membership based on clean durations, regression-burden
 classification, and public-report privacy. The actual augmented prompt-column
 training and batch-size-1 evaluation remain manual GPU evidence.
+
+The Slovenian joint-adapter diagnostic adds CPU-only tests for adapter
+configuration parsing, NeMo-native joint-adapter installation, Slovenian-only
+enablement, non-Slovenian disablement, trainable-parameter isolation,
+adapter-only save/restore, selected-training and holdout exclusion,
+classification logic, and live progress event behavior. The actual joint
+adapter training and batch-size-1 evaluation remain manual GPU evidence.

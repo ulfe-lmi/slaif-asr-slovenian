@@ -157,6 +157,12 @@ audio. The outcome was `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`; no
 checkpoint was accepted and the result is not evidence of real-speaker,
 multi-speaker, child, elderly, or gender coverage.
 
+Work Order 0022 kept the same evaluation policy and tested only one
+frozen-base RNNT joint-hidden adapter on the original clean Piper training
+audio. Evaluation used batch size 1, no duration bucketing, and the fixed
+FLEURS-v2 and ARTUR-J gates. The outcome was
+`SL_JOINT_ADAPTER_SYNTHETIC_ONLY`; no adapter or checkpoint was accepted.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.

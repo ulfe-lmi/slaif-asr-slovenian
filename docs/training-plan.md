@@ -98,6 +98,11 @@ Work Order 0021 reused the same selected-training manifest under a separate
 `DIAGNOSTIC_ONLY` exception and changed only deterministic speaker-range
 resampling of training waveforms. It did not issue `TRAINING_ELIGIBLE`, did not
 accept a checkpoint, and did not mitigate real-gate regression.
+Work Order 0022 reused the clean original Piper selected-training audio under
+another `DIAGNOSTIC_ONLY` exception and trained only one NeMo-native RNNT
+joint-hidden adapter while every pretrained Nemotron tensor stayed frozen. It
+did not issue `TRAINING_ELIGIBLE`, did not accept an adapter or checkpoint, and
+classified the result as synthetic-only.
 
 The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
 
@@ -1627,6 +1632,13 @@ resampling proxies against the Experiment 0008 clean batch-8 arm. The
 intervention improved the synthetic holdout but increased the real-regression
 burden, so future work should not widen this resampling range as a substitute
 for genuinely distinct acoustic sources.
+
+Work Order 0022 fixed batch size 8 and tested only a frozen-base Slovenian
+RNNT joint-hidden adapter on the original clean Piper audio. All pretrained
+Nemotron tensors remained frozen, evaluation used batch size 1, and shared
+progress reporting now keeps long-running training and evaluation visibly
+active. The adapter improved synthetic diagnostics but regressed real gates, so
+it is not an accepted parent.
 
 ---
 

@@ -46,7 +46,11 @@ so no checkpoint is accepted and no corpus is `TRAINING_ELIGIBLE`. A follow-up
 speaker-range resampling diagnostic changed only deterministic training-audio
 resampling against the same batch-8 prompt-column protocol. It still improved
 the synthetic holdout but did not prevent or mitigate real-gate regression, so
-the accepted parent remains the untouched Nemotron checkpoint.
+the accepted parent remains the untouched Nemotron checkpoint. A frozen-base
+Slovenian RNNT joint-adapter diagnostic then trained one NeMo-native adapter in
+`model.joint` while every pretrained Nemotron tensor remained frozen. It also
+learned the synthetic holdout but regressed the real gates, so it is
+synthetic-only and no adapter or checkpoint is accepted.
 
 Present:
 
@@ -79,6 +83,11 @@ Present:
   under the named `DIAGNOSTIC_ONLY` exception;
 - a corpus-v2 speaker-range augmentation diagnostic report showing that
   deterministic resampling proxies did not mitigate real-gate regression;
+- a corpus-v2 Slovenian joint-adapter diagnostic report showing that one
+  frozen-base RNNT joint-hidden adapter learned synthetic diagnostics but
+  regressed real gates;
+- shared privacy-safe live progress infrastructure used by long-running
+  training and evaluation commands;
 - an A100 batched streaming evaluation substrate with batch-1 parity checks,
   duration-bucketed sweeps, and a measured policy for future real-gate
   evaluation;
@@ -116,6 +125,10 @@ Present:
 - a completed corpus-v2 speaker-range augmentation diagnostic. It used fixed
   batch size 8, did not sweep hyperparameters or batches, evaluated with
   batch size 1, and classified the resampling intervention as not supported.
+- a completed corpus-v2 Slovenian joint-adapter diagnostic. It trained exactly
+  one RNNT joint-hidden adapter with batch size 8 on the original clean Piper
+  audio, evaluated with batch size 1, emitted live progress, and classified the
+  result as synthetic-only.
 
 Current GPU execution code supports exactly one visible NVIDIA A100 or RTX 2080
 Ti. The current A100 development host uses physical GPU 1 selected with
@@ -163,6 +176,10 @@ The speaker-range augmentation diagnostic is likewise not a release or
 public-quality claim. Its five resampling profiles are acoustic proxies only,
 not real child, elderly, gender, or multi-speaker coverage. It did not accept a
 checkpoint and did not authorize publication of augmented audio.
+The Slovenian joint-adapter diagnostic is also not a release or public-quality
+claim. It preserved the encoder, tokenizer, prompt kernel, decoder, and RNNT
+joint base weights, trained only the named adapter, used the original clean
+single-voice Piper audio, and did not accept or publish an adapter.
 Future promotion-oriented training requires `TRAINING_ELIGIBLE` data under the
 training-data constitution. The corpus-v2 reservoir is not committed as raw
 text or audio. It now has privacy-safe aggregate `TEXT_ACCEPTED` and

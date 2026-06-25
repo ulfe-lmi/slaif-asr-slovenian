@@ -180,6 +180,21 @@ accepted_parent = none
 
 The untouched Nemotron checkpoint remains the only accepted parent.
 
+## Result
+
+The experiment completed in this PR. The adapter was added only to
+`model.joint`, the exact runtime trainable count was 42,240 parameters, and
+all pretrained Nemotron tensors remained frozen and bitwise identical. The run
+used the original clean Piper selected-training audio, no augmentation, fixed
+batch size 8 for training, and batch size 1 for evaluation. Shared
+privacy-safe live progress was emitted during long training and evaluation
+stages.
+
+The trained joint adapter improved the independent synthetic holdout relative
+to the untouched base but regressed both real gates. The scientific
+classification is `SL_JOINT_ADAPTER_SYNTHETIC_ONLY`; `accepted_parent` remains
+`none`, and no adapter or checkpoint is promoted.
+
 ## Required Commands
 
 Authorization:
