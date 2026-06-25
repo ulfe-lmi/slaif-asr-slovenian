@@ -26,8 +26,11 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   accepted, and true A100 minibatch training was not scientifically equivalent
   to the batch-size-1 reference. A follow-up speaker-range resampling
   diagnostic also remained unsupported: it improved the synthetic holdout but
-  did not mitigate real-gate regression. `TRAINING_ELIGIBLE` certification,
-  promotion-eligible model training, and production ASR work remain incomplete.
+  did not mitigate real-gate regression. A frozen-base Slovenian RNNT
+  joint-adapter diagnostic trained only one new adapter, left every pretrained
+  tensor frozen, emitted shared live progress, and also remained synthetic-only.
+  `TRAINING_ELIGIBLE` certification, promotion-eligible model training, and
+  production ASR work remain incomplete.
 
 ## Mission
 
@@ -172,9 +175,12 @@ Non-negotiable rules:
   selected-training manifest now has `SELECTED_TRAINING_MANIFEST_READY`
   status. That manifest was used once under the Work Order 0020
   `DIAGNOSTIC_ONLY` exception for prompt-column evidence; the result was
-  synthetic-only and did not accept a checkpoint. No acoustic-diversity
-  certificate or `TRAINING_ELIGIBLE` decision exists, and promotion-oriented
-  model training remains prohibited.
+  synthetic-only and did not accept a checkpoint. Work Order 0022 used the same
+  selected-training manifest under a separate `DIAGNOSTIC_ONLY` exception for
+  one frozen-base RNNT joint-hidden adapter; it was also synthetic-only and did
+  not accept an adapter or checkpoint. No acoustic-diversity certificate or
+  `TRAINING_ELIGIBLE` decision exists, and promotion-oriented model training
+  remains prohibited.
 
 ## Model and dependency policy
 

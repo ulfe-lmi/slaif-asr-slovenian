@@ -149,7 +149,7 @@ Work order:
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; corpus-v2 speaker-range diagnostic not supported**
+Status: **prompt-column micro-proof complete; corpus-v2 joint-adapter diagnostic synthetic-only**
 
 Historical prompt-specific evidence first attempted one RTX 2080 Ti. Current
 A100-hosted experiments still use exactly one visible logical GPU and do not use
@@ -191,6 +191,14 @@ protocol and changed only deterministic resampling of selected-training audio.
 It improved the synthetic holdout but increased the real-regression burden
 from 16.361 to 17.572, so the scientific classification is
 `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED` and the accepted parent remains the
+untouched Nemotron checkpoint.
+
+The corpus-v2 Slovenian joint-adapter diagnostic reused the original clean
+Piper selected-training audio, kept batch size 8, trained only one new
+NeMo-native adapter in the frozen RNNT joint hidden layer, and evaluated with
+batch size 1. It improved synthetic diagnostics but increased the real-gate
+regression burden to 28.275, so the scientific classification is
+`SL_JOINT_ADAPTER_SYNTHETIC_ONLY` and the accepted parent remains the
 untouched Nemotron checkpoint.
 
 Work order:

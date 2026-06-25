@@ -89,6 +89,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Corpus-v2 speaker-range resampling augmentation policy, diagnostic
   authorization certificate, augmentation builder, fixed batch-8 runner, CPU
   tests, and privacy-safe Experiment 0009 report.
+- Corpus-v2 Slovenian joint-adapter diagnostic authorization certificate,
+  NeMo-native `model.joint` adapter helper, live progress reporter, fixed
+  batch-8 runner, CPU tests, and privacy-safe Experiment 0010 report.
 
 ### Changed
 
@@ -166,3 +169,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   prompt-column real-gate regression. The augmented arm remained
   synthetic-only, classified as `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`,
   and no checkpoint was accepted.
+- The frozen-base Slovenian joint-adapter diagnostic trained only one
+  NeMo-native RNNT joint-hidden adapter. It improved the synthetic holdout but
+  regressed both real gates, classified as `SL_JOINT_ADAPTER_SYNTHETIC_ONLY`,
+  and accepted no adapter or checkpoint.
+- Shared long-running training and evaluation code now emits privacy-safe live
+  progress events and streamed child-process output instead of appearing silent
+  until completion.

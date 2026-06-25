@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "corpus-v2-slovenian-joint-adapter-diagnostic-v1",
+  "work_order_id": "0022",
+  "status": "diagnostic_authorization",
+  "target_lang": "sl-SI",
+  "baseline_report": {
+    "path": "docs/experiments/0008-corpus-v2-prompt-column-diagnostic.json",
+    "sha256": "117ec8bbb97580db3e9ccf13a118a8472aa06930f42417171046e487e8ba411a",
+    "comparison_arm": "a100_batched"
+  },
+  "speaker_range_report": {
+    "path": "docs/experiments/0009-corpus-v2-speaker-range-augmentation-diagnostic.json"
+  },
+  "adapter": {
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
+    "name": "sl-si-joint-adapter-v1",
+    "target_module": "model.joint",
+    "bottleneck_dimension": 32
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
+  },
+  "data": {
+    "selected_training_certificate": "docs/data-certificates/sl-corpus-v2-selected-training-v1.json",
+    "selected_training_certificate_sha256": "a561ee4c76ddbc5baacca1d5f10aa3beb1749dded7f2f6a1b8fd0e893ab79602",
+    "selected_training_manifest": "runs/scoring/sl-corpus-v2-v1/selected-training/selected-training-manifest.local.jsonl",
+    "selected_training_manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13",
+    "selected_training_audio_manifest": "runs/scoring/sl-corpus-v2-v1/selected-training/selected-training-audio-manifest.local.jsonl",
+    "selected_training_audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+    "selected_rows": 160,
+    "hard_rows": 120,
+    "control_rows": 40,
+    "synthetic_holdout_audio_manifest": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/audio-manifest.local.jsonl",
+    "synthetic_holdout_audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "synthetic_holdout_text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "synthetic_holdout_rows": 96,
+    "fleurs_v2_manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+    "fleurs_v2_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+    "fleurs_v2_rows": 834,
+    "artur_j_manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+    "artur_j_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+    "artur_j_rows": 256
+  },
+  "trainable_surface": {
+    "type": "sl-si-rnnt-joint-linear-residual-adapter",
+    "target_prompt": "sl-SI",
+    "adapter_name": "sl-si-joint-adapter-v1",
+    "joint_hidden": "derive_at_runtime",
+    "bottleneck_dimension": 32,
+    "expected_trainable_formula": "2 * joint_hidden * 32 + 2 * joint_hidden"
+  },
+  "training": {
+    "arm": "sl_si_joint_adapter_dim32",
+    "seed": 1234,
+    "epochs": 12,
+    "rows_per_epoch": 160,
+    "sample_exposures": 1920,
+    "batch_size": 8,
+    "optimizer_steps": 240,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "gradient_accumulation": "none",
+    "gradient_clipping": "none",
+    "precision": "fp32",
+    "tf32": false,
+    "spec_augment": false,
+    "waveform_augmentation": false,
+    "dropout_in_trainable_surface": false,
+    "probe_rows": 32
+  },
+  "evaluation": {
+    "batch_policy": "configs/evaluation/a100_streaming_batch_policy.json",
+    "batch_size": 1,
+    "duration_bucketing": false,
+    "att_context_size": [56, 3],
+    "target_lang": "sl-SI",
+    "precision": "fp32",
+    "tf32": false
+  },
+  "run_dir": "runs/experiments/corpus-v2-joint-adapter-diagnostic-v1",
+  "authorization": {
+    "certificate_path": "docs/data-certificates/sl-corpus-v2-joint-adapter-diagnostic-v1.json",
+    "status": "DIAGNOSTIC_ONLY",
+    "authorized_actions": [
+      "install one NeMo native adapter in model.joint",
+      "train only that adapter on the selected clean Piper training partition",
+      "evaluate it on selected training, synthetic holdout, FLEURS-v2, and ARTUR-J",
+      "save and restore an adapter-only local artifact",
+      "write privacy-safe aggregate evidence"
+    ],
+    "prohibited_actions": [
+      "modifying any pretrained tensor",
+      "training prompt-column parameters",
+      "training encoder, prompt kernel, decoder, or joint base parameters",
+      "adding a second adapter",
+      "changing bottleneck dimension",
+      "running a rank or learning-rate sweep",
+      "using augmented audio",
+      "using holdout for steering",
+      "issuing TRAINING_ELIGIBLE",
+      "accepting a checkpoint as parent",
+      "publishing an adapter, model, text, or audio",
+      "reusing this certificate for another experiment"
+    ]
+  }
+}

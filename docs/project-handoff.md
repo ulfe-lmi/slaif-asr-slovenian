@@ -83,6 +83,13 @@
   holdout still improved, but real-gate regression was not prevented or
   mitigated. The result is `SPEAKER_RANGE_AUGMENTATION_NOT_SUPPORTED`; no
   checkpoint is accepted.
+- Work Order 0022 tested one frozen-base Slovenian RNNT joint-hidden adapter
+  as the only model-surface change relative to the clean batch-8 protocol. The
+  original clean Piper audio was used, every pretrained Nemotron tensor stayed
+  frozen, shared live progress was emitted during long stages, and evaluation
+  used batch size 1. The synthetic holdout improved, but real-gate regression
+  increased; the result is `SL_JOINT_ADAPTER_SYNTHETIC_ONLY` and no adapter or
+  checkpoint is accepted.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without
