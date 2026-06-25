@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import csv
+import concurrent.futures
 import hashlib
 import json
+import math
 import os
 import platform
 import resource
@@ -19,7 +21,7 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 from slaif_asr.acoustic_quality import distribution, read_audio_stats
-from slaif_asr.batched_streaming import file_sha256
+from slaif_asr.batched_streaming import NvidiaSmiMonitor, file_sha256, parse_monitor_csv
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.live_progress import LiveProgressReporter, heartbeat_thread
 from slaif_asr.real_eval import atomic_write_json, atomic_write_jsonl
@@ -60,6 +62,10 @@ PUBLIC_FORBIDDEN_KEYS = {
     "text",
 }
 PUBLIC_FORBIDDEN_MARKERS = ("gamsv2-", "gams9holdout-", "/" + "home" + "/", "/" + "mnt" + "/", "/" + "tmp" + "/")
+SUPPORTED_TTS_IDS = {
+    "supertonic3-sl-multivoice-v1",
+    "supertonic3-sl-multivoice-batched-replay-v1",
+}
 
 
 @dataclass(frozen=True)
@@ -97,6 +103,22 @@ class SupertonicTextItem:
     piper_duration: float | None = None
 
 
+@dataclass(frozen=True)
+class SupertonicBatchPlanItem:
+    item: SupertonicTextItem
+    voice_style: str
+    partition_stage: str
+    preprocessed_text_length: int
+    source_key_hash: str
+    identity: str
+
+
+@dataclass(frozen=True)
+class _BatchedStyle:
+    ttl: Any
+    dp: Any
+
+
 def repo_path(path_text: str | Path) -> Path:
     path = Path(path_text)
     if path.is_absolute():
@@ -119,7 +141,7 @@ def stable_sha256(value: str) -> str:
 
 def load_supertonic_config(path: Path = SUPERTONIC_CONFIG_PATH) -> dict[str, Any]:
     config = read_json(repo_path(path))
-    if config.get("tts_id") != "supertonic3-sl-multivoice-v1":
+    if config.get("tts_id") not in SUPPORTED_TTS_IDS:
         raise ValueError("unexpected Supertonic config id")
     package = config.get("package", {})
     model = config.get("model", {})
@@ -485,6 +507,171 @@ def build_variant_plan(config: dict[str, Any], partition: str) -> list[tuple[Sup
     raise ValueError(f"unsupported partition: {partition}")
 
 
+def _preprocessed_text_length(text: str) -> int:
+    return len(" ".join(text.split()))
+
+
+def build_batched_variant_plan(config: dict[str, Any]) -> list[SupertonicBatchPlanItem]:
+    items: list[SupertonicBatchPlanItem] = []
+    for partition in ("training", "holdout"):
+        for item, voice_style in build_variant_plan(config, partition):
+            source_key_hash = stable_sha256(f"{item.partition_role}:{item.source_key}")
+            identity = f"{item.partition_role}\t{item.source_key}\t{voice_style}"
+            items.append(
+                SupertonicBatchPlanItem(
+                    item=item,
+                    voice_style=voice_style,
+                    partition_stage=partition,
+                    preprocessed_text_length=_preprocessed_text_length(item.text),
+                    source_key_hash=source_key_hash,
+                    identity=identity,
+                )
+            )
+    return sorted(
+        items,
+        key=lambda row: (
+            row.preprocessed_text_length,
+            row.item.partition_role,
+            row.source_key_hash,
+            row.voice_style,
+        ),
+    )
+
+
+def partition_batched_plan(plan: Sequence[SupertonicBatchPlanItem], batch_size: int) -> list[list[SupertonicBatchPlanItem]]:
+    if batch_size <= 0:
+        raise ValueError("batch size must be positive")
+    return [list(plan[index : index + batch_size]) for index in range(0, len(plan), batch_size)]
+
+
+def batch_identity_sha256(batch: Sequence[SupertonicBatchPlanItem]) -> str:
+    return hashlib.sha256(("\n".join(row.identity for row in batch) + "\n").encode("utf-8")).hexdigest()
+
+
+def deterministic_batch_seed(*, experiment_seed: int, batch_index: int, identity_sha256: str) -> int:
+    digest = hashlib.sha256(f"{experiment_seed}:{batch_index}:{identity_sha256}".encode("utf-8")).hexdigest()
+    return int(digest[:8], 16)
+
+
+def _style_batch(styles: dict[str, Any], voice_styles: Sequence[str]) -> _BatchedStyle:
+    import numpy as np
+
+    return _BatchedStyle(
+        ttl=np.concatenate([styles[style].ttl for style in voice_styles], axis=0),
+        dp=np.concatenate([styles[style].dp for style in voice_styles], axis=0),
+    )
+
+
+def _waveform_for_row(waveforms: Any, durations: Any, row_index: int, sample_rate: int) -> Any:
+    import numpy as np
+
+    wav = np.asarray(waveforms)
+    if wav.ndim == 1:
+        wav = wav.reshape(1, -1)
+    duration = _duration_value(durations[row_index])
+    frames = max(1, min(wav.shape[1], int(math.ceil(duration * sample_rate))))
+    return wav[row_index, :frames]
+
+
+def _is_oom_error(exc: BaseException) -> bool:
+    text = f"{type(exc).__name__}: {exc}".lower()
+    return "out of memory" in text or "cuda_oom" in text or "cuda oom" in text
+
+
+def _make_native_row(
+    *,
+    config: dict[str, Any],
+    assets: dict[str, Any],
+    provider_summary: dict[str, Any],
+    paths: SupertonicPaths,
+    plan_item: SupertonicBatchPlanItem,
+    waveform: Any,
+    duration: Any,
+    wall_seconds: float,
+) -> dict[str, Any]:
+    item = plan_item.item
+    voice_style = plan_item.voice_style
+    relative = _variant_relative_name(item, voice_style)
+    native_path = paths.native_root / relative
+    if native_path.exists():
+        raise FileExistsError(f"native Supertonic output already exists: {native_path}")
+    _write_native_wav(native_path, waveform, int(config["synthesis"]["native_sample_rate"]))
+    native_stats = read_audio_stats(native_path)
+    return {
+        "schema_version": "1.0",
+        "source_key": item.source_key,
+        "partition_role": item.partition_role,
+        "voice_style_id": voice_style,
+        "voice_style_json_sha256": assets["voice_style_hashes"][voice_style],
+        "source_text_sha256": item.text_sha256,
+        "source_audio_sha256": item.source_audio_sha256,
+        "utterance_family_id": item.utterance_family_id,
+        "source_family_id": item.source_family_id,
+        "source_id": item.source_id,
+        "domain": item.domain,
+        "phenomena": list(item.phenomena),
+        "selection_reason": item.selection_reason,
+        "selection_rank": item.selection_rank,
+        "native_audio_filepath": str(native_path.resolve()),
+        "native_audio_sha256": native_stats.sha256,
+        "native_sample_rate": native_stats.sample_rate,
+        "native_channels": native_stats.channels,
+        "native_sample_width": native_stats.sample_width,
+        "native_frames": native_stats.frames,
+        "native_duration_seconds": round(native_stats.duration_seconds, 6),
+        "supertonic_duration_seconds": round(_duration_value(duration), 6),
+        "tts": supertonic_provenance(config, assets, voice_style),
+        "onnx_runtime": provider_summary,
+        "runtime": {"synthesis_wall_time_seconds": round(wall_seconds, 6)},
+        "partition_stage": plan_item.partition_stage,
+    }
+
+
+def _convert_native_row(paths: SupertonicPaths, row: dict[str, Any]) -> dict[str, Any]:
+    native_path = Path(row["native_audio_filepath"])
+    relative = native_path.relative_to(paths.native_root)
+    final_path = paths.final_root / relative
+    if final_path.exists():
+        raise FileExistsError(f"final Supertonic output already exists: {final_path}")
+    convert_started = time.perf_counter()
+    convert_to_16k_pcm(native_path, final_path)
+    conversion_wall = time.perf_counter() - convert_started
+    stats_started = time.perf_counter()
+    native_stats = read_audio_stats(native_path)
+    final_stats = read_audio_stats(final_path)
+    stats_wall = time.perf_counter() - stats_started
+    converted = dict(row)
+    converted.update(
+        {
+            "audio_filepath": str(final_path.resolve()),
+            "audio_sha256": final_stats.sha256,
+            "sample_rate": final_stats.sample_rate,
+            "channels": final_stats.channels,
+            "sample_width": final_stats.sample_width,
+            "frames": final_stats.frames,
+            "duration_seconds": round(final_stats.duration_seconds, 6),
+            "target_text_sha256": row["source_text_sha256"],
+            "language": "sl-SI",
+            "target_lang": "sl-SI",
+            "source_type": "synthetic_tts",
+            "audio_validation": {
+                "native_peak_ratio": round(native_stats.peak_ratio, 6),
+                "final_peak_ratio": round(final_stats.peak_ratio, 6),
+                "conversion": {
+                    "tool": "sox",
+                    "version": sox_version(),
+                    "parameters": ["-r", "16000", "-c", "1", "-b", "16", "-e", "signed-integer"],
+                },
+            },
+            "parallel_stage": {
+                "conversion_wall_seconds": round(conversion_wall, 6),
+                "stat_wall_seconds": round(stats_wall, 6),
+            },
+        }
+    )
+    return converted
+
+
 def _variant_relative_name(item: SupertonicTextItem, voice_style: str) -> str:
     safe = item.item_id.replace("/", "_")
     return f"{item.partition_role}/{voice_style}/{safe}.{voice_style}.wav"
@@ -594,6 +781,274 @@ def synthesize_partition(
         "rows_per_minute": round(len(rows) / wall * 60.0, 6) if wall else None,
         "native_audio_seconds_per_wall_second": round(sum(row["native_duration_seconds"] for row in rows) / wall, 6) if wall else None,
     }
+
+
+def _synthesize_batched_core(
+    *,
+    config: dict[str, Any],
+    assets: dict[str, Any],
+    provider_summary: dict[str, Any],
+    paths: SupertonicPaths,
+    tts: Any,
+    styles: dict[str, Any],
+    batch: Sequence[SupertonicBatchPlanItem],
+    batch_index: int,
+    experiment_seed: int,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    import numpy as np
+
+    identity = batch_identity_sha256(batch)
+    seed = deterministic_batch_seed(
+        experiment_seed=experiment_seed,
+        batch_index=batch_index,
+        identity_sha256=identity,
+    )
+    np.random.seed(seed)
+    style = _style_batch(styles, [row.voice_style for row in batch])
+    texts = [row.item.text for row in batch]
+    started = time.perf_counter()
+    waveforms, durations = tts.model(
+        texts,
+        style,
+        total_step=int(config["synthesis"]["total_steps"]),
+        speed=float(config["synthesis"]["speed"]),
+        lang=config["language"]["code"],
+    )
+    wall = time.perf_counter() - started
+    rows = []
+    for row_index, plan_item in enumerate(batch):
+        rows.append(
+            _make_native_row(
+                config=config,
+                assets=assets,
+                provider_summary=provider_summary,
+                paths=paths,
+                plan_item=plan_item,
+                waveform=_waveform_for_row(waveforms, durations, row_index, int(config["synthesis"]["native_sample_rate"])),
+                duration=durations[row_index],
+                wall_seconds=wall / max(1, len(batch)),
+            )
+        )
+    return rows, {
+        "batch_index": batch_index,
+        "requested_size": len(batch),
+        "actual_size": len(batch),
+        "identity_sha256": identity,
+        "seed": seed,
+        "wall_time_seconds": round(wall, 6),
+        "native_audio_seconds": round(sum(float(row["native_duration_seconds"]) for row in rows), 6),
+        "oom_fallback": False,
+    }
+
+
+def _synthesize_batched_with_fallback(
+    *,
+    config: dict[str, Any],
+    assets: dict[str, Any],
+    provider_summary: dict[str, Any],
+    paths: SupertonicPaths,
+    tts: Any,
+    styles: dict[str, Any],
+    batch: Sequence[SupertonicBatchPlanItem],
+    batch_index: int,
+    experiment_seed: int,
+    fallback_size: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    try:
+        rows, summary = _synthesize_batched_core(
+            config=config,
+            assets=assets,
+            provider_summary=provider_summary,
+            paths=paths,
+            tts=tts,
+            styles=styles,
+            batch=batch,
+            batch_index=batch_index,
+            experiment_seed=experiment_seed,
+        )
+        return rows, [summary]
+    except Exception as exc:
+        if not _is_oom_error(exc) or len(batch) <= fallback_size:
+            raise
+    rows: list[dict[str, Any]] = []
+    summaries: list[dict[str, Any]] = []
+    for fallback_index, start in enumerate(range(0, len(batch), fallback_size), start=1):
+        subbatch = list(batch[start : start + fallback_size])
+        if len(subbatch) > fallback_size:
+            raise RuntimeError("invalid Supertonic fallback batch")
+        sub_rows, sub_summary = _synthesize_batched_core(
+            config=config,
+            assets=assets,
+            provider_summary=provider_summary,
+            paths=paths,
+            tts=tts,
+            styles=styles,
+            batch=subbatch,
+            batch_index=(batch_index * 1000) + fallback_index,
+            experiment_seed=experiment_seed,
+        )
+        sub_summary["oom_fallback"] = True
+        sub_summary["original_batch_index"] = batch_index
+        rows.extend(sub_rows)
+        summaries.append(sub_summary)
+    return rows, summaries
+
+
+def synthesize_batched_supertonic_audio(
+    config: dict[str, Any],
+    *,
+    progress_interval_seconds: float,
+    tts_factory: Any | None = None,
+) -> dict[str, Any]:
+    """Synthesize all Supertonic variants through native model batches.
+
+    The function writes native WAVs, converts them to 16 kHz in a bounded CPU
+    worker pool while later GPU batches synthesize, and emits the same manifests
+    consumed by the existing Supertonic training implementation.
+    """
+
+    assert_supertonic_runtime_environment(config)
+    verify_input_identities(config)
+    assets = verify_assets(config)
+    paths = supertonic_paths(config)
+    batch_config = config.get("batch_synthesis", {})
+    batch_size = int(batch_config.get("batch_size", 32))
+    fallback_size = int(batch_config.get("oom_fallback_batch_size", 16))
+    if batch_size != 32 or fallback_size != 16:
+        raise ValueError("the batched replay requires synthesis batch size 32 with OOM fallback 16")
+    plan = build_batched_variant_plan(config)
+    if len(plan) != 1472:
+        raise RuntimeError(f"expected 1472 Supertonic variants, found {len(plan)}")
+    batches = partition_batched_plan(plan, batch_size)
+    workers = min(int(config.get("conversion", {}).get("max_workers", 16)), os.cpu_count() or 1)
+    max_pending = max(workers * int(config.get("conversion", {}).get("bounded_queue_multiplier", 2)), workers)
+    reporter = LiveProgressReporter(stage="synthesize-batched", ndjson_path=paths.progress_dir / "synthesize-batched.local.ndjson")
+    reporter.start("batch-synthesizing Supertonic audio")
+    real_supertonic_runtime = tts_factory is None
+    if tts_factory is None:
+        maybe_reexec_with_supertonic_cuda_libraries(config)
+        from supertonic import TTS
+
+        provider_setup = configure_supertonic_onnx_providers(config)
+        tts_factory = TTS
+    else:
+        provider_setup = {"available_providers": [], "requested_providers": [], "primary_provider": "fixture"}
+    with heartbeat_thread(reporter, interval_seconds=10.0, message="Supertonic model load in progress"):
+        tts = tts_factory(model=config["model"]["name"], model_dir=str(model_dir(config)), auto_download=False)
+    provider_summary = supertonic_session_provider_summary(tts, config) if real_supertonic_runtime else provider_setup
+    if int(getattr(tts, "sample_rate", 0)) != int(config["synthesis"]["native_sample_rate"]):
+        raise RuntimeError(f"Supertonic native sample rate mismatch: {getattr(tts, 'sample_rate', None)}")
+    styles = {style: tts.get_voice_style(style) for style in ALL_STYLES}
+    monitor_path = paths.run_root / "gpu-monitor.local.csv"
+    monitor = NvidiaSmiMonitor(physical_gpu_index="1", output_csv=monitor_path, interval_seconds=0.2)
+    native_rows: list[dict[str, Any]] = []
+    converted_rows: list[dict[str, Any]] = []
+    batch_summaries: list[dict[str, Any]] = []
+    pending: set[concurrent.futures.Future[dict[str, Any]]] = set()
+    conversion_wall_sum = 0.0
+    validation_stat_wall_sum = 0.0
+    started = time.perf_counter()
+    synthesis_wall_sum = 0.0
+
+    def collect(done: set[concurrent.futures.Future[dict[str, Any]]]) -> None:
+        nonlocal conversion_wall_sum, validation_stat_wall_sum
+        for future in done:
+            row = future.result()
+            converted_rows.append(row)
+            conversion_wall_sum += float(row.get("parallel_stage", {}).get("conversion_wall_seconds", 0.0))
+            validation_stat_wall_sum += float(row.get("parallel_stage", {}).get("stat_wall_seconds", 0.0))
+
+    monitor.start()
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+            for batch_index, batch in enumerate(batches, start=1):
+                rows, summaries = _synthesize_batched_with_fallback(
+                    config=config,
+                    assets=assets,
+                    provider_summary=provider_summary,
+                    paths=paths,
+                    tts=tts,
+                    styles=styles,
+                    batch=batch,
+                    batch_index=batch_index,
+                    experiment_seed=int(batch_config.get("seed", 1234)),
+                    fallback_size=fallback_size,
+                )
+                native_rows.extend(rows)
+                batch_summaries.extend(summaries)
+                synthesis_wall_sum += sum(float(summary["wall_time_seconds"]) for summary in summaries)
+                for row in rows:
+                    pending.add(pool.submit(_convert_native_row, paths, row))
+                while len(pending) >= max_pending:
+                    done, pending = concurrent.futures.wait(pending, return_when=concurrent.futures.FIRST_COMPLETED)
+                    collect(done)
+                elapsed = time.perf_counter() - started
+                reporter.progress(
+                    processed_rows=len(native_rows),
+                    total_rows=len(plan),
+                    step=batch_index,
+                    total_steps=len(batches),
+                    examples_per_second=round(len(native_rows) / elapsed, 6) if elapsed else None,
+                )
+            if pending:
+                done, pending = concurrent.futures.wait(pending)
+                collect(done)
+    except Exception as exc:
+        reporter.failed(message="batch synthesis failed", error_type=type(exc).__name__)
+        raise
+    finally:
+        monitor.stop()
+    if len(native_rows) != 1472 or len(converted_rows) != 1472:
+        raise RuntimeError(f"Supertonic output count mismatch: native={len(native_rows)} converted={len(converted_rows)}")
+    native_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
+    converted_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
+    atomic_write_jsonl(paths.native_manifest, native_rows)
+    atomic_write_jsonl(paths.audio_manifest, converted_rows)
+    training_rows = [row for row in converted_rows if row["partition_role"] == "selected_training"]
+    holdout_rows = [row for row in converted_rows if row["partition_role"] == "synthetic_holdout"]
+    atomic_write_jsonl(paths.training_audio_manifest, training_rows)
+    atomic_write_jsonl(paths.holdout_audio_manifest, holdout_rows)
+    write_training_probe_manifest(config, converted_rows)
+    schedule = build_exposure_schedule(config, converted_rows)
+    wall = time.perf_counter() - started
+    monitor_summary = parse_monitor_csv(monitor_path)
+    summary = {
+        "schema_version": "1.0",
+        "status": "PASSED",
+        "synthesis_mode": "native-batched-supertonic-core",
+        "batch_size": batch_size,
+        "batch_count": len(batches),
+        "actual_batch_sizes": [len(batch) for batch in batches],
+        "oom_fallback_count": sum(1 for summary in batch_summaries if summary.get("oom_fallback")),
+        "native_rows": len(native_rows),
+        "converted_rows": len(converted_rows),
+        "workers": workers,
+        "max_pending_futures": max_pending,
+        "timings": {
+            "gpu_synthesis_wall_seconds_sum": round(synthesis_wall_sum, 6),
+            "conversion_wall_seconds_sum": round(conversion_wall_sum, 6),
+            "validation_stat_wall_seconds_sum": round(validation_stat_wall_sum, 6),
+            "complete_data_stage_wall_seconds": round(wall, 6),
+        },
+        "throughput": {
+            "generated_audio_seconds_per_wall_second": round(sum(float(row["native_duration_seconds"]) for row in native_rows) / wall, 6) if wall else None,
+            "items_per_second": round(len(native_rows) / wall, 6) if wall else None,
+        },
+        "gpu_monitor": monitor_summary,
+        "batch_summaries": batch_summaries,
+        "manifests": {
+            "native_manifest_sha256": file_sha256(paths.native_manifest),
+            "audio_manifest_sha256": file_sha256(paths.audio_manifest),
+            "training_audio_manifest_sha256": file_sha256(paths.training_audio_manifest),
+            "holdout_audio_manifest_sha256": file_sha256(paths.holdout_audio_manifest),
+            "training_probe_manifest_sha256": file_sha256(paths.training_probe_manifest),
+            "exposure_schedule_sha256": file_sha256(paths.exposure_schedule),
+        },
+        "exposure_schedule": schedule,
+    }
+    atomic_write_json(paths.run_root / "batched-synthesis-summary.local.json", summary)
+    reporter.complete(processed_rows=len(native_rows), total_rows=len(plan), message="batch synthesis complete")
+    return summary
 
 
 def supertonic_provenance(config: dict[str, Any], assets: dict[str, Any], voice_style: str) -> dict[str, Any]:
