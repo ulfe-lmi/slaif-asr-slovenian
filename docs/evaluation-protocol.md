@@ -163,6 +163,13 @@ audio. Evaluation used batch size 1, no duration bucketing, and the fixed
 FLEURS-v2 and ARTUR-J gates. The outcome was
 `SL_JOINT_ADAPTER_SYNTHETIC_ONLY`; no adapter or checkpoint was accepted.
 
+Work Order 0023 kept the same batch-size-1 evaluation policy and tested the
+same frozen-base joint-adapter surface trained on Supertonic 3 preset
+multi-voice synthetic audio. The outcome was
+`SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`: synthetic diagnostics
+improved and the real-regression burden fell, but real-gate regression was not
+eliminated. No adapter or checkpoint was accepted.
+
 ## Acceptance comparison
 
 Compare the challenger with its parent accepted checkpoint, not only with the original base.

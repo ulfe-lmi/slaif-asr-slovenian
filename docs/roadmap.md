@@ -149,7 +149,7 @@ Work order:
 
 ## M3 — Selective adaptation proof
 
-Status: **prompt-column micro-proof complete; corpus-v2 joint-adapter diagnostic synthetic-only**
+Status: **prompt-column micro-proof complete; corpus-v2 Supertonic multi-voice diagnostic mitigated regression**
 
 Historical prompt-specific evidence first attempted one RTX 2080 Ti. Current
 A100-hosted experiments still use exactly one visible logical GPU and do not use
@@ -200,6 +200,14 @@ batch size 1. It improved synthetic diagnostics but increased the real-gate
 regression burden to 28.275, so the scientific classification is
 `SL_JOINT_ADAPTER_SYNTHETIC_ONLY` and the accepted parent remains the
 untouched Nemotron checkpoint.
+
+The corpus-v2 Supertonic 3 multi-voice diagnostic reused the same texts and
+joint-adapter surface, but replaced Piper training audio with eight Supertonic
+preset voice styles. M5/F5 styles were held out, evaluation stayed at batch
+size 1, and no pretrained Nemotron tensor changed. It reduced the real-gate
+regression burden from 28.275 to 15.537, so the scientific classification is
+`SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`; the accepted parent still
+remains the untouched Nemotron checkpoint.
 
 Work order:
 [`work-orders/0005-m3-prompt-column-adaptation-proof.md`](work-orders/0005-m3-prompt-column-adaptation-proof.md)

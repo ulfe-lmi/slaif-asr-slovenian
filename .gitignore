@@ -10,6 +10,7 @@ htmlcov/
 .venv/
 .venv-piper/
 .venv-gams/
+.venv-supertonic/
 venv/
 .env
 .env.*

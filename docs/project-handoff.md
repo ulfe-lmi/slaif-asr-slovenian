@@ -90,6 +90,13 @@
   used batch size 1. The synthetic holdout improved, but real-gate regression
   increased; the result is `SL_JOINT_ADAPTER_SYNTHETIC_ONLY` and no adapter or
   checkpoint is accepted.
+- Work Order 0023 tested the same frozen-base joint-adapter surface with
+  Supertonic 3 preset multi-voice synthetic training audio. Eight styles
+  trained the adapter, M5/F5 remained held out, Piper audio was not used for
+  training, and evaluation used batch size 1. The real-gate regression burden
+  dropped from 28.275 to 15.537, so the result is
+  `SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`; no adapter or
+  checkpoint is accepted.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without

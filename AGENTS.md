@@ -29,6 +29,10 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   did not mitigate real-gate regression. A frozen-base Slovenian RNNT
   joint-adapter diagnostic trained only one new adapter, left every pretrained
   tensor frozen, emitted shared live progress, and also remained synthetic-only.
+  A Supertonic 3 multi-voice diagnostic then trained the same frozen-base joint
+  adapter on eight preset synthetic voice styles and reduced, but did not
+  eliminate, the Piper joint-adapter real-gate regression burden. It remains
+  `DIAGNOSTIC_ONLY`: no adapter or checkpoint is accepted.
   `TRAINING_ELIGIBLE` certification, promotion-eligible model training, and
   production ASR work remain incomplete.
 
@@ -178,9 +182,11 @@ Non-negotiable rules:
   synthetic-only and did not accept a checkpoint. Work Order 0022 used the same
   selected-training manifest under a separate `DIAGNOSTIC_ONLY` exception for
   one frozen-base RNNT joint-hidden adapter; it was also synthetic-only and did
-  not accept an adapter or checkpoint. No acoustic-diversity certificate or
-  `TRAINING_ELIGIBLE` decision exists, and promotion-oriented model training
-  remains prohibited.
+  not accept an adapter or checkpoint. Work Order 0023 tested Supertonic 3
+  preset multi-voice synthetic audio under another `DIAGNOSTIC_ONLY`
+  exception. It mitigated the Piper joint-adapter real-gate regression burden
+  but did not accept an adapter or checkpoint. No `TRAINING_ELIGIBLE` decision
+  exists, and promotion-oriented model training remains prohibited.
 
 ## Model and dependency policy
 
