@@ -1,0 +1,80 @@
+{
+  "configuration_sha256": "c46470430ac0c87228bb57fd92c64aa79c78116c9df4b627832ca8a31afde940",
+  "corpus_id": "sl-corpus-v3-gams-1600-training-v1",
+  "family_summary": {
+    "discovered_family_count": 1600,
+    "largest_family_fraction": 0.000625,
+    "largest_family_size": 1,
+    "source_family_count": 40
+  },
+  "fingerprint_unique_counts": {
+    "carrier_stripped": 1600,
+    "entity_masked": 1600,
+    "number_masked": 1600,
+    "surface": 1600
+  },
+  "fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+  "generated_rows": 8630,
+  "limitations": [
+    "Awaiting exact whole-file human decision before TTS.",
+    "No audio, training, or evaluation stage has run.",
+    "No TRAINING_ELIGIBLE status is issued."
+  ],
+  "per_cell_fixed_counts": {
+    "cell01": 40,
+    "cell02": 40,
+    "cell03": 40,
+    "cell04": 40,
+    "cell05": 40,
+    "cell06": 40,
+    "cell07": 40,
+    "cell08": 40,
+    "cell09": 40,
+    "cell10": 40,
+    "cell11": 40,
+    "cell12": 40,
+    "cell13": 40,
+    "cell14": 40,
+    "cell15": 40,
+    "cell16": 40,
+    "cell17": 40,
+    "cell18": 40,
+    "cell19": 40,
+    "cell20": 40,
+    "cell21": 40,
+    "cell22": 40,
+    "cell23": 40,
+    "cell24": 40,
+    "cell25": 40,
+    "cell26": 40,
+    "cell27": 40,
+    "cell28": 40,
+    "cell29": 40,
+    "cell30": 40,
+    "cell31": 40,
+    "cell32": 40,
+    "cell33": 40,
+    "cell34": 40,
+    "cell35": 40,
+    "cell36": 40,
+    "cell37": 40,
+    "cell38": 40,
+    "cell39": 40,
+    "cell40": 40
+  },
+  "rejection_counts": {
+    "metadata_leak": 34,
+    "number_masked_collision": 304,
+    "schema_invalid": 20,
+    "surface_duplicate": 10010
+  },
+  "report_id": "0011-gams1600-text-admission",
+  "review": null,
+  "row_count": 1600,
+  "schema_version": "1.0",
+  "status": "DRAFT",
+  "validator_decision_reasons": [
+    "missing_linguistic_review"
+  ],
+  "validator_status": "DRAFT"
+}

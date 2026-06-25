@@ -1,0 +1,49 @@
+{
+  "policy_id": "scale200-transcript-preserving-v1",
+  "clean_voices": [
+    "piper-sl_SI-artur-medium",
+    "supertonic-M1",
+    "supertonic-M2",
+    "supertonic-M3",
+    "supertonic-M4",
+    "supertonic-F1",
+    "supertonic-F2",
+    "supertonic-F3",
+    "supertonic-F4"
+  ],
+  "augmentation_profiles": [
+    {"profile_id": "coupled_speed_pitch_resampling", "view_round": 10, "source_voice_rotation": true, "parameters": {"rates": [0.92, 0.96, 1.04, 1.08]}},
+    {"profile_id": "tempo_preserving_pitch", "view_round": 11, "source_voice_rotation": true, "parameters": {"minimum_factor": 0.9, "maximum_factor": 1.1}},
+    {"profile_id": "mild_pitch_formant_vtlp_proxy", "view_round": 12, "source_voice_rotation": true, "parameters": {"minimum_semitones": -2.0, "maximum_semitones": 2.0, "minimum_warp": 0.94, "maximum_warp": 1.06}},
+    {"profile_id": "procedural_room_impulse_response", "view_round": 13, "source_voice_rotation": true, "parameters": {"minimum_rt60_seconds": 0.15, "maximum_rt60_seconds": 0.6}},
+    {"profile_id": "environmental_background_noise", "view_round": 14, "source_voice_rotation": true, "parameters": {"minimum_snr_db": 12.0, "maximum_snr_db": 30.0}},
+    {"profile_id": "coloured_electrical_noise", "view_round": 15, "source_voice_rotation": true, "parameters": {"minimum_snr_db": 15.0, "maximum_snr_db": 35.0, "hum_hz": 50.0}},
+    {"profile_id": "microphone_channel_filtering", "view_round": 16, "source_voice_rotation": true, "parameters": {"filters": ["mild_low_pass", "mild_high_pass", "band_pass", "telephone_like", "broad_eq_tilt"]}},
+    {"profile_id": "codec_sample_rate_simulation", "view_round": 17, "source_voice_rotation": true, "parameters": {"codecs": ["g711_alaw", "g711_mulaw", "ogg_opus_moderate", "downsample_8k_return_16k", "downsample_12k_return_16k"]}},
+    {"profile_id": "gain_dynamic_range_variation", "view_round": 18, "source_voice_rotation": true, "parameters": {"minimum_gain_db": -8.0, "maximum_gain_db": 8.0, "peak_safety": 0.98}},
+    {"profile_id": "timing_silence_variation", "view_round": 19, "source_voice_rotation": true, "parameters": {"maximum_leading_silence_seconds": 0.35, "maximum_trailing_silence_seconds": 0.35, "maximum_time_shift_seconds": 0.1}},
+    {"profile_id": "compound_realistic_condition", "view_round": 20, "source_voice_rotation": true, "parameters": {"maximum_transforms": 3, "minimum_snr_db": 15.0, "maximum_snr_db": 25.0}}
+  ],
+  "spec_augment": {
+    "enabled": true,
+    "applies_to_augmented_exposures_fraction": 0.5,
+    "frequency_masks": 2,
+    "time_masks": 2,
+    "conservative_width": true,
+    "applies_to_fixed_loss_probes": false,
+    "applies_to_evaluation": false
+  },
+  "forbidden": [
+    "reversed_audio",
+    "random_word_crops",
+    "reordered_segments",
+    "overlapping_speech_mixup",
+    "expression_tags",
+    "custom_voice_cloning",
+    "pitch_shift_beyond_two_semitones",
+    "tempo_outside_0.90_1.10",
+    "severe_clipping",
+    "destructive_packet_loss",
+    "holdout_augmentation"
+  ]
+}
