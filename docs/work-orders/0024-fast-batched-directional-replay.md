@@ -1,6 +1,6 @@
 # Work Order 0024: Fast Batched Directional Replay
 
-Status: in progress
+Status: completed in PR; pending strategic review
 
 ## Scope
 
@@ -41,4 +41,10 @@ PR remains unmerged.
 
 ## Result
 
-Pending execution.
+- Batched Supertonic synthesis status: passed.
+- Batched replay audio validation: `AUDIO_ACCEPTED`.
+- Protected training code: unchanged.
+- Training protocol: unchanged Experiment 0011 joint-adapter protocol.
+- Directional evaluation policy: batch size 32 with duration bucketing.
+- Classification: `FAST_DIRECTIONAL_REPLAY_CONFIRMS_CONCLUSION`.
+- Accepted parent: `none`.

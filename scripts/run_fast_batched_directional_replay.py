@@ -14,21 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".external" / "NeMo"))
 
 from slaif_asr.batched_streaming import file_sha256
-from slaif_asr.corpus_v2_scoring import CHECKPOINT_SHA256, MODEL_REPOSITORY, MODEL_REVISION, NEMO_REVISION, verify_runtime_identities
-from slaif_asr.corpus_v2_training import git_head, read_json, repo_path, run_dir, runtime_summary, verify_all_input_identities
-from slaif_asr.directional_evaluation import (
-    classify_directional,
-    directional_models,
-    load_directional_suite,
-    metric_table_from_summaries,
-    privacy_safe_public_report,
-    run_directional_model,
-    suite_plan_hash,
-    verify_historical_reports,
-    verify_model_artifacts,
-    verify_protected_training_files,
-    write_privacy_safe_suite_manifest,
-)
+from slaif_asr.config import REPO_ROOT
 from slaif_asr.real_eval import NORMALIZER_VERSION, atomic_write_json
 from slaif_asr.supertonic3_tts import (
     load_supertonic_config,
@@ -45,6 +31,21 @@ DEFAULT_CONFIG = Path("configs/experiments/fast_batched_directional_replay_v1.js
 REPORT_JSON = Path("docs/experiments/0012-fast-batched-directional-replay.json")
 REPORT_MD = Path("docs/experiments/0012-fast-batched-directional-replay.md")
 ARM_NAME = "fast_batched_replay_supertonic3_joint_adapter_dim32"
+
+
+def repo_path(path_text: str | Path) -> Path:
+    path = Path(path_text)
+    if path.is_absolute():
+        return path
+    return REPO_ROOT / path
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def run_dir(config: dict[str, Any]) -> Path:
+    return repo_path(config["run_dir"])
 
 
 def load_config(path: Path) -> dict[str, Any]:
@@ -104,6 +105,9 @@ def load_supertonic_runner() -> Any:
 
 
 def replay_training_authorization(config: dict[str, Any], config_path: Path) -> dict[str, Any]:
+    from slaif_asr.corpus_v2_training import verify_all_input_identities
+    from slaif_asr.directional_evaluation import verify_historical_reports, verify_protected_training_files
+
     protected = verify_protected_training_files(config)
     reports = verify_historical_reports(config)
     verify_all_input_identities(config, check_gpu=False)
@@ -196,6 +200,8 @@ def stage_verify_training_code(config: dict[str, Any], config_path: Path) -> dic
 
 
 def stage_train_existing_protocol(config: dict[str, Any], config_path: Path, interval: float) -> dict[str, Any]:
+    from slaif_asr.corpus_v2_scoring import verify_runtime_identities
+
     require_nemotron_env()
     stage_verify_training_code(config, config_path)
     verify_runtime_identities(check_gpu=True)
@@ -221,6 +227,20 @@ def stage_verify_artifact(config: dict[str, Any], config_path: Path) -> dict[str
 
 
 def stage_evaluate_directional(config: dict[str, Any]) -> dict[str, Any]:
+    from slaif_asr.corpus_v2_scoring import verify_runtime_identities
+    from slaif_asr.directional_evaluation import (
+        classify_directional,
+        directional_models,
+        load_directional_suite,
+        metric_table_from_summaries,
+        run_directional_model,
+        suite_plan_hash,
+        verify_historical_reports,
+        verify_model_artifacts,
+        verify_protected_training_files,
+        write_privacy_safe_suite_manifest,
+    )
+
     require_nemotron_env()
     verify_runtime_identities(check_gpu=True)
     verify_protected_training_files(config)
@@ -265,6 +285,10 @@ def stage_evaluate_directional(config: dict[str, Any]) -> dict[str, Any]:
 
 
 def stage_summarize(config: dict[str, Any], config_path: Path) -> dict[str, Any]:
+    from slaif_asr.corpus_v2_scoring import CHECKPOINT_SHA256, MODEL_REPOSITORY, MODEL_REVISION, NEMO_REVISION
+    from slaif_asr.corpus_v2_training import git_head, runtime_summary
+    from slaif_asr.directional_evaluation import privacy_safe_public_report, verify_historical_reports, verify_protected_training_files
+
     protected = verify_protected_training_files(config)
     historical_reports = verify_historical_reports(config)
     tts_config = load_supertonic_config(repo_path(config["tts_config"]))
@@ -280,6 +304,30 @@ def stage_summarize(config: dict[str, Any], config_path: Path) -> dict[str, Any]
     }
     total = sum(stage_times.values())
     time_percentages = {key: round(value / total * 100.0, 6) if total else None for key, value in stage_times.items()}
+    def public_suite_summary(suite: dict[str, Any]) -> dict[str, Any]:
+        layout = suite["layout"]
+        return {
+            "rows": suite["rows"],
+            "prediction_count": suite["prediction_count"],
+            "audio_duration_seconds": suite["audio_duration_seconds"],
+            "wall_time_seconds": suite["wall_time_seconds"],
+            "real_time_factor": suite["real_time_factor"],
+            "rows_per_second": suite["rows_per_second"],
+            "audio_seconds_per_wall_second": suite["audio_seconds_per_wall_second"],
+            "gpu_monitor": suite["gpu_monitor"],
+            "layout": {
+                "batch_size": layout["batch_size"],
+                "bucketed": layout["bucketed"],
+                "batch_count": layout["batch_count"],
+                "full_batch_count": layout["full_batch_count"],
+                "final_partial_batch_size": layout["final_partial_batch_size"],
+                "actual_audio_seconds": layout["actual_audio_seconds"],
+                "padded_audio_seconds": layout["padded_audio_seconds"],
+                "padding_ratio": layout["padding_ratio"],
+                "max_padded_batch_duration": layout["max_padded_batch_duration"],
+            },
+        }
+
     public = {
         "schema_version": "1.0",
         "experiment_id": "fast-batched-directional-replay-v1",
@@ -363,7 +411,7 @@ def stage_summarize(config: dict[str, Any], config_path: Path) -> dict[str, Any]
             "model_summaries": {
                 model_id: {
                     "checkpoint_sha256": model["checkpoint_sha256"],
-                    "suite": model["suite"],
+                    "suite": public_suite_summary(model["suite"]),
                 }
                 for model_id, model in evaluation["models"].items()
             },
