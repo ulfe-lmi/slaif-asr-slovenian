@@ -1,0 +1,264 @@
+{
+  "audio_format": {
+    "channels": 1,
+    "encoding": "signed-16-bit-pcm-wav",
+    "final_sample_rate": 16000,
+    "native_sample_rate": 44100,
+    "sample_width_bytes": 2
+  },
+  "certificate_id": "sl-corpus-v2-supertonic3-multivoice-audio-v1",
+  "counts": {
+    "audio_manifest_rows": 1472,
+    "final_holdout_files": 192,
+    "final_training_files": 1280,
+    "holdout_texts": 96,
+    "native_holdout_files": 192,
+    "native_training_files": 1280,
+    "selected_texts": 160
+  },
+  "decision_date": "2026-06-25",
+  "hashes": {
+    "audio_manifest_sha256": "536d3337eb6ba3f7c9f6c3d082530f119cae56c906905d80ee40d2a65956f95e",
+    "exposure_schedule_sha256": "198eff80a10fe7556e52bb44bb454805f6735474f4185ef0802742564c197656",
+    "holdout_audio_manifest_sha256": "51d08b6b2094027471f430185b4808ccb3f18fb70675cc3988fb13fde6da067f",
+    "native_manifest_sha256": "35803bd5dfbb42d4e7c783e37834481f7415984f219c6963cab3ba992305e931",
+    "training_audio_manifest_sha256": "d302a564cd68230a2cc45e618289f2b064efe15b103b2ab139a4a24c01d0f9e3",
+    "training_probe_manifest_sha256": "6ce7479bbc612b223dced7321e4bd4cb543022b36d1af423bace6529813a4623",
+    "tts_config_sha256": "1b25ae787696b4c662abbe686e7b5de2ec8c6adce3e91a52dc7fe25364ce6422"
+  },
+  "limitations": [
+    "All audio is synthetic.",
+    "Preset labels are Supertonic voice styles, not verified speakers or demographic evidence.",
+    "Waveform checks do not prove transcript correctness or natural prosody.",
+    "This is AUDIO_ACCEPTED only and never TRAINING_ELIGIBLE."
+  ],
+  "schema_version": "1.0",
+  "status": "AUDIO_ACCEPTED",
+  "synthesis": {
+    "aggregate_synthesis_wall_seconds": 1434.378539,
+    "cpu": {
+      "model": "AMD EPYC 7513 32-Core Processor",
+      "platform": "Linux-5.15.0-151-generic-x86_64-with-glibc2.35",
+      "python": "3.12.13"
+    },
+    "execution_device": "cuda",
+    "generated_audio_seconds_per_wall_second": 3.722128,
+    "human_override": "2026-06-25 Supertonic synthesis GPU override",
+    "peak_process_memory_kib": 125460,
+    "required_provider": "CUDAExecutionProvider",
+    "rows_per_minute": 61.573704,
+    "runtime_packages": {
+      "audioop-lts": "0.2.2",
+      "huggingface-hub": "1.21.0",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.23.2",
+      "onnxruntime-gpu": "1.23.2",
+      "soundfile": "0.14.0",
+      "supertonic": "1.3.1"
+    },
+    "thread_settings": {
+      "SUPERTONIC_INTER_OP_THREADS": null,
+      "SUPERTONIC_INTRA_OP_THREADS": null
+    },
+    "wheel_record_hashes": {
+      "audioop-lts": "0c9d4aa6bc0dddb443d6e0469a35e05d19fd499a7ba737809767f9a5189d2e2e",
+      "huggingface-hub": "08bedf5d95518a84d4d0b4a03d439a3264ed18ae04bdb7a36dfc2633aee2b04c",
+      "numpy": "cce0ed345a9c7773b7a93340d8f7680baf6ab72a84296d9d29f2ded62bf2ec1a",
+      "onnxruntime": "e441bc69acbee8b47e5bfe2a0534e6ba27b2faf5af4fe3f0287e69f9bdd40aa8",
+      "onnxruntime-gpu": "91ab5ac83fd01143b5f2dbe541e5192ad5f8a512fad67ba7ee3f2faabcb98e8e",
+      "soundfile": "9af6ca20e1f43ef52b6d4889ff6eb5512d4f79cb6fe55274e30927e1af2fbdad",
+      "supertonic": "d2fae5e04ce497328abe0e2b755498b5c995d12fae2203b47a4cb406cda57c4b"
+    }
+  },
+  "tts": {
+    "asset_tree_sha256": "c2ef7787750f10636ba30fbe426411802c09fdc0764e2935cca51be42d906136",
+    "model_license": "BigScience OpenRAIL-M",
+    "model_repository": "Supertone/supertonic-3",
+    "model_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "package": "supertonic",
+    "package_license": "MIT",
+    "package_version": "1.3.1"
+  },
+  "validation": {
+    "duplicate_hashes": 0,
+    "duplicate_paths": 0,
+    "duration_distribution": {
+      "count": 1472,
+      "maximum": 9.752375,
+      "mean": 3.627006,
+      "median": 3.065062,
+      "minimum": 1.462875,
+      "p95": 6.617687
+    },
+    "failures_by_reason": {}
+  },
+  "voice_styles": {
+    "available": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5"
+    ],
+    "counts": {
+      "selected_training": {
+        "F1": 160,
+        "F2": 160,
+        "F3": 160,
+        "F4": 160,
+        "M1": 160,
+        "M2": 160,
+        "M3": 160,
+        "M4": 160
+      },
+      "synthetic_holdout": {
+        "F5": 96,
+        "M5": 96
+      }
+    },
+    "duration_by_style": {
+      "F1": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 9.404063,
+          "mean": 3.789942,
+          "median": 3.204375,
+          "minimum": 1.671875,
+          "p95": 6.757
+        }
+      },
+      "F2": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 8.846813,
+          "mean": 3.619709,
+          "median": 3.030219,
+          "minimum": 1.671875,
+          "p95": 6.408688
+        }
+      },
+      "F3": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 9.613062,
+          "mean": 3.902269,
+          "median": 3.274,
+          "minimum": 1.7415,
+          "p95": 6.966
+        }
+      },
+      "F4": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 8.080562,
+          "mean": 3.415953,
+          "median": 2.92575,
+          "minimum": 1.602188,
+          "p95": 5.921125
+        }
+      },
+      "F5": {
+        "count": 96,
+        "duration_seconds": {
+          "count": 96,
+          "maximum": 9.47375,
+          "mean": 3.437287,
+          "median": 2.960562,
+          "minimum": 1.462875,
+          "p95": 6.548063
+        }
+      },
+      "M1": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 9.404063,
+          "mean": 3.790377,
+          "median": 3.204375,
+          "minimum": 1.671875,
+          "p95": 6.757
+        }
+      },
+      "M2": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 9.195125,
+          "mean": 3.720715,
+          "median": 3.134688,
+          "minimum": 1.671875,
+          "p95": 6.617687
+        }
+      },
+      "M3": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 7.801938,
+          "mean": 3.34368,
+          "median": 2.856063,
+          "minimum": 1.5325,
+          "p95": 5.78175
+        }
+      },
+      "M4": {
+        "count": 160,
+        "duration_seconds": {
+          "count": 160,
+          "maximum": 8.846813,
+          "mean": 3.60752,
+          "median": 3.030219,
+          "minimum": 1.671875,
+          "p95": 6.339062
+        }
+      },
+      "M5": {
+        "count": 96,
+        "duration_seconds": {
+          "count": 96,
+          "maximum": 9.752375,
+          "mean": 3.526538,
+          "median": 3.065062,
+          "minimum": 1.462875,
+          "p95": 6.757
+        }
+      }
+    },
+    "held_out": [
+      "M5",
+      "F5"
+    ],
+    "labels_are_presets_only": true,
+    "training": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "F1",
+      "F2",
+      "F3",
+      "F4"
+    ],
+    "voice_style_hashes": {
+      "F1": "bbdec6ee00231c2c742ad05483df5334cab3b52fda3ba38e6a07059c4563dbc2",
+      "F2": "7c722c6a72707b1a77f035d67f0d1351ba187738e06f7683e8c72b1df3477fc6",
+      "F3": "12f6ef2573baa2defa1128069cb59f203e3ab67c92af77b42df8a0e3a2f7c6ab",
+      "F4": "c2fa764c1225a76dfc3e2c73e8aa4f70d9ee48793860eb34c295fff01c2e032b",
+      "F5": "45966e73316415626cf41a7d1c6f3b4c70dbc1ba2bee5c1978ef0ce33244fc8d",
+      "M1": "e35604687f5d23694b8e91593a93eec0e4eca6c0b02bb8ed69139ab2ea6b0a5b",
+      "M2": "b76cbf62bac707c710cf0ae5aba5e31eea1a6339a9734bfae33ab98499534a50",
+      "M3": "ea1ac35ccb91b0d7ecad533a2fbd0eec10c91513d8951e3b25fbba99954e159b",
+      "M4": "ca8eefad4fcd989c9379032ff3e50738adc547eeb5e221b82593a6d7b3bac303",
+      "M5": "dd22b92740314321f8ae11c5e87f8dd60d060f15dd3a632b5adf77f471f77af2"
+    }
+  }
+}

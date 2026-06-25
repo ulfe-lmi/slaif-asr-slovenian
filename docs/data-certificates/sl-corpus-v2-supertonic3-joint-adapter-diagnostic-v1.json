@@ -1,0 +1,185 @@
+{
+  "adapter": {
+    "activation": "swish",
+    "bottleneck_dimension": 32,
+    "dropout": 0.0,
+    "input_dimension": "derive_at_runtime_from_model.joint.joint_hidden",
+    "name": "sl-si-joint-adapter-v1",
+    "normalization_position": "pre",
+    "strategy": "ResidualAddAdapterStrategy",
+    "target_module": "model.joint",
+    "trainable_parameter_formula": "2 * joint_hidden * 32 + 2 * joint_hidden",
+    "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter"
+  },
+  "adapter_config_sha256": "2c970413e7668e79f8e9fd61c2af213ae1095b988c76ec61d02c5be15c605eb7",
+  "authorized_actions": [
+    "internally train one frozen-base joint-adapter arm",
+    "evaluate it on the declared synthetic and real diagnostics",
+    "write privacy-safe aggregate evidence"
+  ],
+  "certificate_id": "sl-corpus-v2-supertonic3-joint-adapter-diagnostic-v1",
+  "decision_date": "2026-06-25",
+  "experiment_config_sha256": "547b5659d4c3ab0062fd6f992681470bb2aa3927482bb168d278c94c484d2f72",
+  "fixed_training_protocol": {
+    "arm": "supertonic3_multivoice_joint_adapter_dim32",
+    "batch_size": 8,
+    "dropout_in_trainable_surface": false,
+    "epochs": 12,
+    "gradient_accumulation": "none",
+    "gradient_clipping": "none",
+    "learning_rate": 0.001,
+    "optimizer": "AdamW",
+    "optimizer_steps": 240,
+    "precision": "fp32",
+    "probe_rows": 32,
+    "rows_per_epoch": 160,
+    "sample_exposures": 1920,
+    "scheduler": "none",
+    "seed": 1234,
+    "spec_augment": false,
+    "tf32": false,
+    "waveform_augmentation": false,
+    "weight_decay": 0.0
+  },
+  "human_approved_exception_statement": "This certificate authorizes only the named Work Order 0023 diagnostic. It permits internal training of one frozen-base RNNT joint adapter on Supertonic 3 synthetic audio, does not issue TRAINING_ELIGIBLE, and cannot be reused by another experiment.",
+  "license_assessment_sha256": "c63891886e8c668b28729b5b8583ab6e8a6f96056e6aa3707308ad353c6184a8",
+  "model": {
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "named_exception": "corpus-v2 Supertonic 3 multi-voice frozen-base joint-adapter diagnostic",
+  "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+  "permitted_evaluation_sets": [
+    "supertonic_training_voice_probe",
+    "piper_selected_training",
+    "piper_synthetic_holdout",
+    "supertonic_heldout_voice_holdout",
+    "fleurs_v2",
+    "artur_j"
+  ],
+  "prohibited_actions": [
+    "publishing or distributing generated Supertonic audio",
+    "publishing or distributing the trained ASR adapter/checkpoint",
+    "accepting the adapter as a parent",
+    "using custom cloned voices",
+    "using expression tags",
+    "using M5/F5 for training",
+    "changing text membership",
+    "changing model surface or hyperparameters",
+    "issuing TRAINING_ELIGIBLE",
+    "making commercial or release-quality claims",
+    "reusing this certificate for another experiment"
+  ],
+  "schema_version": "1.0",
+  "scientific_limitations": [
+    "Data status is DIAGNOSTIC_ONLY, not TRAINING_ELIGIBLE.",
+    "All training audio is synthetic Supertonic 3 preset voice-style output.",
+    "Preset voice styles are not verified real speakers or demographic evidence.",
+    "Generated audio and trained artifacts are not authorized for publication or distribution.",
+    "Synthetic diagnostics are not real-speech generalization evidence.",
+    "No checkpoint or adapter from this experiment may become an accepted parent."
+  ],
+  "selected_training_certificate": {
+    "sha256": "a561ee4c76ddbc5baacca1d5f10aa3beb1749dded7f2f6a1b8fd0e893ab79602",
+    "status": "SELECTED_TRAINING_MANIFEST_READY"
+  },
+  "source_partition_exclusion_evidence": {
+    "audio_hash_overlap": 0,
+    "id_overlap": 0,
+    "template_family_overlap": 0,
+    "text_hash_overlap": 0,
+    "utterance_family_overlap": 0
+  },
+  "source_partitions": {
+    "control_rows": 40,
+    "hard_rows": 120,
+    "holdout_audio_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "holdout_partition_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "holdout_rows": 96,
+    "selected_rows": 160,
+    "selected_training_audio_manifest_sha256": "4fe8ab008dd9725c65da510ed801a46299e1c03db0c00cb3fbf5dea40ff0be7b",
+    "selected_training_manifest_sha256": "84e10587af184be92571ab84e3bd58cd676866e2bd944534c759f0fc9a07fa13"
+  },
+  "status": "DIAGNOSTIC_ONLY",
+  "supertonic": {
+    "asset_tree_sha256": "c2ef7787750f10636ba30fbe426411802c09fdc0764e2935cca51be42d906136",
+    "available_voice_styles": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5"
+    ],
+    "held_out_voice_styles": [
+      "M5",
+      "F5"
+    ],
+    "model_license": "BigScience OpenRAIL-M",
+    "model_repository": "Supertone/supertonic-3",
+    "model_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "package": "supertonic",
+    "package_license": "MIT",
+    "package_version": "1.3.1",
+    "runtime_packages": {
+      "audioop-lts": "0.2.2",
+      "huggingface-hub": "1.21.0",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.23.2",
+      "onnxruntime-gpu": "1.23.2",
+      "soundfile": "0.14.0",
+      "supertonic": "1.3.1"
+    },
+    "training_voice_styles": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "F1",
+      "F2",
+      "F3",
+      "F4"
+    ],
+    "voice_style_hashes": {
+      "F1": "bbdec6ee00231c2c742ad05483df5334cab3b52fda3ba38e6a07059c4563dbc2",
+      "F2": "7c722c6a72707b1a77f035d67f0d1351ba187738e06f7683e8c72b1df3477fc6",
+      "F3": "12f6ef2573baa2defa1128069cb59f203e3ab67c92af77b42df8a0e3a2f7c6ab",
+      "F4": "c2fa764c1225a76dfc3e2c73e8aa4f70d9ee48793860eb34c295fff01c2e032b",
+      "F5": "45966e73316415626cf41a7d1c6f3b4c70dbc1ba2bee5c1978ef0ce33244fc8d",
+      "M1": "e35604687f5d23694b8e91593a93eec0e4eca6c0b02bb8ed69139ab2ea6b0a5b",
+      "M2": "b76cbf62bac707c710cf0ae5aba5e31eea1a6339a9734bfae33ab98499534a50",
+      "M3": "ea1ac35ccb91b0d7ecad533a2fbd0eec10c91513d8951e3b25fbba99954e159b",
+      "M4": "ca8eefad4fcd989c9379032ff3e50738adc547eeb5e221b82593a6d7b3bac303",
+      "M5": "dd22b92740314321f8ae11c5e87f8dd60d060f15dd3a632b5adf77f471f77af2"
+    },
+    "wheel_record_hashes": {
+      "audioop-lts": "0c9d4aa6bc0dddb443d6e0469a35e05d19fd499a7ba737809767f9a5189d2e2e",
+      "huggingface-hub": "08bedf5d95518a84d4d0b4a03d439a3264ed18ae04bdb7a36dfc2633aee2b04c",
+      "numpy": "cce0ed345a9c7773b7a93340d8f7680baf6ab72a84296d9d29f2ded62bf2ec1a",
+      "onnxruntime": "e441bc69acbee8b47e5bfe2a0534e6ba27b2faf5af4fe3f0287e69f9bdd40aa8",
+      "onnxruntime-gpu": "91ab5ac83fd01143b5f2dbe541e5192ad5f8a512fad67ba7ee3f2faabcb98e8e",
+      "soundfile": "9af6ca20e1f43ef52b6d4889ff6eb5512d4f79cb6fe55274e30927e1af2fbdad",
+      "supertonic": "d2fae5e04ce497328abe0e2b755498b5c995d12fae2203b47a4cb406cda57c4b"
+    }
+  },
+  "supertonic_audio": {
+    "audio_certificate_sha256": "6f0171cfd248f2bb1fce24f7faacf1cf33fd16b88d81c486ff4a2b784abd21e3",
+    "combined_audio_manifest_sha256": "536d3337eb6ba3f7c9f6c3d082530f119cae56c906905d80ee40d2a65956f95e",
+    "exposure_schedule_sha256": "198eff80a10fe7556e52bb44bb454805f6735474f4185ef0802742564c197656",
+    "holdout_audio_manifest_sha256": "51d08b6b2094027471f430185b4808ccb3f18fb70675cc3988fb13fde6da067f",
+    "holdout_final_files": 192,
+    "status": "AUDIO_ACCEPTED",
+    "training_audio_manifest_sha256": "d302a564cd68230a2cc45e618289f2b064efe15b103b2ab139a4a24c01d0f9e3",
+    "training_final_files": 1280,
+    "training_probe_manifest_sha256": "6ce7479bbc612b223dced7321e4bd4cb543022b36d1af423bace6529813a4623"
+  },
+  "tts_config_sha256": "1b25ae787696b4c662abbe686e7b5de2ec8c6adce3e91a52dc7fe25364ce6422",
+  "work_order_id": "0023"
+}
