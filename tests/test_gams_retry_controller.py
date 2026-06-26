@@ -60,6 +60,23 @@ class GamsRetryControllerTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "budget exhausted"):
             plan_refill_tasks({"cell01": 360}, verification_round=1, state=state, limits=limits)
 
+    def test_unbounded_limits_do_not_stop_refills(self) -> None:
+        limits = RetryLimits(
+            max_verification_rounds=None,
+            max_attempts_per_cell=None,
+            max_attempts_per_shard=None,
+            max_total_attempts=None,
+            max_requested_rows=None,
+        )
+        state = RetryState()
+        for index in range(60):
+            task = initial_tasks(["cell01"])[0]
+            task = type(task)("cell01", "shard01", index, 0, 60, index, "fixture")
+            state.record(AttemptRecord(task=task, status="completed"))
+        self.assertEqual(exhausted_budgets(state, limits), [])
+        tasks = plan_refill_tasks({"cell01": 360}, verification_round=99, state=state, limits=limits)
+        self.assertEqual(len(tasks), 5)
+
     def test_guidance_rejects_raw_identifiers_and_protected_names(self) -> None:
         self.assertEqual(validate_diversity_guidance(["vary clause structure"]), ("vary clause structure",))
         with self.assertRaisesRegex(ValueError, "retry guidance"):
@@ -70,4 +87,3 @@ class GamsRetryControllerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

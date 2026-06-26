@@ -4,19 +4,37 @@ import json
 import subprocess
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Sequence
 
 from slaif_asr.config import REPO_ROOT
-from slaif_asr.data_quality import atomic_write_jsonl, load_json, load_jsonl, sha256_file
+from slaif_asr.data_quality import (
+    atomic_write_json,
+    atomic_write_jsonl,
+    atomic_write_text,
+    canonical_json_sha256,
+    entity_masked_form,
+    load_json,
+    load_jsonl,
+    sha256_file,
+)
 from slaif_asr.gams_retry_controller import AttemptTask, RetryLimits
 from slaif_asr.scale200_corpus import (
+    ALLOWED_WHOLE_FILE_OUTCOMES,
     TRAINING_VIEWS,
+    _selection_features,
+    _selection_similarity_graph,
+    _selection_tokens,
     build_prompt,
+    family_summary,
+    fingerprint_counts,
+    fixed_counts_by_cell,
     generation_seed,
     load_augmentation_config,
     load_generation_config,
     prompt_cell_by_id,
+    read_rejections,
     stable_sha256,
 )
 
@@ -28,6 +46,12 @@ ANCHOR_CORPUS_ID = "sl-corpus-v3-gams-1600-training-v1"
 ANCHOR_TEXT_SHA256 = "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf"
 EXPERIMENT_0013_SHA256 = "5128a7d63cb15bb243ad7e54e853de42178e88897c3e9d8d17dcf3d33346f1e1"
 SCALE200_BURDEN = 2.868
+
+
+class SelectionShortfall(RuntimeError):
+    def __init__(self, shortfalls: dict[str, int]):
+        super().__init__(f"selection constraints shortfall: {shortfalls}")
+        self.shortfalls = shortfalls
 
 
 @dataclass(frozen=True)
@@ -116,17 +140,25 @@ def validate_scale2000_generation_config(config: dict[str, Any]) -> None:
     if generation.get("prompt_batch_size") != 8 or generation.get("oom_fallback_batch_size") != 4:
         raise ValueError("prompt batch policy must be 8 with OOM fallback to 4")
     retry = config.get("retry_policy", {})
-    expected = {
-        "max_verification_rounds": 8,
-        "max_attempts_per_shard": 12,
-        "max_attempts_per_cell": 48,
-        "max_total_attempts": 1440,
-        "max_requested_rows": 86400,
-        "max_refill_attempts_per_deficient_cell_per_round": 5,
-    }
-    for key, value in expected.items():
-        if int(retry.get(key, -1)) != value:
-            raise ValueError(f"retry_policy.{key} must be {value}")
+    if retry.get("retry_until_valid") is True:
+        for key in ("max_verification_rounds", "max_attempts_per_shard", "max_attempts_per_cell", "max_total_attempts", "max_requested_rows"):
+            if retry.get(key) is not None:
+                raise ValueError(f"retry_policy.{key} must be null when retry_until_valid is true")
+        if not str(retry.get("human_override", "")).strip():
+            raise ValueError("retry_until_valid requires a human_override note")
+    else:
+        expected = {
+            "max_verification_rounds": 8,
+            "max_attempts_per_shard": 12,
+            "max_attempts_per_cell": 48,
+            "max_total_attempts": 1440,
+            "max_requested_rows": 86400,
+        }
+        for key, value in expected.items():
+            if int(retry.get(key, -1)) != value:
+                raise ValueError(f"retry_policy.{key} must be {value}")
+    if int(retry.get("max_refill_attempts_per_deficient_cell_per_round", -1)) != 5:
+        raise ValueError("retry_policy.max_refill_attempts_per_deficient_cell_per_round must be 5")
     anchor = config.get("inherited_corpus", {})
     if anchor.get("corpus_id") != ANCHOR_CORPUS_ID or anchor.get("sha256") != ANCHOR_TEXT_SHA256:
         raise ValueError("inherited corpus identity mismatch")
@@ -184,12 +216,16 @@ def validate_scale2000_experiment_config(config: dict[str, Any]) -> None:
 
 def retry_limits_from_config(config: dict[str, Any]) -> RetryLimits:
     retry = config["retry_policy"]
+    def optional_int(key: str) -> int | None:
+        value = retry.get(key)
+        return None if value is None else int(value)
+
     return RetryLimits(
-        max_verification_rounds=int(retry["max_verification_rounds"]),
-        max_attempts_per_shard=int(retry["max_attempts_per_shard"]),
-        max_attempts_per_cell=int(retry["max_attempts_per_cell"]),
-        max_total_attempts=int(retry["max_total_attempts"]),
-        max_requested_rows=int(retry["max_requested_rows"]),
+        max_verification_rounds=optional_int("max_verification_rounds"),
+        max_attempts_per_shard=optional_int("max_attempts_per_shard"),
+        max_attempts_per_cell=optional_int("max_attempts_per_cell"),
+        max_total_attempts=optional_int("max_total_attempts"),
+        max_requested_rows=optional_int("max_requested_rows"),
         requested_rows_per_attempt=int(config["requested_rows_per_shard"]),
         max_refill_attempts_per_cell_per_round=int(retry["max_refill_attempts_per_deficient_cell_per_round"]),
     )
@@ -224,12 +260,44 @@ def new_addition_path(config: dict[str, Any]) -> Path:
     return run_dir(config) / "new-addition.local.jsonl"
 
 
+def rejected_path(config: dict[str, Any]) -> Path:
+    return run_dir(config) / "rejected.local.jsonl"
+
+
 def generation_state_path(config: dict[str, Any]) -> Path:
     return run_dir(config) / "generation-state.local.json"
 
 
 def retry_history_path(config: dict[str, Any]) -> Path:
     return run_dir(config) / "retry-history.local.jsonl"
+
+
+def text_decisions_path(config: dict[str, Any]) -> Path:
+    return run_dir(config) / "text-review-decisions.local.jsonl"
+
+
+def accepted_review_path(config: dict[str, Any]) -> Path:
+    return run_dir(config) / "accepted-training-review.local.jsonl"
+
+
+def validation_report_path(config: dict[str, Any]) -> Path:
+    return run_dir(config) / "text-validation.local.json"
+
+
+def validator_review_output_path(config: dict[str, Any]) -> Path:
+    return run_dir(config) / "text-validation-review.local.jsonl"
+
+
+def text_certificate_path(config: dict[str, Any]) -> Path:
+    return repo_path(config["public_certificates"]["text"])
+
+
+def text_report_json_path(config: dict[str, Any]) -> Path:
+    return repo_path(config["public_reports"]["text_json"])
+
+
+def text_report_markdown_path(config: dict[str, Any]) -> Path:
+    return repo_path(config["public_reports"]["text_markdown"])
 
 
 def verify_inherited_rows(config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -310,7 +378,12 @@ def build_task_prompt(config: dict[str, Any], task: AttemptTask) -> str:
     return prompt
 
 
-def select_new_rows(new_rows: Sequence[dict[str, Any]], *, config: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def select_new_rows(
+    new_rows: Sequence[dict[str, Any]],
+    *,
+    inherited_rows: Sequence[dict[str, Any]],
+    config: dict[str, Any],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     rows_by_cell: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in new_rows:
         rows_by_cell[str(row.get("generation", {}).get("prompt_cell", "unknown"))].append(row)
@@ -328,15 +401,118 @@ def select_new_rows(new_rows: Sequence[dict[str, Any]], *, config: dict[str, Any
         raise RuntimeError(f"new-row selection shortfall: {shortfalls}")
     if surplus_shortfalls:
         raise RuntimeError(f"new-row surplus shortfall: {surplus_shortfalls}")
+
+    data_config = load_json(REPO_ROOT / "configs/data_quality/training_text_v1.json")
+    similarity = data_config["similarity"]
+    token_threshold = float(similarity["token_jaccard_review_threshold"])
+    char_threshold = float(similarity["character_jaccard_review_threshold"])
+    feature_limit = max(0, int(config["final_rows"] * float(data_config["carrier_detection"]["max_fraction"])) - 1)
+    all_pool = [*inherited_rows, *new_rows]
+    row_features = _selection_features(all_pool)
+
+    def row_feature_counter(row: dict[str, Any]) -> Counter[str]:
+        entities = row.get("entities", ())
+        entities = entities if isinstance(entities, list) else ()
+        tokens = entity_masked_form(str(row["target_text"]), entities).split()
+        counts: Counter[str] = Counter()
+        for width in range(2, 7):
+            if len(tokens) < width:
+                continue
+            counts[f"p{width}:{' '.join(tokens[:width])}"] += 1
+            counts[f"s{width}:{' '.join(tokens[-width:])}"] += 1
+            for index in range(len(tokens) - width + 1):
+                counts[f"i{width}:{' '.join(tokens[index:index + width])}"] += 1
+            if len(tokens) >= width * 2:
+                counts[f"f{width}:{' '.join(tokens[:width])}||{' '.join(tokens[-width:])}"] += 1
+        return counts
+
+    row_feature_counters = {str(row["candidate_id"]): row_feature_counter(row) for row in all_pool}
+    feature_counts = Counter()
+    for counts in row_feature_counters.values():
+        feature_counts.update(counts)
+    risky_pairs = _selection_similarity_graph(
+        all_pool,
+        token_threshold=token_threshold,
+        char_threshold=char_threshold,
+    )
+    risky_by_id: dict[str, set[str]] = defaultdict(set)
+    for left, right in risky_pairs:
+        risky_by_id[left].add(right)
+        risky_by_id[right].add(left)
+
+    inherited_ids = {str(row["candidate_id"]) for row in inherited_rows}
+    selected_ids: set[str] = set(inherited_ids)
+    selected_feature_counts: Counter[str] = Counter()
+    for row in inherited_rows:
+        selected_feature_counts.update(row_feature_counters[str(row["candidate_id"])])
+    rows_by_id = {str(row["candidate_id"]): row for row in all_pool}
+    row_token_lengths = {cid: len(_selection_tokens(str(row["target_text"]))) for cid, row in rows_by_id.items()}
+
+    def allowed(row: dict[str, Any]) -> bool:
+        cid = str(row["candidate_id"])
+        if risky_by_id[cid] & selected_ids:
+            return False
+        return not any(
+            selected_feature_counts[feature] + count > feature_limit
+            for feature, count in row_feature_counters[cid].items()
+        )
+
+    def row_score(row: dict[str, Any]) -> tuple[int, int, int, str]:
+        cid = str(row["candidate_id"])
+        features = row_feature_counters[cid]
+        global_density = sum(feature_counts[feature] for feature in features)
+        selected_density = sum(selected_feature_counts[feature] for feature in features)
+        return (
+            selected_density,
+            global_density,
+            -row_token_lengths[cid],
+            stable_sha256(cid),
+        )
+
     selected: list[dict[str, Any]] = []
-    for cell_id in sorted(prompt_cell_by_id(config)):
-        cell_rows = sorted(rows_by_cell[cell_id], key=lambda row: stable_sha256(str(row["candidate_id"])))
-        selected.extend(cell_rows[:needed])
+    selected_by_cell: dict[str, list[dict[str, Any]]] = {}
+    constraint_shortfalls: dict[str, int] = {}
+
+    def cell_pressure(cell_id: str) -> tuple[int, int, int, str]:
+        rows = rows_by_cell.get(cell_id, [])
+        row_feature_sets = [set(row_feature_counters[str(row["candidate_id"])]) for row in rows]
+        cell_feature_counts = Counter()
+        for row in rows:
+            cell_feature_counts.update(row_feature_counters[str(row["candidate_id"])])
+        extra_rows = max(0, len(rows) - needed)
+        forced = 0
+        for count in cell_feature_counts.values():
+            forced += max(0, count - extra_rows)
+        risky_edges = sum(len(risky_by_id[str(row["candidate_id"])]) for row in rows)
+        return (-forced, -risky_edges, len(rows), cell_id)
+
+    for cell_id in sorted(prompt_cell_by_id(config), key=cell_pressure):
+        available = sorted(rows_by_cell[cell_id], key=lambda row: stable_sha256(str(row["candidate_id"])))
+        chosen: list[dict[str, Any]] = []
+        while len(chosen) < needed:
+            viable = [row for row in available if allowed(row)]
+            if not viable:
+                constraint_shortfalls[cell_id] = needed - len(chosen)
+                break
+            best = min(viable, key=row_score)
+            available.remove(best)
+            chosen.append(best)
+            cid = str(best["candidate_id"])
+            selected_ids.add(cid)
+            selected_feature_counts.update(row_feature_counters[cid])
+        selected_by_cell[cell_id] = chosen
+        selected.extend(chosen)
+    if constraint_shortfalls:
+        raise SelectionShortfall(constraint_shortfalls)
     summary = {
         "selected_new_rows": len(selected),
         "new_rows_per_cell": {cell_id: needed for cell_id in sorted(prompt_cell_by_id(config))},
         "admissible_new_per_cell": {cell_id: len(rows_by_cell.get(cell_id, [])) for cell_id in sorted(prompt_cell_by_id(config))},
-        "selector": "sha256-candidate-id-ascending-v1",
+        "selector": "validator-aware-sha256-tiebreaker-v1",
+        "risky_pairs_in_pool": len(risky_pairs),
+        "risky_pairs_selected": sum(1 for left, right in risky_pairs if left in selected_ids and right in selected_ids),
+        "feature_limit": feature_limit,
+        "max_selected_feature_count": max(selected_feature_counts.values(), default=0),
     }
     return selected, summary
 
@@ -345,7 +521,7 @@ def build_combined_rows(inherited_rows: Sequence[dict[str, Any]], new_rows: Sequ
     inherited_counts = counts_by_cell(inherited_rows)
     if any(count != int(config["inherited_rows_per_cell"]) for count in inherited_counts.values()) or len(inherited_counts) != 40:
         raise RuntimeError("inherited rows must remain exactly 40 per cell")
-    selected_new, selection_summary = select_new_rows(new_rows, config=config)
+    selected_new, selection_summary = select_new_rows(new_rows, inherited_rows=inherited_rows, config=config)
     combined = [*inherited_rows, *selected_new]
     combined_counts = counts_by_cell(combined)
     expected = int(config["combined_rows_per_cell"])
@@ -381,6 +557,247 @@ def write_combined_rows(config: dict[str, Any], rows: Sequence[dict[str, Any]], 
         "new_addition_sha256": sha256_file(new_addition_path(config)),
         "combined_rows": len(rows),
         "new_rows": len(new_rows),
+    }
+
+
+def run_text_validator(config: dict[str, Any], *, review_path: Path | None, require_status: str) -> dict[str, Any]:
+    command = [
+        str(REPO_ROOT / ".venv/bin/python"),
+        str(REPO_ROOT / "scripts/validate_training_corpus.py"),
+        "--config",
+        str(REPO_ROOT / "configs/data_quality/training_text_v1.json"),
+        "--corpus-id",
+        f"{config['corpus_id']}-with-existing-holdout",
+        "--partition",
+        f"selected_training={fixed_combined_text_path(config)}",
+        "--partition",
+        f"synthetic_holdout={repo_path(config['existing_holdout']['text'])}",
+        "--protected-index",
+        str(REPO_ROOT / "runs/data-quality/protected/fleurs-v2.hash-index.json"),
+        "--protected-index",
+        str(REPO_ROOT / "runs/data-quality/protected/artur-j.hash-index.json"),
+        "--output-report",
+        str(validation_report_path(config)),
+        "--local-review-output",
+        str(validator_review_output_path(config)),
+        "--require-status",
+        require_status,
+    ]
+    if review_path is not None:
+        command.extend(["--linguistic-review", str(review_path)])
+    completed = subprocess.run(command, cwd=REPO_ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+    if not validation_report_path(config).exists():
+        raise RuntimeError(completed.stdout.strip() or "text validator did not write a report")
+    report = load_json(validation_report_path(config))
+    if completed.returncode != 0:
+        report["_command_output"] = completed.stdout.strip()
+    return report
+
+
+def build_text_certificate(
+    config: dict[str, Any],
+    *,
+    status: str,
+    outcome: str,
+    review_revision: str,
+    decision_id: str,
+    validator_report: dict[str, Any],
+) -> dict[str, Any]:
+    rows = load_jsonl(fixed_combined_text_path(config))
+    new_rows = load_jsonl(new_addition_path(config)) if new_addition_path(config).exists() else []
+    inherited_rows = [row for row in rows if not str(row.get("candidate_id", "")).startswith("gamsv4-")]
+    return {
+        "schema_version": "1.0",
+        "certificate_id": "sl-corpus-v4-gams-16000-text-v1",
+        "corpus_id": config["corpus_id"],
+        "new_addition_corpus_id": config["new_addition_corpus_id"],
+        "status": status,
+        "decision_date": date.today().isoformat(),
+        "work_order_id": "0026",
+        "partition_role": config["partition_role"],
+        "row_count": len(rows),
+        "inherited_row_count": len(inherited_rows),
+        "new_row_count": len(new_rows),
+        "fixed_text_sha256": sha256_file(fixed_combined_text_path(config)),
+        "new_addition_sha256": sha256_file(new_addition_path(config)) if new_addition_path(config).exists() else None,
+        "inherited_corpus": {
+            "corpus_id": config["inherited_corpus"]["corpus_id"],
+            "sha256": config["inherited_corpus"]["sha256"],
+            "rows": config["inherited_corpus"]["rows"],
+            "rows_per_cell": config["inherited_corpus"]["rows_per_cell"],
+        },
+        "whole_file_decision": {
+            "outcome": outcome,
+            "decision_id": decision_id,
+            "review_revision": review_revision,
+            "row_count": len(rows),
+            "corpus_sha256": sha256_file(fixed_combined_text_path(config)),
+        },
+        "generator": {
+            "repository": config["model"]["repository"],
+            "revision": config["model"]["revision"],
+            "prompt_revision": config["prompt_revision"],
+        },
+        "retry_evidence": load_json(run_dir(config) / "text-generation-summary.local.json").get("retry_budget", {})
+        if (run_dir(config) / "text-generation-summary.local.json").exists()
+        else {},
+        "config_sha256": canonical_json_sha256(config),
+        "fingerprint_unique_counts": fingerprint_counts(rows),
+        "family_summary": family_summary(rows),
+        "protected_gate_overlap_counts": validator_report.get("protected_overlap_counts", {}),
+        "cross_partition_overlap_counts": validator_report.get("cross_partition_overlap_counts", {}),
+        "linguistic_review": {
+            "mode": "whole_file",
+            "coverage": len(rows),
+            "accepted": len(rows) if outcome == "ACCEPT" else 0,
+            "rejected": 0 if outcome == "ACCEPT" else len(rows),
+        },
+        "validator": {
+            "status": validator_report.get("final_text_status"),
+            "algorithm_version": validator_report.get("validator_algorithm_version"),
+            "report_sha256": sha256_file(validation_report_path(config)) if validation_report_path(config).exists() else None,
+        },
+        "limitations": [
+            "Text admission does not prove acoustic suitability.",
+            "This corpus is DIAGNOSTIC_ONLY until later audio and experiment certificates are issued.",
+            "No TRAINING_ELIGIBLE decision is issued.",
+            "The 2000x figure is deterministic exposure scale, not independent linguistic information.",
+        ],
+    }
+
+
+def write_text_public_reports(config: dict[str, Any], certificate: dict[str, Any], *, validator_report: dict[str, Any]) -> dict[str, Any]:
+    rows = load_jsonl(fixed_combined_text_path(config)) if fixed_combined_text_path(config).exists() else []
+    summary_path = run_dir(config) / "text-generation-summary.local.json"
+    generation_summary = load_json(summary_path) if summary_path.exists() else {}
+    certificate_validator = certificate.get("validator", {}) if isinstance(certificate.get("validator"), dict) else {}
+    validator_status = certificate_validator.get("status") or validator_report.get("final_text_status") or validator_report.get("status")
+    payload = {
+        "schema_version": "1.0",
+        "report_id": "0013-gams16000-text-admission",
+        "corpus_id": config["corpus_id"],
+        "new_addition_corpus_id": config["new_addition_corpus_id"],
+        "status": certificate.get("status", "DRAFT"),
+        "row_count": len(rows),
+        "inherited_rows": int(config["inherited_corpus"]["rows"]),
+        "new_rows": int(config["new_rows"]),
+        "fixed_text_sha256": sha256_file(fixed_combined_text_path(config)) if fixed_combined_text_path(config).exists() else None,
+        "new_addition_sha256": sha256_file(new_addition_path(config)) if new_addition_path(config).exists() else None,
+        "generated_rows": generation_summary.get("generated_rows", 0),
+        "new_admissible_rows": generation_summary.get("new_admissible_rows", 0),
+        "rejection_counts": dict(sorted(Counter(str(row.get("reason", "unknown")) for row in read_rejections(rejected_path(config))).items()))
+        if rejected_path(config).exists()
+        else {},
+        "per_cell_counts": {
+            "inherited": generation_summary.get("selection", {}).get("per_cell_inherited", {}),
+            "new": generation_summary.get("selection", {}).get("per_cell_new", {}),
+            "combined": fixed_counts_by_cell(rows),
+        },
+        "retry_budget": generation_summary.get("retry_budget", {}),
+        "fingerprint_unique_counts": fingerprint_counts(rows) if rows else {},
+        "family_summary": family_summary(rows) if rows else {},
+        "validator_status": validator_status,
+        "validator_decision_reasons": [] if validator_status == "TEXT_ACCEPTED" else validator_report.get("decision_reasons", []),
+        "configuration_sha256": canonical_json_sha256(config),
+        "review": certificate.get("whole_file_decision"),
+        "limitations": certificate.get("limitations", []),
+    }
+    atomic_write_json(text_report_json_path(config), payload)
+    lines = [
+        "# GaMS 16000 Text Admission",
+        "",
+        f"- Corpus ID: `{payload['corpus_id']}`",
+        f"- Status: `{payload['status']}`",
+        f"- Fixed rows: `{payload['row_count']}`",
+        f"- Inherited rows: `{payload['inherited_rows']}`",
+        f"- New rows: `{payload['new_rows']}`",
+        f"- Fixed text SHA256: `{payload['fixed_text_sha256']}`",
+        f"- New-addition SHA256: `{payload['new_addition_sha256']}`",
+        f"- Validator status: `{payload['validator_status']}`",
+        f"- Generated rows: `{payload['generated_rows']}`",
+        f"- Retry attempts used: `{payload['retry_budget'].get('total_attempts_used')}` / `{payload['retry_budget'].get('total_attempts_max')}`",
+        f"- Requested rows used: `{payload['retry_budget'].get('requested_rows_used')}` / `{payload['retry_budget'].get('requested_rows_max')}`",
+        "",
+        "This report is aggregate-only and contains no generated sentences or candidate IDs.",
+        "",
+        "## Limitations",
+        "",
+        *[f"- {item}" for item in payload["limitations"]],
+        "",
+    ]
+    atomic_write_text(text_report_markdown_path(config), "\n".join(lines))
+    return payload
+
+
+def expand_whole_file_decision(
+    config: dict[str, Any],
+    *,
+    outcome: str,
+    review_revision: str,
+    decision_id: str,
+    expected_corpus_sha256: str,
+    expected_rows: int,
+) -> dict[str, Any]:
+    if outcome not in ALLOWED_WHOLE_FILE_OUTCOMES:
+        raise ValueError(f"unsupported whole-file outcome: {outcome}")
+    if not review_revision.strip() or not decision_id.strip():
+        raise ValueError("review revision and decision ID are required")
+    actual = sha256_file(fixed_combined_text_path(config))
+    if actual != expected_corpus_sha256:
+        raise RuntimeError(f"fixed text SHA mismatch: {actual}")
+    rows = load_jsonl(fixed_combined_text_path(config))
+    if len(rows) != expected_rows:
+        raise RuntimeError(f"fixed text row mismatch: {len(rows)}")
+    decisions = [
+        {
+            "candidate_id": row["candidate_id"],
+            "outcome": outcome,
+            "review_revision": review_revision,
+            "reviewer_approval": decision_id,
+            "reason_codes": [] if outcome == "ACCEPT" else [outcome],
+            "minimal_pair_approved": False,
+        }
+        for row in rows
+    ]
+    atomic_write_jsonl(text_decisions_path(config), decisions)
+    if outcome == "ACCEPT":
+        accepted_reviews = [
+            {
+                "candidate_id": row["candidate_id"],
+                "outcome": "ACCEPT",
+                "review_revision": review_revision,
+                "reason_codes": [],
+                "minimal_pair_approved": False,
+            }
+            for row in rows
+        ]
+        holdout_reviews = load_jsonl(repo_path(config["existing_holdout"]["linguistic_review"]))
+        atomic_write_jsonl(accepted_review_path(config), [*accepted_reviews, *holdout_reviews])
+        report = run_text_validator(config, review_path=accepted_review_path(config), require_status="TEXT_ACCEPTED")
+        if report.get("final_text_status") != "TEXT_ACCEPTED":
+            raise RuntimeError(f"accepted text did not reach TEXT_ACCEPTED: {report.get('decision_reasons')}")
+        status = "TEXT_ACCEPTED"
+    else:
+        status = "TEXT_REJECTED" if outcome.startswith("REJECT_") else "DRAFT"
+        report = {"final_text_status": status, "decision_reasons": [outcome]}
+    certificate = build_text_certificate(
+        config,
+        status=status,
+        outcome=outcome,
+        review_revision=review_revision,
+        decision_id=decision_id,
+        validator_report=report,
+    )
+    atomic_write_json(text_certificate_path(config), certificate)
+    write_text_public_reports(config, certificate, validator_report=report)
+    return {
+        "status": status,
+        "whole_file_outcome": outcome,
+        "decision_id": decision_id,
+        "fixed_text_sha256": actual,
+        "rows": len(rows),
+        "text_certificate_sha256": sha256_file(text_certificate_path(config)),
+        "validator_status": report.get("final_text_status"),
     }
 
 
@@ -590,4 +1007,3 @@ def verify_scale200_report(path: str | Path, expected_sha256: str = EXPERIMENT_0
     if round(float(decision["scale200_burden"]), 3) != SCALE200_BURDEN:
         raise RuntimeError("Experiment 0013 scale-200 burden mismatch")
     return {"sha256": actual, "classification": decision["classification"], "scale200_burden": decision["scale200_burden"]}
-

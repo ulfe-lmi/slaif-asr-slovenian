@@ -43,11 +43,13 @@
     "monitor_interval_seconds": 0.2
   },
   "retry_policy": {
-    "max_verification_rounds": 8,
-    "max_attempts_per_shard": 12,
-    "max_attempts_per_cell": 48,
-    "max_total_attempts": 1440,
-    "max_requested_rows": 86400,
+    "retry_until_valid": true,
+    "human_override": "2026-06-26 retry until structurally valid",
+    "max_verification_rounds": null,
+    "max_attempts_per_shard": null,
+    "max_attempts_per_cell": null,
+    "max_total_attempts": null,
+    "max_requested_rows": null,
     "max_refill_attempts_per_deficient_cell_per_round": 5,
     "adaptive_refill_divisor": 40
   },

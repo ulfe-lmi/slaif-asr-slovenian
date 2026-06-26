@@ -63,11 +63,11 @@ FORBIDDEN_GUIDANCE_MARKERS = (
 
 @dataclass(frozen=True)
 class RetryLimits:
-    max_verification_rounds: int = 8
-    max_attempts_per_shard: int = 12
-    max_attempts_per_cell: int = 48
-    max_total_attempts: int = 1440
-    max_requested_rows: int = 86400
+    max_verification_rounds: int | None = 8
+    max_attempts_per_shard: int | None = 12
+    max_attempts_per_cell: int | None = 48
+    max_total_attempts: int | None = 1440
+    max_requested_rows: int | None = 86400
     requested_rows_per_attempt: int = 60
     max_refill_attempts_per_cell_per_round: int = 5
 
@@ -278,16 +278,18 @@ def save_state(path: Path, state: RetryState) -> None:
 
 def exhausted_budgets(state: RetryState, limits: RetryLimits = RetryLimits()) -> list[str]:
     exhausted: list[str] = []
-    if state.total_attempts() >= limits.max_total_attempts:
+    if limits.max_total_attempts is not None and state.total_attempts() >= limits.max_total_attempts:
         exhausted.append("total_attempts")
-    if state.requested_rows_used() >= limits.max_requested_rows:
+    if limits.max_requested_rows is not None and state.requested_rows_used() >= limits.max_requested_rows:
         exhausted.append("requested_rows")
-    for cell_id, count in state.attempts_by_cell().items():
-        if count >= limits.max_attempts_per_cell:
-            exhausted.append(f"cell:{cell_id}")
-    for shard, count in state.attempts_by_shard().items():
-        if count >= limits.max_attempts_per_shard:
-            exhausted.append(f"shard:{shard}")
+    if limits.max_attempts_per_cell is not None:
+        for cell_id, count in state.attempts_by_cell().items():
+            if count >= limits.max_attempts_per_cell:
+                exhausted.append(f"cell:{cell_id}")
+    if limits.max_attempts_per_shard is not None:
+        for shard, count in state.attempts_by_shard().items():
+            if count >= limits.max_attempts_per_shard:
+                exhausted.append(f"shard:{shard}")
     return exhausted
 
 
@@ -300,7 +302,9 @@ def plan_refill_tasks(
     diversity_guidance: Sequence[str] = (),
     seed_namespace: str = "scale2000-gams-v4",
 ) -> list[AttemptTask]:
-    if verification_round < 1 or verification_round > limits.max_verification_rounds:
+    if verification_round < 1 or (
+        limits.max_verification_rounds is not None and verification_round > limits.max_verification_rounds
+    ):
         raise RuntimeError("verification round budget exhausted")
     guidance = validate_diversity_guidance(diversity_guidance)
     if exhausted_budgets(state, limits):
@@ -313,14 +317,15 @@ def plan_refill_tasks(
         count = min(limits.max_refill_attempts_per_cell_per_round, targeted_attempt_count(deficit))
         if count <= 0:
             continue
-        available_cell_budget = limits.max_attempts_per_cell - attempts_by_cell[cell_id]
-        if available_cell_budget <= 0:
-            raise RuntimeError(f"retry budget exhausted for {cell_id}")
-        count = min(count, available_cell_budget)
+        if limits.max_attempts_per_cell is not None:
+            available_cell_budget = limits.max_attempts_per_cell - attempts_by_cell[cell_id]
+            if available_cell_budget <= 0:
+                raise RuntimeError(f"retry budget exhausted for {cell_id}")
+            count = min(count, available_cell_budget)
         for offset in range(count):
             shard = shard_id(((attempts_by_cell[cell_id] + offset) % 9) + 1)
             shard_key = f"{cell_id}:{shard}"
-            if attempts_by_shard[shard_key] >= limits.max_attempts_per_shard:
+            if limits.max_attempts_per_shard is not None and attempts_by_shard[shard_key] >= limits.max_attempts_per_shard:
                 continue
             attempt_index = state.next_attempt_index(cell_id, shard)
             task = AttemptTask(
@@ -336,9 +341,12 @@ def plan_refill_tasks(
             tasks.append(task)
             attempts_by_cell[cell_id] += 1
             attempts_by_shard[shard_key] += 1
-            if state.total_attempts() + len(tasks) > limits.max_total_attempts:
+            if limits.max_total_attempts is not None and state.total_attempts() + len(tasks) > limits.max_total_attempts:
                 raise RuntimeError("total attempt budget would be exceeded")
-            if state.requested_rows_used() + len(tasks) * limits.requested_rows_per_attempt > limits.max_requested_rows:
+            if (
+                limits.max_requested_rows is not None
+                and state.requested_rows_used() + len(tasks) * limits.requested_rows_per_attempt > limits.max_requested_rows
+            ):
                 raise RuntimeError("requested-row budget would be exceeded")
     return tasks
 
@@ -348,4 +356,3 @@ def rejection_counts_by_reason(records: Sequence[AttemptRecord]) -> dict[str, in
     for record in records:
         counts.update(record.rejection_counts or {})
     return dict(sorted(counts.items()))
-

@@ -47,6 +47,17 @@ sl-corpus-v4-gams-16000-training-v1
 The experiment may continue only after an exact whole-file decision bound to
 the combined corpus SHA256 and row count.
 
+Retry policy update:
+
+- The human lead explicitly overrode the original finite retry budgets on
+  2026-06-26.
+- Generation now retries deficient cells until the combined corpus is
+  structurally valid.
+- The override does not weaken validators, reuse rejected text, expose
+  protected text, or infer human acceptance.
+- Each refill round remains bounded and resumable so progress and evidence stay
+  auditable.
+
 Boundaries:
 
 - `TRAINING_ELIGIBLE` is not issued;
@@ -56,4 +67,3 @@ Boundaries:
 - batch-1 canonical evaluation is not run;
 - the 2,000x figure refers to deterministic exposure count, not independent
   linguistic information.
-

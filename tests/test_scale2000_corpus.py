@@ -22,6 +22,15 @@ ANCHOR_CONFIG_PATH = Path("configs/generation/gams_corpus_v3_1600_v1.json")
 
 
 class Scale2000CorpusTests(unittest.TestCase):
+    def _word(self, prefix: str, index: int) -> str:
+        alphabet = "abcdefghijklmnoprstuvz"
+        value = index
+        letters = []
+        for _ in range(5):
+            letters.append(alphabet[value % len(alphabet)])
+            value //= len(alphabet)
+        return prefix + "".join(letters)
+
     def test_config_reuses_exact_forty_prompt_cells(self) -> None:
         config = load_scale2000_generation_config(CONFIG_PATH)
         verify_prompt_cells_match_anchor(config)
@@ -53,13 +62,17 @@ class Scale2000CorpusTests(unittest.TestCase):
         rows = []
         for cell in anchor["prompt_cells"]:
             for ordinal in range(1, 41):
+                index = int(str(cell["cell_id"]).replace("cell", "")) * 1000 + ordinal
                 rows.append(
                     build_record(
                         config=anchor,
                         cell=cell,
                         attempt_index=0,
                         output_ordinal=ordinal,
-                        text=f"Podedovana varna poved {cell['cell_id']} {ordinal}.",
+                        text=(
+                            f"{self._word('ank', index)} {self._word('bnk', index)} "
+                            f"{self._word('cnk', index)} {self._word('dnk', index)}."
+                        ),
                     )
                 )
         return rows
@@ -69,6 +82,7 @@ class Scale2000CorpusTests(unittest.TestCase):
         rows = []
         for cell in config["prompt_cells"]:
             for ordinal in range(1, per_cell + 1):
+                index = int(str(cell["cell_id"]).replace("cell", "")) * 1000 + ordinal
                 task = AttemptTask(str(cell["cell_id"]), f"shard{((ordinal - 1) % 9) + 1:02d}", ordinal // 61, 0, 60, ordinal, "fixture")
                 rows.append(
                     build_new_record(
@@ -76,23 +90,27 @@ class Scale2000CorpusTests(unittest.TestCase):
                         cell=cell,
                         task=task,
                         output_ordinal=ordinal,
-                        text=f"Nova varna poved {cell['cell_id']} {ordinal}.",
+                        text=(
+                            f"{self._word('eno', index)} {self._word('dve', index)} "
+                            f"{self._word('tri', index)} {self._word('sti', index)}."
+                        ),
                     )
                 )
         return rows
 
     def test_selects_exactly_360_new_rows_per_cell(self) -> None:
         config = load_scale2000_generation_config(CONFIG_PATH)
-        selected, summary = select_new_rows(self._new_rows(), config=config)
+        inherited = self._inherited_rows()
+        selected, summary = select_new_rows(self._new_rows(), inherited_rows=inherited, config=config)
         self.assertEqual(len(selected), 14400)
         self.assertTrue(all(count == 360 for count in summary["new_rows_per_cell"].values()))
-        selected_again, _ = select_new_rows(list(reversed(self._new_rows())), config=config)
+        selected_again, _ = select_new_rows(list(reversed(self._new_rows())), inherited_rows=inherited, config=config)
         self.assertEqual([row["candidate_id"] for row in selected], [row["candidate_id"] for row in selected_again])
 
     def test_new_row_surplus_shortfall_fails(self) -> None:
         config = load_scale2000_generation_config(CONFIG_PATH)
         with self.assertRaisesRegex(RuntimeError, "surplus shortfall"):
-            select_new_rows(self._new_rows(per_cell=399), config=config)
+            select_new_rows(self._new_rows(per_cell=399), inherited_rows=self._inherited_rows(), config=config)
 
     def test_build_combined_rows_preserves_nesting_counts(self) -> None:
         config = load_scale2000_generation_config(CONFIG_PATH)
@@ -114,4 +132,3 @@ class Scale2000CorpusTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

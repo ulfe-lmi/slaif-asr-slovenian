@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import io
 import json
 import sys
 import time
@@ -19,6 +21,7 @@ from slaif_asr.scale2000_corpus import (
     build_combined_rows,
     build_new_record,
     build_task_prompt,
+    expand_whole_file_decision,
     fixed_combined_text_path,
     generation_state_path,
     load_scale2000_experiment_config,
@@ -29,11 +32,13 @@ from slaif_asr.scale2000_corpus import (
     retry_limits_from_config,
     run_dir,
     scale2000_multiplier_table,
+    SelectionShortfall,
     verify_inherited_rows,
     verify_prompt_cells_match_anchor,
     verify_scale200_report,
 )
 from slaif_asr.scale200_corpus import extract_utterance_lines, filter_records, load_augmentation_config, load_existing_holdout, protected_indexes, write_rejections
+from slaif_asr.scale200_corpus import stable_sha256
 from slaif_asr.corpus_v2_generation import GpuMonitor
 
 
@@ -88,8 +93,9 @@ def stage_prepare_human_decision(config_path: Path) -> dict[str, Any]:
     path = fixed_combined_text_path(text)
     if not path.exists():
         raise FileNotFoundError(path)
+    rows_data = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     corpus_hash = sha256_file(path)
-    rows = sum(1 for _ in path.open("r", encoding="utf-8"))
+    rows = len(rows_data)
     command = " ".join(
         [
             ".venv/bin/python",
@@ -103,12 +109,71 @@ def stage_prepare_human_decision(config_path: Path) -> dict[str, Any]:
         ]
     )
     run_dir(text).mkdir(parents=True, exist_ok=True)
+    tsv_buffer = io.StringIO()
+    writer = csv.DictWriter(
+        tsv_buffer,
+        delimiter="\t",
+        fieldnames=[
+            "prompt_cell",
+            "row_origin",
+            "domain",
+            "spoken_text",
+            "target_text",
+            "outcome",
+            "review_revision",
+            "reason_codes",
+        ],
+    )
+    writer.writeheader()
+    by_cell: dict[str, list[dict[str, Any]]] = {}
+    for row in rows_data:
+        by_cell.setdefault(str(row.get("generation", {}).get("prompt_cell", "unknown")), []).append(row)
+    for cell_id in sorted(by_cell):
+        for row in sorted(by_cell[cell_id], key=lambda item: stable_sha256(str(item.get("candidate_id", "")))):
+            candidate_id = str(row.get("candidate_id", ""))
+            writer.writerow(
+                {
+                    "prompt_cell": cell_id,
+                    "row_origin": "new" if candidate_id.startswith("gamsv4-") else "inherited_scale200",
+                    "domain": row.get("domain", ""),
+                    "spoken_text": row.get("spoken_text", ""),
+                    "target_text": row.get("target_text", ""),
+                    "outcome": "",
+                    "review_revision": "",
+                    "reason_codes": "",
+                }
+            )
+    atomic_write_text(run_dir(text) / "review-capsule.local.tsv", tsv_buffer.getvalue())
+    md_lines = [
+        "# Corpus v4 16000 Whole-File Review Capsule",
+        "",
+        f"Corpus: `{text['corpus_id']}`",
+        f"SHA256: `{corpus_hash}`",
+        f"Rows: `{rows}`",
+        "",
+        "This capsule is local review evidence and is not committed.",
+        "It distinguishes inherited scale-200 rows from newly generated scale-2000 rows.",
+        "Do not approve if quality is mixed.",
+        "",
+    ]
+    for cell_id in sorted(by_cell):
+        cell_rows = sorted(by_cell[cell_id], key=lambda item: stable_sha256(str(item.get("candidate_id", ""))))
+        inherited_count = sum(not str(row.get("candidate_id", "")).startswith("gamsv4-") for row in cell_rows)
+        new_count = len(cell_rows) - inherited_count
+        md_lines.extend([f"## {cell_id}", "", f"Inherited rows: {inherited_count}; new rows: {new_count}.", ""])
+        for row in cell_rows:
+            origin = "new" if str(row.get("candidate_id", "")).startswith("gamsv4-") else "inherited"
+            md_lines.append(f"- [{origin}] {row.get('spoken_text', '')}")
+        md_lines.append("")
+    atomic_write_text(run_dir(text) / "review-capsule.local.md", "\n".join(md_lines))
     atomic_write_text(run_dir(text) / "whole-file-decision-command.local.txt", command + "\n")
     payload = {
         "status": "READY_FOR_HUMAN_DECISION",
         "decision": f"ACCEPT or REJECT {text['corpus_id']} {corpus_hash} {rows}",
         "combined_sha256": corpus_hash,
         "rows": rows,
+        "review_capsule_markdown": str(run_dir(text) / "review-capsule.local.md"),
+        "review_capsule_tsv": str(run_dir(text) / "review-capsule.local.tsv"),
     }
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
     return payload
@@ -190,7 +255,13 @@ def filter_and_select(config: dict[str, Any], state: RetryState) -> tuple[dict[s
     if shortfalls:
         summary["status"] = "REFILL_REQUIRED"
     else:
-        combined, selection = build_combined_rows(inherited, new_retained, config=config)
+        try:
+            combined, selection = build_combined_rows(inherited, new_retained, config=config)
+        except SelectionShortfall as exc:
+            summary["status"] = "REFILL_REQUIRED"
+            summary["selection_constraint_shortfalls"] = exc.shortfalls
+            atomic_write_json(run_dir(config) / "text-generation-summary.local.json", summary)
+            return summary, exc.shortfalls
         selected_new_ids = {str(row["candidate_id"]) for row in combined if str(row["candidate_id"]).startswith("gamsv4-")}
         selected_new = [row for row in new_retained if str(row["candidate_id"]) in selected_new_ids]
         atomic_write_jsonl(fixed_combined_text_path(config), combined)
@@ -302,7 +373,7 @@ def stage_generate_text_until_valid(config_path: Path, *, restart_from_scratch: 
     run_generation_tasks(text, initial, state)
     summary, shortfalls = filter_and_select(text, state)
     round_index = 1
-    while shortfalls and round_index <= limits.max_verification_rounds:
+    while shortfalls and (limits.max_verification_rounds is None or round_index <= limits.max_verification_rounds):
         tasks = plan_refill_tasks(
             shortfalls,
             verification_round=round_index,
@@ -330,7 +401,7 @@ def stage_generate_text_until_valid(config_path: Path, *, restart_from_scratch: 
             )
         round_index += 1
     if shortfalls:
-        raise RuntimeError(f"retry budget ended before sufficient text: {shortfalls}")
+        raise RuntimeError(f"text generation ended before sufficient text: {shortfalls}")
     summary["wall_time_seconds"] = round(time.perf_counter() - started, 6)
     summary["retry_budget"] = state.budget_summary(limits)
     atomic_write_json(run_dir(text) / "text-generation-summary.local.json", summary)
@@ -347,6 +418,20 @@ def stage_not_yet_safe(config_path: Path, stage: str) -> dict[str, Any]:
         "reason": "This stage is implemented in later commit phases or requires prior whole-file text admission.",
         "work_order_id": experiment["work_order_id"],
     }
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    return payload
+
+
+def stage_admit_text(config_path: Path, args: argparse.Namespace) -> dict[str, Any]:
+    _experiment, text, _augmentation = load_configs(config_path)
+    payload = expand_whole_file_decision(
+        text,
+        outcome=args.whole_file_outcome,
+        review_revision=args.review_revision,
+        decision_id=args.decision_id,
+        expected_corpus_sha256=args.expected_corpus_sha256,
+        expected_rows=args.expected_rows,
+    )
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
     return payload
 
@@ -370,8 +455,9 @@ def main() -> int:
         stage_generate_text_until_valid(args.config, restart_from_scratch=args.restart_from_scratch)
     elif args.stage == "prepare-human-decision":
         stage_prepare_human_decision(args.config)
+    elif args.stage == "admit-text":
+        stage_admit_text(args.config, args)
     elif args.stage in {
-        "admit-text",
         "synthesize-piper-new",
         "synthesize-supertonic-new",
         "augment-new",
