@@ -1,0 +1,71 @@
+{
+  "experiment_id": "gams1600-nine-voice-scale200-directional-v1",
+  "work_order_id": "0025",
+  "status": "DIAGNOSTIC_ONLY",
+  "accepted_parent": "none",
+  "text_config": "configs/generation/gams_corpus_v3_1600_v1.json",
+  "augmentation_config": "configs/augmentation/scale200_transcript_preserving_v1.json",
+  "directional_reference_report": {
+    "path": "docs/experiments/0012-fast-batched-directional-replay.json",
+    "sha256": "66060061b0b6f5ad75bd4cdd2d3b0d573ae26c03a2e893284a6b4301cfc89aba",
+    "reference_replay_burden": 9.536
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
+  },
+  "adapter": {
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
+    "module": "model.joint",
+    "name": "sl-si-joint-adapter-v1",
+    "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter",
+    "bottleneck_dimension": 32,
+    "expected_trainable_parameters": 42240
+  },
+  "training": {
+    "arm": "gams1600_nine_voice_augmented_joint_adapter_dim32",
+    "batch_size": 8,
+    "exposure_rounds": 20,
+    "semantic_rows": 1600,
+    "sample_exposures": 32000,
+    "optimizer_steps": 4000,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "gradient_accumulation": "none",
+    "gradient_clipping": "none",
+    "seed": 1234,
+    "precision": "fp32",
+    "tf32": false,
+    "spec_augment": "fixed_mild_on_half_augmented_exposures",
+    "early_stopping": false
+  },
+  "evaluation": {
+    "policy": "configs/evaluation/a100-directional-batch32-v1.json",
+    "batch_size": 32,
+    "duration_bucketing": true,
+    "canonical": false,
+    "promotion_eligible": false,
+    "suite_rows": 1378
+  },
+  "local_outputs": {
+    "run_root": "runs/experiments/gams1600-nine-voice-scale200-directional-v1",
+    "data_root": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1"
+  },
+  "run_dir": "runs/experiments/gams1600-nine-voice-scale200-directional-v1",
+  "public_outputs": {
+    "text_certificate": "docs/data-certificates/sl-corpus-v3-gams-1600-text-v1.json",
+    "audio_certificate": "docs/data-certificates/sl-corpus-v3-nine-voice-augmented-audio-v1.json",
+    "experiment_certificate": "docs/data-certificates/sl-corpus-v3-scale200-joint-adapter-diagnostic-v1.json",
+    "text_report_json": "docs/data-reports/0011-gams1600-text-admission.json",
+    "text_report_markdown": "docs/data-reports/0011-gams1600-text-admission.md",
+    "audio_report_json": "docs/data-reports/0012-nine-voice-scale200-acoustic-admission.json",
+    "audio_report_markdown": "docs/data-reports/0012-nine-voice-scale200-acoustic-admission.md",
+    "experiment_report_json": "docs/experiments/0013-gams1600-nine-voice-scale200-directional.json",
+    "experiment_report_markdown": "docs/experiments/0013-gams1600-nine-voice-scale200-directional.md"
+  }
+}

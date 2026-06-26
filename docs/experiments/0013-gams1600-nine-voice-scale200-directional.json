@@ -1,0 +1,373 @@
+{
+  "accepted_parent": "none",
+  "adapter": {
+    "bottleneck_dimension": 32,
+    "module": "model.joint",
+    "name": "sl-si-joint-adapter-v1",
+    "trainable_parameters": 42240
+  },
+  "authorization": {
+    "audio_certificate_sha256": "eccdad5a200c46a6d1426ae0b7ea90e42695d2a41ff7e0c4ff670979d1293585",
+    "certificate_sha256": "730bbb849b0aaf0daeabc1402ed1575e67967b453f076e31d359a5c907f636d8",
+    "experiment_config_sha256": "f8183dca1a64fcac585bd8bf241adefbc36900aa49ebb564a761d3ac1318b6f3",
+    "status": "DIAGNOSTIC_ONLY",
+    "text_certificate_sha256": "80a00f8c29d0f6e3635c92b928e12a80269ca06e597115a1b03d1e49d4ab4574"
+  },
+  "canonical": false,
+  "data": {
+    "all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+    "augmented_files": 17600,
+    "clean_files": 14400,
+    "corpus_id": "sl-corpus-v3-gams-1600-training-v1",
+    "fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+    "multiplier_table": {
+      "augmentation_views_per_text": 11,
+      "clean_voice_realizations_per_text": 9,
+      "exposure_multiplier": 200,
+      "interpretation": "200x refers to deterministic exposure count, not independent linguistic information.",
+      "new_semantic_items": 1600,
+      "reference_semantic_items": 160,
+      "semantic_text_multiplier": 10,
+      "total_view_records": 32000
+    },
+    "profile_counts": {
+      "codec_sample_rate_simulation": 1600,
+      "coloured_electrical_noise": 1600,
+      "compound_realistic_condition": 1600,
+      "coupled_speed_pitch_resampling": 1600,
+      "environmental_background_noise": 1600,
+      "gain_dynamic_range_variation": 1600,
+      "microphone_channel_filtering": 1600,
+      "mild_pitch_formant_vtlp_proxy": 1600,
+      "procedural_room_impulse_response": 1600,
+      "tempo_preserving_pitch": 1600,
+      "timing_silence_variation": 1600
+    },
+    "schedule_sha256": "dc15089184a6e479da173ad5e1e184e2510ef89974b95576f7f4e2f262cbb4d9",
+    "semantic_rows": 1600,
+    "view_records": 32000,
+    "voice_counts": {
+      "piper-sl_SI-artur-medium": 3555,
+      "supertonic-F1": 3556,
+      "supertonic-F2": 3556,
+      "supertonic-F3": 3555,
+      "supertonic-F4": 3554,
+      "supertonic-M1": 3556,
+      "supertonic-M2": 3556,
+      "supertonic-M3": 3556,
+      "supertonic-M4": 3556
+    }
+  },
+  "directional_evaluation": {
+    "decision": {
+      "accepted_parent": "none",
+      "burden_reduction_percent": 69.924497,
+      "classification": "SCALE200_SYNTHETIC_MITIGATES_REPLAY_REGRESSION",
+      "no_metric_more_than_half_point_worse_than_replay": true,
+      "piper_holdout_improves": true,
+      "real_improvement": true,
+      "real_non_regression": false,
+      "reference_replay_burden": 9.536,
+      "scale200_burden": 2.868,
+      "supertonic_heldout_improves": true
+    },
+    "metric_table": {
+      "base": {
+        "artur_j": {
+          "cer": 28.62,
+          "empty": 12,
+          "raw_cer": 31.849,
+          "raw_wer": 74.672,
+          "wer": 67.322
+        },
+        "fleurs_v2": {
+          "cer": 16.406,
+          "empty": 1,
+          "raw_cer": 19.74,
+          "raw_wer": 63.031,
+          "wer": 52.685
+        },
+        "piper_synthetic_holdout": {
+          "cer": 46.762,
+          "empty": 17,
+          "raw_cer": 48.549,
+          "raw_wer": 87.383,
+          "wer": 86.025
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 27.712,
+          "empty": 32,
+          "raw_cer": 29.753,
+          "raw_wer": 63.941,
+          "wer": 58.307
+        }
+      },
+      "batched_replay_joint_adapter": {
+        "artur_j": {
+          "cer": 24.926,
+          "empty": 0,
+          "raw_cer": 28.007,
+          "raw_wer": 76.463,
+          "wer": 68.283
+        },
+        "fleurs_v2": {
+          "cer": 19.023,
+          "empty": 0,
+          "raw_cer": 21.935,
+          "raw_wer": 66.802,
+          "wer": 58.643
+        },
+        "piper_synthetic_holdout": {
+          "cer": 28.091,
+          "empty": 1,
+          "raw_cer": 29.835,
+          "raw_wer": 76.012,
+          "wer": 73.137
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 13.821,
+          "empty": 1,
+          "raw_cer": 15.758,
+          "raw_wer": 54.439,
+          "wer": 48.292
+        }
+      },
+      "piper_joint_adapter": {
+        "artur_j": {
+          "cer": 30.021,
+          "empty": 0,
+          "raw_cer": 33.026,
+          "raw_wer": 79.869,
+          "wer": 72.958
+        },
+        "fleurs_v2": {
+          "cer": 25.529,
+          "empty": 0,
+          "raw_cer": 28.321,
+          "raw_wer": 72.11,
+          "wer": 64.733
+        },
+        "piper_synthetic_holdout": {
+          "cer": 28.007,
+          "empty": 0,
+          "raw_cer": 29.753,
+          "raw_wer": 72.897,
+          "wer": 69.876
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 15.041,
+          "empty": 1,
+          "raw_cer": 16.884,
+          "raw_wer": 56.698,
+          "wer": 50.543
+        }
+      },
+      "scale200_joint_adapter": {
+        "artur_j": {
+          "cer": 22.753,
+          "empty": 1,
+          "raw_cer": 25.907,
+          "raw_wer": 72.969,
+          "wer": 64.176
+        },
+        "fleurs_v2": {
+          "cer": 17.573,
+          "empty": 0,
+          "raw_cer": 20.28,
+          "raw_wer": 62.795,
+          "wer": 54.386
+        },
+        "piper_synthetic_holdout": {
+          "cer": 23.83,
+          "empty": 1,
+          "raw_cer": 25.414,
+          "raw_wer": 68.224,
+          "wer": 63.509
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 11.088,
+          "empty": 3,
+          "raw_cer": 12.788,
+          "raw_wer": 43.614,
+          "wer": 36.879
+        }
+      },
+      "supertonic3_joint_adapter": {
+        "artur_j": {
+          "cer": 26.723,
+          "empty": 0,
+          "raw_cer": 29.948,
+          "raw_wer": 78.69,
+          "wer": 70.511
+        },
+        "fleurs_v2": {
+          "cer": 20.973,
+          "empty": 0,
+          "raw_cer": 23.935,
+          "raw_wer": 69.049,
+          "wer": 60.616
+        },
+        "piper_synthetic_holdout": {
+          "cer": 30.25,
+          "empty": 1,
+          "raw_cer": 32.113,
+          "raw_wer": 79.128,
+          "wer": 75.932
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 13.849,
+          "empty": 4,
+          "raw_cer": 15.731,
+          "raw_wer": 52.726,
+          "wer": 46.817
+        }
+      }
+    },
+    "policy": {
+      "att_context_size": [
+        56,
+        3
+      ],
+      "batch_size": 32,
+      "canonical": false,
+      "duration_bucketing": true,
+      "promotion_eligible": false,
+      "target_lang": "sl-SI"
+    },
+    "scale200_model_summary": {
+      "checkpoint_sha256": "acf1843da1e0130530cbfdb5110e3e74a053205f1746a7f428025dda32ecaf71",
+      "suite": {
+        "audio_duration_seconds": 10129.779368,
+        "audio_seconds_per_wall_second": 69.4674,
+        "gpu_monitor": {
+          "fraction_at_or_above_80_percent": 0.485232,
+          "mean_power_watts": 178.262743,
+          "mean_utilization_percent": 54.7173,
+          "median_utilization_percent": 77.0,
+          "p95_power_watts": 266.54,
+          "p95_utilization_percent": 97.0,
+          "peak_memory_mib": 5889.0,
+          "sample_count": 237
+        },
+        "layout": {
+          "actual_audio_seconds": 10129.779368,
+          "batch_count": 44,
+          "batch_size": 32,
+          "bucketed": true,
+          "final_partial_batch_size": 2,
+          "full_batch_count": 43,
+          "max_padded_batch_duration": 28.2,
+          "padded_audio_seconds": 10570.374016,
+          "padding_ratio": 1.043495
+        },
+        "prediction_count": 1378,
+        "real_time_factor": 0.014395,
+        "rows": 1378,
+        "rows_per_second": 9.449967,
+        "wall_time_seconds": 145.820621
+      }
+    },
+    "suite_rows": 1378
+  },
+  "experiment_id": "gams1600-nine-voice-scale200-directional-v1",
+  "limitations": [
+    "Directional batch-32 metrics are not canonical acceptance evidence.",
+    "No batch-1 evaluation was run.",
+    "All training remains synthetic.",
+    "The 200x multiplier refers to exposure count, not independent linguistic information.",
+    "No checkpoint or adapter is accepted as a parent.",
+    "TRAINING_ELIGIBLE was not issued."
+  ],
+  "model": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "promotion_eligible": false,
+  "schema_version": "1.0",
+  "status": "completed in PR; pending strategic review",
+  "training": {
+    "adapter_integrity": {
+      "adapter_tensor_count": 4,
+      "adapter_tensors_changed": [
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.0.bias",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.0.weight",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.1.weight",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.3.weight"
+      ],
+      "adapter_tensors_unchanged": [],
+      "only_adapter_tensors_may_change": true
+    },
+    "audio_seconds_per_wall_second": 266.568545,
+    "base_integrity": {
+      "base_tensors_identical": true,
+      "changed_pretrained_tensors": [],
+      "missing_pretrained_tensors": [],
+      "unexpected_pretrained_tensors": []
+    },
+    "batch_size": 8,
+    "examples_per_second": 69.858497,
+    "exposure_counts_by_profile": {
+      "clean": 14400,
+      "codec_sample_rate_simulation": 1600,
+      "coloured_electrical_noise": 1600,
+      "compound_realistic_condition": 1600,
+      "coupled_speed_pitch_resampling": 1600,
+      "environmental_background_noise": 1600,
+      "gain_dynamic_range_variation": 1600,
+      "microphone_channel_filtering": 1600,
+      "mild_pitch_formant_vtlp_proxy": 1600,
+      "procedural_room_impulse_response": 1600,
+      "tempo_preserving_pitch": 1600,
+      "timing_silence_variation": 1600
+    },
+    "exposure_counts_by_voice": {
+      "piper-sl_SI-artur-medium": 3555,
+      "supertonic-F1": 3556,
+      "supertonic-F2": 3556,
+      "supertonic-F3": 3555,
+      "supertonic-F4": 3554,
+      "supertonic-M1": 3556,
+      "supertonic-M2": 3556,
+      "supertonic-M3": 3556,
+      "supertonic-M4": 3556
+    },
+    "final_full_clean_loss": 16.509102,
+    "final_probe_loss": 16.183645,
+    "full_loss_reduction_percent": 64.919971,
+    "gpu_monitor": {
+      "fraction_at_or_above_80_percent": 0.610963,
+      "mean_power_watts": 258.115361,
+      "mean_utilization_percent": 76.708556,
+      "median_utilization_percent": 81.0,
+      "p95_power_watts": 333.6,
+      "p95_utilization_percent": 94.0,
+      "peak_memory_mib": 32425.0,
+      "sample_count": 748
+    },
+    "initial_full_clean_loss": 47.061255,
+    "initial_probe_loss": 48.291626,
+    "learning_rate": 0.001,
+    "optimizer_steps": 4000,
+    "padding_ratio": 1.010371,
+    "peak_allocated_mib": 12429.484,
+    "peak_reserved_mib": 31886.0,
+    "restore_integrity": {
+      "artifact_name": "sl-si-joint-adapter-v1",
+      "base_integrity": {
+        "base_tensors_identical": true,
+        "changed_pretrained_tensors": [],
+        "missing_pretrained_tensors": [],
+        "unexpected_pretrained_tensors": []
+      },
+      "disabled_after_restore": true,
+      "status": "PASSED"
+    },
+    "rounds": 20,
+    "sample_exposures": 32000,
+    "status": "PASSED",
+    "wall_time_seconds": 458.068827
+  },
+  "work_order_id": "0025"
+}

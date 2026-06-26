@@ -65,6 +65,7 @@ PUBLIC_FORBIDDEN_MARKERS = ("gamsv2-", "gams9holdout-", "/" + "home" + "/", "/" 
 SUPPORTED_TTS_IDS = {
     "supertonic3-sl-multivoice-v1",
     "supertonic3-sl-multivoice-batched-replay-v1",
+    "supertonic3-sl-scale200-training-v1",
 }
 
 
@@ -223,6 +224,10 @@ def sha256_json(payload: Any) -> str:
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
 
+def optional_file_sha256(path: Path) -> str | None:
+    return file_sha256(path) if path.exists() else None
+
+
 def supertonic_execution_device(config: dict[str, Any]) -> str:
     return str(config.get("runtime", {}).get("execution_device", "cpu"))
 
@@ -321,6 +326,18 @@ def assert_public_payload_safe(payload: Any) -> None:
 
 def verify_input_identities(config: dict[str, Any]) -> dict[str, Any]:
     inputs = config["inputs"]
+    if "scale200_fixed_text" in inputs:
+        fixed_text = repo_path(inputs["scale200_fixed_text"])
+        if file_sha256(fixed_text) != inputs["scale200_fixed_text_sha256"]:
+            raise RuntimeError("scale-200 fixed text SHA mismatch")
+        selected_rows = read_jsonl(fixed_text)
+        if len(selected_rows) != int(inputs["selected_rows"]):
+            raise RuntimeError("scale-200 selected row count mismatch")
+        return {
+            "scale200_fixed_text_sha256": file_sha256(fixed_text),
+            "selected_rows": len(selected_rows),
+            "include_holdout": bool(inputs.get("include_holdout", False)),
+        }
     selected = repo_path(inputs["selected_training_manifest"])
     selected_audio = repo_path(inputs["selected_training_audio_manifest"])
     holdout = repo_path(inputs["synthetic_holdout_text"])
@@ -347,6 +364,29 @@ def verify_input_identities(config: dict[str, Any]) -> dict[str, Any]:
 
 def load_selected_items(config: dict[str, Any]) -> list[SupertonicTextItem]:
     inputs = config["inputs"]
+    if "scale200_fixed_text" in inputs:
+        rows = read_jsonl(repo_path(inputs["scale200_fixed_text"]))
+        output = []
+        for row in rows:
+            cid = str(row["candidate_id"])
+            text = str(row["target_text"])
+            output.append(
+                SupertonicTextItem(
+                    item_id=cid,
+                    source_key=cid,
+                    partition_role="selected_training",
+                    text=text,
+                    text_sha256=hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                    source_id=str(row["source_id"]),
+                    source_family_id=str(row["source_family_id"]),
+                    utterance_family_id=str(row["utterance_family_id"]),
+                    domain=str(row.get("domain", "")),
+                    phenomena=tuple(str(item) for item in row.get("phenomena", [])),
+                    selection_reason="scale200",
+                    selection_rank=0,
+                )
+            )
+        return sorted(output, key=lambda item: item.item_id)
     selected_rows = read_jsonl(repo_path(inputs["selected_training_manifest"]))
     selected_audio_rows = read_jsonl(repo_path(inputs["selected_training_audio_manifest"]))
     audio_by_id = {str(row["selected_training_id"]): row for row in selected_audio_rows}
@@ -517,6 +557,8 @@ def build_variant_plan(config: dict[str, Any], partition: str) -> list[tuple[Sup
     if partition == "training":
         return [(item, style) for item in load_selected_items(config) for style in TRAINING_STYLES]
     if partition == "holdout":
+        if config.get("inputs", {}).get("include_holdout") is False:
+            return []
         return [(item, style) for item in load_holdout_items(config) for style in HELD_OUT_STYLES]
     raise ValueError(f"unsupported partition: {partition}")
 
@@ -944,12 +986,79 @@ def synthesize_batched_supertonic_audio(
     if batch_size != 32 or fallback_size != 16:
         raise ValueError("the batched replay requires synthesis batch size 32 with OOM fallback 16")
     plan = build_batched_variant_plan(config)
-    if len(plan) != 1472:
-        raise RuntimeError(f"expected 1472 Supertonic variants, found {len(plan)}")
+    expected_total = int(config.get("expected_counts", {}).get("total_variants", 1472))
+    if len(plan) != expected_total:
+        raise RuntimeError(f"expected {expected_total} Supertonic variants, found {len(plan)}")
     batches = partition_batched_plan(plan, batch_size)
     workers = min(int(config.get("conversion", {}).get("max_workers", 16)), os.cpu_count() or 1)
     max_pending = max(workers * int(config.get("conversion", {}).get("bounded_queue_multiplier", 2)), workers)
     reporter = LiveProgressReporter(stage="synthesize-batched", ndjson_path=paths.progress_dir / "synthesize-batched.local.ndjson")
+    existing_manifests = [
+        paths.native_manifest,
+        paths.audio_manifest,
+        paths.training_audio_manifest,
+        paths.holdout_audio_manifest,
+        paths.training_probe_manifest,
+    ]
+    if all(path.exists() for path in existing_manifests):
+        existing_native_rows = read_jsonl(paths.native_manifest)
+        existing_audio_rows = read_jsonl(paths.audio_manifest)
+        existing_training_rows = read_jsonl(paths.training_audio_manifest)
+        existing_holdout_rows = read_jsonl(paths.holdout_audio_manifest)
+        expected_training = int(config.get("expected_counts", {}).get("selected_training", 1280))
+        expected_holdout = int(config.get("expected_counts", {}).get("synthetic_holdout", 192))
+        missing_paths = [
+            row.get("audio_filepath")
+            for row in existing_audio_rows
+            if not Path(str(row.get("audio_filepath", ""))).exists()
+        ]
+        missing_native_paths = [
+            row.get("native_audio_filepath")
+            for row in existing_audio_rows
+            if not Path(str(row.get("native_audio_filepath", ""))).exists()
+        ]
+        if (
+            len(existing_native_rows) == expected_total
+            and len(existing_audio_rows) == expected_total
+            and len(existing_training_rows) == expected_training
+            and len(existing_holdout_rows) == expected_holdout
+            and not missing_paths
+            and not missing_native_paths
+        ):
+            reporter.start("using existing complete Supertonic audio bank")
+            schedule = (
+                validate_exposure_schedule(config, read_jsonl(paths.exposure_schedule))
+                if config.get("training_schedule", {}).get("write_legacy_schedule", True)
+                else {"status": "SKIPPED", "reason": "scale-200 schedule is owned by scale200_corpus"}
+            )
+            summary = {
+                "schema_version": "1.0",
+                "status": "PASSED",
+                "synthesis_mode": "native-batched-supertonic-core",
+                "resumed_from_complete_manifests": True,
+                "batch_size": batch_size,
+                "batch_count": len(batches),
+                "actual_batch_sizes": [len(batch) for batch in batches],
+                "oom_fallback_count": None,
+                "native_rows": len(existing_native_rows),
+                "converted_rows": len(existing_audio_rows),
+                "workers": workers,
+                "max_pending_futures": max_pending,
+                "manifests": {
+                    "native_manifest_sha256": file_sha256(paths.native_manifest),
+                    "audio_manifest_sha256": file_sha256(paths.audio_manifest),
+                    "training_audio_manifest_sha256": file_sha256(paths.training_audio_manifest),
+                    "holdout_audio_manifest_sha256": file_sha256(paths.holdout_audio_manifest),
+                    "training_probe_manifest_sha256": file_sha256(paths.training_probe_manifest),
+                    "exposure_schedule_sha256": optional_file_sha256(paths.exposure_schedule),
+                },
+                "exposure_schedule": schedule,
+            }
+            atomic_write_json(paths.run_root / "batched-synthesis-summary.local.json", summary)
+            reporter.complete(processed_rows=len(existing_audio_rows), total_rows=len(plan), message="existing batch synthesis complete")
+            return summary
+        if missing_paths or missing_native_paths:
+            raise RuntimeError("existing Supertonic manifests reference missing audio files")
     reporter.start("batch-synthesizing Supertonic audio")
     real_supertonic_runtime = tts_factory is None
     if tts_factory is None:
@@ -1025,7 +1134,7 @@ def synthesize_batched_supertonic_audio(
         raise
     finally:
         monitor.stop()
-    if len(native_rows) != 1472 or len(converted_rows) != 1472:
+    if len(native_rows) != expected_total or len(converted_rows) != expected_total:
         raise RuntimeError(f"Supertonic output count mismatch: native={len(native_rows)} converted={len(converted_rows)}")
     native_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
     converted_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
@@ -1036,7 +1145,11 @@ def synthesize_batched_supertonic_audio(
     atomic_write_jsonl(paths.training_audio_manifest, training_rows)
     atomic_write_jsonl(paths.holdout_audio_manifest, holdout_rows)
     write_training_probe_manifest(config, converted_rows)
-    schedule = build_exposure_schedule(config, converted_rows)
+    schedule = (
+        build_exposure_schedule(config, converted_rows)
+        if config.get("training_schedule", {}).get("write_legacy_schedule", True)
+        else {"status": "SKIPPED", "reason": "scale-200 schedule is owned by scale200_corpus"}
+    )
     wall = time.perf_counter() - started
     monitor_summary = parse_monitor_csv(monitor_path)
     summary = {
@@ -1069,7 +1182,7 @@ def synthesize_batched_supertonic_audio(
             "training_audio_manifest_sha256": file_sha256(paths.training_audio_manifest),
             "holdout_audio_manifest_sha256": file_sha256(paths.holdout_audio_manifest),
             "training_probe_manifest_sha256": file_sha256(paths.training_probe_manifest),
-            "exposure_schedule_sha256": file_sha256(paths.exposure_schedule),
+            "exposure_schedule_sha256": optional_file_sha256(paths.exposure_schedule),
         },
         "exposure_schedule": schedule,
     }
@@ -1190,8 +1303,11 @@ def build_exposure_schedule(config: dict[str, Any], audio_rows: Sequence[dict[st
     training_rows = [row for row in audio_rows if row["partition_role"] == "selected_training" and row["voice_style_id"] in TRAINING_STYLES]
     by_id_voice = {(str(row["source_key"]), str(row["voice_style_id"])): row for row in training_rows}
     ordered = sorted({str(row["source_key"]) for row in training_rows}, key=stable_sha256)
-    if len(ordered) != 160:
-        raise RuntimeError("expected 160 selected-training IDs for exposure schedule")
+    expected_rows = int(config.get("inputs", {}).get("selected_rows", 160))
+    if len(ordered) != expected_rows:
+        raise RuntimeError(f"expected {expected_rows} selected-training IDs for exposure schedule")
+    if expected_rows != 160:
+        raise RuntimeError("legacy Supertonic exposure schedule supports only 160 selected-training IDs")
     schedule = []
     for epoch in range(1, 13):
         for position, source_key in enumerate(ordered):
@@ -1302,20 +1418,27 @@ def validate_supertonic_audio(config: dict[str, Any], *, progress_interval_secon
         if index % 50 == 0 or now - last_emit >= progress_interval_seconds:
             reporter.progress(processed_rows=index, total_rows=len(audio_rows))
             last_emit = now
-    if rows_by_partition["selected_training"] != 1280:
+    expected_counts = config.get("expected_counts", {})
+    expected_training = int(expected_counts.get("selected_training", 1280))
+    expected_holdout = int(expected_counts.get("synthetic_holdout", 192))
+    if rows_by_partition["selected_training"] != expected_training:
         issues.append({"reason": "training_count"})
-    if rows_by_partition["synthetic_holdout"] != 192:
+    if rows_by_partition["synthetic_holdout"] != expected_holdout:
         issues.append({"reason": "holdout_count"})
     if voice_by_partition["selected_training"].get("M5", 0) or voice_by_partition["selected_training"].get("F5", 0):
         issues.append({"reason": "heldout_voice_training_leakage"})
     if any(voice_by_partition["synthetic_holdout"].get(style, 0) for style in TRAINING_STYLES):
         issues.append({"reason": "training_voice_holdout_leakage"})
     for source_key, counts in text_voice_counts.items():
-        if source_key.startswith("sl-corpus-v2-selected-training") and any(counts[style] != 1 for style in TRAINING_STYLES):
+        if any(counts[style] for style in TRAINING_STYLES) and any(counts[style] != 1 for style in TRAINING_STYLES):
             issues.append({"reason": "selected_text_missing_voice", "source_key_hash": hashlib.sha256(source_key.encode()).hexdigest()})
-        if source_key.startswith("gams9holdout") and any(counts[style] != 1 for style in HELD_OUT_STYLES):
+        if any(counts[style] for style in HELD_OUT_STYLES) and any(counts[style] != 1 for style in HELD_OUT_STYLES):
             issues.append({"reason": "holdout_text_missing_voice", "source_key_hash": hashlib.sha256(source_key.encode()).hexdigest()})
-    schedule = validate_exposure_schedule(config, read_jsonl(paths.exposure_schedule))
+    schedule = (
+        validate_exposure_schedule(config, read_jsonl(paths.exposure_schedule))
+        if config.get("training_schedule", {}).get("write_legacy_schedule", True)
+        else {"status": "SKIPPED", "reason": "scale-200 schedule is owned by scale200_corpus"}
+    )
     durations = [float(row["duration_seconds"]) for row in stats_rows]
     by_voice: dict[str, dict[str, Any]] = {}
     for voice in ALL_STYLES:
@@ -1418,7 +1541,7 @@ def summarize_supertonic_audio(config: dict[str, Any]) -> dict[str, Any]:
             "holdout_audio_manifest_sha256": validation["holdout_audio_manifest_sha256"],
             "native_manifest_sha256": file_sha256(paths.native_manifest),
             "training_probe_manifest_sha256": file_sha256(paths.training_probe_manifest),
-            "exposure_schedule_sha256": file_sha256(paths.exposure_schedule),
+            "exposure_schedule_sha256": optional_file_sha256(paths.exposure_schedule),
             "tts_config_sha256": file_sha256(SUPERTONIC_CONFIG_PATH),
         },
         "audio_format": {

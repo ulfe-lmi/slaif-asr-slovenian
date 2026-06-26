@@ -1,0 +1,78 @@
+{
+  "certificate_sha256": "eccdad5a200c46a6d1426ae0b7ea90e42695d2a41ff7e0c4ff670979d1293585",
+  "counts": {
+    "augmented_files": 17600,
+    "clean_files": 14400,
+    "piper_clean_files": 1600,
+    "semantic_rows": 1600,
+    "supertonic_clean_files": 12800,
+    "view_records": 32000
+  },
+  "duration_seconds": {
+    "augmented": 67442.3875,
+    "clean": 54664.353125
+  },
+  "hashes": {
+    "all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+    "augmentation_manifest_sha256": "52aa1ebe3218f667d8807499b4fc50645d57cd6e8001ad9dd0bb8bbbd41a6e0b",
+    "fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+    "piper_audio_manifest_sha256": "12a1ca66259f7753990d2751224c48c3c26c84a407061b82eb77b35ba35ee291",
+    "supertonic_audio_manifest_sha256": "f20150fb5bdb0d976422f9d34e5a8e5a60dca6ab16d444009f1fd01998e014e0"
+  },
+  "limitations": [
+    "All audio is synthetic.",
+    "The 200x multiplier is exposure count, not independent linguistic information.",
+    "No TRAINING_ELIGIBLE status is issued."
+  ],
+  "multiplier_table": {
+    "augmentation_views_per_text": 11,
+    "clean_voice_realizations_per_text": 9,
+    "exposure_multiplier": 200,
+    "interpretation": "200x refers to deterministic exposure count, not independent linguistic information.",
+    "new_semantic_items": 1600,
+    "reference_semantic_items": 160,
+    "semantic_text_multiplier": 10,
+    "total_view_records": 32000
+  },
+  "profile_counts": {
+    "codec_sample_rate_simulation": 1600,
+    "coloured_electrical_noise": 1600,
+    "compound_realistic_condition": 1600,
+    "coupled_speed_pitch_resampling": 1600,
+    "environmental_background_noise": 1600,
+    "gain_dynamic_range_variation": 1600,
+    "microphone_channel_filtering": 1600,
+    "mild_pitch_formant_vtlp_proxy": 1600,
+    "procedural_room_impulse_response": 1600,
+    "tempo_preserving_pitch": 1600,
+    "timing_silence_variation": 1600
+  },
+  "report_id": "0012-nine-voice-scale200-acoustic-admission",
+  "schedule": {
+    "exposures": 32000,
+    "heldout_voice_exposures": {
+      "supertonic-F5": 0,
+      "supertonic-M5": 0
+    },
+    "optimizer_steps": 4000,
+    "schedule_sha256": "dc15089184a6e479da173ad5e1e184e2510ef89974b95576f7f4e2f262cbb4d9"
+  },
+  "schema_version": "1.0",
+  "status": "AUDIO_ACCEPTED",
+  "validation": {
+    "duplicate_hashes": 0,
+    "duplicate_paths": 0,
+    "issues_by_reason": {}
+  },
+  "voice_counts": {
+    "piper-sl_SI-artur-medium": 3555,
+    "supertonic-F1": 3556,
+    "supertonic-F2": 3556,
+    "supertonic-F3": 3555,
+    "supertonic-F4": 3554,
+    "supertonic-M1": 3556,
+    "supertonic-M2": 3556,
+    "supertonic-M3": 3556,
+    "supertonic-M4": 3556
+  }
+}
