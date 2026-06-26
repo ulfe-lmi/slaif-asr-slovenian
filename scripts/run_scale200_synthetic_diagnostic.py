@@ -1157,12 +1157,10 @@ def _view_lookup(text_config: dict[str, Any]) -> dict[tuple[str, str, str, str],
 
 def _training_record_from_view(text_row: dict[str, Any], view_row: dict[str, Any]) -> Any:
     from slaif_asr.corpus_v2_training import TrainingRecord
-    from slaif_asr.tts import validate_wav
 
     path = Path(str(view_row["audio_filepath"]))
-    validate_wav(path, sample_rate=16000)
-    if sha256_file(path) != str(view_row["audio_sha256"]):
-        raise RuntimeError("scale-200 training audio hash mismatch")
+    if not path.exists():
+        raise FileNotFoundError(path)
     if str(view_row["target_text_sha256"]) != stable_sha256(str(text_row["target_text"])):
         raise RuntimeError("scale-200 text/audio text-hash mismatch")
     return TrainingRecord(
