@@ -1,5 +1,5 @@
 {
-  "certificate_sha256": "e34421ee71f306603f7494493ba3fbebb962033c93655686379b33f16615a3d7",
+  "certificate_sha256": "eccdad5a200c46a6d1426ae0b7ea90e42695d2a41ff7e0c4ff670979d1293585",
   "counts": {
     "augmented_files": 17600,
     "clean_files": 14400,
@@ -55,7 +55,7 @@
       "supertonic-M5": 0
     },
     "optimizer_steps": 4000,
-    "schedule_sha256": "63a3313440e14a728a1615bd739ab388f5c167c5ecb8c3b50bc0b4309274e7cf"
+    "schedule_sha256": "dc15089184a6e479da173ad5e1e184e2510ef89974b95576f7f4e2f262cbb4d9"
   },
   "schema_version": "1.0",
   "status": "AUDIO_ACCEPTED",

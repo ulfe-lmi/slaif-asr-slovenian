@@ -16,7 +16,7 @@ This report records aggregate-only evidence for the synthetic scale-200 audio ba
 
 - Fixed text SHA256: `9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf`
 - All views SHA256: `c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775`
-- Exposure schedule SHA256: `63a3313440e14a728a1615bd739ab388f5c167c5ecb8c3b50bc0b4309274e7cf`
+- Exposure schedule SHA256: `dc15089184a6e479da173ad5e1e184e2510ef89974b95576f7f4e2f262cbb4d9`
 
 ## Safety
 

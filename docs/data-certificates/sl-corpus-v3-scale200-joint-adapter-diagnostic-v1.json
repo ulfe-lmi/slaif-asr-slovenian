@@ -8,7 +8,7 @@
     "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter"
   },
   "all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
-  "audio_certificate_sha256": "e34421ee71f306603f7494493ba3fbebb962033c93655686379b33f16615a3d7",
+  "audio_certificate_sha256": "eccdad5a200c46a6d1426ae0b7ea90e42695d2a41ff7e0c4ff670979d1293585",
   "augmentation_policy_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
   "authorized_actions": [
     "internally train one frozen-base Slovenian joint-adapter arm on the declared 32,000-exposure synthetic schedule",
@@ -26,7 +26,7 @@
     "suite_rows": 1378
   },
   "experiment_config_sha256": "f8183dca1a64fcac585bd8bf241adefbc36900aa49ebb564a761d3ac1318b6f3",
-  "exposure_schedule_sha256": "63a3313440e14a728a1615bd739ab388f5c167c5ecb8c3b50bc0b4309274e7cf",
+  "exposure_schedule_sha256": "dc15089184a6e479da173ad5e1e184e2510ef89974b95576f7f4e2f262cbb4d9",
   "fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
   "limitations": [
     "DIAGNOSTIC_ONLY synthetic experiment.",

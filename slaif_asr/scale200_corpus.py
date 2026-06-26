@@ -1243,12 +1243,12 @@ def build_exposure_schedule(
                     "batch_order_seed": stable_sha256(f"{seed}:{round_index}:{position}"),
                 }
             )
-    for profile in profiles:
+    for profile_index, profile in enumerate(profiles):
         round_index = int(profile["view_round"])
         profile_id = str(profile["profile_id"])
         for position, row in enumerate(ordered):
-            voice = clean_voices[(position + round_index) % len(clean_voices)]
-            spec_augment = ((position + round_index) % 2) == 0
+            voice = clean_voices[(position + profile_index) % len(clean_voices)]
+            spec_augment = ((position + profile_index) % 2) == 0
             schedule.append(
                 {
                     "round": round_index,
