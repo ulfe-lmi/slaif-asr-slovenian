@@ -266,8 +266,10 @@ def verify_text_admission_inputs(generation_config: dict[str, Any], *, corpus_ro
     }
 
 
-def piper_runtime_env(piper_python: Path) -> dict[str, str]:
+def piper_runtime_env(piper_python: Path, *, cuda_visible_devices: str | None = None) -> dict[str, str]:
     env = os.environ.copy()
+    if cuda_visible_devices is not None:
+        env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
     python_path = piper_python if piper_python.is_absolute() else REPO_ROOT / piper_python
     venv_root = python_path.parents[1]
     site_roots = sorted((venv_root / "lib").glob("python*/site-packages/nvidia/*/lib"))
@@ -443,6 +445,7 @@ def render_one_item(
     tts_config: dict[str, Any],
     paths: AudioPaths,
     output_root: Path | None,
+    cuda_visible_devices: str | None = None,
 ) -> dict[str, Any]:
     voice_root = repo_resolve(tts_config["voice"]["local_storage_dir"])
     model_path = voice_root / next(entry["path"] for entry in tts_config["voice"]["files"] if entry["role"] == "model")
@@ -466,7 +469,7 @@ def render_one_item(
         text=item.spoken_text,
     )
     start = time.perf_counter()
-    completed = run_piper_command(command, env=piper_runtime_env(piper_python))
+    completed = run_piper_command(command, env=piper_runtime_env(piper_python, cuda_visible_devices=cuda_visible_devices))
     wall = time.perf_counter() - start
     atomic_write_text(log_path, completed.stdout)
     if completed.returncode != 0:
@@ -527,7 +530,7 @@ def render_one_item(
             "voice_repository": tts_config["voice"]["repository"],
             "voice_revision": tts_config["voice"]["revision"],
             "execution_provider": tts_config["runtime"]["required_execution_provider"],
-            "physical_gpu_selector": os.environ.get("CUDA_VISIBLE_DEVICES"),
+            "physical_gpu_selector": cuda_visible_devices or os.environ.get("CUDA_VISIBLE_DEVICES"),
         },
         "runtime": {
             "piper_wall_time_seconds": round(wall, 6),

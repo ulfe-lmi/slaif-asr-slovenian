@@ -66,6 +66,7 @@ SUPPORTED_TTS_IDS = {
     "supertonic3-sl-multivoice-v1",
     "supertonic3-sl-multivoice-batched-replay-v1",
     "supertonic3-sl-scale200-training-v1",
+    "supertonic3-sl-scale2000-training-v1",
 }
 
 
