@@ -1630,6 +1630,31 @@ def stage_final_summarize(config_path: Path) -> dict[str, Any]:
     audio_report = read_json(_audio_report_json_path(experiment))
     training = read_json(_experiment_run_dir(experiment) / ARM_NAME / "training-summary.local.json")
     evaluation = read_json(_experiment_run_dir(experiment) / "directional-evaluation" / "summary.local.json")
+
+    def public_suite_summary(suite: dict[str, Any]) -> dict[str, Any]:
+        layout = suite["layout"]
+        return {
+            "rows": suite["rows"],
+            "prediction_count": suite["prediction_count"],
+            "audio_duration_seconds": suite["audio_duration_seconds"],
+            "wall_time_seconds": suite["wall_time_seconds"],
+            "real_time_factor": suite["real_time_factor"],
+            "rows_per_second": suite["rows_per_second"],
+            "audio_seconds_per_wall_second": suite["audio_seconds_per_wall_second"],
+            "gpu_monitor": suite["gpu_monitor"],
+            "layout": {
+                "batch_size": layout["batch_size"],
+                "bucketed": layout["bucketed"],
+                "batch_count": layout["batch_count"],
+                "full_batch_count": layout["full_batch_count"],
+                "final_partial_batch_size": layout["final_partial_batch_size"],
+                "actual_audio_seconds": layout["actual_audio_seconds"],
+                "padded_audio_seconds": layout["padded_audio_seconds"],
+                "padding_ratio": layout["padding_ratio"],
+                "max_padded_batch_duration": layout["max_padded_batch_duration"],
+            },
+        }
+
     public = {
         "schema_version": "1.0",
         "experiment_id": experiment["experiment_id"],
@@ -1701,7 +1726,7 @@ def stage_final_summarize(config_path: Path) -> dict[str, Any]:
             "decision": evaluation["decision"],
             "scale200_model_summary": {
                 "checkpoint_sha256": evaluation["models"]["scale200_joint_adapter"]["checkpoint_sha256"],
-                "suite": evaluation["models"]["scale200_joint_adapter"]["suite"],
+                "suite": public_suite_summary(evaluation["models"]["scale200_joint_adapter"]["suite"]),
             },
         },
         "limitations": [
