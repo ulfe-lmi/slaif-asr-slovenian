@@ -1,0 +1,74 @@
+{
+  "adapter": {
+    "bottleneck_dimension": 32,
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
+    "expected_trainable_parameters": 42240,
+    "module": "model.joint",
+    "name": "sl-si-joint-adapter-v1",
+    "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter"
+  },
+  "all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+  "audio_certificate_sha256": "e34421ee71f306603f7494493ba3fbebb962033c93655686379b33f16615a3d7",
+  "augmentation_policy_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
+  "authorized_actions": [
+    "internally train one frozen-base Slovenian joint-adapter arm on the declared 32,000-exposure synthetic schedule",
+    "evaluate the trained adapter using the declared batch-32 directional suite",
+    "write privacy-safe aggregate evidence"
+  ],
+  "certificate_id": "sl-corpus-v3-scale200-joint-adapter-diagnostic-v1",
+  "decision_date": "2026-06-26",
+  "evaluation": {
+    "batch_size": 32,
+    "canonical": false,
+    "duration_bucketing": true,
+    "policy": "configs/evaluation/a100-directional-batch32-v1.json",
+    "promotion_eligible": false,
+    "suite_rows": 1378
+  },
+  "experiment_config_sha256": "f8183dca1a64fcac585bd8bf241adefbc36900aa49ebb564a761d3ac1318b6f3",
+  "exposure_schedule_sha256": "63a3313440e14a728a1615bd739ab388f5c167c5ecb8c3b50bc0b4309274e7cf",
+  "fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+  "limitations": [
+    "DIAGNOSTIC_ONLY synthetic experiment.",
+    "The 200x multiplier is an exposure-count multiplier, not independent linguistic information.",
+    "Fast batch-32 evaluation is directional and noncanonical."
+  ],
+  "model": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "named_exception": "scale-200 synthetic joint-adapter diagnostic",
+  "prohibited_actions": [
+    "issuing TRAINING_ELIGIBLE",
+    "accepting a checkpoint or adapter as a parent",
+    "running batch-1 canonical evaluation",
+    "using M5/F5 or holdout rows in training",
+    "publishing generated text, audio, adapter, or checkpoint artifacts",
+    "changing adapter rank, optimizer, learning rate, batch size, or text membership"
+  ],
+  "schema_version": "1.0",
+  "status": "DIAGNOSTIC_ONLY",
+  "text_certificate_sha256": "80a00f8c29d0f6e3635c92b928e12a80269ca06e597115a1b03d1e49d4ab4574",
+  "training": {
+    "arm": "gams1600_nine_voice_augmented_joint_adapter_dim32",
+    "batch_size": 8,
+    "early_stopping": false,
+    "exposure_rounds": 20,
+    "gradient_accumulation": "none",
+    "gradient_clipping": "none",
+    "learning_rate": 0.001,
+    "optimizer": "AdamW",
+    "optimizer_steps": 4000,
+    "precision": "fp32",
+    "sample_exposures": 32000,
+    "scheduler": "none",
+    "seed": 1234,
+    "semantic_rows": 1600,
+    "spec_augment": "fixed_mild_on_half_augmented_exposures",
+    "tf32": false,
+    "weight_decay": 0.0
+  },
+  "work_order_id": "0025"
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "tts_id": "supertonic3-sl-scale200-training-v1",
+  "package": {
+    "name": "supertonic",
+    "version": "1.3.1",
+    "license": "MIT",
+    "environment": ".venv-supertonic"
+  },
+  "model": {
+    "repository": "Supertone/supertonic-3",
+    "name": "supertonic-3",
+    "revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "license": "BigScience OpenRAIL-M",
+    "local_dir": "models/tts/supertonic-3/724fb5abbf5502583fb520898d45929e62f02c0b",
+    "auto_download": false
+  },
+  "language": {
+    "code": "sl",
+    "fallback_na_allowed": false
+  },
+  "runtime": {
+    "execution_device": "cuda",
+    "cuda_visible_devices": "1",
+    "required_provider": "CUDAExecutionProvider",
+    "cpu_provider_fallback_allowed": false
+  },
+  "voice_styles": {
+    "available": ["M1", "M2", "M3", "M4", "M5", "F1", "F2", "F3", "F4", "F5"],
+    "training": ["M1", "M2", "M3", "M4", "F1", "F2", "F3", "F4"],
+    "held_out": ["M5", "F5"],
+    "style_labels_are_presets_only": true
+  },
+  "synthesis": {
+    "total_steps": 8,
+    "speed": 1.05,
+    "max_chunk_length": 300,
+    "silence_duration": 0.3,
+    "expression_tags_allowed": false,
+    "custom_voice_builder_allowed": false,
+    "native_sample_rate": 44100,
+    "final_sample_rate": 16000
+  },
+  "batch_synthesis": {
+    "enabled": true,
+    "batch_size": 32,
+    "oom_fallback_batch_size": 16,
+    "seed": 1234,
+    "sort_key": ["preprocessed_text_length", "partition", "source_key_hash", "voice_style_id"]
+  },
+  "conversion": {
+    "max_workers": 16,
+    "bounded_queue_multiplier": 2
+  },
+  "inputs": {
+    "scale200_fixed_text": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/fixed-training-text.local.jsonl",
+    "scale200_fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+    "selected_rows": 1600,
+    "include_holdout": false
+  },
+  "expected_counts": {
+    "selected_training": 12800,
+    "synthetic_holdout": 0,
+    "total_variants": 12800,
+    "training_voices_per_text": 8
+  },
+  "training_schedule": {
+    "write_legacy_schedule": false
+  },
+  "local_outputs": {
+    "run_root": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic",
+    "native_manifest": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/native-manifest.local.jsonl",
+    "audio_manifest": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/audio-manifest.local.jsonl",
+    "training_audio_manifest": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/training-audio-manifest.local.jsonl",
+    "holdout_audio_manifest": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/holdout-audio-manifest.local.jsonl",
+    "training_probe_manifest": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/training-voice-probe.local.jsonl",
+    "exposure_schedule": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/exposure-schedule.local.jsonl",
+    "validation": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/audio-validation.local.json",
+    "summary": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/summary.local.json",
+    "progress_dir": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/progress",
+    "logs_dir": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/supertonic/logs"
+  }
+}

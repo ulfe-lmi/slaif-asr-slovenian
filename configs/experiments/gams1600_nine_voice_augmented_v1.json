@@ -13,10 +13,12 @@
   "model": {
     "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
     "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
     "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
     "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
   },
   "adapter": {
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
     "module": "model.joint",
     "name": "sl-si-joint-adapter-v1",
     "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter",
@@ -54,6 +56,7 @@
     "run_root": "runs/experiments/gams1600-nine-voice-scale200-directional-v1",
     "data_root": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1"
   },
+  "run_dir": "runs/experiments/gams1600-nine-voice-scale200-directional-v1",
   "public_outputs": {
     "text_certificate": "docs/data-certificates/sl-corpus-v3-gams-1600-text-v1.json",
     "audio_certificate": "docs/data-certificates/sl-corpus-v3-nine-voice-augmented-audio-v1.json",

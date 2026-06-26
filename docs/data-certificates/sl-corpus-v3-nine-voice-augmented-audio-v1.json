@@ -1,0 +1,104 @@
+{
+  "augmentation": {
+    "policy_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
+    "profile_counts": {
+      "codec_sample_rate_simulation": 1600,
+      "coloured_electrical_noise": 1600,
+      "compound_realistic_condition": 1600,
+      "coupled_speed_pitch_resampling": 1600,
+      "environmental_background_noise": 1600,
+      "gain_dynamic_range_variation": 1600,
+      "microphone_channel_filtering": 1600,
+      "mild_pitch_formant_vtlp_proxy": 1600,
+      "procedural_room_impulse_response": 1600,
+      "tempo_preserving_pitch": 1600,
+      "timing_silence_variation": 1600
+    },
+    "render_version": "scale200-transcript-preserving-render-v2"
+  },
+  "certificate_id": "sl-corpus-v3-nine-voice-augmented-audio-v1",
+  "corpus_id": "sl-corpus-v3-gams-1600-training-v1",
+  "counts": {
+    "augmented_files": 17600,
+    "clean_files": 14400,
+    "piper_clean_files": 1600,
+    "semantic_rows": 1600,
+    "supertonic_clean_files": 12800,
+    "view_records": 32000
+  },
+  "decision_date": "2026-06-26",
+  "fixed_text_sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+  "hashes": {
+    "all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+    "augmentation_manifest_sha256": "52aa1ebe3218f667d8807499b4fc50645d57cd6e8001ad9dd0bb8bbbd41a6e0b",
+    "piper_audio_manifest_sha256": "12a1ca66259f7753990d2751224c48c3c26c84a407061b82eb77b35ba35ee291",
+    "supertonic_audio_manifest_sha256": "f20150fb5bdb0d976422f9d34e5a8e5a60dca6ab16d444009f1fd01998e014e0"
+  },
+  "limitations": [
+    "All audio is synthetic.",
+    "The 200x multiplier is exposure count, not independent linguistic information.",
+    "No TRAINING_ELIGIBLE status is issued."
+  ],
+  "prohibited_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "schedule": {
+    "exposures": 32000,
+    "heldout_voice_exposures": {
+      "supertonic-F5": 0,
+      "supertonic-M5": 0
+    },
+    "optimizer_steps": 4000,
+    "schedule_sha256": "63a3313440e14a728a1615bd739ab388f5c167c5ecb8c3b50bc0b4309274e7cf"
+  },
+  "schema_version": "1.0",
+  "status": "AUDIO_ACCEPTED",
+  "synthesis": {
+    "augmentation": {
+      "items_per_second": 40.776146,
+      "manifest_sha256": "52aa1ebe3218f667d8807499b4fc50645d57cd6e8001ad9dd0bb8bbbd41a6e0b",
+      "wall_time_seconds": 431.624902
+    },
+    "piper": {
+      "audio_manifest_sha256": "12a1ca66259f7753990d2751224c48c3c26c84a407061b82eb77b35ba35ee291",
+      "utterances_per_minute": 75.809726,
+      "wall_time_seconds": 1266.328288
+    },
+    "supertonic": {
+      "audio_manifest_sha256": "f20150fb5bdb0d976422f9d34e5a8e5a60dca6ab16d444009f1fd01998e014e0",
+      "converted_rows": 12800,
+      "native_rows": 12800,
+      "resumed_from_complete_manifests": true
+    }
+  },
+  "text_certificate_sha256": "80a00f8c29d0f6e3635c92b928e12a80269ca06e597115a1b03d1e49d4ab4574",
+  "validation": {
+    "duplicate_hashes": 0,
+    "duplicate_paths": 0,
+    "issues_by_reason": {}
+  },
+  "voices": {
+    "clean_training_views": [
+      "piper-sl_SI-artur-medium",
+      "supertonic-M1",
+      "supertonic-M2",
+      "supertonic-M3",
+      "supertonic-M4",
+      "supertonic-F1",
+      "supertonic-F2",
+      "supertonic-F3",
+      "supertonic-F4"
+    ],
+    "voice_counts": {
+      "piper-sl_SI-artur-medium": 3555,
+      "supertonic-F1": 3556,
+      "supertonic-F2": 3556,
+      "supertonic-F3": 3555,
+      "supertonic-F4": 3554,
+      "supertonic-M1": 3556,
+      "supertonic-M2": 3556,
+      "supertonic-M3": 3556,
+      "supertonic-M4": 3556
+    }
+  }
+}
