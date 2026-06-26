@@ -1,0 +1,904 @@
+{
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "new_addition_corpus_id": "sl-corpus-v4-gams-14400-addition-v1",
+  "partition_role": "selected_training",
+  "source_type": "generated_text",
+  "prompt_revision": "sl-corpus-v4-gams-16000-v1",
+  "final_rows": 16000,
+  "new_rows": 14400,
+  "combined_rows_per_cell": 400,
+  "inherited_rows_per_cell": 40,
+  "new_rows_per_cell": 360,
+  "new_surplus_per_cell": 40,
+  "shards_per_cell": 9,
+  "requested_rows_per_shard": 60,
+  "initial_requested_rows": 21600,
+  "maximum_requested_rows": 86400,
+  "run_directory": "runs/data-quality/sl-corpus-v4-gams-16000-training-v1",
+  "model": {
+    "repository": "cjvt/GaMS3-12B-Instruct",
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc",
+    "license": "Gemma Terms of Use"
+  },
+  "quantization": {
+    "policy": "4bit-nf4-double-quant-bf16",
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "double_quantization": true,
+    "compute_dtype": "bfloat16"
+  },
+  "device_policy": {
+    "cuda_visible_devices": "1",
+    "visible_gpu_count": 1,
+    "max_memory_gib": 76,
+    "cpu_offload": false,
+    "disk_offload": false
+  },
+  "generation": {
+    "prompt_batch_size": 8,
+    "oom_fallback_batch_size": 4,
+    "max_new_tokens": 1536,
+    "temperature": 0.8,
+    "top_p": 0.92,
+    "monitor_interval_seconds": 0.2
+  },
+  "retry_policy": {
+    "max_verification_rounds": 8,
+    "max_attempts_per_shard": 12,
+    "max_attempts_per_cell": 48,
+    "max_total_attempts": 1440,
+    "max_requested_rows": 86400,
+    "max_refill_attempts_per_deficient_cell_per_round": 5,
+    "adaptive_refill_divisor": 40
+  },
+  "diversity_retry_guidance": [
+    "avoid the most frequent sentence openings",
+    "vary clause structure",
+    "vary grammatical person and number",
+    "avoid repeated question frames",
+    "vary named entities and quantities",
+    "avoid discovered artificial carriers"
+  ],
+  "inherited_corpus": {
+    "corpus_id": "sl-corpus-v3-gams-1600-training-v1",
+    "text": "runs/data-quality/sl-corpus-v3-gams-1600-training-v1/fixed-training-text.local.jsonl",
+    "sha256": "9a23df00734193eca0a52bf9b3dae385ff6087d0282529f3f4cb1a28bbf6dccf",
+    "rows": 1600,
+    "rows_per_cell": 40,
+    "all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+    "audio_certificate_sha256": "eccdad5a200c46a6d1426ae0b7ea90e42695d2a41ff7e0c4ff670979d1293585"
+  },
+  "protected_indexes": [
+    "runs/data-quality/protected/fleurs-v2.hash-index.json",
+    "runs/data-quality/protected/artur-j.hash-index.json"
+  ],
+  "existing_holdout": {
+    "text": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/accepted-holdout.local.jsonl",
+    "linguistic_review": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/accepted-holdout-linguistic-review.local.jsonl",
+    "sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "rows": 96
+  },
+  "public_reports": {
+    "text_json": "docs/data-reports/0013-gams16000-text-admission.json",
+    "text_markdown": "docs/data-reports/0013-gams16000-text-admission.md",
+    "audio_json": "docs/data-reports/0014-scale2000-acoustic-admission.json",
+    "audio_markdown": "docs/data-reports/0014-scale2000-acoustic-admission.md"
+  },
+  "public_certificates": {
+    "text": "docs/data-certificates/sl-corpus-v4-gams-16000-text-v1.json",
+    "audio": "docs/data-certificates/sl-corpus-v4-scale2000-audio-v1.json",
+    "experiment": "docs/data-certificates/sl-corpus-v4-scale2000-joint-adapter-diagnostic-v1.json"
+  },
+  "prompt_cells": [
+    {
+      "cell_id": "cell01",
+      "domain": "everyday conversation",
+      "register": "spontaneous short spoken turns",
+      "length_target": "short",
+      "phenomena": [
+        "everyday_conversation",
+        "questions",
+        "clitics"
+      ],
+      "source_family_id": "gams-v3-everyday-conversation",
+      "prompt_revision": "gams-v3-cell01-v1",
+      "seed_sequence": [
+        730101,
+        730102,
+        730103
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell02",
+      "domain": "questions and requests",
+      "register": "natural polite and informal requests",
+      "length_target": "short to medium",
+      "phenomena": [
+        "questions",
+        "requests",
+        "case_government"
+      ],
+      "source_family_id": "gams-v3-questions-requests",
+      "prompt_revision": "gams-v3-cell02-v1",
+      "seed_sequence": [
+        730201,
+        730202,
+        730203
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell03",
+      "domain": "commands and instructions",
+      "register": "practical spoken instructions",
+      "length_target": "short to medium",
+      "phenomena": [
+        "commands",
+        "imperatives",
+        "negation"
+      ],
+      "source_family_id": "gams-v3-commands-instructions",
+      "prompt_revision": "gams-v3-cell03-v1",
+      "seed_sequence": [
+        730301,
+        730302,
+        730303
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell04",
+      "domain": "public services and administration",
+      "register": "ordinary administrative situations",
+      "length_target": "medium",
+      "phenomena": [
+        "public_services",
+        "institutions",
+        "requests"
+      ],
+      "source_family_id": "gams-v3-public-services",
+      "prompt_revision": "gams-v3-cell04-v1",
+      "seed_sequence": [
+        730401,
+        730402,
+        730403
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell05",
+      "domain": "health and appointments",
+      "register": "patient and appointment speech",
+      "length_target": "short to medium",
+      "phenomena": [
+        "appointments",
+        "dates",
+        "times"
+      ],
+      "source_family_id": "gams-v3-health-appointments",
+      "prompt_revision": "gams-v3-cell05-v1",
+      "seed_sequence": [
+        730501,
+        730502,
+        730503
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell06",
+      "domain": "education and school",
+      "register": "student parent teacher communication",
+      "length_target": "medium",
+      "phenomena": [
+        "education",
+        "agreement",
+        "dual_forms"
+      ],
+      "source_family_id": "gams-v3-education",
+      "prompt_revision": "gams-v3-cell06-v1",
+      "seed_sequence": [
+        730601,
+        730602,
+        730603
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell07",
+      "domain": "transport and mobility",
+      "register": "travel logistics and movement",
+      "length_target": "short to medium",
+      "phenomena": [
+        "transport",
+        "locations",
+        "times"
+      ],
+      "source_family_id": "gams-v3-transport",
+      "prompt_revision": "gams-v3-cell07-v1",
+      "seed_sequence": [
+        730701,
+        730702,
+        730703
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell08",
+      "domain": "travel and accommodation",
+      "register": "tourism and trip planning",
+      "length_target": "medium",
+      "phenomena": [
+        "travel",
+        "addresses",
+        "named_entities"
+      ],
+      "source_family_id": "gams-v3-travel",
+      "prompt_revision": "gams-v3-cell08-v1",
+      "seed_sequence": [
+        730801,
+        730802,
+        730803
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell09",
+      "domain": "home food and daily planning",
+      "register": "ordinary home conversation",
+      "length_target": "short to medium",
+      "phenomena": [
+        "home",
+        "food",
+        "quantities"
+      ],
+      "source_family_id": "gams-v3-home-food",
+      "prompt_revision": "gams-v3-cell09-v1",
+      "seed_sequence": [
+        730901,
+        730902,
+        730903
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell10",
+      "domain": "work and business",
+      "register": "workplace coordination",
+      "length_target": "medium",
+      "phenomena": [
+        "work",
+        "business",
+        "dates"
+      ],
+      "source_family_id": "gams-v3-work-business",
+      "prompt_revision": "gams-v3-cell10-v1",
+      "seed_sequence": [
+        731001,
+        731002,
+        731003
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell11",
+      "domain": "culture and events",
+      "register": "public cultural information",
+      "length_target": "medium",
+      "phenomena": [
+        "culture",
+        "events",
+        "locations"
+      ],
+      "source_family_id": "gams-v3-culture-events",
+      "prompt_revision": "gams-v3-cell11-v1",
+      "seed_sequence": [
+        731101,
+        731102,
+        731103
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell12",
+      "domain": "sports and recreation",
+      "register": "ordinary sports discussion",
+      "length_target": "short to medium",
+      "phenomena": [
+        "sports",
+        "quantities",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-sports",
+      "prompt_revision": "gams-v3-cell12-v1",
+      "seed_sequence": [
+        731201,
+        731202,
+        731203
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell13",
+      "domain": "environment and weather",
+      "register": "observations and practical notices",
+      "length_target": "medium",
+      "phenomena": [
+        "environment",
+        "weather",
+        "measurements"
+      ],
+      "source_family_id": "gams-v3-environment-weather",
+      "prompt_revision": "gams-v3-cell13-v1",
+      "seed_sequence": [
+        731301,
+        731302,
+        731303
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell14",
+      "domain": "technical language",
+      "register": "bounded everyday technical speech",
+      "length_target": "medium",
+      "phenomena": [
+        "technical_language",
+        "code_switching",
+        "instructions"
+      ],
+      "source_family_id": "gams-v3-technical",
+      "prompt_revision": "gams-v3-cell14-v1",
+      "seed_sequence": [
+        731401,
+        731402,
+        731403
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell15",
+      "domain": "scientific language",
+      "register": "careful explanatory statements",
+      "length_target": "medium to long",
+      "phenomena": [
+        "scientific_language",
+        "measurements",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-scientific",
+      "prompt_revision": "gams-v3-cell15-v1",
+      "seed_sequence": [
+        731501,
+        731502,
+        731503
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell16",
+      "domain": "numbers and quantities",
+      "register": "natural numeric statements",
+      "length_target": "short to medium",
+      "phenomena": [
+        "numbers",
+        "quantities",
+        "measurements"
+      ],
+      "source_family_id": "gams-v3-numbers-quantities",
+      "prompt_revision": "gams-v3-cell16-v1",
+      "seed_sequence": [
+        731601,
+        731602,
+        731603
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell17",
+      "domain": "dates times and schedules",
+      "register": "appointment and scheduling speech",
+      "length_target": "short to medium",
+      "phenomena": [
+        "dates",
+        "times",
+        "appointments"
+      ],
+      "source_family_id": "gams-v3-dates-times",
+      "prompt_revision": "gams-v3-cell17-v1",
+      "seed_sequence": [
+        731701,
+        731702,
+        731703
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell18",
+      "domain": "addresses and locations",
+      "register": "navigation and local information",
+      "length_target": "medium",
+      "phenomena": [
+        "addresses",
+        "slovenian_locations",
+        "case_government"
+      ],
+      "source_family_id": "gams-v3-addresses-locations",
+      "prompt_revision": "gams-v3-cell18-v1",
+      "seed_sequence": [
+        731801,
+        731802,
+        731803
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell19",
+      "domain": "currencies and prices",
+      "register": "shop service and budget speech",
+      "length_target": "short to medium",
+      "phenomena": [
+        "currencies",
+        "numbers",
+        "requests"
+      ],
+      "source_family_id": "gams-v3-currencies-prices",
+      "prompt_revision": "gams-v3-cell19-v1",
+      "seed_sequence": [
+        731901,
+        731902,
+        731903
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell20",
+      "domain": "named entities and Slovenian places",
+      "register": "natural references to people and places",
+      "length_target": "medium",
+      "phenomena": [
+        "named_entities",
+        "slovenian_locations",
+        "entity_inflection"
+      ],
+      "source_family_id": "gams-v3-named-entities-places",
+      "prompt_revision": "gams-v3-cell20-v1",
+      "seed_sequence": [
+        732001,
+        732002,
+        732003
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell21",
+      "domain": "inflected personal names",
+      "register": "ordinary references to people",
+      "length_target": "short to medium",
+      "phenomena": [
+        "personal_names",
+        "entity_inflection",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-inflected-names",
+      "prompt_revision": "gams-v3-cell21-v1",
+      "seed_sequence": [
+        732101,
+        732102,
+        732103
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell22",
+      "domain": "dual forms",
+      "register": "natural dual-number contexts",
+      "length_target": "short to medium",
+      "phenomena": [
+        "dual_forms",
+        "agreement",
+        "clitics"
+      ],
+      "source_family_id": "gams-v3-dual-forms",
+      "prompt_revision": "gams-v3-cell22-v1",
+      "seed_sequence": [
+        732201,
+        732202,
+        732203
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell23",
+      "domain": "clitics and function words",
+      "register": "fluent spoken Slovenian",
+      "length_target": "short to medium",
+      "phenomena": [
+        "clitics",
+        "function_words",
+        "negation"
+      ],
+      "source_family_id": "gams-v3-clitics",
+      "prompt_revision": "gams-v3-cell23-v1",
+      "seed_sequence": [
+        732301,
+        732302,
+        732303
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell24",
+      "domain": "case government and prepositions",
+      "register": "ordinary inflected speech",
+      "length_target": "medium",
+      "phenomena": [
+        "case_government",
+        "prepositions",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-case-prepositions",
+      "prompt_revision": "gams-v3-cell24-v1",
+      "seed_sequence": [
+        732401,
+        732402,
+        732403
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell25",
+      "domain": "agreement and morphology",
+      "register": "morphologically varied statements",
+      "length_target": "medium",
+      "phenomena": [
+        "agreement",
+        "morphology",
+        "dual_forms"
+      ],
+      "source_family_id": "gams-v3-agreement-morphology",
+      "prompt_revision": "gams-v3-cell25-v1",
+      "seed_sequence": [
+        732501,
+        732502,
+        732503
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell26",
+      "domain": "negation and contrast",
+      "register": "natural statements and corrections",
+      "length_target": "short to medium",
+      "phenomena": [
+        "negation",
+        "contrast",
+        "clitics"
+      ],
+      "source_family_id": "gams-v3-negation-contrast",
+      "prompt_revision": "gams-v3-cell26-v1",
+      "seed_sequence": [
+        732601,
+        732602,
+        732603
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell27",
+      "domain": "long informational speech",
+      "register": "prepared public explanation",
+      "length_target": "long",
+      "phenomena": [
+        "longer_informational_speech",
+        "public_information",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-long-informational",
+      "prompt_revision": "gams-v3-cell27-v1",
+      "seed_sequence": [
+        732701,
+        732702,
+        732703
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell28",
+      "domain": "interview-style statements",
+      "register": "answering questions in public speech",
+      "length_target": "medium to long",
+      "phenomena": [
+        "interview_style",
+        "spontaneous_style",
+        "public_speech"
+      ],
+      "source_family_id": "gams-v3-interview-style",
+      "prompt_revision": "gams-v3-cell28-v1",
+      "seed_sequence": [
+        732801,
+        732802,
+        732803
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell29",
+      "domain": "spontaneous-style utterances",
+      "register": "natural spoken reactions",
+      "length_target": "short",
+      "phenomena": [
+        "spontaneous_style",
+        "function_words",
+        "questions"
+      ],
+      "source_family_id": "gams-v3-spontaneous-style",
+      "prompt_revision": "gams-v3-cell29-v1",
+      "seed_sequence": [
+        732901,
+        732902,
+        732903
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell30",
+      "domain": "reasonable code-switching",
+      "register": "Slovenian speech with bounded foreign terms",
+      "length_target": "medium",
+      "phenomena": [
+        "code_switching",
+        "technical_language",
+        "case_government"
+      ],
+      "source_family_id": "gams-v3-code-switching",
+      "prompt_revision": "gams-v3-cell30-v1",
+      "seed_sequence": [
+        733001,
+        733002,
+        733003
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell31",
+      "domain": "short utterance coverage",
+      "register": "brief standalone speech",
+      "length_target": "short",
+      "phenomena": [
+        "short_utterance",
+        "everyday_conversation",
+        "requests"
+      ],
+      "source_family_id": "gams-v3-short-utterances",
+      "prompt_revision": "gams-v3-cell31-v1",
+      "seed_sequence": [
+        733101,
+        733102,
+        733103
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell32",
+      "domain": "medium utterance coverage",
+      "register": "ordinary informational speech",
+      "length_target": "medium",
+      "phenomena": [
+        "medium_utterance",
+        "public_information",
+        "case_government"
+      ],
+      "source_family_id": "gams-v3-medium-utterances",
+      "prompt_revision": "gams-v3-cell32-v1",
+      "seed_sequence": [
+        733201,
+        733202,
+        733203
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell33",
+      "domain": "long utterance coverage",
+      "register": "clear prepared speech",
+      "length_target": "long",
+      "phenomena": [
+        "long_utterance",
+        "prepared_speech",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-long-utterances",
+      "prompt_revision": "gams-v3-cell33-v1",
+      "seed_sequence": [
+        733301,
+        733302,
+        733303,
+        733304,
+        733305,
+        733306,
+        733307,
+        733308,
+        733309,
+        733310,
+        733311
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 10
+    },
+    {
+      "cell_id": "cell34",
+      "domain": "public information and notices",
+      "register": "institutional public-facing speech",
+      "length_target": "medium",
+      "phenomena": [
+        "public_information",
+        "institutions",
+        "dates"
+      ],
+      "source_family_id": "gams-v3-public-notices",
+      "prompt_revision": "gams-v3-cell34-v1",
+      "seed_sequence": [
+        733401,
+        733402,
+        733403
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell35",
+      "domain": "ordinary observations",
+      "register": "spoken descriptions of everyday events",
+      "length_target": "short to medium",
+      "phenomena": [
+        "observations",
+        "weather",
+        "environment"
+      ],
+      "source_family_id": "gams-v3-observations",
+      "prompt_revision": "gams-v3-cell35-v1",
+      "seed_sequence": [
+        733501,
+        733502,
+        733503
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell36",
+      "domain": "news-like public speech",
+      "register": "prepared neutral statements",
+      "length_target": "medium to long",
+      "phenomena": [
+        "prepared_speech",
+        "public_information",
+        "named_entities"
+      ],
+      "source_family_id": "gams-v3-news-like",
+      "prompt_revision": "gams-v3-cell36-v1",
+      "seed_sequence": [
+        733601,
+        733602,
+        733603
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell37",
+      "domain": "customer service",
+      "register": "service desk and support speech",
+      "length_target": "medium",
+      "phenomena": [
+        "requests",
+        "problem_reports",
+        "politeness"
+      ],
+      "source_family_id": "gams-v3-customer-service",
+      "prompt_revision": "gams-v3-cell37-v1",
+      "seed_sequence": [
+        733701,
+        733702,
+        733703
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell38",
+      "domain": "local community",
+      "register": "municipal and neighborhood speech",
+      "length_target": "medium",
+      "phenomena": [
+        "slovenian_locations",
+        "public_services",
+        "events"
+      ],
+      "source_family_id": "gams-v3-local-community",
+      "prompt_revision": "gams-v3-cell38-v1",
+      "seed_sequence": [
+        733801,
+        733802,
+        733803
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell39",
+      "domain": "personal plans and narratives",
+      "register": "short personal event narratives",
+      "length_target": "medium",
+      "phenomena": [
+        "narrative",
+        "dates",
+        "agreement"
+      ],
+      "source_family_id": "gams-v3-personal-narratives",
+      "prompt_revision": "gams-v3-cell39-v1",
+      "seed_sequence": [
+        733901,
+        733902,
+        733903
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    },
+    {
+      "cell_id": "cell40",
+      "domain": "mixed morphology stress test",
+      "register": "natural morphologically varied Slovenian",
+      "length_target": "short medium and long mix",
+      "phenomena": [
+        "dual_forms",
+        "clitics",
+        "case_government",
+        "agreement",
+        "negation"
+      ],
+      "source_family_id": "gams-v3-morphology-mix",
+      "prompt_revision": "gams-v3-cell40-v1",
+      "seed_sequence": [
+        734001,
+        734002,
+        734003
+      ],
+      "requested_rows": 60,
+      "maximum_retries": 2
+    }
+  ]
+}
