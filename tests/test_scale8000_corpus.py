@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from slaif_asr.gams_retry_controller import AttemptTask
@@ -8,8 +9,10 @@ from slaif_asr.scale8000_corpus import (
     build_dual_gpu_generation_plan,
     build_new_record,
     load_scale8000_generation_config,
+    local_run_path,
     scale8000_multiplier_table,
     verify_scale2000_prefix,
+    worker_initial_tasks,
 )
 
 
@@ -48,6 +51,22 @@ class Scale8000CorpusTests(unittest.TestCase):
         self.assertEqual(plan["workers"]["gpu1"]["cuda_visible_devices"], "1")
         self.assertEqual(plan["workers"]["gpu0"]["logical_device"], "cuda:0")
         self.assertEqual(plan["workers"]["gpu1"]["logical_device"], "cuda:0")
+
+    def test_worker_initial_tasks_are_deterministic_and_disjoint(self) -> None:
+        config = load_scale8000_generation_config(CONFIG_PATH)
+        gpu0 = worker_initial_tasks(config, "gpu0")
+        gpu1 = worker_initial_tasks(config, "gpu1")
+        self.assertEqual(len(gpu0), 600)
+        self.assertEqual(len(gpu1), 600)
+        gpu0_ids = {task.attempt_id for task in gpu0}
+        gpu1_ids = {task.attempt_id for task in gpu1}
+        self.assertFalse(gpu0_ids & gpu1_ids)
+        self.assertEqual(len(gpu0_ids | gpu1_ids), 1200)
+        self.assertEqual([task.attempt_id for task in gpu0], [task.attempt_id for task in worker_initial_tasks(config, "gpu0")])
+
+    def test_local_run_path_honors_external_runs_root(self) -> None:
+        with mock.patch.dict("os.environ", {"SLAIF_ASR_RUNS_ROOT": "/tmp/slaif-runs"}):
+            self.assertEqual(local_run_path("runs/data-quality/example"), Path("/tmp/slaif-runs/data-quality/example"))
 
     def test_scale2000_prefix_verification_rejects_mutation(self) -> None:
         inherited = [{"candidate_id": "a", "target_text": "Prva."}, {"candidate_id": "b", "target_text": "Druga."}]

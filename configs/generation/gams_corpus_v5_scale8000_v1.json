@@ -18,9 +18,11 @@
   "local_staging_directory": ".local/scale8000",
   "model": {
     "repository": "cjvt/GaMS3-12B-Instruct",
-    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc"
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc",
+    "license": "Gemma Terms of Use"
   },
   "quantization": {
+    "policy": "4bit-nf4-bfloat16",
     "load_in_4bit": true,
     "quant_type": "nf4",
     "double_quantization": true,
@@ -31,12 +33,17 @@
     "worker_processes": 2,
     "single_visible_gpu_per_worker": true,
     "worker_a_cuda_visible_devices": "0",
-    "worker_b_cuda_visible_devices": "1"
+    "worker_b_cuda_visible_devices": "1",
+    "max_memory_gib": 78
   },
   "generation": {
     "prompt_batch_size": 8,
     "oom_fallback_batch_size": 4,
-    "retry_until_valid": true
+    "retry_until_valid": true,
+    "max_new_tokens": 1536,
+    "temperature": 0.85,
+    "top_p": 0.92,
+    "monitor_interval_seconds": 0.2
   },
   "retry_policy": {
     "retry_until_valid": true,

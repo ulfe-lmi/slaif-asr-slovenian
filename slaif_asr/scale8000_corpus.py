@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from collections import Counter, defaultdict
@@ -9,9 +10,20 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from slaif_asr.config import REPO_ROOT
-from slaif_asr.data_quality import load_json, load_jsonl, sha256_file
-from slaif_asr.gams_retry_controller import AttemptTask
-from slaif_asr.scale200_corpus import TRAINING_VIEWS, load_augmentation_config, stable_sha256
+from slaif_asr.data_quality import atomic_write_jsonl, load_json, load_jsonl, sha256_file
+from slaif_asr.gams_retry_controller import AttemptTask, RetryState, load_state
+from slaif_asr.scale200_corpus import (
+    TRAINING_VIEWS,
+    build_prompt,
+    extract_utterance_lines,
+    filter_records,
+    load_augmentation_config,
+    load_existing_holdout,
+    prompt_cell_by_id,
+    protected_indexes,
+    stable_sha256,
+    write_rejections,
+)
 from slaif_asr.scale2000_corpus import counts_by_cell as scale2000_counts_by_cell
 
 
@@ -51,9 +63,30 @@ def repo_path(path_text: str | Path) -> Path:
     return path if path.is_absolute() else REPO_ROOT / path
 
 
+def local_runs_root() -> Path:
+    override = os.environ.get("SLAIF_ASR_RUNS_ROOT")
+    if override:
+        return Path(override).expanduser().resolve()
+    return REPO_ROOT / "runs"
+
+
+def local_run_path(path_text: str | Path) -> Path:
+    path = Path(path_text)
+    if path.is_absolute():
+        return path
+    parts = path.parts
+    if parts and parts[0] == "runs":
+        return local_runs_root().joinpath(*parts[1:])
+    return REPO_ROOT / path
+
+
 def load_scale8000_generation_config(path: str | Path = "configs/generation/gams_corpus_v5_scale8000_v1.json") -> dict[str, Any]:
     config = load_json(repo_path(path))
     validate_scale8000_generation_config(config)
+    source = load_json(repo_path(config["prompt_cells_source"]))
+    config.setdefault("prompt_cells", source.get("prompt_cells", []))
+    config.setdefault("protected_indexes", source.get("protected_indexes", []))
+    config.setdefault("existing_holdout", source.get("existing_holdout", {}))
     return config
 
 
@@ -106,6 +139,17 @@ def validate_scale8000_generation_config(config: dict[str, Any]) -> None:
         raise ValueError("scale-8000 must authorize GPU0 and GPU1")
     if gpu.get("single_visible_gpu_per_worker") is not True:
         raise ValueError("workers must use one visible logical CUDA device")
+    if int(gpu.get("max_memory_gib", 0)) < 70:
+        raise ValueError("GaMS workers must reserve enough A100 memory")
+    generation = config.get("generation", {})
+    if generation.get("prompt_batch_size") != 8 or generation.get("oom_fallback_batch_size") != 4:
+        raise ValueError("GaMS prompt batching must be fixed at 8 with OOM fallback to 4")
+    for key in ("max_new_tokens", "temperature", "top_p", "monitor_interval_seconds"):
+        if key not in generation:
+            raise ValueError(f"generation.{key} is required")
+    quant = config.get("quantization", {})
+    if quant.get("policy") != "4bit-nf4-bfloat16":
+        raise ValueError("scale-8000 GaMS quantization policy mismatch")
 
 
 def validate_scale8000_experiment_config(config: dict[str, Any]) -> None:
@@ -126,6 +170,11 @@ def validate_scale8000_experiment_config(config: dict[str, Any]) -> None:
 
 
 def prompt_cells(config: dict[str, Any]) -> list[dict[str, Any]]:
+    if "prompt_cells" in config:
+        cells = list(config.get("prompt_cells", []))
+        if len(cells) != 40:
+            raise ValueError("scale-8000 must reuse forty prompt cells")
+        return cells
     source = load_json(repo_path(config["prompt_cells_source"]))
     cells = list(source.get("prompt_cells", []))
     if len(cells) != 40:
@@ -183,6 +232,197 @@ def counts_by_cell(rows: Sequence[dict[str, Any]]) -> dict[str, int]:
     return dict(Counter(str(row.get("generation", {}).get("prompt_cell", "unknown")) for row in rows))
 
 
+def run_directory(config: dict[str, Any]) -> Path:
+    return local_run_path(config["run_directory"])
+
+
+def raw_generation_dir(config: dict[str, Any], worker: str | None = None) -> Path:
+    root = run_directory(config) / "raw-generation"
+    return root / worker if worker else root
+
+
+def worker_state_path(config: dict[str, Any], worker: str) -> Path:
+    return run_directory(config) / f"generation-state-{worker}.local.json"
+
+
+def worker_monitor_path(config: dict[str, Any], worker: str) -> Path:
+    return run_directory(config) / f"gpu-monitor-{worker}.local.csv"
+
+
+def worker_summary_path(config: dict[str, Any], worker: str) -> Path:
+    return run_directory(config) / f"generation-summary-{worker}.local.json"
+
+
+def worker_log_path(config: dict[str, Any], worker: str) -> Path:
+    return run_directory(config) / "logs" / f"{worker}.generate-text.log"
+
+
+def worker_pid_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "generation-pids.local.json"
+
+
+def prompt_path(config: dict[str, Any], task: AttemptTask, worker: str | None = None) -> Path:
+    return raw_generation_dir(config, worker) / f"{task.attempt_id}.prompt.txt"
+
+
+def raw_output_path(config: dict[str, Any], task: AttemptTask, worker: str | None = None) -> Path:
+    return raw_generation_dir(config, worker) / f"{task.attempt_id}.txt"
+
+
+def generated_all_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "generated-all.local.jsonl"
+
+
+def fixed_combined_text_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "fixed-combined-training-text.local.jsonl"
+
+
+def new_addition_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "new-addition.local.jsonl"
+
+
+def rejected_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "rejected.local.jsonl"
+
+
+def text_generation_summary_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "text-generation-summary.local.json"
+
+
+def build_task_prompt(config: dict[str, Any], task: AttemptTask) -> str:
+    cell = prompt_cell_by_id({"prompt_cells": prompt_cells(config)})[task.cell_id]
+    prompt = build_prompt(cell, requested_rows=task.requested_rows, avoid_openings=task.diversity_guidance)
+    if task.shard_id in prompt or task.attempt_id in prompt:
+        raise ValueError("shard or attempt identifier leaked into prompt")
+    return prompt
+
+
+def worker_initial_tasks(config: dict[str, Any], worker: str) -> list[AttemptTask]:
+    if worker not in {"gpu0", "gpu1"}:
+        raise ValueError("worker must be gpu0 or gpu1")
+    cells = sorted(str(cell["cell_id"]) for cell in prompt_cells(config))
+    tasks: list[AttemptTask] = []
+    for cell_id in cells:
+        for shard_index in range(1, int(config["shards_per_cell"]) + 1):
+            shard = f"shard{shard_index:02d}"
+            seed = int(stable_sha256(f"scale8000-gams-v5:{cell_id}:{shard}:attempt00")[:12], 16) % (2**31 - 1)
+            tasks.append(
+                AttemptTask(
+                    cell_id=cell_id,
+                    shard_id=shard,
+                    attempt_index=0,
+                    verification_round=0,
+                    requested_rows=int(config["requested_rows_per_shard"]),
+                    seed=seed,
+                    reason="initial",
+                )
+            )
+    tasks = sorted(tasks, key=lambda task: (task.cell_id, task.shard_id))
+    worker_offset = 0 if worker == "gpu0" else 1
+    return [task for index, task in enumerate(tasks) if index % 2 == worker_offset]
+
+
+def parse_task_output(config: dict[str, Any], task: AttemptTask, raw: str) -> tuple[list[dict[str, Any]], list[Any]]:
+    lines, rejected = extract_utterance_lines(raw, cell_id=task.cell_id, attempt_id=task.attempt_id)
+    cells = prompt_cell_by_id({"prompt_cells": prompt_cells(config)})
+    rows = [
+        build_new_record(config, cells[task.cell_id], task, line.output_ordinal, line.text)
+        for line in lines
+    ]
+    return rows, rejected
+
+
+def load_worker_generated_rows(config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[Any], dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    rejections: list[Any] = []
+    worker_status: dict[str, Any] = {}
+    for worker in ("gpu0", "gpu1"):
+        state = load_state(worker_state_path(config, worker))
+        completed = 0
+        for attempt_id, record in sorted(state.records.items()):
+            if record.status != "completed":
+                continue
+            raw_path = raw_output_path(config, record.task, worker)
+            if not raw_path.exists():
+                raise RuntimeError(f"completed attempt is missing raw output: {worker}:{attempt_id}")
+            parsed, rejected = parse_task_output(config, record.task, raw_path.read_text(encoding="utf-8"))
+            rows.extend(parsed)
+            rejections.extend(rejected)
+            completed += 1
+        worker_status[worker] = {
+            "completed_attempts": completed,
+            "expected_attempts": len(worker_initial_tasks(config, worker)),
+            "state_exists": worker_state_path(config, worker).exists(),
+        }
+    return rows, rejections, worker_status
+
+
+def select_scale8000_new_rows(new_rows: Sequence[dict[str, Any]], config: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    rows_by_cell: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in new_rows:
+        rows_by_cell[str(row.get("generation", {}).get("prompt_cell", "unknown"))].append(row)
+    needed = int(config["new_rows_per_cell"])
+    surplus = int(config["new_surplus_per_cell"])
+    shortfalls: dict[str, int] = {}
+    selection_counts: dict[str, int] = {}
+    admissible_counts: dict[str, int] = {}
+    selected: list[dict[str, Any]] = []
+    for cell_id in sorted(str(cell["cell_id"]) for cell in prompt_cells(config)):
+        cell_rows = sorted(rows_by_cell.get(cell_id, []), key=lambda row: stable_sha256(str(row["candidate_id"])))
+        admissible_counts[cell_id] = len(cell_rows)
+        required = needed + surplus
+        if len(cell_rows) < required:
+            shortfalls[cell_id] = required - len(cell_rows)
+            continue
+        chosen = cell_rows[:needed]
+        selected.extend(chosen)
+        selection_counts[cell_id] = len(chosen)
+    if shortfalls:
+        raise RuntimeError(f"scale-8000 per-cell admissible shortfall: {shortfalls}")
+    return selected, {
+        "new_rows_per_cell": dict(sorted(selection_counts.items())),
+        "new_admissible_per_cell": dict(sorted(admissible_counts.items())),
+        "selection_key": "SHA256(candidate_id)",
+        "selected_new_rows": len(selected),
+        "required_admissible_per_cell": needed + surplus,
+    }
+
+
+def build_scale8000_combined_rows(
+    inherited_rows: Sequence[dict[str, Any]],
+    new_rows: Sequence[dict[str, Any]],
+    *,
+    config: dict[str, Any],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    inherited_counts = counts_by_cell(inherited_rows)
+    if len(inherited_rows) != int(config["inherited_corpus"]["rows"]):
+        raise RuntimeError("inherited scale-2000 row count changed")
+    if len(inherited_counts) != 40 or any(count != int(config["inherited_rows_per_cell"]) for count in inherited_counts.values()):
+        raise RuntimeError("inherited scale-2000 per-cell counts changed")
+    selected_new, selection = select_scale8000_new_rows(new_rows, config)
+    selected_new = sorted(
+        selected_new,
+        key=lambda row: (
+            str(row.get("generation", {}).get("prompt_cell", "unknown")),
+            stable_sha256(str(row["candidate_id"])),
+        ),
+    )
+    combined = [*inherited_rows, *selected_new]
+    combined_counts = counts_by_cell(combined)
+    bad = {cell: count for cell, count in combined_counts.items() if count != int(config["combined_rows_per_cell"])}
+    if len(combined) != int(config["final_rows"]) or len(combined_counts) != 40 or bad:
+        raise RuntimeError(f"combined scale-8000 count mismatch: rows={len(combined)} bad={bad}")
+    return combined, {
+        "inherited_rows": len(inherited_rows),
+        "new_rows": len(selected_new),
+        "combined_rows": len(combined),
+        "per_cell_inherited": inherited_counts,
+        "per_cell_new": selection["new_rows_per_cell"],
+        "per_cell_combined": combined_counts,
+        "selection": selection,
+    }
+
+
 def build_new_record(config: dict[str, Any], cell: dict[str, Any], task: AttemptTask, output_ordinal: int, text: str) -> dict[str, Any]:
     candidate_id = f"gamsv5-{task.cell_id}-{task.shard_id}-a{task.attempt_index:02d}-o{output_ordinal:03d}-{stable_sha256(f'{task.attempt_id}:{output_ordinal}')[:12]}"
     return {
@@ -200,7 +440,12 @@ def build_new_record(config: dict[str, Any], cell: dict[str, Any], task: Attempt
         "utterance_family_id": candidate_id,
         "domain": cell.get("domain"),
         "phenomena": cell.get("phenomena", []),
+        "license": config["model"]["license"],
         "generation": {
+            "system": "project-generated",
+            "method": "gams-local-text-proposal",
+            "corpus_id": config["new_addition_corpus_id"],
+            "combined_corpus_id": config["corpus_id"],
             "model": config["model"]["repository"],
             "revision": config["model"]["revision"],
             "prompt_revision": config["prompt_revision"],
@@ -209,7 +454,10 @@ def build_new_record(config: dict[str, Any], cell: dict[str, Any], task: Attempt
             "attempt_index": task.attempt_index,
             "attempt_id": task.attempt_id,
             "seed": task.seed,
+            "verification_round": task.verification_round,
+            "quantization_policy": config["quantization"]["policy"],
         },
+        "entities": [],
     }
 
 
@@ -396,12 +644,16 @@ def estimate_scale8000_storage(
 def storage_preflight(config: dict[str, Any]) -> dict[str, Any]:
     inherited_dir = repo_path("runs/data-quality/sl-corpus-v4-gams-16000-training-v1")
     inherited_bytes = directory_size_bytes(inherited_dir)
-    usage = shutil.disk_usage(REPO_ROOT)
-    return estimate_scale8000_storage(
+    root = local_runs_root()
+    root.mkdir(parents=True, exist_ok=True)
+    usage = shutil.disk_usage(root)
+    payload = estimate_scale8000_storage(
         inherited_scale2000_bytes=inherited_bytes,
         available_bytes=usage.free,
         safety_margin_fraction=0.25,
     )
+    payload["storage_root_token"] = "SLAIF_ASR_RUNS_ROOT" if os.environ.get("SLAIF_ASR_RUNS_ROOT") else "repository_runs"
+    return payload
 
 
 def safe_public_status_report(config: dict[str, Any], *, canonical_results: dict[str, Any] | None = None, preflight: dict[str, Any] | None = None) -> dict[str, Any]:
