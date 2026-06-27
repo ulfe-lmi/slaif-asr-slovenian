@@ -1,6 +1,6 @@
 # Scale-8000 Dual-GPU Generation
 
-Status: `STRUCTURALLY_READY_FOR_HUMAN_REVIEW`
+Status: `TEXT_ACCEPTED`
 
 This report is privacy-safe scale-8000 text-generation evidence. It contains no raw generated text, candidate IDs, audio paths, hypotheses, model artifacts, or monitor CSV data.
 
@@ -98,3 +98,11 @@ ACCEPT or REJECT sl-corpus-v5-scale8000-training-v1 e76e55ffd12cfa0000a27579566f
 ## Boundary
 
 No audio synthesis, acoustic validation, training, or ASR evaluation has been run for scale-8000. This corpus is not `TEXT_ACCEPTED` and no `TRAINING_ELIGIBLE` status exists.
+
+## Whole-File Decision
+
+- Outcome: `ACCEPT`
+- Decision ID: `human-scale8000-decision-v1`
+- Review revision: `human-scale8000-review-v1`
+- Bound SHA256: `e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd`
+- Bound rows: `64000`

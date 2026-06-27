@@ -62,7 +62,7 @@
     "status": "PASSED_AFTER_RERUN"
   },
   "corpus_id": "sl-corpus-v5-scale8000-training-v1",
-  "diagnostic_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW",
+  "diagnostic_status": "TEXT_ACCEPTED",
   "dual_gpu_generation": {
     "initial_attempts": 1200,
     "raw_prompt_and_output_file_count": 4568,
@@ -146,12 +146,16 @@
   },
   "report_id": "0015-scale8000-dual-gpu-generation",
   "review_capsule": {
+    "bound_corpus_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "bound_rows": 64000,
     "decision_command": "ACCEPT or REJECT sl-corpus-v5-scale8000-training-v1 e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd 64000",
+    "decision_id": "human-scale8000-decision-v1",
     "fixed_combined_rows": 64000,
     "generated_rows": 158573,
     "new_addition_rows": 48000,
     "rejected_rows": 93295,
-    "status": "CREATED_LOCALLY",
+    "review_revision": "human-scale8000-review-v1",
+    "status": "ACCEPTED",
     "tsv_lines_including_header": 64001
   },
   "safety": {
@@ -175,7 +179,7 @@
     "total_views": 1280000
   },
   "schema_version": "1.0",
-  "status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW",
+  "status": "TEXT_ACCEPTED",
   "storage_preflight": {
     "available_bytes": 3286672367616,
     "inherited_scale2000_bytes": 82341008788,
@@ -202,5 +206,5 @@
     "selection_key": "SHA256(candidate_id)",
     "status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW"
   },
-  "text_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW"
+  "text_status": "TEXT_ACCEPTED"
 }

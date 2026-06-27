@@ -67,6 +67,7 @@ SUPPORTED_TTS_IDS = {
     "supertonic3-sl-multivoice-batched-replay-v1",
     "supertonic3-sl-scale200-training-v1",
     "supertonic3-sl-scale2000-training-v1",
+    "supertonic3-sl-scale8000-training-v1",
 }
 
 
@@ -584,7 +585,7 @@ def build_batched_variant_plan(config: dict[str, Any]) -> list[SupertonicBatchPl
                     identity=identity,
                 )
             )
-    return sorted(
+    sorted_items = sorted(
         items,
         key=lambda row: (
             row.preprocessed_text_length,
@@ -593,6 +594,16 @@ def build_batched_variant_plan(config: dict[str, Any]) -> list[SupertonicBatchPl
             row.voice_style,
         ),
     )
+    source_shard = config.get("source_shard")
+    if source_shard:
+        worker_index = int(source_shard["worker_index"])
+        worker_count = int(source_shard["worker_count"])
+        if worker_count <= 0 or not (0 <= worker_index < worker_count):
+            raise ValueError("invalid Supertonic source shard")
+        source_keys = sorted({row.item.source_key for row in sorted_items}, key=stable_sha256)
+        allowed = {key for index, key in enumerate(source_keys) if index % worker_count == worker_index}
+        sorted_items = [row for row in sorted_items if row.item.source_key in allowed]
+    return sorted_items
 
 
 def partition_batched_plan(plan: Sequence[SupertonicBatchPlanItem], batch_size: int) -> list[list[SupertonicBatchPlanItem]]:
@@ -1077,7 +1088,8 @@ def synthesize_batched_supertonic_audio(
         raise RuntimeError(f"Supertonic native sample rate mismatch: {getattr(tts, 'sample_rate', None)}")
     styles = {style: tts.get_voice_style(style) for style in ALL_STYLES}
     monitor_path = paths.run_root / "gpu-monitor.local.csv"
-    monitor = NvidiaSmiMonitor(physical_gpu_index="1", output_csv=monitor_path, interval_seconds=0.2)
+    monitor_selector = str(config.get("runtime", {}).get("cuda_visible_devices", "1")).split(",")[0]
+    monitor = NvidiaSmiMonitor(physical_gpu_index=monitor_selector, output_csv=monitor_path, interval_seconds=0.2)
     native_rows: list[dict[str, Any]] = []
     converted_rows: list[dict[str, Any]] = []
     batch_summaries: list[dict[str, Any]] = []
@@ -1145,7 +1157,10 @@ def synthesize_batched_supertonic_audio(
     holdout_rows = [row for row in converted_rows if row["partition_role"] == "synthetic_holdout"]
     atomic_write_jsonl(paths.training_audio_manifest, training_rows)
     atomic_write_jsonl(paths.holdout_audio_manifest, holdout_rows)
-    write_training_probe_manifest(config, converted_rows)
+    if config.get("training_schedule", {}).get("write_training_probe_manifest", True):
+        write_training_probe_manifest(config, converted_rows)
+    elif paths.training_probe_manifest.exists():
+        paths.training_probe_manifest.unlink()
     schedule = (
         build_exposure_schedule(config, converted_rows)
         if config.get("training_schedule", {}).get("write_legacy_schedule", True)
@@ -1182,7 +1197,7 @@ def synthesize_batched_supertonic_audio(
             "audio_manifest_sha256": file_sha256(paths.audio_manifest),
             "training_audio_manifest_sha256": file_sha256(paths.training_audio_manifest),
             "holdout_audio_manifest_sha256": file_sha256(paths.holdout_audio_manifest),
-            "training_probe_manifest_sha256": file_sha256(paths.training_probe_manifest),
+            "training_probe_manifest_sha256": optional_file_sha256(paths.training_probe_manifest),
             "exposure_schedule_sha256": optional_file_sha256(paths.exposure_schedule),
         },
         "exposure_schedule": schedule,

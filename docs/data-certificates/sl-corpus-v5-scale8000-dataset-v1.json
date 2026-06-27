@@ -4,12 +4,24 @@
   "certificate_id": "sl-corpus-v5-scale8000-dataset-v1",
   "corpus_id": "sl-corpus-v5-scale8000-training-v1",
   "decision_date": "2026-06-27",
-  "diagnostic_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW",
+  "diagnostic_status": "TEXT_ACCEPTED",
   "generation_status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW",
-  "reason": "Dual-GPU GaMS generation and structural text validation completed. The corpus is awaiting one whole-file human linguistic decision before any audio synthesis or downstream experiment stage.",
+  "reason": "Whole-file human decision recorded for the structurally validated scale-8000 text corpus.",
   "review_decision": {
-    "expected_command": "ACCEPT or REJECT sl-corpus-v5-scale8000-training-v1 e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd 64000",
-    "status": "PENDING"
+    "bound_corpus_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "bound_rows": 64000,
+    "decision_id": "human-scale8000-decision-v1",
+    "outcome": "ACCEPT",
+    "review_revision": "human-scale8000-review-v1",
+    "status": "RECORDED"
+  },
+  "safety": {
+    "audio_generated": false,
+    "generated_audio_committed": false,
+    "generated_text_committed": false,
+    "model_or_checkpoint_committed": false,
+    "production_system_touched": false,
+    "training_eligible_issued": false
   },
   "scale8000_plan": {
     "augmented_files": 704000,
@@ -28,7 +40,7 @@
     "rows": 16000,
     "sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14"
   },
-  "status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW",
+  "status": "TEXT_ACCEPTED",
   "storage_preflight": {
     "available_bytes": 3286672367616,
     "inherited_scale2000_bytes": 82341008788,
@@ -46,16 +58,9 @@
     "new_addition_rows": 48000,
     "new_addition_sha256": "88a9cd19b726cf0fe44fd9f0d2e19d69eba392cc1d65439d9d5f3c0ca53f9887",
     "structural_validation_status": "PASS",
-    "text_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW"
+    "text_status": "TEXT_ACCEPTED"
   },
+  "text_status": "TEXT_ACCEPTED",
   "training_status": "NOT_RUN",
-  "safety": {
-    "audio_generated": false,
-    "generated_audio_committed": false,
-    "generated_text_committed": false,
-    "model_or_checkpoint_committed": false,
-    "production_system_touched": false,
-    "training_eligible_issued": false
-  },
   "work_order_id": "0027"
 }

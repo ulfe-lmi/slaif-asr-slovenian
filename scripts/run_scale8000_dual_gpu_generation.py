@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
@@ -50,7 +51,7 @@ from slaif_asr.scale8000_corpus import (
     worker_state_path,
     worker_summary_path,
 )
-from slaif_asr.scale200_corpus import filter_records, load_existing_holdout, protected_indexes, write_rejections
+from slaif_asr.scale200_corpus import filter_records, load_existing_holdout, protected_indexes, stable_sha256, write_rejections
 
 
 DEFAULT_CONFIG = REPO_ROOT / "configs/generation/gams_corpus_v5_scale8000_v1.json"
@@ -318,6 +319,558 @@ def stage_merge_text(config_path: Path) -> dict[str, Any]:
     return payload
 
 
+def _load_fixed_rows(config: dict[str, Any]) -> list[dict[str, Any]]:
+    path = fixed_combined_text_path(config)
+    if not path.exists():
+        raise FileNotFoundError(path)
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if len(rows) != int(config["final_rows"]):
+        raise RuntimeError(f"expected {config['final_rows']} fixed rows, found {len(rows)}")
+    return rows
+
+
+def _text_decisions_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "whole-file-text-decisions.local.jsonl"
+
+
+def stage_admit_text(config_path: Path, args: argparse.Namespace) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    if args.whole_file_outcome not in {"ACCEPT", "REJECT"}:
+        raise RuntimeError("--whole-file-outcome must be ACCEPT or REJECT")
+    if not args.review_revision or not args.decision_id:
+        raise RuntimeError("--review-revision and --decision-id are required")
+    actual_hash = sha256_file(fixed_combined_text_path(config))
+    if actual_hash != args.expected_corpus_sha256:
+        raise RuntimeError(f"fixed text SHA mismatch: {actual_hash}")
+    rows = _load_fixed_rows(config)
+    if len(rows) != int(args.expected_rows):
+        raise RuntimeError(f"fixed text row mismatch: {len(rows)}")
+    decisions = [
+        {
+            "candidate_id": row["candidate_id"],
+            "outcome": args.whole_file_outcome,
+            "review_revision": args.review_revision,
+            "reviewer_approval": args.decision_id,
+            "reason_codes": [] if args.whole_file_outcome == "ACCEPT" else ["REJECT"],
+            "minimal_pair_approved": False,
+        }
+        for row in rows
+    ]
+    atomic_write_jsonl(_text_decisions_path(config), decisions)
+    status = "TEXT_ACCEPTED" if args.whole_file_outcome == "ACCEPT" else "TEXT_REJECTED"
+    summary_path = text_generation_summary_path(config)
+    summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {}
+    certificate_path = REPO_ROOT / config["public_certificates"]["dataset_certificate"]
+    report_json_path = REPO_ROOT / config["public_reports"]["planning_report_json"]
+    report_md_path = REPO_ROOT / config["public_reports"]["planning_report_markdown"]
+    certificate = json.loads(certificate_path.read_text(encoding="utf-8"))
+    certificate.update(
+        {
+            "status": status,
+            "diagnostic_status": status,
+            "generation_status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW",
+            "text_status": status,
+            "audio_status": "NOT_RUN",
+            "training_status": "NOT_RUN",
+            "reason": "Whole-file human decision recorded for the structurally validated scale-8000 text corpus.",
+            "review_decision": {
+                "outcome": args.whole_file_outcome,
+                "decision_id": args.decision_id,
+                "review_revision": args.review_revision,
+                "bound_corpus_sha256": actual_hash,
+                "bound_rows": len(rows),
+                "status": "RECORDED",
+            },
+            "text_corpus": {
+                **certificate.get("text_corpus", {}),
+                "combined_rows": len(rows),
+                "combined_sha256": actual_hash,
+                "structural_validation_status": "PASS",
+                "text_status": status,
+                "generated_rows": summary.get("generated_rows"),
+                "new_addition_rows": summary.get("new_selected_rows"),
+                "new_addition_sha256": summary.get("new_addition_sha256"),
+            },
+        }
+    )
+    atomic_write_json(certificate_path, certificate)
+    report = json.loads(report_json_path.read_text(encoding="utf-8"))
+    report.update(
+        {
+            "status": status,
+            "diagnostic_status": status,
+            "text_status": status,
+            "audio_status": "NOT_RUN",
+            "review_capsule": {
+                **report.get("review_capsule", {}),
+                "status": "ACCEPTED" if args.whole_file_outcome == "ACCEPT" else "REJECTED",
+                "decision_id": args.decision_id,
+                "review_revision": args.review_revision,
+                "bound_corpus_sha256": actual_hash,
+                "bound_rows": len(rows),
+            },
+        }
+    )
+    atomic_write_json(report_json_path, report)
+    markdown = report_md_path.read_text(encoding="utf-8")
+    markdown = markdown.replace("Status: `STRUCTURALLY_READY_FOR_HUMAN_REVIEW`", f"Status: `{status}`")
+    markdown += (
+        "\n## Whole-File Decision\n\n"
+        f"- Outcome: `{args.whole_file_outcome}`\n"
+        f"- Decision ID: `{args.decision_id}`\n"
+        f"- Review revision: `{args.review_revision}`\n"
+        f"- Bound SHA256: `{actual_hash}`\n"
+        f"- Bound rows: `{len(rows)}`\n"
+    )
+    atomic_write_text(report_md_path, markdown)
+    payload = {
+        "status": status,
+        "whole_file_outcome": args.whole_file_outcome,
+        "decision_id": args.decision_id,
+        "fixed_text_sha256": actual_hash,
+        "rows": len(rows),
+        "certificate_sha256": sha256_file(certificate_path),
+        "report_sha256": sha256_file(report_json_path),
+    }
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    return payload
+
+
+def require_text_accepted(config: dict[str, Any]) -> dict[str, Any]:
+    certificate_path = REPO_ROOT / config["public_certificates"]["dataset_certificate"]
+    if not certificate_path.exists():
+        raise RuntimeError("scale-8000 dataset certificate is missing")
+    certificate = json.loads(certificate_path.read_text(encoding="utf-8"))
+    if certificate.get("status") != "TEXT_ACCEPTED":
+        raise RuntimeError(f"scale-8000 text is not TEXT_ACCEPTED: {certificate.get('status')}")
+    fixed_hash = sha256_file(fixed_combined_text_path(config))
+    if certificate.get("text_corpus", {}).get("combined_sha256") != fixed_hash:
+        raise RuntimeError("scale-8000 text certificate hash mismatch")
+    return certificate
+
+
+def _source_keys_for_worker(rows: list[dict[str, Any]], worker: str) -> set[str]:
+    worker_index = {"gpu0": 0, "gpu1": 1}[worker]
+    ordered = sorted((str(row["candidate_id"]) for row in rows), key=stable_sha256)
+    return {candidate_id for index, candidate_id in enumerate(ordered) if index % 2 == worker_index}
+
+
+def _scale8000_tts_items(config: dict[str, Any], worker: str | None = None) -> list[Any]:
+    from slaif_asr.acoustic_quality import CorpusV2TtsItem
+
+    rows = _load_fixed_rows(config)
+    allowed = _source_keys_for_worker(rows, worker) if worker else None
+    items = []
+    for row in rows:
+        if allowed is not None and str(row["candidate_id"]) not in allowed:
+            continue
+        items.append(
+            CorpusV2TtsItem(
+                candidate_id=str(row["candidate_id"]),
+                spoken_text=str(row["spoken_text"]),
+                target_text=str(row["target_text"]),
+                language="sl-SI",
+                partition_role="selected_training",
+                source_id=str(row["source_id"]),
+                source_family_id=str(row["source_family_id"]),
+                utterance_family_id=str(row["utterance_family_id"]),
+                domain=str(row.get("domain", "")),
+                phenomena=tuple(str(item) for item in row.get("phenomena", [])),
+            )
+        )
+    return sorted(items, key=lambda item: stable_sha256(item.candidate_id))
+
+
+def _piper_root(config: dict[str, Any], worker: str | None = None) -> Path:
+    root = run_directory(config) / "piper-clean"
+    return root / worker if worker else root
+
+
+def _piper_audio_paths(config: dict[str, Any], worker: str | None = None) -> Any:
+    from slaif_asr.acoustic_quality import AudioPaths
+
+    root = _piper_root(config, worker)
+    return AudioPaths(
+        run_root=root,
+        native_dir=root / "native-22050",
+        final_dir=root / "final-16000",
+        log_dir=root / "logs",
+        benchmark_dir=root / "benchmark",
+        audio_manifest=root / "audio-manifest.local.jsonl",
+        validation_report=root / "audio-validation.local.json",
+        synthesis_summary=root / "audio-synthesis-summary.local.json",
+        benchmark_summary=root / "benchmark" / "benchmark-summary.local.json",
+        gpu_monitor=root / "gpu-monitor.local.csv",
+    )
+
+
+def _completed_piper_row(item: Any, tts_config: dict[str, Any], paths: Any) -> dict[str, Any] | None:
+    from scripts.run_scale2000_text_only_diagnostic import _completed_piper_row as scale2000_completed
+
+    return scale2000_completed(item, tts_config, paths)
+
+
+def stage_synthesize_piper_worker(config_path: Path, worker: str) -> dict[str, Any]:
+    from slaif_asr.acoustic_quality import GpuMonitor as PiperGpuMonitor
+    from slaif_asr.acoustic_quality import monitor_summary, render_one_item
+    from slaif_asr.tts import load_tts_config
+
+    config = load_scale8000_generation_config(config_path)
+    require_text_accepted(config)
+    if worker not in {"gpu0", "gpu1"}:
+        raise RuntimeError("--worker must be gpu0 or gpu1")
+    expected_selector = "0" if worker == "gpu0" else "1"
+    if os.environ.get("CUDA_VISIBLE_DEVICES") != expected_selector:
+        raise RuntimeError(f"{worker} Piper worker must run with CUDA_VISIBLE_DEVICES={expected_selector}")
+    items = _scale8000_tts_items(config, worker)
+    expected_items = int(config["final_rows"]) // 2
+    if len(items) != expected_items:
+        raise RuntimeError(f"expected {expected_items} Piper items for {worker}, found {len(items)}")
+    paths = _piper_audio_paths(config, worker)
+    tts_config = load_tts_config()
+    rows_by_id: dict[str, dict[str, Any]] = {}
+    pending = []
+    for item in items:
+        existing = _completed_piper_row(item, tts_config, paths)
+        if existing is None:
+            pending.append(item)
+        else:
+            rows_by_id[item.candidate_id] = existing
+    failures: list[dict[str, Any]] = []
+    workers_per_gpu = int(os.environ.get("SCALE8000_PIPER_WORKERS_PER_GPU", "32"))
+    started = time.perf_counter()
+    last_emit = started
+    with PiperGpuMonitor(paths.gpu_monitor, physical_selector=expected_selector, interval_seconds=0.2):
+        with ThreadPoolExecutor(max_workers=workers_per_gpu) as pool:
+            futures = {
+                pool.submit(render_one_item, item=item, tts_config=tts_config, paths=paths, output_root=None, cuda_visible_devices=None): item
+                for item in pending
+            }
+            for future in as_completed(futures):
+                item = futures[future]
+                try:
+                    rows_by_id[item.candidate_id] = future.result()
+                except Exception as exc:  # noqa: BLE001
+                    failures.append({"candidate_hash": stable_sha256(item.candidate_id), "reason": type(exc).__name__, "detail": str(exc)[:500]})
+                processed = len(rows_by_id) + len(failures)
+                now = time.perf_counter()
+                if processed % 100 == 0 or now - last_emit >= 10.0:
+                    elapsed = now - started
+                    print(
+                        json.dumps(
+                            {
+                                "event": "progress",
+                                "stage": "synthesize-piper-worker",
+                                "worker": worker,
+                                "processed_rows": processed,
+                                "total_rows": len(items),
+                                "successful": len(rows_by_id),
+                                "failed": len(failures),
+                                "resumed_existing": len(items) - len(pending),
+                                "elapsed_seconds": round(elapsed, 6),
+                                "rows_per_second": round(processed / elapsed, 6) if elapsed else None,
+                            },
+                            ensure_ascii=False,
+                            sort_keys=True,
+                        ),
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    last_emit = now
+    rows = [rows_by_id[key] for key in sorted(rows_by_id)]
+    atomic_write_jsonl(paths.audio_manifest, rows)
+    wall = time.perf_counter() - started
+    total_duration = sum(float(row["duration_seconds"]) for row in rows)
+    summary = {
+        "schema_version": "1.0",
+        "status": "PASSED" if not failures and len(rows) == len(items) else "FAILED",
+        "worker": worker,
+        "physical_gpu": expected_selector,
+        "cuda_visible_devices": expected_selector,
+        "logical_device": "cuda:0",
+        "requested": len(items),
+        "resumed_existing": len(items) - len(pending),
+        "successful": len(rows),
+        "failed": len(failures),
+        "failures": failures[:200],
+        "workers_per_gpu": workers_per_gpu,
+        "wall_time_seconds": round(wall, 6),
+        "utterances_per_minute": round((len(rows) / wall) * 60.0, 6) if wall else None,
+        "audio_seconds_per_wall_second": round(total_duration / wall, 6) if wall else None,
+        "total_audio_duration_seconds": round(total_duration, 6),
+        "audio_manifest_sha256": sha256_file(paths.audio_manifest),
+        "monitor": monitor_summary(paths.gpu_monitor),
+    }
+    atomic_write_json(paths.synthesis_summary, summary)
+    if summary["status"] != "PASSED":
+        raise RuntimeError(f"{worker} Piper synthesis failed")
+    print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
+    return summary
+
+
+def _launch_worker_stage(config_path: Path, runs_root: Path | None, *, worker: str, selector: str, stage: str, log_name: str) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    log_path = run_directory(config) / "logs" / log_name
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    env = os.environ.copy()
+    env["CUDA_VISIBLE_DEVICES"] = selector
+    env["PYTHONUNBUFFERED"] = "1"
+    if runs_root is not None:
+        env["SLAIF_ASR_RUNS_ROOT"] = str(runs_root)
+    command = [
+        sys.executable,
+        "-u",
+        str(Path(__file__).resolve()),
+        "--stage",
+        stage,
+        "--worker",
+        worker,
+        "--config",
+        str(config_path),
+    ]
+    if runs_root is not None:
+        command.extend(["--runs-root", str(runs_root)])
+    with log_path.open("ab") as log:
+        process = subprocess.Popen(command, cwd=REPO_ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+    return {
+        "status": "LAUNCHED",
+        "pid": process.pid,
+        "physical_gpu": selector,
+        "cuda_visible_devices": selector,
+        "logical_device": "cuda:0",
+        "log_token": log_path.name,
+    }
+
+
+def stage_launch_dual_piper(config_path: Path, runs_root: Path | None) -> dict[str, Any]:
+    payload = {
+        "status": "LAUNCHED",
+        "stage": "synthesize-piper-dual",
+        "workers": {
+            "gpu0": _launch_worker_stage(config_path, runs_root, worker="gpu0", selector="0", stage="synthesize-piper-worker", log_name="gpu0.synthesize-piper.log"),
+            "gpu1": _launch_worker_stage(config_path, runs_root, worker="gpu1", selector="1", stage="synthesize-piper-worker", log_name="gpu1.synthesize-piper.log"),
+        },
+    }
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    return payload
+
+
+def stage_merge_piper(config_path: Path) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    require_text_accepted(config)
+    rows: list[dict[str, Any]] = []
+    summaries: dict[str, Any] = {}
+    for worker in ("gpu0", "gpu1"):
+        paths = _piper_audio_paths(config, worker)
+        if not paths.audio_manifest.exists():
+            raise FileNotFoundError(paths.audio_manifest)
+        worker_rows = [json.loads(line) for line in paths.audio_manifest.read_text(encoding="utf-8").splitlines() if line.strip()]
+        if len(worker_rows) != int(config["final_rows"]) // 2:
+            raise RuntimeError(f"{worker} Piper manifest count mismatch: {len(worker_rows)}")
+        summaries[worker] = json.loads(paths.synthesis_summary.read_text(encoding="utf-8")) if paths.synthesis_summary.exists() else {}
+        rows.extend(worker_rows)
+    ids = [str(row["candidate_id"]) for row in rows]
+    if len(rows) != int(config["final_rows"]) or len(set(ids)) != len(ids):
+        raise RuntimeError("combined Piper manifest count or uniqueness mismatch")
+    rows = sorted(rows, key=lambda row: str(row["candidate_id"]))
+    paths = _piper_audio_paths(config)
+    atomic_write_jsonl(paths.audio_manifest, rows)
+    summary = {
+        "schema_version": "1.0",
+        "status": "PASSED",
+        "engine": "piper",
+        "rows": len(rows),
+        "worker_summaries": summaries,
+        "audio_manifest_sha256": sha256_file(paths.audio_manifest),
+        "total_audio_duration_seconds": round(sum(float(row["duration_seconds"]) for row in rows), 6),
+    }
+    atomic_write_json(paths.synthesis_summary, summary)
+    print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
+    return summary
+
+
+def _supertonic_root(config: dict[str, Any], worker: str | None = None) -> Path:
+    root = run_directory(config) / "supertonic-clean"
+    return root / worker if worker else root
+
+
+def _supertonic_manifest_path(config: dict[str, Any], worker: str | None = None) -> Path:
+    return _supertonic_root(config, worker) / "training-audio-manifest.local.jsonl"
+
+
+def _supertonic_worker_config(config: dict[str, Any], worker: str) -> dict[str, Any]:
+    base_path = REPO_ROOT / "configs/tts/supertonic3_sl_scale2000_training_v1.json"
+    base = json.loads(base_path.read_text(encoding="utf-8"))
+    worker_index = {"gpu0": 0, "gpu1": 1}[worker]
+    selector = "0" if worker == "gpu0" else "1"
+    root = _supertonic_root(config, worker)
+    base.update(
+        {
+            "tts_id": "supertonic3-sl-scale8000-training-v1",
+            "runtime": {
+                **base["runtime"],
+                "execution_device": "cuda",
+                "cuda_visible_devices": selector,
+                "required_provider": "CUDAExecutionProvider",
+                "cpu_provider_fallback_allowed": False,
+            },
+            "inputs": {
+                "scale200_fixed_text": str(fixed_combined_text_path(config)),
+                "scale200_fixed_text_sha256": sha256_file(fixed_combined_text_path(config)),
+                "selected_rows": int(config["final_rows"]),
+                "include_holdout": False,
+            },
+            "expected_counts": {
+                "selected_training": (int(config["final_rows"]) // 2) * 8,
+                "synthetic_holdout": 0,
+                "total_variants": (int(config["final_rows"]) // 2) * 8,
+                "training_voices_per_text": 8,
+            },
+            "training_schedule": {
+                "write_legacy_schedule": False,
+                "write_training_probe_manifest": False,
+            },
+            "source_shard": {
+                "worker": worker,
+                "worker_index": worker_index,
+                "worker_count": 2,
+            },
+            "local_outputs": {
+                "run_root": str(root),
+                "native_manifest": str(root / "native-manifest.local.jsonl"),
+                "audio_manifest": str(root / "audio-manifest.local.jsonl"),
+                "training_audio_manifest": str(root / "training-audio-manifest.local.jsonl"),
+                "holdout_audio_manifest": str(root / "holdout-audio-manifest.local.jsonl"),
+                "training_probe_manifest": str(root / "training-voice-probe.local.jsonl"),
+                "exposure_schedule": str(root / "exposure-schedule.local.jsonl"),
+                "validation": str(root / "audio-validation.local.json"),
+                "summary": str(root / "summary.local.json"),
+                "progress_dir": str(root / "progress"),
+                "logs_dir": str(root / "logs"),
+            },
+        }
+    )
+    return base
+
+
+def stage_synthesize_supertonic_worker(config_path: Path, worker: str, progress_interval_seconds: float) -> dict[str, Any]:
+    from slaif_asr.supertonic3_tts import synthesize_batched_supertonic_audio
+
+    config = load_scale8000_generation_config(config_path)
+    require_text_accepted(config)
+    if worker not in {"gpu0", "gpu1"}:
+        raise RuntimeError("--worker must be gpu0 or gpu1")
+    expected_selector = "0" if worker == "gpu0" else "1"
+    if os.environ.get("CUDA_VISIBLE_DEVICES") != expected_selector:
+        raise RuntimeError(f"{worker} Supertonic worker must run with CUDA_VISIBLE_DEVICES={expected_selector}")
+    worker_config = _supertonic_worker_config(config, worker)
+    summary = synthesize_batched_supertonic_audio(worker_config, progress_interval_seconds=progress_interval_seconds)
+    summary["worker"] = worker
+    summary["physical_gpu"] = expected_selector
+    summary["source_shard"] = worker_config["source_shard"]
+    summary_path = _supertonic_root(config, worker) / "scale8000-supertonic-worker-summary.local.json"
+    atomic_write_json(summary_path, summary)
+    print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
+    return summary
+
+
+def stage_launch_dual_supertonic(config_path: Path, runs_root: Path | None) -> dict[str, Any]:
+    supertonic_python = REPO_ROOT / ".venv-supertonic" / "bin" / "python"
+    if not supertonic_python.exists():
+        raise FileNotFoundError(supertonic_python)
+    config = load_scale8000_generation_config(config_path)
+    launched = {}
+    for worker, selector in (("gpu0", "0"), ("gpu1", "1")):
+        log_path = run_directory(config) / "logs" / f"{worker}.synthesize-supertonic.log"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        env = os.environ.copy()
+        env["CUDA_VISIBLE_DEVICES"] = selector
+        env["PYTHONUNBUFFERED"] = "1"
+        if runs_root is not None:
+            env["SLAIF_ASR_RUNS_ROOT"] = str(runs_root)
+        command = [
+            str(supertonic_python),
+            "-u",
+            str(Path(__file__).resolve()),
+            "--stage",
+            "synthesize-supertonic-worker",
+            "--worker",
+            worker,
+            "--config",
+            str(config_path),
+        ]
+        if runs_root is not None:
+            command.extend(["--runs-root", str(runs_root)])
+        with log_path.open("ab") as log:
+            process = subprocess.Popen(command, cwd=REPO_ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+        launched[worker] = {
+            "status": "LAUNCHED",
+            "pid": process.pid,
+            "physical_gpu": selector,
+            "cuda_visible_devices": selector,
+            "logical_device": "cuda:0",
+            "log_token": log_path.name,
+        }
+    payload = {"status": "LAUNCHED", "stage": "synthesize-supertonic-dual", "workers": launched}
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    return payload
+
+
+def stage_merge_supertonic(config_path: Path) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    require_text_accepted(config)
+    rows: list[dict[str, Any]] = []
+    native_rows: list[dict[str, Any]] = []
+    summaries: dict[str, Any] = {}
+    for worker in ("gpu0", "gpu1"):
+        root = _supertonic_root(config, worker)
+        manifest = root / "training-audio-manifest.local.jsonl"
+        native_manifest = root / "native-manifest.local.jsonl"
+        if not manifest.exists() or not native_manifest.exists():
+            raise FileNotFoundError(manifest if not manifest.exists() else native_manifest)
+        worker_rows = [json.loads(line) for line in manifest.read_text(encoding="utf-8").splitlines() if line.strip()]
+        worker_native = [json.loads(line) for line in native_manifest.read_text(encoding="utf-8").splitlines() if line.strip()]
+        expected = (int(config["final_rows"]) // 2) * 8
+        if len(worker_rows) != expected or len(worker_native) != expected:
+            raise RuntimeError(f"{worker} Supertonic manifest count mismatch: final={len(worker_rows)} native={len(worker_native)}")
+        summary_path = root / "scale8000-supertonic-worker-summary.local.json"
+        summaries[worker] = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {}
+        rows.extend(worker_rows)
+        native_rows.extend(worker_native)
+    keys = [(str(row["source_key"]), str(row["voice_style_id"])) for row in rows]
+    expected_total = int(config["final_rows"]) * 8
+    if len(rows) != expected_total or len(set(keys)) != len(keys):
+        raise RuntimeError("combined Supertonic manifest count or uniqueness mismatch")
+    rows.sort(key=lambda row: (str(row["source_key"]), str(row["voice_style_id"])))
+    native_rows.sort(key=lambda row: (str(row["source_key"]), str(row["voice_style_id"])))
+    root = _supertonic_root(config)
+    root.mkdir(parents=True, exist_ok=True)
+    audio_manifest = root / "audio-manifest.local.jsonl"
+    training_manifest = root / "training-audio-manifest.local.jsonl"
+    native_manifest = root / "native-manifest.local.jsonl"
+    holdout_manifest = root / "holdout-audio-manifest.local.jsonl"
+    atomic_write_jsonl(audio_manifest, rows)
+    atomic_write_jsonl(training_manifest, rows)
+    atomic_write_jsonl(native_manifest, native_rows)
+    atomic_write_jsonl(holdout_manifest, [])
+    summary = {
+        "schema_version": "1.0",
+        "status": "PASSED",
+        "engine": "supertonic-3",
+        "rows": len(rows),
+        "native_rows": len(native_rows),
+        "worker_summaries": summaries,
+        "audio_manifest_sha256": sha256_file(audio_manifest),
+        "training_audio_manifest_sha256": sha256_file(training_manifest),
+        "native_manifest_sha256": sha256_file(native_manifest),
+        "total_audio_duration_seconds": round(sum(float(row["duration_seconds"]) for row in rows), 6),
+        "voice_counts": dict(sorted(Counter(str(row["voice_style_id"]) for row in rows).items())),
+    }
+    atomic_write_json(root / "audio-synthesis-summary.local.json", summary)
+    print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
+    return summary
+
+
 def _completed_attempts_by_cell(config: dict[str, Any]) -> dict[str, int]:
     counts: Counter[str] = Counter()
     for worker in ("gpu0", "gpu1"):
@@ -575,12 +1128,25 @@ def main() -> int:
             "plan-refill",
             "generate-refill-worker",
             "generate-refill-dual",
+            "admit-text",
+            "synthesize-piper-worker",
+            "synthesize-piper-dual",
+            "merge-piper",
+            "synthesize-supertonic-worker",
+            "synthesize-supertonic-dual",
+            "merge-supertonic",
         ],
         required=True,
     )
     parser.add_argument("--canonical-results", type=Path)
     parser.add_argument("--runs-root", type=Path)
     parser.add_argument("--worker", choices=["gpu0", "gpu1"])
+    parser.add_argument("--whole-file-outcome")
+    parser.add_argument("--review-revision")
+    parser.add_argument("--decision-id")
+    parser.add_argument("--expected-corpus-sha256")
+    parser.add_argument("--expected-rows", type=int)
+    parser.add_argument("--progress-interval-seconds", type=float, default=5.0)
     args = parser.parse_args()
     if args.runs_root is not None:
         os.environ["SLAIF_ASR_RUNS_ROOT"] = str(args.runs_root.expanduser().resolve())
@@ -608,6 +1174,24 @@ def main() -> int:
         stage_generate_refill_worker(args.config, args.worker)
     elif args.stage == "generate-refill-dual":
         stage_launch_dual_refill(args.config, args.runs_root)
+    elif args.stage == "admit-text":
+        stage_admit_text(args.config, args)
+    elif args.stage == "synthesize-piper-worker":
+        if args.worker is None:
+            raise SystemExit("--worker is required for synthesize-piper-worker")
+        stage_synthesize_piper_worker(args.config, args.worker)
+    elif args.stage == "synthesize-piper-dual":
+        stage_launch_dual_piper(args.config, args.runs_root)
+    elif args.stage == "merge-piper":
+        stage_merge_piper(args.config)
+    elif args.stage == "synthesize-supertonic-worker":
+        if args.worker is None:
+            raise SystemExit("--worker is required for synthesize-supertonic-worker")
+        stage_synthesize_supertonic_worker(args.config, args.worker, args.progress_interval_seconds)
+    elif args.stage == "synthesize-supertonic-dual":
+        stage_launch_dual_supertonic(args.config, args.runs_root)
+    elif args.stage == "merge-supertonic":
+        stage_merge_supertonic(args.config)
     else:  # pragma: no cover
         raise AssertionError(args.stage)
     return 0
