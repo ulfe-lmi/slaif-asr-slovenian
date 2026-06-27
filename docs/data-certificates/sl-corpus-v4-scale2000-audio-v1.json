@@ -1,0 +1,70 @@
+{
+  "certificate_id": "sl-corpus-v4-scale2000-audio-v1",
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "counts": {
+    "augmented_files": 176000,
+    "clean_files": 144000,
+    "inherited_view_records": 32000,
+    "new_view_records": 288000,
+    "semantic_rows": 16000,
+    "view_records": 320000
+  },
+  "decision_date": "2026-06-27",
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "hashes": {
+    "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+    "augmentation_new_manifest_sha256": "c3f3cf60930a30934dc7fe47914cce4fbad52caba277396b1f5851282ca83d8b",
+    "inherited_all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+    "piper_new_audio_manifest_sha256": "6655c7ef6e93b018c84000498060e96237d91156abec9d7c1224303e1593a2fe",
+    "supertonic_new_audio_manifest_sha256": "f0251a82ccff6ecf63fff1224918eee581ead63ffa05fd04fe69e4f296810d4d"
+  },
+  "inherited_all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+  "limitations": [
+    "All audio is synthetic.",
+    "The 2000x multiplier is exposure count, not independent linguistic information.",
+    "No TRAINING_ELIGIBLE status is issued."
+  ],
+  "prohibited_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "schedule": {
+    "exposures": 320000,
+    "heldout_voice_exposures": {
+      "supertonic-F5": 0,
+      "supertonic-M5": 0
+    },
+    "optimizer_steps": 40000,
+    "schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842"
+  },
+  "schema_version": "1.0",
+  "status": "AUDIO_ACCEPTED",
+  "validation": {
+    "duplicate_hashes": 0,
+    "duplicate_paths": 0,
+    "issues_by_reason": {}
+  },
+  "voices": {
+    "clean_training_views": [
+      "piper-sl_SI-artur-medium",
+      "supertonic-M1",
+      "supertonic-M2",
+      "supertonic-M3",
+      "supertonic-M4",
+      "supertonic-F1",
+      "supertonic-F2",
+      "supertonic-F3",
+      "supertonic-F4"
+    ],
+    "voice_counts": {
+      "piper-sl_SI-artur-medium": 35555,
+      "supertonic-F1": 35556,
+      "supertonic-F2": 35556,
+      "supertonic-F3": 35555,
+      "supertonic-F4": 35554,
+      "supertonic-M1": 35556,
+      "supertonic-M2": 35556,
+      "supertonic-M3": 35556,
+      "supertonic-M4": 35556
+    }
+  }
+}
