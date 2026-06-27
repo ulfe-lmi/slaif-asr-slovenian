@@ -461,15 +461,23 @@ def render_one_item(
         if not required.exists():
             raise FileNotFoundError(required)
     temp_native = _safe_temp_output(native_path)
+    log_dir.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=log_dir, prefix=f"{item.candidate_id}.", suffix=".input.txt", delete=False) as fp:
+        fp.write(item.spoken_text)
+        fp.write("\n")
+        input_path = Path(fp.name)
     command = build_piper_command(
         piper_python=piper_python,
         model_path=model_path,
         config_path=config_path,
         output_file=temp_native,
-        text=item.spoken_text,
+        input_file=input_path,
     )
     start = time.perf_counter()
-    completed = run_piper_command(command, env=piper_runtime_env(piper_python, cuda_visible_devices=cuda_visible_devices))
+    try:
+        completed = run_piper_command(command, env=piper_runtime_env(piper_python, cuda_visible_devices=cuda_visible_devices))
+    finally:
+        input_path.unlink(missing_ok=True)
     wall = time.perf_counter() - start
     atomic_write_text(log_path, completed.stdout)
     if completed.returncode != 0:

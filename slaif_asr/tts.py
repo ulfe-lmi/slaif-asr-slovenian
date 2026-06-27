@@ -263,9 +263,12 @@ def build_piper_command(
     model_path: Path,
     config_path: Path,
     output_file: Path,
-    text: str,
+    text: str | None = None,
+    input_file: Path | None = None,
 ) -> list[str]:
-    return [
+    if (text is None) == (input_file is None):
+        raise ValueError("provide exactly one of text or input_file")
+    command = [
         str(piper_python),
         "-m",
         "piper",
@@ -277,8 +280,12 @@ def build_piper_command(
         str(config_path),
         "--output-file",
         str(output_file),
-        text,
     ]
+    if input_file is not None:
+        command.extend(["--input-file", str(input_file)])
+    else:
+        command.append(str(text))
+    return command
 
 
 def run_piper_command(command: list[str], *, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
