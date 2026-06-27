@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added scale-8000 dual-GPU generation planning, prefix-inclusion checks, shard
+  planning, and storage preflight evidence. Generation is currently
+  `ENVIRONMENT_BLOCKED` because the available local storage does not satisfy the
+  required 25% safety margin for the projected new synthetic artifacts.
+
 All notable project changes will be documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and releases should use semantic versioning where it fits the software artifact.

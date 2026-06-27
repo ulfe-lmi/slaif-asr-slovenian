@@ -1,0 +1,44 @@
+{
+  "accepted_parent": "none",
+  "certificate_id": "sl-corpus-v5-scale8000-dataset-v1",
+  "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+  "decision_date": "2026-06-27",
+  "diagnostic_status": "ENVIRONMENT_BLOCKED",
+  "generation_status": "NOT_RUN",
+  "reason": "Storage preflight failed before generation. Available free space was below the projected new scale-8000 artifact size plus the required 25% safety margin.",
+  "schema_version": "1.0",
+  "scale8000_plan": {
+    "augmented_files": 704000,
+    "clean_files": 576000,
+    "exposure_multiplier_vs_reference": 8000,
+    "new_rows": 48000,
+    "optimizer_steps_at_batch8": 160000,
+    "semantic_rows": 64000,
+    "total_views": 1280000
+  },
+  "source_scale2000": {
+    "audio_certificate": "docs/data-certificates/sl-corpus-v4-scale2000-audio-v1.json",
+    "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+    "experiment_report": "docs/experiments/0014-gams16000-scale2000-text-only-directional.json",
+    "rows": 16000,
+    "sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14"
+  },
+  "status": "ENVIRONMENT_BLOCKED",
+  "storage_preflight": {
+    "available_bytes": 211107655680,
+    "inherited_scale2000_bytes": 82341008788,
+    "projected_new_bytes": 247023026364,
+    "required_free_bytes": 308778782955,
+    "safety_margin_fraction": 0.25,
+    "sufficient": false
+  },
+  "safety": {
+    "audio_generated": false,
+    "generated_audio_committed": false,
+    "generated_text_committed": false,
+    "model_or_checkpoint_committed": false,
+    "production_system_touched": false,
+    "training_eligible_issued": false
+  },
+  "work_order_id": "0027"
+}

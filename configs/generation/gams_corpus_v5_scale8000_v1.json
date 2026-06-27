@@ -1,0 +1,78 @@
+{
+  "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+  "new_addition_corpus_id": "sl-corpus-v5-scale8000-addition-v1",
+  "partition_role": "selected_training",
+  "source_type": "generated_text",
+  "prompt_revision": "sl-corpus-v5-scale8000-v1",
+  "prompt_cells_source": "configs/generation/gams_corpus_v4_16000_v1.json",
+  "final_rows": 64000,
+  "new_rows": 48000,
+  "combined_rows_per_cell": 1600,
+  "inherited_rows_per_cell": 400,
+  "new_rows_per_cell": 1200,
+  "new_surplus_per_cell": 120,
+  "shards_per_cell": 30,
+  "requested_rows_per_shard": 60,
+  "initial_requested_rows": 72000,
+  "run_directory": "runs/data-quality/sl-corpus-v5-scale8000-training-v1",
+  "local_staging_directory": ".local/scale8000",
+  "model": {
+    "repository": "cjvt/GaMS3-12B-Instruct",
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc"
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "double_quantization": true,
+    "compute_dtype": "bfloat16"
+  },
+  "device_policy": {
+    "authorized_physical_gpus": [0, 1],
+    "worker_processes": 2,
+    "single_visible_gpu_per_worker": true,
+    "worker_a_cuda_visible_devices": "0",
+    "worker_b_cuda_visible_devices": "1"
+  },
+  "generation": {
+    "prompt_batch_size": 8,
+    "oom_fallback_batch_size": 4,
+    "retry_until_valid": true
+  },
+  "retry_policy": {
+    "retry_until_valid": true,
+    "max_verification_rounds": null,
+    "max_attempts_per_shard": null,
+    "max_attempts_per_cell": null,
+    "max_total_attempts": null,
+    "max_requested_rows": null,
+    "requested_rows_per_attempt": 60,
+    "human_override": "Operator explicitly removed retry-budget caps for this long-duration scale-8000 generation work order."
+  },
+  "inherited_corpus": {
+    "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+    "sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+    "rows": 16000,
+    "rows_per_cell": 400,
+    "text": "runs/data-quality/sl-corpus-v4-gams-16000-training-v1/fixed-combined-training-text.local.jsonl",
+    "text_certificate": "docs/data-certificates/sl-corpus-v4-gams-16000-text-v1.json",
+    "audio_certificate": "docs/data-certificates/sl-corpus-v4-scale2000-audio-v1.json",
+    "experiment_report": "docs/experiments/0014-gams16000-scale2000-text-only-directional.json"
+  },
+  "inclusion_policy": {
+    "type": "prefix",
+    "description": "The 16,000 inherited scale-2000 rows remain byte-for-byte unchanged and appear before all newly generated scale-8000 rows in the combined local corpus."
+  },
+  "tts_and_augmentation": {
+    "augmentation_config": "configs/augmentation/scale200_transcript_preserving_v1.json",
+    "clean_voices_per_text": 9,
+    "augmentation_views_per_text": 11,
+    "views_per_text": 20
+  },
+  "public_reports": {
+    "planning_report_json": "docs/data-reports/0015-scale8000-dual-gpu-generation.json",
+    "planning_report_markdown": "docs/data-reports/0015-scale8000-dual-gpu-generation.md"
+  },
+  "public_certificates": {
+    "dataset_certificate": "docs/data-certificates/sl-corpus-v5-scale8000-dataset-v1.json"
+  }
+}
