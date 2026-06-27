@@ -873,6 +873,88 @@ def build_scale2000_exposure_schedule(
     return schedule, summary
 
 
+def build_scale2000_exposure_schedule_from_views(
+    text_rows: Sequence[dict[str, Any]],
+    augmentation_config: dict[str, Any],
+    view_rows: Sequence[dict[str, Any]],
+    *,
+    batch_size: int = 8,
+    seed: int = 1234,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Build a scale-2000 schedule using validated view rows as authority.
+
+    The inherited scale-200 audio was generated before the 16k combined corpus
+    existed, so its augmentation source-voice rotation is bound to the original
+    1,600-row order.  Recomputing source voices from the 16k order would break
+    strict nesting by pointing training at non-existent inherited views.
+    """
+    if len(text_rows) != 16000:
+        raise ValueError(f"expected 16000 semantic rows, got {len(text_rows)}")
+    clean_voices = list(augmentation_config["clean_voices"])
+    if tuple(clean_voices) != TRAINING_VIEWS:
+        raise ValueError("clean voices must remain unchanged")
+    profiles = list(augmentation_config["augmentation_profiles"])
+    if len(profiles) != 11:
+        raise ValueError("eleven augmentation profiles are required")
+
+    clean_available: set[tuple[str, str]] = set()
+    augmented_voice_by_key: dict[tuple[str, str], str] = {}
+    for view in view_rows:
+        semantic_key = str(view["semantic_key"])
+        view_type = str(view["view_type"])
+        voice = str(view["voice"])
+        profile_id = str(view["profile_id"])
+        if view_type == "clean":
+            clean_available.add((semantic_key, voice))
+        elif view_type == "augmented":
+            key = (semantic_key, profile_id)
+            if key in augmented_voice_by_key:
+                raise ValueError(f"duplicate augmented view for {key}")
+            augmented_voice_by_key[key] = voice
+
+    ordered = sorted(text_rows, key=lambda row: stable_sha256(str(row["candidate_id"])))
+    schedule: list[dict[str, Any]] = []
+    for round_index, voice in enumerate(clean_voices, start=1):
+        for position, row in enumerate(ordered):
+            semantic_key = str(row["candidate_id"])
+            if (semantic_key, voice) not in clean_available:
+                raise ValueError(f"missing clean view for {semantic_key}:{voice}")
+            schedule.append(
+                {
+                    "round": round_index,
+                    "semantic_position": position,
+                    "semantic_key": semantic_key,
+                    "view_type": "clean",
+                    "voice": voice,
+                    "profile_id": "clean",
+                    "spec_augment": False,
+                    "batch_order_seed": stable_sha256(f"{seed}:{round_index}:{position}"),
+                }
+            )
+    for profile_index, profile in enumerate(profiles):
+        round_index = int(profile["view_round"])
+        profile_id = str(profile["profile_id"])
+        for position, row in enumerate(ordered):
+            semantic_key = str(row["candidate_id"])
+            voice = augmented_voice_by_key.get((semantic_key, profile_id))
+            if voice is None:
+                raise ValueError(f"missing augmented view for {semantic_key}:{profile_id}")
+            schedule.append(
+                {
+                    "round": round_index,
+                    "semantic_position": position,
+                    "semantic_key": semantic_key,
+                    "view_type": "augmented",
+                    "voice": voice,
+                    "profile_id": profile_id,
+                    "spec_augment": ((position + profile_index) % 2) == 0,
+                    "batch_order_seed": stable_sha256(f"{seed}:{round_index}:{position}"),
+                }
+            )
+    summary = validate_scale2000_exposure_schedule(schedule, augmentation_config, batch_size=batch_size)
+    return schedule, summary
+
+
 def validate_scale2000_exposure_schedule(
     schedule: Sequence[dict[str, Any]],
     augmentation_config: dict[str, Any],

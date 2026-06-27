@@ -1,0 +1,86 @@
+{
+  "certificate_sha256": "1651353ac2b0f1e74b8ecc3414534e7ec3161b3ed8f70bfa6b6eb0e0c2b986ab",
+  "counts": {
+    "augmented_files": 176000,
+    "clean_files": 144000,
+    "inherited_view_records": 32000,
+    "new_view_records": 288000,
+    "semantic_rows": 16000,
+    "view_records": 320000
+  },
+  "duration_seconds": {
+    "augmented": 703597.549375,
+    "clean": 570617.265
+  },
+  "hashes": {
+    "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+    "augmentation_new_manifest_sha256": "c3f3cf60930a30934dc7fe47914cce4fbad52caba277396b1f5851282ca83d8b",
+    "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+    "inherited_all_views_sha256": "c5232cd020dc1926e0732ff6bafab515385956dd6c9410cc144a37655330e775",
+    "piper_new_audio_manifest_sha256": "6655c7ef6e93b018c84000498060e96237d91156abec9d7c1224303e1593a2fe",
+    "supertonic_new_audio_manifest_sha256": "f0251a82ccff6ecf63fff1224918eee581ead63ffa05fd04fe69e4f296810d4d"
+  },
+  "limitations": [
+    "All audio is synthetic.",
+    "The 2000x multiplier is exposure count, not independent linguistic information.",
+    "No TRAINING_ELIGIBLE status is issued."
+  ],
+  "multiplier_table": {
+    "augmentation_views_per_text": 11,
+    "augmented_files": 176000,
+    "clean_files": 144000,
+    "clean_voice_realizations_per_text": 9,
+    "exposure_multiplier_vs_reference": 2000,
+    "exposure_multiplier_vs_scale200": 10,
+    "interpretation": "2000x refers to deterministic exposure count, not independent linguistic information.",
+    "optimizer_steps": 40000,
+    "reference_semantic_items": 160,
+    "scale2000_semantic_items": 16000,
+    "scale200_semantic_items": 1600,
+    "semantic_text_multiplier_vs_reference": 100,
+    "semantic_text_multiplier_vs_scale200": 10,
+    "total_view_records": 320000,
+    "views_per_text": 20
+  },
+  "profile_counts": {
+    "codec_sample_rate_simulation": 16000,
+    "coloured_electrical_noise": 16000,
+    "compound_realistic_condition": 16000,
+    "coupled_speed_pitch_resampling": 16000,
+    "environmental_background_noise": 16000,
+    "gain_dynamic_range_variation": 16000,
+    "microphone_channel_filtering": 16000,
+    "mild_pitch_formant_vtlp_proxy": 16000,
+    "procedural_room_impulse_response": 16000,
+    "tempo_preserving_pitch": 16000,
+    "timing_silence_variation": 16000
+  },
+  "report_id": "0014-scale2000-acoustic-admission",
+  "schedule": {
+    "exposures": 320000,
+    "heldout_voice_exposures": {
+      "supertonic-F5": 0,
+      "supertonic-M5": 0
+    },
+    "optimizer_steps": 40000,
+    "schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842"
+  },
+  "schema_version": "1.0",
+  "status": "AUDIO_ACCEPTED",
+  "validation": {
+    "duplicate_hashes": 0,
+    "duplicate_paths": 0,
+    "issues_by_reason": {}
+  },
+  "voice_counts": {
+    "piper-sl_SI-artur-medium": 35555,
+    "supertonic-F1": 35556,
+    "supertonic-F2": 35556,
+    "supertonic-F3": 35555,
+    "supertonic-F4": 35554,
+    "supertonic-M1": 35556,
+    "supertonic-M2": 35556,
+    "supertonic-M3": 35556,
+    "supertonic-M4": 35556
+  }
+}
