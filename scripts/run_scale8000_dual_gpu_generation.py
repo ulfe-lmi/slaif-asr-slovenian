@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import argparse
-import os
 import json
+import math
+import os
 import subprocess
 import sys
 import time
@@ -15,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.data_quality import atomic_write_json, atomic_write_jsonl, atomic_write_text, sha256_file
-from slaif_asr.gams_retry_controller import AttemptRecord, RetryState, load_state, save_state
+from slaif_asr.gams_retry_controller import AttemptRecord, AttemptTask, load_state, save_state
 from slaif_asr.gpu_policy import require_single_visible_cuda
 from slaif_asr.corpus_v2_generation import GpuMonitor
 from slaif_asr.scale200_corpus import extract_utterance_lines
@@ -34,6 +35,8 @@ from slaif_asr.scale8000_corpus import (
     raw_generation_dir,
     raw_output_path,
     rejected_path,
+    refill_plan_path,
+    refill_summary_path,
     run_directory,
     safe_public_status_report,
     scale8000_multiplier_table,
@@ -89,19 +92,18 @@ def _generate_task_batch(tokenizer: Any, model: Any, config: dict[str, Any], tas
     return list(zip(tasks, outputs, strict=True))
 
 
-def stage_generate_text_worker(config_path: Path, worker: str) -> dict[str, Any]:
+def _run_generation_task_list(config: dict[str, Any], worker: str, tasks: list[AttemptTask], *, stage_name: str) -> dict[str, Any]:
     from scripts.generate_gams_corpus_v2 import load_model
 
     if worker not in {"gpu0", "gpu1"}:
         raise ValueError("--worker must be gpu0 or gpu1")
-    config = load_scale8000_generation_config(config_path)
     verify_inherited_scale2000_rows(config)
     info = require_single_visible_cuda(allowed_name_fragments=("A100",))
     run_directory(config).mkdir(parents=True, exist_ok=True)
     raw_generation_dir(config, worker).mkdir(parents=True, exist_ok=True)
     state_path = worker_state_path(config, worker)
     state = load_state(state_path)
-    tasks = [task for task in worker_initial_tasks(config, worker) if task.attempt_id not in state.completed_attempt_ids]
+    tasks = [task for task in tasks if task.attempt_id not in state.completed_attempt_ids]
     started = time.perf_counter()
     completed_at_start = len(state.completed_attempt_ids)
     tokenizer, model = load_model(config)
@@ -126,7 +128,7 @@ def stage_generate_text_worker(config_path: Path, worker: str) -> dict[str, Any]
                         json.dumps(
                             {
                                 "event": "oom_fallback",
-                                "stage": "generate-text-worker",
+                                "stage": stage_name,
                                 "worker": worker,
                                 "fallback_batch_size": batch_size,
                                 "error": exc.__class__.__name__,
@@ -160,11 +162,11 @@ def stage_generate_text_worker(config_path: Path, worker: str) -> dict[str, Any]
                 json.dumps(
                     {
                         "event": "progress",
-                        "stage": "generate-text-worker",
+                        "stage": stage_name,
                         "worker": worker,
                         "processed_attempts_this_run": processed_this_run,
                         "completed_attempts_total": len(state.completed_attempt_ids),
-                        "worker_total_attempts": len(worker_initial_tasks(config, worker)),
+                        "worker_total_attempts": completed_at_start + len(tasks),
                         "batch_size": len(batch),
                         "elapsed_seconds": round(time.perf_counter() - started, 3),
                     },
@@ -180,14 +182,20 @@ def stage_generate_text_worker(config_path: Path, worker: str) -> dict[str, Any]
         "completed_at_start": completed_at_start,
         "processed_this_run": processed_this_run,
         "completed_attempts_total": len(state.completed_attempt_ids),
-        "worker_total_attempts": len(worker_initial_tasks(config, worker)),
+        "worker_total_attempts": completed_at_start + len(tasks),
         "wall_time_seconds": round(time.perf_counter() - started, 6),
         "state_path_token": state_path.name,
         "raw_generation_dir_token": f"raw-generation/{worker}",
+        "stage": stage_name,
     }
     atomic_write_json(worker_summary_path(config, worker), payload)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
     return payload
+
+
+def stage_generate_text_worker(config_path: Path, worker: str) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    return _run_generation_task_list(config, worker, worker_initial_tasks(config, worker), stage_name="generate-text-worker")
 
 
 def stage_launch_dual_text_generation(config_path: Path, runs_root: Path | None) -> dict[str, Any]:
@@ -310,6 +318,157 @@ def stage_merge_text(config_path: Path) -> dict[str, Any]:
     return payload
 
 
+def _completed_attempts_by_cell(config: dict[str, Any]) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for worker in ("gpu0", "gpu1"):
+        state = load_state(worker_state_path(config, worker))
+        for record in state.records.values():
+            if record.status == "completed":
+                counts[record.task.cell_id] += 1
+    return dict(counts)
+
+
+def stage_plan_refill(config_path: Path) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    inherited = verify_inherited_scale2000_rows(config)
+    generated, parser_rejections, worker_status = load_worker_generated_rows(config)
+    retained, rejected, filter_summary = filter_records(
+        [*inherited, *generated],
+        config=config,
+        existing_rejections=parser_rejections,
+        protected=protected_indexes(config),
+        holdout_rows=load_existing_holdout(config),
+    )
+    new_retained = [row for row in retained if str(row.get("candidate_id", "")).startswith("gamsv5-")]
+    retained_by_cell = Counter(str(row.get("generation", {}).get("prompt_cell", "unknown")) for row in new_retained)
+    attempts_by_cell = _completed_attempts_by_cell(config)
+    target = int(config["new_rows_per_cell"]) + int(config["new_surplus_per_cell"])
+    shortfalls = {
+        str(cell["cell_id"]): target - retained_by_cell[str(cell["cell_id"])]
+        for cell in prompt_cells(config)
+        if retained_by_cell[str(cell["cell_id"])] < target
+    }
+    plans: dict[str, list[AttemptTask]] = {"gpu0": [], "gpu1": []}
+    refill_counts_by_cell: dict[str, int] = {}
+    if shortfalls:
+        all_refill_tasks: list[AttemptTask] = []
+        existing_refills: Counter[str] = Counter()
+        for worker in ("gpu0", "gpu1"):
+            state = load_state(worker_state_path(config, worker))
+            for record in state.records.values():
+                if record.task.reason == "targeted_refill":
+                    existing_refills[record.task.cell_id] += 1
+        for cell_id, deficit in sorted(shortfalls.items()):
+            attempts_done = max(1, int(attempts_by_cell.get(cell_id, 0)))
+            observed_yield = retained_by_cell[cell_id] / attempts_done
+            conservative_yield = max(8.0, observed_yield * 0.75)
+            attempt_count = max(1, math.ceil(deficit / conservative_yield) + 5)
+            refill_counts_by_cell[cell_id] = attempt_count
+            for offset in range(attempt_count):
+                sequence = existing_refills[cell_id] + offset + 1
+                shard_id = f"refill{sequence:04d}"
+                seed = int(
+                    __import__("hashlib")
+                    .sha256(f"scale8000-refill-v1:{cell_id}:{shard_id}".encode("utf-8"))
+                    .hexdigest()[:12],
+                    16,
+                ) % (2**31 - 1)
+                all_refill_tasks.append(
+                    AttemptTask(
+                        cell_id=cell_id,
+                        shard_id=shard_id,
+                        attempt_index=0,
+                        verification_round=1 + max(existing_refills.values(), default=0),
+                        requested_rows=int(config["requested_rows_per_shard"]),
+                        seed=seed,
+                        reason="targeted_refill",
+                        diversity_guidance=tuple(config.get("diversity_retry_guidance", ())),
+                    )
+                )
+        for index, task in enumerate(all_refill_tasks):
+            plans["gpu0" if index % 2 == 0 else "gpu1"].append(task)
+    for worker, tasks in plans.items():
+        atomic_write_json(refill_plan_path(config, worker), {"tasks": [task.to_json() for task in tasks]})
+    write_rejections(rejected_path(config), rejected)
+    payload = {
+        "status": "REFILL_REQUIRED" if shortfalls else "NO_REFILL_NEEDED",
+        "new_admissible_rows": len(new_retained),
+        "new_admissible_per_cell": dict(sorted(retained_by_cell.items())),
+        "shortfalls": shortfalls,
+        "refill_attempts_by_cell": refill_counts_by_cell,
+        "refill_attempts_by_worker": {worker: len(tasks) for worker, tasks in plans.items()},
+        "worker_status": worker_status,
+        "filter_summary": filter_summary,
+    }
+    atomic_write_json(refill_summary_path(config), payload)
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    return payload
+
+
+def _load_refill_plan(config: dict[str, Any], worker: str) -> list[AttemptTask]:
+    path = refill_plan_path(config, worker)
+    if not path.exists():
+        raise FileNotFoundError(path)
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return [AttemptTask.from_json(item) for item in payload.get("tasks", [])]
+
+
+def stage_generate_refill_worker(config_path: Path, worker: str) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    return _run_generation_task_list(config, worker, _load_refill_plan(config, worker), stage_name="generate-refill-worker")
+
+
+def stage_launch_dual_refill(config_path: Path, runs_root: Path | None) -> dict[str, Any]:
+    config = load_scale8000_generation_config(config_path)
+    run_directory(config).mkdir(parents=True, exist_ok=True)
+    (run_directory(config) / "logs").mkdir(parents=True, exist_ok=True)
+    launched: dict[str, Any] = {}
+    for worker, selector in (("gpu0", "0"), ("gpu1", "1")):
+        plan_tasks = _load_refill_plan(config, worker)
+        if not plan_tasks:
+            launched[worker] = {"status": "SKIPPED", "reason": "empty refill plan"}
+            continue
+        log_path = run_directory(config) / "logs" / f"{worker}.generate-refill.log"
+        env = os.environ.copy()
+        env["CUDA_VISIBLE_DEVICES"] = selector
+        env["PYTHONUNBUFFERED"] = "1"
+        if runs_root is not None:
+            env["SLAIF_ASR_RUNS_ROOT"] = str(runs_root)
+        command = [
+            sys.executable,
+            "-u",
+            str(Path(__file__).resolve()),
+            "--stage",
+            "generate-refill-worker",
+            "--worker",
+            worker,
+            "--config",
+            str(config_path),
+        ]
+        if runs_root is not None:
+            command.extend(["--runs-root", str(runs_root)])
+        with log_path.open("ab") as log:
+            process = subprocess.Popen(
+                command,
+                cwd=REPO_ROOT,
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,
+            )
+        launched[worker] = {
+            "status": "LAUNCHED",
+            "pid": process.pid,
+            "physical_gpu": selector,
+            "cuda_visible_devices": selector,
+            "planned_attempts": len(plan_tasks),
+            "log_token": log_path.name,
+        }
+    payload = {"status": "LAUNCHED", "stage": "generate-refill-dual", "workers": launched}
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    return payload
+
+
 def stage_verify(config_path: Path) -> dict[str, Any]:
     config = load_scale8000_generation_config(config_path)
     inherited = verify_inherited_scale2000_rows(config)
@@ -405,7 +564,18 @@ def main() -> int:
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument(
         "--stage",
-        choices=["verify", "preflight", "write-report", "generate-text-worker", "generate-text-dual", "generation-status", "merge-text"],
+        choices=[
+            "verify",
+            "preflight",
+            "write-report",
+            "generate-text-worker",
+            "generate-text-dual",
+            "generation-status",
+            "merge-text",
+            "plan-refill",
+            "generate-refill-worker",
+            "generate-refill-dual",
+        ],
         required=True,
     )
     parser.add_argument("--canonical-results", type=Path)
@@ -430,6 +600,14 @@ def main() -> int:
         stage_generation_status(args.config)
     elif args.stage == "merge-text":
         stage_merge_text(args.config)
+    elif args.stage == "plan-refill":
+        stage_plan_refill(args.config)
+    elif args.stage == "generate-refill-worker":
+        if args.worker is None:
+            raise SystemExit("--worker is required for generate-refill-worker")
+        stage_generate_refill_worker(args.config, args.worker)
+    elif args.stage == "generate-refill-dual":
+        stage_launch_dual_refill(args.config, args.runs_root)
     else:  # pragma: no cover
         raise AssertionError(args.stage)
     return 0

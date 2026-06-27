@@ -253,6 +253,14 @@ def worker_summary_path(config: dict[str, Any], worker: str) -> Path:
     return run_directory(config) / f"generation-summary-{worker}.local.json"
 
 
+def refill_plan_path(config: dict[str, Any], worker: str) -> Path:
+    return run_directory(config) / f"refill-plan-{worker}.local.json"
+
+
+def refill_summary_path(config: dict[str, Any]) -> Path:
+    return run_directory(config) / "refill-summary.local.json"
+
+
 def worker_log_path(config: dict[str, Any], worker: str) -> Path:
     return run_directory(config) / "logs" / f"{worker}.generate-text.log"
 
