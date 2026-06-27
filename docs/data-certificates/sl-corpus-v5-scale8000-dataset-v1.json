@@ -1,12 +1,16 @@
 {
   "accepted_parent": "none",
+  "audio_status": "NOT_RUN",
   "certificate_id": "sl-corpus-v5-scale8000-dataset-v1",
   "corpus_id": "sl-corpus-v5-scale8000-training-v1",
   "decision_date": "2026-06-27",
-  "diagnostic_status": "ENVIRONMENT_BLOCKED",
-  "generation_status": "NOT_RUN",
-  "reason": "Storage preflight failed before generation. Available free space was below the projected new scale-8000 artifact size plus the required 25% safety margin.",
-  "schema_version": "1.0",
+  "diagnostic_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW",
+  "generation_status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW",
+  "reason": "Dual-GPU GaMS generation and structural text validation completed. The corpus is awaiting one whole-file human linguistic decision before any audio synthesis or downstream experiment stage.",
+  "review_decision": {
+    "expected_command": "ACCEPT or REJECT sl-corpus-v5-scale8000-training-v1 e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd 64000",
+    "status": "PENDING"
+  },
   "scale8000_plan": {
     "augmented_files": 704000,
     "clean_files": 576000,
@@ -16,6 +20,7 @@
     "semantic_rows": 64000,
     "total_views": 1280000
   },
+  "schema_version": "1.0",
   "source_scale2000": {
     "audio_certificate": "docs/data-certificates/sl-corpus-v4-scale2000-audio-v1.json",
     "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
@@ -23,15 +28,27 @@
     "rows": 16000,
     "sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14"
   },
-  "status": "ENVIRONMENT_BLOCKED",
+  "status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW",
   "storage_preflight": {
-    "available_bytes": 211107655680,
+    "available_bytes": 3286672367616,
     "inherited_scale2000_bytes": 82341008788,
     "projected_new_bytes": 247023026364,
     "required_free_bytes": 308778782955,
+    "runtime_storage": "external-data-runs-root",
     "safety_margin_fraction": 0.25,
-    "sufficient": false
+    "sufficient": true
   },
+  "text_corpus": {
+    "combined_rows": 64000,
+    "combined_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "generated_rows": 158573,
+    "inherited_rows": 16000,
+    "new_addition_rows": 48000,
+    "new_addition_sha256": "88a9cd19b726cf0fe44fd9f0d2e19d69eba392cc1d65439d9d5f3c0ca53f9887",
+    "structural_validation_status": "PASS",
+    "text_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW"
+  },
+  "training_status": "NOT_RUN",
   "safety": {
     "audio_generated": false,
     "generated_audio_committed": false,

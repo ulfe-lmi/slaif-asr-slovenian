@@ -1,5 +1,6 @@
 {
   "accepted_parent": "none",
+  "audio_status": "NOT_RUN",
   "canonical_pass": {
     "commands": [
       {
@@ -56,40 +57,62 @@
     ],
     "notes": [
       "The first wrapper invocation of py_compile embedded newline-separated file names in a shell string and returned exit 126; the required py_compile command was rerun directly and passed.",
-      "No canonical-pass failure affected scale-8000 generation; generation was stopped only by storage preflight."
+      "Scale-8000 text generation proceeded after the run root was moved to external data storage with sufficient free space."
     ],
     "status": "PASSED_AFTER_RERUN"
   },
   "corpus_id": "sl-corpus-v5-scale8000-training-v1",
-  "dual_gpu_plan": {
-    "status": "PLANNED",
-    "total_requested_rows": 72000,
-    "total_tasks": 1200,
+  "diagnostic_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW",
+  "dual_gpu_generation": {
+    "initial_attempts": 1200,
+    "raw_prompt_and_output_file_count": 4568,
+    "refill_attempts": 1084,
+    "requested_rows": {
+      "initial": 72000,
+      "refill": 65040,
+      "total": 137040
+    },
+    "runtime_storage": "external-data-runs-root",
+    "total_attempts": 2284,
     "workers": {
       "gpu0": {
+        "completed_attempts": 1142,
         "cuda_visible_devices": "0",
+        "device_name": "NVIDIA A100-SXM4-80GB",
         "logical_device": "cuda:0",
         "physical_gpu": 0,
-        "requested_rows": 36000,
-        "task_count": 600
+        "refill_wall_time_seconds": 13359.709404,
+        "status": "COMPLETED",
+        "visible_device_count": 1
       },
       "gpu1": {
+        "completed_attempts": 1142,
         "cuda_visible_devices": "1",
+        "device_name": "NVIDIA A100-SXM4-80GB",
         "logical_device": "cuda:0",
         "physical_gpu": 1,
-        "requested_rows": 36000,
-        "task_count": 600
+        "refill_wall_time_seconds": 13358.312546,
+        "status": "COMPLETED",
+        "visible_device_count": 1
       }
     }
   },
+  "generation_model": {
+    "repository": "cjvt/GaMS3-12B-Instruct",
+    "revision": "1d0b27af5748784482600d24779409e7e1dc9adc",
+    "runtime": "4-bit NF4, double quantization, BF16 compute, prompt batch size 8 with OOM fallback to 4"
+  },
   "inclusion_policy": {
     "description": "The 16,000 inherited scale-2000 rows remain byte-for-byte unchanged and appear before all newly generated scale-8000 rows in the combined local corpus.",
+    "inherited_rows": 16000,
+    "new_rows": 48000,
     "type": "prefix"
   },
   "limitations": [
     "Scale-8000 is synthetic dataset construction evidence, not checkpoint acceptance.",
     "The 8000x figure is exposure count, not independent linguistic information.",
-    "Generation must not start when storage preflight is insufficient."
+    "The text corpus is structurally ready but not text-accepted until a whole-file human review decision is recorded.",
+    "No audio synthesis, acoustic validation, training, or ASR evaluation was run for scale-8000 in this evidence update."
   ],
   "multiplier_table": {
     "augmentation_views_per_text": 11,
@@ -109,7 +132,11 @@
     "total_views": 1280000,
     "views_per_text": 20
   },
-  "new_addition_corpus_id": "sl-corpus-v5-scale8000-addition-v1",
+  "new_addition": {
+    "corpus_id": "sl-corpus-v5-scale8000-addition-v1",
+    "rows": 48000,
+    "sha256": "88a9cd19b726cf0fe44fd9f0d2e19d69eba392cc1d65439d9d5f3c0ca53f9887"
+  },
   "parent_scale2000": {
     "audio_certificate": "docs/data-certificates/sl-corpus-v4-scale2000-audio-v1.json",
     "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
@@ -118,7 +145,19 @@
     "sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14"
   },
   "report_id": "0015-scale8000-dual-gpu-generation",
+  "review_capsule": {
+    "decision_command": "ACCEPT or REJECT sl-corpus-v5-scale8000-training-v1 e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd 64000",
+    "fixed_combined_rows": 64000,
+    "generated_rows": 158573,
+    "new_addition_rows": 48000,
+    "rejected_rows": 93295,
+    "status": "CREATED_LOCALLY",
+    "tsv_lines_including_header": 64001
+  },
   "safety": {
+    "audio_generated": false,
+    "generated_audio_committed": false,
+    "generated_text_committed": false,
     "model_or_checkpoint_committed": false,
     "model_publication": false,
     "raw_audio_committed": false,
@@ -136,13 +175,32 @@
     "total_views": 1280000
   },
   "schema_version": "1.0",
-  "status": "ENVIRONMENT_BLOCKED",
+  "status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW",
   "storage_preflight": {
-    "available_bytes": 211107639296,
+    "available_bytes": 3286672367616,
     "inherited_scale2000_bytes": 82341008788,
     "projected_new_bytes": 247023026364,
     "required_free_bytes": 308778782955,
+    "runtime_storage": "external-data-runs-root",
     "safety_margin_fraction": 0.25,
-    "sufficient": false
-  }
+    "sufficient": true
+  },
+  "text_generation": {
+    "combined_rows": 64000,
+    "combined_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "generated_rows": 158573,
+    "new_admissible_rows": 65278,
+    "new_selected_rows": 48000,
+    "rejected_rows": 93295,
+    "rejection_counts": {
+      "holdout_surface_overlap": 2,
+      "metadata_leak": 271,
+      "number_masked_collision": 3367,
+      "schema_invalid": 639,
+      "surface_duplicate": 89016
+    },
+    "selection_key": "SHA256(candidate_id)",
+    "status": "STRUCTURALLY_READY_FOR_HUMAN_REVIEW"
+  },
+  "text_status": "DRAFT_AWAITING_WHOLE_FILE_REVIEW"
 }

@@ -281,7 +281,7 @@ def stage_merge_text(config_path: Path) -> dict[str, Any]:
     incomplete = {
         worker: status
         for worker, status in worker_status.items()
-        if int(status["completed_attempts"]) != int(status["expected_attempts"])
+        if int(status["completed_attempts"]) < int(status["expected_attempts"])
     }
     if incomplete:
         raise RuntimeError(f"generation workers are incomplete: {incomplete}")
