@@ -1,0 +1,73 @@
+{
+  "adapter": {
+    "bottleneck_dimension": 32,
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
+    "expected_trainable_parameters": 42240,
+    "module": "model.joint",
+    "name": "sl-si-joint-adapter-v1",
+    "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter"
+  },
+  "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+  "audio_certificate_sha256": "1651353ac2b0f1e74b8ecc3414534e7ec3161b3ed8f70bfa6b6eb0e0c2b986ab",
+  "augmentation_policy_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
+  "authorized_actions": [
+    "internally train one frozen-base Slovenian joint-adapter arm on the declared 320,000-exposure synthetic schedule",
+    "evaluate the trained adapter using the declared batch-32 directional suite",
+    "write privacy-safe aggregate evidence"
+  ],
+  "certificate_id": "sl-corpus-v4-scale2000-joint-adapter-diagnostic-v1",
+  "decision_date": "2026-06-27",
+  "evaluation": {
+    "batch_size": 32,
+    "canonical": false,
+    "duration_bucketing": true,
+    "policy": "configs/evaluation/a100-directional-batch32-v1.json",
+    "promotion_eligible": false,
+    "suite_rows": 1378
+  },
+  "experiment_config_sha256": "e2b005a8d80e1b11161831b7f3e8a8bc1ed99e4378e61681ec0f138320dbed0f",
+  "exposure_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842",
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "limitations": [
+    "DIAGNOSTIC_ONLY synthetic experiment.",
+    "The 2000x multiplier is an exposure-count multiplier, not independent linguistic information.",
+    "Fast batch-32 evaluation is directional and noncanonical."
+  ],
+  "model": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "prohibited_actions": [
+    "issuing TRAINING_ELIGIBLE",
+    "accepting a checkpoint or adapter as a parent",
+    "running batch-1 canonical evaluation",
+    "using M5/F5 or holdout rows in training",
+    "publishing generated text, audio, adapter, or checkpoint artifacts",
+    "changing adapter rank, optimizer, learning rate, batch size, or augmentation policy"
+  ],
+  "schema_version": "1.0",
+  "status": "DIAGNOSTIC_ONLY",
+  "text_certificate_sha256": "6c58986e51eea9b2448f2bfc84642f98c3eefc393914a4b080a1dedbddcadeb4",
+  "training": {
+    "arm": "gams16000_nine_voice_augmented_joint_adapter_dim32",
+    "batch_size": 8,
+    "early_stopping": false,
+    "exposure_rounds": 20,
+    "gradient_accumulation": "none",
+    "gradient_clipping": "none",
+    "learning_rate": 0.001,
+    "optimizer": "AdamW",
+    "optimizer_steps": 40000,
+    "precision": "fp32",
+    "sample_exposures": 320000,
+    "scheduler": "none",
+    "seed": 1234,
+    "semantic_rows": 16000,
+    "spec_augment": "fixed_mild_on_half_augmented_exposures",
+    "tf32": false,
+    "weight_decay": 0.0
+  },
+  "work_order_id": "0026"
+}

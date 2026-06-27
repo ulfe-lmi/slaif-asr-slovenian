@@ -30,7 +30,7 @@ from slaif_asr.scale2000_corpus import (
     build_task_prompt,
     expand_whole_file_decision,
     fixed_combined_text_path,
-    build_scale2000_exposure_schedule,
+    build_scale2000_exposure_schedule_from_views,
     classify_scale2000,
     generation_state_path,
     load_scale2000_experiment_config,
@@ -444,7 +444,7 @@ def stage_generate_text_until_valid(config_path: Path, *, restart_from_scratch: 
 
 
 def stage_not_yet_safe(config_path: Path, stage: str) -> dict[str, Any]:
-    experiment, text, _augmentation = load_configs(config_path)
+    experiment, text, augmentation = load_configs(config_path)
     run_dir(text).mkdir(parents=True, exist_ok=True)
     payload = {
         "status": "NOT_RUN",
@@ -1152,8 +1152,7 @@ def stage_validate_combined_audio(config_path: Path) -> dict[str, Any]:
         issues.append({"reason": "duplicate_audio_sha256", "count": duplicate_hashes})
     if len(semantic_seen) != 16000 or any(count != 20 for count in semantic_seen.values()):
         issues.append({"reason": "semantic_view_count", "semantic_rows": len(semantic_seen)})
-    schedule, schedule_summary = build_scale2000_exposure_schedule(_load_jsonl(fixed_combined_text_path(text)), augmentation)
-    atomic_write_jsonl(paths["exposure_schedule"], schedule)
+    schedule_summary_payload = _write_view_aware_schedule(text, augmentation, stats_rows)
     sorted_stats = sorted(stats_rows, key=lambda row: (str(row["semantic_key"]), str(row["view_type"]), str(row["voice"]), str(row["profile_id"])))
     atomic_write_jsonl(paths["all_views"], sorted_stats)
     validation = {
@@ -1176,7 +1175,7 @@ def stage_validate_combined_audio(config_path: Path) -> dict[str, Any]:
         "duplicate_hashes": duplicate_hashes,
         "issues_by_reason": dict(sorted(Counter(str(issue["reason"]) for issue in issues).items())),
         "issues": issues[:500],
-        "schedule": {**schedule_summary, "schedule_sha256": sha256_file(paths["exposure_schedule"])},
+        "schedule": schedule_summary_payload,
         "hashes": {
             "inherited_all_views_sha256": sha256_file(INHERITED_SCALE200_ROOT / "all-views.local.jsonl"),
             "piper_new_audio_manifest_sha256": sha256_file(_piper_new_audio_paths(text).audio_manifest),
@@ -1275,6 +1274,30 @@ def _view_lookup(text: dict[str, Any]) -> dict[tuple[str, str, str, str], dict[s
     return lookup
 
 
+def _write_view_aware_schedule(text: dict[str, Any], augmentation: dict[str, Any], view_rows: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    paths = _data_paths(text)
+    if view_rows is None:
+        view_rows = _load_jsonl(paths["all_views"])
+    schedule, schedule_summary = build_scale2000_exposure_schedule_from_views(
+        _load_jsonl(fixed_combined_text_path(text)),
+        augmentation,
+        view_rows,
+    )
+    atomic_write_jsonl(paths["exposure_schedule"], schedule)
+    schedule_payload = {**schedule_summary, "schedule_sha256": sha256_file(paths["exposure_schedule"])}
+    if paths["validation"].exists():
+        validation = read_json(paths["validation"])
+        validation["schedule"] = schedule_payload
+        validation.setdefault("hashes", {})["all_views_sha256"] = sha256_file(paths["all_views"])
+        atomic_write_json(paths["validation"], validation)
+    if paths["audio_certificate_local"].exists():
+        certificate = read_json(paths["audio_certificate_local"])
+        certificate["schedule_sha256"] = schedule_payload["schedule_sha256"]
+        certificate["all_views_sha256"] = sha256_file(paths["all_views"])
+        atomic_write_json(paths["audio_certificate_local"], certificate)
+    return schedule_payload
+
+
 def _training_record_from_view(text_row: dict[str, Any], view_row: dict[str, Any], *, selection_reason: str) -> Any:
     from slaif_asr.corpus_v2_training import TrainingRecord
 
@@ -1318,13 +1341,23 @@ def _probe_records(text: dict[str, Any]) -> tuple[list[Any], list[Any], list[Any
     )
 
 
-def _load_scheduled_round_records(text: dict[str, Any]) -> tuple[dict[int, list[Any]], dict[str, dict[str, Any]], dict[str, Any]]:
+def _load_scheduled_round_records(text: dict[str, Any], augmentation: dict[str, Any]) -> tuple[dict[int, list[Any]], dict[str, dict[str, Any]], dict[str, Any]]:
     paths = _data_paths(text)
     text_by_id = _load_text_by_id(text)
     views = _view_lookup(text)
     schedule = _load_jsonl(paths["exposure_schedule"])
     if len(schedule) != 320000:
         raise RuntimeError(f"expected 320000 exposure schedule rows, found {len(schedule)}")
+    missing_keys = []
+    for item in schedule:
+        key = (str(item["semantic_key"]), str(item["view_type"]), str(item["voice"]), str(item["profile_id"]))
+        if key not in views:
+            missing_keys.append(key)
+            if len(missing_keys) >= 5:
+                break
+    if missing_keys:
+        _write_view_aware_schedule(text, augmentation)
+        schedule = _load_jsonl(paths["exposure_schedule"])
     rounds: dict[int, list[Any]] = defaultdict(list)
     meta_by_audio: dict[str, dict[str, Any]] = {}
     for item in schedule:
@@ -1385,7 +1418,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
         verify_optimizer_scope,
     )
 
-    experiment, text, _augmentation = load_configs(config_path)
+    experiment, text, augmentation = load_configs(config_path)
     require_audio_accepted(config_path)
     require_nemotron_env()
     runtime = verify_runtime_identities(check_gpu=True)
@@ -1398,7 +1431,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
             return summary
     torch = configure_torch()
     anchor_probe, scale_probe, anchor_full, scale_full = _probe_records(text)
-    rounds, meta_by_audio, schedule_summary = _load_scheduled_round_records(text)
+    rounds, meta_by_audio, schedule_summary = _load_scheduled_round_records(text, augmentation)
     reporter = LiveProgressReporter(stage="train", arm=ARM_NAME, ndjson_path=arm_dir / "progress" / "train.local.ndjson")
     reporter.start("training scale-2000 joint adapter")
     model = restore_base_model(experiment, reporter=LiveProgressReporter(stage="restore", arm=ARM_NAME, ndjson_path=arm_dir / "progress" / "restore.local.ndjson"))
