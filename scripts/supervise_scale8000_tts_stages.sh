@@ -7,7 +7,7 @@ cd "$ROOT_DIR"
 RUNS_ROOT="${SLAIF_ASR_RUNS_ROOT:-/data/janezp/codex-work/slaif-asr-slovenian/runs}"
 export SLAIF_ASR_RUNS_ROOT="$RUNS_ROOT"
 
-CONFIG="${1:-configs/generation/scale8000_dual_gpu_generation_v1.json}"
+CONFIG="${1:-configs/generation/gams_corpus_v5_scale8000_v1.json}"
 RUN_DIR="$RUNS_ROOT/data-quality/sl-corpus-v5-scale8000-training-v1"
 LOG_DIR="$RUN_DIR/logs"
 mkdir -p "$LOG_DIR"
