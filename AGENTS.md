@@ -4,7 +4,13 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 
 ## Discovery summary
 
-- **Domain problem:** produce a high-quality, low-latency Slovenian speech recognizer without relearning transferable multilingual acoustic and streaming capabilities.
+- **Domain problem:** produce a high-quality, low-latency Slovenian, and
+  eventually Slovenian-English, speech recognizer using synthetic-only training
+  and validation-only real Slovenian speech.
+- **Active strategy:** ADR 0007 adopts a Slovenian-first synthetic development
+  track: real Slovenian acoustic data is validation-only, the encoder stays
+  frozen while training remains synthetic-only, and broader emission-side
+  adaptation requires explicit work orders.
 - **Product shape:** a reproducible adaptation, evaluation, and release pipeline around an open-weight streaming ASR base model.
 - **Initial base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`.
 - **Training framework:** NVIDIA NeMo, pinned by commit or release in executable work.
@@ -38,7 +44,9 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 
 ## Mission
 
-Build an auditable SLAIF pipeline that can adapt and evaluate open-weight streaming ASR models for Slovenian while preserving transferable acoustic, multilingual, and streaming behavior.
+Build an auditable SLAIF pipeline that can adapt and evaluate open-weight
+streaming ASR models for Slovenian and Slovenian-English while keeping real
+Slovenian acoustic data reserved for validation and acceptance evidence.
 
 The core user promise is:
 
@@ -100,11 +108,17 @@ The repository will not own:
 5. **Do not replace the tokenizer casually.**
    - The initial strategy reuses the base tokenizer.
    - A tokenizer change requires an ADR, an explicit decoder-reinitialization analysis, and human approval.
-6. **Preserve transferable behavior.**
-   - Start with the smallest declared trainable surface.
-   - Escalation from prompt-specific adaptation to shared decoder/joint or encoder weights requires measured evidence and a work order.
+6. **Protect acoustic and streaming behavior while optimizing for Slovenian.**
+   - Start with a declared trainable surface and prove parameter integrity.
+   - Broader non-encoder emission adaptation is permitted only by explicit work
+     order and evidence.
+   - Encoder training remains prohibited while training data is synthetic-only
+     unless a later ADR and human approval explicitly change that rule.
 7. **Real speech decides checkpoint acceptance.**
    - Synthetic improvement alone is insufficient.
+   - Real Slovenian acoustic data is validation-only and must not be used for
+     training, synthetic prompt construction, selected-training membership,
+     early stopping, or per-sample steering.
 8. **Skipped is not passed.**
    - Every report distinguishes passed, failed, skipped, not run, blocked, and out of scope.
 9. **No performance claim without a committed protocol.**

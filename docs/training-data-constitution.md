@@ -49,9 +49,21 @@ The following decisions are effective once this policy is adopted:
 3. Experiment 0004 remains a valid rejection of its challenger.
 4. Experiment 0005 remains valid as an execution and parameter-integrity record, but is **corpus-confounded** and must not be cited as evidence that residual adapters are intrinsically unsuitable.
 5. The old synthetic holdout is not an independent generalization set. It may remain a historical synthetic-domain diagnostic only.
-6. No new TTS synthesis, ASR scoring, A100 training, or adapter comparison may begin from a newly generated corpus until the corpus has obtained `TRAINING_ELIGIBLE` status under this policy.
-7. Synthetic-only improvement is never sufficient for model promotion. Real speech remains decisive.
-8. A one-voice synthetic corpus may be used for pipeline validation or bounded overfit proofs, but is not by itself promotion-eligible evidence for real-speech generalization.
+6. Training authorization is separate from checkpoint acceptance. A named
+   human-approved work order and certificate may authorize synthetic-only model
+   training. The source of training data does not by itself disqualify a
+   challenger; validation-only real gates and the committed release protocol
+   decide whether a completed challenger can become an accepted parent.
+7. Synthetic-only improvement is never sufficient for model promotion. Real
+   speech remains decisive.
+8. Real Slovenian acoustic data is validation-only unless a later human-approved
+   policy explicitly changes that boundary. It must not enter training,
+   synthetic prompt construction, selected-training membership, early stopping,
+   hyperparameter tuning, per-sample steering, or adapter-surface selection.
+   Aggregate real-gate metrics may compare completed challengers.
+9. A one-voice synthetic corpus may be used for pipeline validation or bounded
+   overfit proofs, but is not by itself promotion-eligible evidence for
+   real-speech generalization.
 
 ---
 
@@ -1043,7 +1055,11 @@ A single TTS voice produces one narrow acoustic domain. It may be useful for:
 
 It is not sufficient by itself to support a claim of real-speaker generalization.
 
-A synthetic-only training corpus is promotion-eligible only under an explicit work order that provides credible acoustic diversity and still passes real gates. By default, promotion-oriented training SHOULD include rights-cleared real Slovenian speech or multiple materially distinct voices/speakers.
+A synthetic-only training corpus may support model training under an explicit
+work order and certificate that preserves synthetic/real boundaries. The
+corpus itself is not evidence of real-speech quality. A model trained on it may
+be considered only after canonical validation-only real-gate evaluation, and
+any public release claim requires a human-approved release protocol.
 
 ### 13.2 Diversity dimensions
 

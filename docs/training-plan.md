@@ -6,7 +6,10 @@
   RTX 2080 Ti. Historical M1/M2 evidence used one RTX 2080 Ti. Current A100
   experiments select physical GPU 1 with `CUDA_VISIBLE_DEVICES=1`, which maps
   to logical `cuda:0`.
-- **Training loop:** GaMS generates Slovenian text → external Piper Slovenian TTS renders audio → current ASR model evaluates it → failures are selected → a small update is trained → real and multilingual gates accept or reject the update
+- **Training loop:** GaMS generates Slovenian text → governed synthetic TTS
+  renders audio → current ASR model evaluates it → failures are selected → a
+  bounded update is trained → validation-only real Slovenian gates and
+  streaming checks accept, reject, or defer the update
 - **Prepared:** 2026-06-21
 
 ---
@@ -52,8 +55,13 @@ The recommended adaptation ladder is:
 1. **Slovenian prompt-column only** — modify only the part of the prompt projection activated by `sl-SI`; preserve the encoder, decoder, joint network, tokenizer, and every other language prompt.
 2. **Prompt kernel** — allow the small prompt projection to adapt.
 3. **Prompt kernel + RNNT decoder + joint** — adapt emission behavior while keeping the large FastConformer acoustic encoder frozen.
-4. **Last encoder layers** — only when real-speech errors demonstrate an acoustic/phonetic ceiling.
-5. **Full fine-tune** — retain as the official reference baseline, not the first production choice.
+4. **Frozen-encoder emission expansion** — larger joint adapters, decoder
+   adapters, joint-plus-decoder adapters, or frozen-encoder joint/decoder
+   fine-tuning may be tested by explicit work order when synthetic-scale
+   evidence warrants it.
+5. **Last encoder layers** — prohibited while training remains synthetic-only
+   unless a later ADR and human approval explicitly change the rule.
+6. **Full fine-tune** — retain as the official reference baseline, not the first production choice.
 
 The first prompt-column micro-proof has now been executed on one RTX 2080 Ti.
 It supports only the narrow mechanism claim: a 2048-scalar Slovenian prompt
@@ -110,7 +118,17 @@ training, did not train on M5/F5 held-out styles, did not accept an adapter or
 checkpoint, and classified the result as
 `SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`.
 
-The adaptive loop must never generate a huge static synthetic corpus. Each round should generate a bounded candidate batch, synthesize it, run the current model, select the actual failures, train a small update, and either accept or roll it back.
+ADR 0007 reframes the active development target as Slovenian-first and
+synthetic-only for training. Real Slovenian acoustic data is validation-only:
+it may compare completed challengers, but it must not be used for training,
+synthetic prompt construction, selected-training membership, early stopping,
+hyperparameter search, per-sample steering, or adapter-surface selection.
+
+Large synthetic-scale corpora are now acceptable only as governed development
+experiments with explicit privacy-safe evidence and certificates. They are not
+independent real-speech evidence and do not replace canonical real-gate
+validation. The completed model, not the synthetic corpus alone, may be judged
+by validation-only real gates.
 
 ---
 

@@ -97,6 +97,16 @@
   dropped from 28.275 to 15.537, so the result is
   `SUPERTONIC3_MULTIVOICE_MITIGATES_PIPER_REGRESSION`; no adapter or
   checkpoint is accepted.
+- ADR 0007 reframes the active development strategy as Slovenian-first, with
+  Slovenian-English as the likely first bilingual extension. Real Slovenian
+  acoustic data is validation-only and must not be used for training,
+  synthetic prompt construction, selected-training membership, early stopping,
+  hyperparameter tuning, per-sample steering, or adapter-surface selection.
+  While training remains synthetic-only, the acoustic encoder stays frozen by
+  default. The next model-surface experiments should focus on broader
+  frozen-encoder emission adaptation, such as larger joint adapters, decoder
+  adapters, joint-plus-decoder adapters, or frozen-encoder joint/decoder
+  fine-tuning.
 - A100 batched streaming evaluation has been measured on physical GPU 1 with
   FP32 and TF32 disabled. Batch sizes 2 through 128 were faster on FLEURS-v2
   but changed transcripts, so the selected policy is batch size 1 without
@@ -215,9 +225,11 @@ not a benchmark and does not start training.
 ## Next recommended task
 
 Do not prepare another prompt-column training rerun from the current
-single-voice corpus as if it were promotion-eligible. The next scientific work
-should address the acoustic/domain mismatch before any promotion-oriented
-training authorization.
+single-voice corpus as if it were promotion-eligible. The next useful
+development work is governed synthetic-scale data construction followed by
+frozen-encoder emission adaptation, then validation-only real-gate comparison.
+Batch-32 directional evidence can guide iteration, but canonical batch-1
+validation is still required before any acceptance discussion.
 
 Use the rejected Round 1 and residual-adapter aggregate evidence to design the
 next controlled work order. The accepted parent remains the untouched Nemotron
@@ -227,7 +239,9 @@ residual adapter as an accepted parent.
 ## Do not do next
 
 - Do not expose real-gate reference text to GaMS.
-- Do not broaden beyond the prompt column in the active-curriculum experiment.
+- Do not use real Slovenian acoustic samples for training or steering.
+- Do not train the acoustic encoder while the training signal remains
+  synthetic-only.
 - Do not create a service API or UI.
 - Do not publish a checkpoint.
 - Do not add private data to obtain an early score.
