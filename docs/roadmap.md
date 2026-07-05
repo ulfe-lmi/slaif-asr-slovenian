@@ -262,7 +262,7 @@ Residual-adapter report:
 
 ## M4 — Active GaMS/TTS loop
 
-Status: **not started as a release loop**
+Status: **active as Slovenian-first synthetic development; not a release loop**
 
 Deliverables:
 
@@ -280,12 +280,26 @@ Exit gate:
 - accepted-parent discipline enforced;
 - real-speech metrics guide acceptance.
 
+ADR 0007 changes the M4 emphasis from multilingual preservation to
+Slovenian-first streaming ASR development under a hard no-real-training-data
+constraint. Large synthetic-scale corpora may be used for governed development
+experiments, but real Slovenian speech remains validation-only. Synthetic
+metrics alone cannot promote a checkpoint; completed challengers are judged by
+canonical real-gate validation and release policy.
+
+Near-term development should keep the acoustic encoder frozen and test broader
+emission-side surfaces, such as larger joint adapters, decoder adapters,
+joint-plus-decoder adapters, or frozen-encoder joint/decoder fine-tuning.
+Batch-32 directional evaluation is acceptable for iteration, but any serious
+acceptance discussion still requires canonical batch-1 real-gate evidence.
+
 ## M5 — Accuracy and transfer campaign
 
 Deliverables:
 
-- comparison of prompt-specific, prompt-kernel, emission, and limited-encoder stages;
-- multilingual regression suite;
+- comparison of prompt-specific, prompt-kernel, joint-adapter,
+  decoder-adapter, joint-plus-decoder, and frozen-encoder emission stages;
+- multilingual regression suite when Slovenian-English scope requires it;
 - latency/accuracy matrix;
 - real/synthetic gap analysis;
 - failure-driven curriculum report.

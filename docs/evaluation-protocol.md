@@ -2,7 +2,10 @@
 
 ## Purpose
 
-Evaluation determines whether a challenger improves Slovenian recognition without unacceptable loss of streaming or multilingual behavior.
+Evaluation determines whether a challenger improves Slovenian, and eventually
+Slovenian-English, streaming recognition under validation-only real-speech
+gates. Multilingual regression evidence is secondary unless a work order makes
+it an explicit acceptance condition.
 
 ## Required checkpoint identity
 
@@ -108,6 +111,13 @@ These are not final blind tests. Raw references and hypotheses remain local
 ignored artifacts. Future challengers must evaluate both gates before any
 accepted-parent decision.
 
+Real Slovenian speech is validation-only. Gate audio and references must not be
+used for model training, synthetic prompt construction, selected-training
+membership, early stopping, hyperparameter tuning, per-sample steering, or
+adapter-surface selection. Aggregate real-gate metrics may compare completed
+challengers and determine whether a completed challenger is worth the next
+governed step.
+
 The untouched-base FLEURS-v2 baseline is recorded in
 [`docs/experiments/0006-a100-batched-streaming-evaluation.md`](experiments/0006-a100-batched-streaming-evaluation.md).
 Historical FLEURS-v1 numbers in Experiment 0003 remain deprecated audit
@@ -191,8 +201,15 @@ Initial project guardrails, subject to revision through an ADR:
 Statistical uncertainty should be reported using paired bootstrap intervals when the sample size supports it.
 
 A claim of real-speech improvement requires material improvement on at least
-one real gate and non-regression on the other. Synthetic-only improvement is
-classified as synthetic-only and cannot accept a parent checkpoint.
+one real gate and non-regression on the other. Improvement only on synthetic
+splits is classified as synthetic-only and cannot accept a parent checkpoint.
+The fact that a challenger was trained on synthetic audio is not itself a
+rejection reason; validation-only real-gate behavior is decisive.
+
+Batch-32 directional evaluation may be used for faster development decisions
+when explicitly configured as noncanonical and promotion-ineligible. It must
+not replace canonical batch-1 evidence for acceptance, release, or public
+quality claims.
 
 ## Normalization
 
