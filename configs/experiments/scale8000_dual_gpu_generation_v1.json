@@ -1,0 +1,46 @@
+{
+  "experiment_id": "scale8000-dual-gpu-synthetic-generation-v1",
+  "work_order_id": "0027",
+  "status": "DIAGNOSTIC_ONLY",
+  "accepted_parent": "none",
+  "generation_config": "configs/generation/gams_corpus_v5_scale8000_v1.json",
+  "augmentation_config": "configs/augmentation/scale200_transcript_preserving_v1.json",
+  "source_scale2000_report": {
+    "path": "docs/experiments/0014-gams16000-scale2000-text-only-directional.json",
+    "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+    "corpus_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+    "semantic_rows": 16000,
+    "view_records": 320000
+  },
+  "target_scale8000": {
+    "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+    "semantic_rows": 64000,
+    "new_semantic_rows": 48000,
+    "clean_files": 576000,
+    "augmented_files": 704000,
+    "view_records": 1280000,
+    "optimizer_steps_at_batch8": 160000,
+    "exposure_multiplier_vs_reference": 8000
+  },
+  "dual_gpu_policy": {
+    "authorized_physical_gpus": [0, 1],
+    "worker_processes": 2,
+    "single_visible_gpu_per_worker": true,
+    "worker_a_cuda_visible_devices": "0",
+    "worker_b_cuda_visible_devices": "1"
+  },
+  "storage_policy": {
+    "minimum_free_space_safety_margin_fraction": 0.25,
+    "estimate_from_inherited_scale2000_directory": true,
+    "stop_before_generation_when_insufficient": true
+  },
+  "canonical_pass": {
+    "run_before_generation": true,
+    "generation_proceeds_after_canonical_failure_unless_safety_blocked": true
+  },
+  "protected_unchanged_configs": [
+    "configs/augmentation/scale200_transcript_preserving_v1.json",
+    "configs/evaluation/a100-directional-batch32-v1.json",
+    "configs/adapters/sl_si_joint_adapter_v1.json"
+  ]
+}

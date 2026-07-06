@@ -67,6 +67,7 @@ SUPPORTED_TTS_IDS = {
     "supertonic3-sl-multivoice-batched-replay-v1",
     "supertonic3-sl-scale200-training-v1",
     "supertonic3-sl-scale2000-training-v1",
+    "supertonic3-sl-scale8000-training-v1",
 }
 
 
@@ -584,7 +585,7 @@ def build_batched_variant_plan(config: dict[str, Any]) -> list[SupertonicBatchPl
                     identity=identity,
                 )
             )
-    return sorted(
+    sorted_items = sorted(
         items,
         key=lambda row: (
             row.preprocessed_text_length,
@@ -593,6 +594,16 @@ def build_batched_variant_plan(config: dict[str, Any]) -> list[SupertonicBatchPl
             row.voice_style,
         ),
     )
+    source_shard = config.get("source_shard")
+    if source_shard:
+        worker_index = int(source_shard["worker_index"])
+        worker_count = int(source_shard["worker_count"])
+        if worker_count <= 0 or not (0 <= worker_index < worker_count):
+            raise ValueError("invalid Supertonic source shard")
+        source_keys = sorted({row.item.source_key for row in sorted_items}, key=stable_sha256)
+        allowed = {key for index, key in enumerate(source_keys) if index % worker_count == worker_index}
+        sorted_items = [row for row in sorted_items if row.item.source_key in allowed]
+    return sorted_items
 
 
 def partition_batched_plan(plan: Sequence[SupertonicBatchPlanItem], batch_size: int) -> list[list[SupertonicBatchPlanItem]]:
@@ -645,7 +656,14 @@ def _waveform_for_row(waveforms: Any, durations: Any, row_index: int, sample_rat
 
 def _is_oom_error(exc: BaseException) -> bool:
     text = f"{type(exc).__name__}: {exc}".lower()
-    return "out of memory" in text or "cuda_oom" in text or "cuda oom" in text
+    return (
+        "out of memory" in text
+        or "cuda_oom" in text
+        or "cuda oom" in text
+        or "failed to allocate memory" in text
+        or "bfcarena::allocaterawinternal" in text
+        or "bfc_arena" in text
+    )
 
 
 def _make_native_row(
@@ -695,6 +713,247 @@ def _make_native_row(
         "runtime": {"synthesis_wall_time_seconds": round(wall_seconds, 6)},
         "partition_stage": plan_item.partition_stage,
     }
+
+
+def _make_pending_native_row(
+    *,
+    config: dict[str, Any],
+    assets: dict[str, Any],
+    provider_summary: dict[str, Any],
+    paths: SupertonicPaths,
+    plan_item: SupertonicBatchPlanItem,
+    waveform: Any,
+    duration: Any,
+    wall_seconds: float,
+) -> dict[str, Any]:
+    import numpy as np
+
+    item = plan_item.item
+    voice_style = plan_item.voice_style
+    relative = _variant_relative_name(item, voice_style)
+    native_path = paths.native_root / relative
+    final_path = paths.final_root / relative
+    if native_path.exists():
+        raise FileExistsError(f"native Supertonic output already exists: {native_path}")
+    if final_path.exists():
+        raise FileExistsError(f"final Supertonic output already exists: {final_path}")
+    return {
+        "schema_version": "1.0",
+        "source_key": item.source_key,
+        "partition_role": item.partition_role,
+        "voice_style_id": voice_style,
+        "voice_style_json_sha256": assets["voice_style_hashes"][voice_style],
+        "source_text_sha256": item.text_sha256,
+        "source_audio_sha256": item.source_audio_sha256,
+        "utterance_family_id": item.utterance_family_id,
+        "source_family_id": item.source_family_id,
+        "source_id": item.source_id,
+        "domain": item.domain,
+        "phenomena": list(item.phenomena),
+        "selection_reason": item.selection_reason,
+        "selection_rank": item.selection_rank,
+        "native_audio_filepath": str(native_path.resolve()),
+        "supertonic_duration_seconds": round(_duration_value(duration), 6),
+        "tts": supertonic_provenance(config, assets, voice_style),
+        "onnx_runtime": provider_summary,
+        "runtime": {"synthesis_wall_time_seconds": round(wall_seconds, 6)},
+        "partition_stage": plan_item.partition_stage,
+        "_pending_waveform": np.asarray(waveform).copy(),
+        "_pending_native_sample_rate": int(config["synthesis"]["native_sample_rate"]),
+    }
+
+
+def _materialize_and_convert_native_row(paths: SupertonicPaths, pending_row: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    waveform = pending_row.pop("_pending_waveform")
+    sample_rate = int(pending_row.pop("_pending_native_sample_rate"))
+    native_path = Path(pending_row["native_audio_filepath"])
+    if native_path.exists():
+        raise FileExistsError(f"native Supertonic output already exists: {native_path}")
+    _write_native_wav(native_path, waveform, sample_rate)
+    native_stats = read_audio_stats(native_path)
+    native_row = dict(pending_row)
+    native_row.update(
+        {
+            "native_audio_sha256": native_stats.sha256,
+            "native_sample_rate": native_stats.sample_rate,
+            "native_channels": native_stats.channels,
+            "native_sample_width": native_stats.sample_width,
+            "native_frames": native_stats.frames,
+            "native_duration_seconds": round(native_stats.duration_seconds, 6),
+        }
+    )
+    return {"native": native_row, "converted": _convert_native_row(paths, native_row)}
+
+
+def _existing_native_row(
+    *,
+    config: dict[str, Any],
+    assets: dict[str, Any],
+    provider_summary: dict[str, Any],
+    paths: SupertonicPaths,
+    plan_item: SupertonicBatchPlanItem,
+) -> dict[str, Any]:
+    item = plan_item.item
+    voice_style = plan_item.voice_style
+    relative = _variant_relative_name(item, voice_style)
+    native_path = paths.native_root / relative
+    native_stats = read_audio_stats(native_path)
+    return {
+        "schema_version": "1.0",
+        "source_key": item.source_key,
+        "partition_role": item.partition_role,
+        "voice_style_id": voice_style,
+        "voice_style_json_sha256": assets["voice_style_hashes"][voice_style],
+        "source_text_sha256": item.text_sha256,
+        "source_audio_sha256": item.source_audio_sha256,
+        "utterance_family_id": item.utterance_family_id,
+        "source_family_id": item.source_family_id,
+        "source_id": item.source_id,
+        "domain": item.domain,
+        "phenomena": list(item.phenomena),
+        "selection_reason": item.selection_reason,
+        "selection_rank": item.selection_rank,
+        "native_audio_filepath": str(native_path.resolve()),
+        "native_audio_sha256": native_stats.sha256,
+        "native_sample_rate": native_stats.sample_rate,
+        "native_channels": native_stats.channels,
+        "native_sample_width": native_stats.sample_width,
+        "native_frames": native_stats.frames,
+        "native_duration_seconds": round(native_stats.duration_seconds, 6),
+        "supertonic_duration_seconds": round(native_stats.duration_seconds, 6),
+        "tts": supertonic_provenance(config, assets, voice_style),
+        "onnx_runtime": provider_summary,
+        "runtime": {"synthesis_wall_time_seconds": None, "resumed_from_existing_audio": True},
+        "partition_stage": plan_item.partition_stage,
+    }
+
+
+def _existing_converted_row(paths: SupertonicPaths, native_row: dict[str, Any]) -> dict[str, Any]:
+    native_path = Path(native_row["native_audio_filepath"])
+    relative = native_path.relative_to(paths.native_root)
+    final_path = paths.final_root / relative
+    native_stats = read_audio_stats(native_path)
+    final_stats = read_audio_stats(final_path)
+    converted = dict(native_row)
+    converted.update(
+        {
+            "audio_filepath": str(final_path.resolve()),
+            "audio_sha256": final_stats.sha256,
+            "sample_rate": final_stats.sample_rate,
+            "channels": final_stats.channels,
+            "sample_width": final_stats.sample_width,
+            "frames": final_stats.frames,
+            "duration_seconds": round(final_stats.duration_seconds, 6),
+            "target_text_sha256": native_row["source_text_sha256"],
+            "language": "sl-SI",
+            "target_lang": "sl-SI",
+            "source_type": "synthetic_tts",
+            "audio_validation": {
+                "native_peak_ratio": round(native_stats.peak_ratio, 6),
+                "final_peak_ratio": round(final_stats.peak_ratio, 6),
+                "conversion": {
+                    "tool": "sox",
+                    "version": sox_version(),
+                    "parameters": ["-r", "16000", "-c", "1", "-b", "16", "-e", "signed-integer"],
+                },
+            },
+            "parallel_stage": {
+                "conversion_wall_seconds": 0.0,
+                "stat_wall_seconds": 0.0,
+                "resumed_from_existing_audio": True,
+            },
+        }
+    )
+    return converted
+
+
+def _split_existing_batched_plan(
+    *,
+    paths: SupertonicPaths,
+    plan: Sequence[SupertonicBatchPlanItem],
+) -> tuple[list[SupertonicBatchPlanItem], list[SupertonicBatchPlanItem]]:
+    existing: list[SupertonicBatchPlanItem] = []
+    remaining: list[SupertonicBatchPlanItem] = []
+    for item in plan:
+        relative = _variant_relative_name(item.item, item.voice_style)
+        native_path = paths.native_root / relative
+        final_path = paths.final_root / relative
+        if native_path.exists() or final_path.exists():
+            if not native_path.exists() or not final_path.exists():
+                raise RuntimeError(f"incomplete existing Supertonic output pair for {item.identity}")
+            existing.append(item)
+        else:
+            remaining.append(item)
+    return existing, remaining
+
+
+def _reconstruct_existing_pair_from_args(args: tuple[dict[str, Any], dict[str, Any], dict[str, Any], SupertonicPaths, SupertonicBatchPlanItem]) -> dict[str, dict[str, Any]]:
+    config, assets, provider_summary, paths, item = args
+    native_row = _existing_native_row(
+        config=config,
+        assets=assets,
+        provider_summary=provider_summary,
+        paths=paths,
+        plan_item=item,
+    )
+    return {"native": native_row, "converted": _existing_converted_row(paths, native_row)}
+
+
+def _reconstruct_existing_batched_rows(
+    *,
+    config: dict[str, Any],
+    assets: dict[str, Any],
+    provider_summary: dict[str, Any],
+    paths: SupertonicPaths,
+    plan: Sequence[SupertonicBatchPlanItem],
+    workers: int | None = None,
+    flush_rows: int = 4096,
+    reporter: LiveProgressReporter | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    native_rows: list[dict[str, Any]] = []
+    converted_rows: list[dict[str, Any]] = []
+    if not plan:
+        return native_rows, converted_rows
+    worker_count = max(1, int(workers or os.cpu_count() or 1))
+    chunk_size = max(1, int(flush_rows))
+    shard_root = paths.run_root / "reconstruction-shards"
+    shard_root.mkdir(parents=True, exist_ok=True)
+
+    started = time.perf_counter()
+    with concurrent.futures.ProcessPoolExecutor(max_workers=worker_count) as pool:
+        for shard_index, start in enumerate(range(0, len(plan), chunk_size), start=1):
+            chunk = list(plan[start : start + chunk_size])
+            native_shard = shard_root / f"native-{shard_index:06d}.jsonl"
+            converted_shard = shard_root / f"converted-{shard_index:06d}.jsonl"
+            if native_shard.exists() and converted_shard.exists():
+                shard_native_rows = read_jsonl(native_shard)
+                shard_converted_rows = read_jsonl(converted_shard)
+                if len(shard_native_rows) != len(chunk) or len(shard_converted_rows) != len(chunk):
+                    raise RuntimeError(f"corrupt Supertonic reconstruction shard {shard_index}")
+            else:
+                results = list(
+                    pool.map(
+                        _reconstruct_existing_pair_from_args,
+                        ((config, assets, provider_summary, paths, item) for item in chunk),
+                    )
+                )
+                shard_native_rows = [result["native"] for result in results]
+                shard_converted_rows = [result["converted"] for result in results]
+                atomic_write_jsonl(native_shard, shard_native_rows)
+                atomic_write_jsonl(converted_shard, shard_converted_rows)
+            native_rows.extend(shard_native_rows)
+            converted_rows.extend(shard_converted_rows)
+            if reporter is not None:
+                elapsed = time.perf_counter() - started
+                reporter.progress(
+                    processed_rows=len(native_rows),
+                    total_rows=len(plan),
+                    step=shard_index,
+                    total_steps=math.ceil(len(plan) / chunk_size),
+                    examples_per_second=round(len(native_rows) / elapsed, 6) if elapsed else None,
+                    message=f"reconstructed existing audio shard {shard_index}",
+                )
+    return native_rows, converted_rows
 
 
 def _convert_native_row(paths: SupertonicPaths, row: dict[str, Any]) -> dict[str, Any]:
@@ -888,7 +1147,7 @@ def _synthesize_batched_core(
     rows = []
     for row_index, plan_item in enumerate(batch):
         rows.append(
-            _make_native_row(
+            _make_pending_native_row(
                 config=config,
                 assets=assets,
                 provider_summary=provider_summary,
@@ -906,7 +1165,8 @@ def _synthesize_batched_core(
         "identity_sha256": identity,
         "seed": seed,
         "wall_time_seconds": round(wall, 6),
-        "native_audio_seconds": round(sum(float(row["native_duration_seconds"]) for row in rows), 6),
+        "native_audio_seconds": round(sum(_duration_value(durations[index]) for index in range(len(batch))), 6),
+        "cpu_materialization_pending": True,
         "oom_fallback": False,
     }
 
@@ -922,7 +1182,7 @@ def _synthesize_batched_with_fallback(
     batch: Sequence[SupertonicBatchPlanItem],
     batch_index: int,
     experiment_seed: int,
-    fallback_size: int,
+    fallback_sizes: Sequence[int],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     try:
         rows, summary = _synthesize_batched_core(
@@ -938,15 +1198,19 @@ def _synthesize_batched_with_fallback(
         )
         return rows, [summary]
     except Exception as exc:
-        if not _is_oom_error(exc) or len(batch) <= fallback_size:
+        if not _is_oom_error(exc):
             raise
+    usable_fallbacks = sorted({int(size) for size in fallback_sizes if 0 < int(size) < len(batch)}, reverse=True)
+    if not usable_fallbacks:
+        raise RuntimeError(f"Supertonic batch size {len(batch)} OOM and no smaller fallback size is configured")
+    fallback_size = usable_fallbacks[0]
     rows: list[dict[str, Any]] = []
     summaries: list[dict[str, Any]] = []
     for fallback_index, start in enumerate(range(0, len(batch), fallback_size), start=1):
         subbatch = list(batch[start : start + fallback_size])
         if len(subbatch) > fallback_size:
             raise RuntimeError("invalid Supertonic fallback batch")
-        sub_rows, sub_summary = _synthesize_batched_core(
+        sub_rows, sub_summaries = _synthesize_batched_with_fallback(
             config=config,
             assets=assets,
             provider_summary=provider_summary,
@@ -956,11 +1220,15 @@ def _synthesize_batched_with_fallback(
             batch=subbatch,
             batch_index=(batch_index * 1000) + fallback_index,
             experiment_seed=experiment_seed,
+            fallback_sizes=usable_fallbacks[1:],
         )
-        sub_summary["oom_fallback"] = True
-        sub_summary["original_batch_index"] = batch_index
+        for sub_summary in sub_summaries:
+            sub_summary["oom_fallback"] = True
+            sub_summary["original_batch_index"] = batch_index
+            sub_summary["fallback_from_size"] = len(batch)
+            sub_summary["fallback_target_size"] = fallback_size
         rows.extend(sub_rows)
-        summaries.append(sub_summary)
+        summaries.extend(sub_summaries)
     return rows, summaries
 
 
@@ -983,14 +1251,17 @@ def synthesize_batched_supertonic_audio(
     paths = supertonic_paths(config)
     batch_config = config.get("batch_synthesis", {})
     batch_size = int(batch_config.get("batch_size", 32))
-    fallback_size = int(batch_config.get("oom_fallback_batch_size", 16))
-    if batch_size != 32 or fallback_size != 16:
-        raise ValueError("the batched replay requires synthesis batch size 32 with OOM fallback 16")
+    fallback_values = batch_config.get("oom_fallback_batch_sizes", [batch_config.get("oom_fallback_batch_size", 16)])
+    if not isinstance(fallback_values, list):
+        fallback_values = [fallback_values]
+    fallback_sizes = sorted({int(value) for value in fallback_values if int(value) > 0}, reverse=True)
+    if batch_size < 32 or not fallback_sizes or fallback_sizes[0] >= batch_size:
+        raise ValueError("batched Supertonic synthesis requires batch size >=32 and strictly smaller OOM fallback batches")
     plan = build_batched_variant_plan(config)
     expected_total = int(config.get("expected_counts", {}).get("total_variants", 1472))
     if len(plan) != expected_total:
         raise RuntimeError(f"expected {expected_total} Supertonic variants, found {len(plan)}")
-    batches = partition_batched_plan(plan, batch_size)
+    all_batches = partition_batched_plan(plan, batch_size)
     workers = min(int(config.get("conversion", {}).get("max_workers", 16)), os.cpu_count() or 1)
     max_pending = max(workers * int(config.get("conversion", {}).get("bounded_queue_multiplier", 2)), workers)
     reporter = LiveProgressReporter(stage="synthesize-batched", ndjson_path=paths.progress_dir / "synthesize-batched.local.ndjson")
@@ -1038,8 +1309,8 @@ def synthesize_batched_supertonic_audio(
                 "synthesis_mode": "native-batched-supertonic-core",
                 "resumed_from_complete_manifests": True,
                 "batch_size": batch_size,
-                "batch_count": len(batches),
-                "actual_batch_sizes": [len(batch) for batch in batches],
+                "batch_count": len(all_batches),
+                "actual_batch_sizes": [len(batch) for batch in all_batches],
                 "oom_fallback_count": None,
                 "native_rows": len(existing_native_rows),
                 "converted_rows": len(existing_audio_rows),
@@ -1060,6 +1331,80 @@ def synthesize_batched_supertonic_audio(
             return summary
         if missing_paths or missing_native_paths:
             raise RuntimeError("existing Supertonic manifests reference missing audio files")
+    existing_plan, remaining_plan = _split_existing_batched_plan(paths=paths, plan=plan)
+    if existing_plan and not remaining_plan:
+        reporter.start("reconstructing complete Supertonic audio bank manifests from existing WAVs")
+        started = time.perf_counter()
+        reconstruction_config = config.get("reconstruction", {})
+        reconstruction_workers = min(
+            int(reconstruction_config.get("max_workers", os.cpu_count() or 1)),
+            os.cpu_count() or 1,
+        )
+        reconstruction_flush_rows = int(reconstruction_config.get("flush_rows", 4096))
+        provider_summary = {
+            "reconstructed_from_existing_audio": True,
+            "runtime_provider_validation": "SKIPPED_NO_MODEL_LOAD",
+            "reason": "All expected native and final WAV files existed before manifest reconstruction.",
+        }
+        native_rows, converted_rows = _reconstruct_existing_batched_rows(
+            config=config,
+            assets=assets,
+            provider_summary=provider_summary,
+            paths=paths,
+            plan=existing_plan,
+            workers=reconstruction_workers,
+            flush_rows=reconstruction_flush_rows,
+            reporter=reporter,
+        )
+        if len(native_rows) != expected_total or len(converted_rows) != expected_total:
+            raise RuntimeError(f"Supertonic reconstruction count mismatch: native={len(native_rows)} converted={len(converted_rows)}")
+        native_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
+        converted_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
+        atomic_write_jsonl(paths.native_manifest, native_rows)
+        atomic_write_jsonl(paths.audio_manifest, converted_rows)
+        training_rows = [row for row in converted_rows if row["partition_role"] == "selected_training"]
+        holdout_rows = [row for row in converted_rows if row["partition_role"] == "synthetic_holdout"]
+        atomic_write_jsonl(paths.training_audio_manifest, training_rows)
+        atomic_write_jsonl(paths.holdout_audio_manifest, holdout_rows)
+        if config.get("training_schedule", {}).get("write_training_probe_manifest", True):
+            write_training_probe_manifest(config, converted_rows)
+        elif paths.training_probe_manifest.exists():
+            paths.training_probe_manifest.unlink()
+        schedule = (
+            build_exposure_schedule(config, converted_rows)
+            if config.get("training_schedule", {}).get("write_legacy_schedule", True)
+            else {"status": "SKIPPED", "reason": "scale-200 schedule is owned by scale200_corpus"}
+        )
+        wall = time.perf_counter() - started
+        summary = {
+            "schema_version": "1.0",
+            "status": "PASSED",
+            "synthesis_mode": "native-batched-supertonic-core",
+            "resumed_from_existing_audio_without_model_load": True,
+            "batch_size": batch_size,
+            "batch_count": len(all_batches),
+            "actual_batch_sizes": [len(batch) for batch in all_batches],
+            "oom_fallback_count": None,
+            "native_rows": len(native_rows),
+            "converted_rows": len(converted_rows),
+            "workers": reconstruction_workers,
+            "reconstruction_flush_rows": reconstruction_flush_rows,
+            "max_pending_futures": max_pending,
+            "timings": {"manifest_reconstruction_wall_seconds": round(wall, 6)},
+            "throughput": {"items_per_second": round(len(converted_rows) / wall, 6) if wall else None},
+            "manifests": {
+                "native_manifest_sha256": file_sha256(paths.native_manifest),
+                "audio_manifest_sha256": file_sha256(paths.audio_manifest),
+                "training_audio_manifest_sha256": file_sha256(paths.training_audio_manifest),
+                "holdout_audio_manifest_sha256": file_sha256(paths.holdout_audio_manifest),
+                "training_probe_manifest_sha256": optional_file_sha256(paths.training_probe_manifest),
+                "exposure_schedule_sha256": optional_file_sha256(paths.exposure_schedule),
+            },
+            "exposure_schedule": schedule,
+        }
+        atomic_write_json(paths.run_root / "batched-synthesis-summary.local.json", summary)
+        reporter.complete(processed_rows=len(converted_rows), total_rows=len(plan), message="existing audio manifest reconstruction complete")
+        return summary
     reporter.start("batch-synthesizing Supertonic audio")
     real_supertonic_runtime = tts_factory is None
     if tts_factory is None:
@@ -1076,24 +1421,30 @@ def synthesize_batched_supertonic_audio(
     if int(getattr(tts, "sample_rate", 0)) != int(config["synthesis"]["native_sample_rate"]):
         raise RuntimeError(f"Supertonic native sample rate mismatch: {getattr(tts, 'sample_rate', None)}")
     styles = {style: tts.get_voice_style(style) for style in ALL_STYLES}
+    existing_plan, remaining_plan = _split_existing_batched_plan(paths=paths, plan=plan)
+    batches = partition_batched_plan(remaining_plan, batch_size)
     monitor_path = paths.run_root / "gpu-monitor.local.csv"
-    monitor = NvidiaSmiMonitor(physical_gpu_index="1", output_csv=monitor_path, interval_seconds=0.2)
+    monitor_selector = str(config.get("runtime", {}).get("cuda_visible_devices", "1")).split(",")[0]
+    monitor = NvidiaSmiMonitor(physical_gpu_index=monitor_selector, output_csv=monitor_path, interval_seconds=0.2)
     native_rows: list[dict[str, Any]] = []
     converted_rows: list[dict[str, Any]] = []
     batch_summaries: list[dict[str, Any]] = []
-    pending: set[concurrent.futures.Future[dict[str, Any]]] = set()
+    pending: set[concurrent.futures.Future[dict[str, dict[str, Any]]]] = set()
     conversion_wall_sum = 0.0
     validation_stat_wall_sum = 0.0
     started = time.perf_counter()
     synthesis_wall_sum = 0.0
 
-    def collect(done: set[concurrent.futures.Future[dict[str, Any]]]) -> None:
+    def collect(done: set[concurrent.futures.Future[dict[str, dict[str, Any]]]]) -> None:
         nonlocal conversion_wall_sum, validation_stat_wall_sum
         for future in done:
-            row = future.result()
-            converted_rows.append(row)
-            conversion_wall_sum += float(row.get("parallel_stage", {}).get("conversion_wall_seconds", 0.0))
-            validation_stat_wall_sum += float(row.get("parallel_stage", {}).get("stat_wall_seconds", 0.0))
+            result = future.result()
+            native_row = result["native"]
+            converted_row = result["converted"]
+            native_rows.append(native_row)
+            converted_rows.append(converted_row)
+            conversion_wall_sum += float(converted_row.get("parallel_stage", {}).get("conversion_wall_seconds", 0.0))
+            validation_stat_wall_sum += float(converted_row.get("parallel_stage", {}).get("stat_wall_seconds", 0.0))
 
     monitor.start()
     try:
@@ -1109,16 +1460,15 @@ def synthesize_batched_supertonic_audio(
                     batch=batch,
                     batch_index=batch_index,
                     experiment_seed=int(batch_config.get("seed", 1234)),
-                    fallback_size=fallback_size,
+                    fallback_sizes=fallback_sizes,
                 )
-                native_rows.extend(rows)
                 batch_summaries.extend(summaries)
                 synthesis_wall_sum += sum(float(summary["wall_time_seconds"]) for summary in summaries)
                 for row in rows:
-                    pending.add(pool.submit(_convert_native_row, paths, row))
-                while len(pending) >= max_pending:
-                    done, pending = concurrent.futures.wait(pending, return_when=concurrent.futures.FIRST_COMPLETED)
-                    collect(done)
+                    pending.add(pool.submit(_materialize_and_convert_native_row, paths, row))
+                    while len(pending) >= max_pending:
+                        done, pending = concurrent.futures.wait(pending, return_when=concurrent.futures.FIRST_COMPLETED)
+                        collect(done)
                 elapsed = time.perf_counter() - started
                 reporter.progress(
                     processed_rows=len(native_rows),
@@ -1135,6 +1485,16 @@ def synthesize_batched_supertonic_audio(
         raise
     finally:
         monitor.stop()
+    if existing_plan:
+        existing_native_rows, existing_converted_rows = _reconstruct_existing_batched_rows(
+            config=config,
+            assets=assets,
+            provider_summary=provider_summary,
+            paths=paths,
+            plan=existing_plan,
+        )
+        native_rows.extend(existing_native_rows)
+        converted_rows.extend(existing_converted_rows)
     if len(native_rows) != expected_total or len(converted_rows) != expected_total:
         raise RuntimeError(f"Supertonic output count mismatch: native={len(native_rows)} converted={len(converted_rows)}")
     native_rows.sort(key=lambda value: (str(value["partition_role"]), str(value["source_key"]), str(value["voice_style_id"])))
@@ -1145,7 +1505,10 @@ def synthesize_batched_supertonic_audio(
     holdout_rows = [row for row in converted_rows if row["partition_role"] == "synthetic_holdout"]
     atomic_write_jsonl(paths.training_audio_manifest, training_rows)
     atomic_write_jsonl(paths.holdout_audio_manifest, holdout_rows)
-    write_training_probe_manifest(config, converted_rows)
+    if config.get("training_schedule", {}).get("write_training_probe_manifest", True):
+        write_training_probe_manifest(config, converted_rows)
+    elif paths.training_probe_manifest.exists():
+        paths.training_probe_manifest.unlink()
     schedule = (
         build_exposure_schedule(config, converted_rows)
         if config.get("training_schedule", {}).get("write_legacy_schedule", True)
@@ -1158,6 +1521,9 @@ def synthesize_batched_supertonic_audio(
         "status": "PASSED",
         "synthesis_mode": "native-batched-supertonic-core",
         "batch_size": batch_size,
+        "oom_fallback_batch_sizes": fallback_sizes,
+        "resumed_existing_rows": len(existing_plan),
+        "remaining_rows_at_start": len(remaining_plan),
         "batch_count": len(batches),
         "actual_batch_sizes": [len(batch) for batch in batches],
         "oom_fallback_count": sum(1 for summary in batch_summaries if summary.get("oom_fallback")),
@@ -1182,7 +1548,7 @@ def synthesize_batched_supertonic_audio(
             "audio_manifest_sha256": file_sha256(paths.audio_manifest),
             "training_audio_manifest_sha256": file_sha256(paths.training_audio_manifest),
             "holdout_audio_manifest_sha256": file_sha256(paths.holdout_audio_manifest),
-            "training_probe_manifest_sha256": file_sha256(paths.training_probe_manifest),
+            "training_probe_manifest_sha256": optional_file_sha256(paths.training_probe_manifest),
             "exposure_schedule_sha256": optional_file_sha256(paths.exposure_schedule),
         },
         "exposure_schedule": schedule,
