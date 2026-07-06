@@ -235,8 +235,31 @@ class TtsPipelineTests(unittest.TestCase):
             ".external/piper-voices/sl/sl_SI/artur/medium/sl_SI-artur-medium.onnx",
             "runs/tts/piper/final-16000/piper-smoke-0001.wav",
         ]
-        completed = subprocess.run(["git", "check-ignore", *paths], cwd=root, text=True, stdout=subprocess.PIPE, check=True)
-        self.assertEqual(completed.stdout.splitlines(), paths)
+        ignored = []
+        for path in paths:
+            completed = subprocess.run(
+                ["git", "check-ignore", path],
+                cwd=root,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            if completed.returncode == 0:
+                ignored.append(completed.stdout.strip())
+                continue
+            # Some development hosts make .external an ignored symlink to a
+            # large local cache. Git refuses to traverse beyond that symlink,
+            # so checking the ignored parent is the equivalent safety proof.
+            if path.startswith(".external/"):
+                parent = subprocess.run(
+                    ["git", "check-ignore", ".external"],
+                    cwd=root,
+                    text=True,
+                    stdout=subprocess.PIPE,
+                    check=True,
+                )
+                ignored.append(path if parent.stdout.strip() == ".external" else "")
+        self.assertEqual(ignored, paths)
 
     def minimal_config(self, root: Path) -> dict:
         return {

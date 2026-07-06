@@ -1,7 +1,127 @@
 {
   "accepted_parent": "none",
-  "audio_status": "NOT_RUN",
+  "audio_status": "CLEAN_AUDIO_GENERATED",
   "certificate_id": "sl-corpus-v5-scale8000-dataset-v1",
+  "clean_audio": {
+    "augmented_audio": {
+      "generated_augmented_files": 0,
+      "planned_augmented_files": 704000,
+      "status": "NOT_IMPLEMENTED_IN_THIS_RUNNER"
+    },
+    "clean_audio_complete": true,
+    "generated_clean_files": 576000,
+    "piper": {
+      "audio_manifest_sha256": "290c733207ee08a58d6a707b241b65ed25121d19da11472caed99f562c0fde9f",
+      "engine": "piper",
+      "native_manifest_sha256": null,
+      "native_rows": 0,
+      "rows": 64000,
+      "status": "PASSED",
+      "total_audio_duration_seconds": 201544.979654,
+      "voice_counts": {},
+      "workers": {
+        "gpu0": {
+          "audio_seconds_per_wall_second": 2.421506,
+          "cuda_visible_devices": "0",
+          "failed": 0,
+          "items_per_second": null,
+          "logical_device": "cuda:0",
+          "mean_gpu_utilization_percent": 12.338811,
+          "native_rows": null,
+          "oom_fallback_count": null,
+          "p95_gpu_utilization_percent": 78.0,
+          "peak_memory_mib": 36616.0,
+          "physical_gpu": "0",
+          "requested": 32000,
+          "rows": null,
+          "status": "PASSED",
+          "successful": 32000,
+          "utterances_per_minute": 46.043316,
+          "wall_time_seconds": 41699.863455
+        },
+        "gpu1": {
+          "audio_seconds_per_wall_second": 2.412386,
+          "cuda_visible_devices": "1",
+          "failed": 0,
+          "items_per_second": null,
+          "logical_device": "cuda:0",
+          "mean_gpu_utilization_percent": 12.919479,
+          "native_rows": null,
+          "oom_fallback_count": null,
+          "p95_gpu_utilization_percent": 78.0,
+          "peak_memory_mib": 33724.0,
+          "physical_gpu": "1",
+          "requested": 32000,
+          "rows": null,
+          "status": "PASSED",
+          "successful": 32000,
+          "utterances_per_minute": 46.055966,
+          "wall_time_seconds": 41688.41046
+        }
+      }
+    },
+    "planned_clean_files": 576000,
+    "status": "CLEAN_AUDIO_GENERATED",
+    "supertonic": {
+      "audio_manifest_sha256": "c6b3152ee2d8925dfbeb4c7acd2c6f6656f8aa26a32f65570f425a3c5004d5a4",
+      "engine": "supertonic-3",
+      "native_manifest_sha256": "b61ac8d7ce223f2c9eca0a09b719627016b2de68b4fd759fdf1cb21bffdbea3b",
+      "native_rows": 512000,
+      "rows": 512000,
+      "status": "PASSED",
+      "total_audio_duration_seconds": 2083074.411514,
+      "voice_counts": {
+        "F1": 64000,
+        "F2": 64000,
+        "F3": 64000,
+        "F4": 64000,
+        "M1": 64000,
+        "M2": 64000,
+        "M3": 64000,
+        "M4": 64000
+      },
+      "workers": {
+        "gpu0": {
+          "audio_seconds_per_wall_second": 50.12311,
+          "cuda_visible_devices": null,
+          "failed": null,
+          "items_per_second": 12.302935,
+          "logical_device": null,
+          "mean_gpu_utilization_percent": 63.446934,
+          "native_rows": 256000,
+          "oom_fallback_count": 32,
+          "p95_gpu_utilization_percent": 80.0,
+          "peak_memory_mib": 10817.0,
+          "physical_gpu": "0",
+          "requested": null,
+          "rows": null,
+          "status": "PASSED",
+          "successful": null,
+          "utterances_per_minute": null,
+          "wall_time_seconds": 20808.043139
+        },
+        "gpu1": {
+          "audio_seconds_per_wall_second": null,
+          "cuda_visible_devices": null,
+          "failed": null,
+          "items_per_second": 65.704658,
+          "logical_device": null,
+          "mean_gpu_utilization_percent": null,
+          "native_rows": 256000,
+          "oom_fallback_count": null,
+          "p95_gpu_utilization_percent": null,
+          "peak_memory_mib": null,
+          "physical_gpu": "1",
+          "requested": null,
+          "rows": null,
+          "status": "PASSED",
+          "successful": null,
+          "utterances_per_minute": null,
+          "wall_time_seconds": null
+        }
+      }
+    }
+  },
   "corpus_id": "sl-corpus-v5-scale8000-training-v1",
   "decision_date": "2026-06-27",
   "diagnostic_status": "TEXT_ACCEPTED",
@@ -16,7 +136,7 @@
     "status": "RECORDED"
   },
   "safety": {
-    "audio_generated": false,
+    "audio_generated": true,
     "generated_audio_committed": false,
     "generated_text_committed": false,
     "model_or_checkpoint_committed": false,

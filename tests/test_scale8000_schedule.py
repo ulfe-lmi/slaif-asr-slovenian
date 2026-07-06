@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from slaif_asr.scale8000_corpus import estimate_scale8000_storage, scale8000_plan
+from slaif_asr.scale8000_corpus import estimate_scale8000_storage, scale8000_plan, storage_preflight
 
 
 class Scale8000ScheduleTests(unittest.TestCase):
@@ -33,6 +33,20 @@ class Scale8000ScheduleTests(unittest.TestCase):
             safety_margin_fraction=0.25,
         )
         self.assertTrue(sufficient["sufficient"])
+
+    def test_storage_preflight_uses_recorded_inherited_size(self) -> None:
+        config = {
+            "storage_preflight": {
+                "inherited_scale2000_bytes": 100,
+                "measurement_source": "fixture-recorded-size",
+                "runtime_storage": "fixture-storage",
+            }
+        }
+        result = storage_preflight(config)
+        self.assertEqual(result["inherited_scale2000_bytes"], 100)
+        self.assertEqual(result["projected_new_bytes"], 300)
+        self.assertEqual(result["measurement_source"], "fixture-recorded-size")
+        self.assertEqual(result["runtime_storage"], "fixture-storage")
 
 
 if __name__ == "__main__":

@@ -75,6 +75,11 @@
     "augmentation_views_per_text": 11,
     "views_per_text": 20
   },
+  "storage_preflight": {
+    "inherited_scale2000_bytes": 82341008788,
+    "measurement_source": "docs/data-reports/0015-scale8000-dual-gpu-generation.json",
+    "runtime_storage": "external-data-runs-root"
+  },
   "public_reports": {
     "planning_report_json": "docs/data-reports/0015-scale8000-dual-gpu-generation.json",
     "planning_report_markdown": "docs/data-reports/0015-scale8000-dual-gpu-generation.md"

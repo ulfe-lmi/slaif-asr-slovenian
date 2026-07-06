@@ -650,8 +650,13 @@ def estimate_scale8000_storage(
 
 
 def storage_preflight(config: dict[str, Any]) -> dict[str, Any]:
-    inherited_dir = repo_path("runs/data-quality/sl-corpus-v4-gams-16000-training-v1")
-    inherited_bytes = directory_size_bytes(inherited_dir)
+    storage_config = config.get("storage_preflight", {})
+    inherited_bytes = int(storage_config.get("inherited_scale2000_bytes") or 0)
+    measurement_source = storage_config.get("measurement_source")
+    if inherited_bytes <= 0:
+        inherited_dir = repo_path("runs/data-quality/sl-corpus-v4-gams-16000-training-v1")
+        inherited_bytes = directory_size_bytes(inherited_dir)
+        measurement_source = str(inherited_dir)
     root = local_runs_root()
     root.mkdir(parents=True, exist_ok=True)
     usage = shutil.disk_usage(root)
@@ -661,7 +666,86 @@ def storage_preflight(config: dict[str, Any]) -> dict[str, Any]:
         safety_margin_fraction=0.25,
     )
     payload["storage_root_token"] = "SLAIF_ASR_RUNS_ROOT" if os.environ.get("SLAIF_ASR_RUNS_ROOT") else "repository_runs"
+    if measurement_source:
+        payload["measurement_source"] = measurement_source
+    if storage_config.get("runtime_storage"):
+        payload["runtime_storage"] = storage_config["runtime_storage"]
     return payload
+
+
+def clean_audio_status(config: dict[str, Any]) -> dict[str, Any]:
+    """Return privacy-safe clean TTS evidence from ignored local summaries."""
+
+    plan = scale8000_plan()
+    root = run_directory(config)
+    piper_path = root / "piper-clean" / "audio-synthesis-summary.local.json"
+    supertonic_path = root / "supertonic-clean" / "audio-synthesis-summary.local.json"
+
+    def read_summary(path: Path, *, engine: str) -> dict[str, Any]:
+        if not path.exists():
+            return {"engine": engine, "status": "NOT_RUN", "rows": 0}
+        summary = json.loads(path.read_text(encoding="utf-8"))
+        worker_summaries = {}
+        for worker, worker_summary in sorted(summary.get("worker_summaries", {}).items()):
+            throughput = worker_summary.get("throughput", {})
+            timings = worker_summary.get("timings", {})
+            monitor = worker_summary.get("gpu_monitor", worker_summary.get("monitor", {})) or {}
+            worker_summaries[worker] = {
+                "status": worker_summary.get("status"),
+                "physical_gpu": worker_summary.get("physical_gpu"),
+                "cuda_visible_devices": worker_summary.get("cuda_visible_devices"),
+                "logical_device": worker_summary.get("logical_device"),
+                "requested": worker_summary.get("requested"),
+                "successful": worker_summary.get("successful"),
+                "rows": worker_summary.get("rows"),
+                "native_rows": worker_summary.get("native_rows"),
+                "failed": worker_summary.get("failed"),
+                "oom_fallback_count": worker_summary.get("oom_fallback_count"),
+                "wall_time_seconds": worker_summary.get("wall_time_seconds", timings.get("complete_data_stage_wall_seconds")),
+                "items_per_second": worker_summary.get("items_per_second", throughput.get("items_per_second")),
+                "utterances_per_minute": worker_summary.get("utterances_per_minute"),
+                "audio_seconds_per_wall_second": worker_summary.get(
+                    "audio_seconds_per_wall_second",
+                    throughput.get("generated_audio_seconds_per_wall_second"),
+                ),
+                "mean_gpu_utilization_percent": monitor.get("mean_utilization_percent"),
+                "p95_gpu_utilization_percent": monitor.get("p95_utilization_percent"),
+                "peak_memory_mib": monitor.get("peak_memory_mib"),
+            }
+        return {
+            "engine": summary.get("engine", engine),
+            "status": summary.get("status", "UNKNOWN"),
+            "rows": int(summary.get("rows", 0) or 0),
+            "native_rows": int(summary.get("native_rows", 0) or 0),
+            "audio_manifest_sha256": summary.get("audio_manifest_sha256"),
+            "native_manifest_sha256": summary.get("native_manifest_sha256"),
+            "total_audio_duration_seconds": summary.get("total_audio_duration_seconds"),
+            "voice_counts": summary.get("voice_counts", {}),
+            "workers": worker_summaries,
+        }
+
+    piper = read_summary(piper_path, engine="piper")
+    supertonic = read_summary(supertonic_path, engine="supertonic-3")
+    generated = int(piper.get("rows", 0)) + int(supertonic.get("rows", 0))
+    complete = (
+        piper.get("status") == "PASSED"
+        and supertonic.get("status") == "PASSED"
+        and int(piper.get("rows", 0)) == plan.semantic_rows
+        and int(supertonic.get("rows", 0)) == plan.semantic_rows * 8
+    )
+    return {
+        "status": "CLEAN_AUDIO_GENERATED" if complete else "INCOMPLETE",
+        "clean_audio_complete": complete,
+        "planned_clean_files": plan.clean_files,
+        "generated_clean_files": generated,
+        "piper": piper,
+        "supertonic": supertonic,
+        "augmented_audio": {
+            "status": "NOT_IMPLEMENTED_IN_THIS_RUNNER",
+            "planned_augmented_files": plan.augmented_files,
+            "generated_augmented_files": 0,
+        },
+    }
 
 
 def safe_public_status_report(config: dict[str, Any], *, canonical_results: dict[str, Any] | None = None, preflight: dict[str, Any] | None = None) -> dict[str, Any]:

@@ -41,6 +41,7 @@ from slaif_asr.scale8000_corpus import (
     run_directory,
     safe_public_status_report,
     scale8000_multiplier_table,
+    clean_audio_status,
     storage_preflight,
     text_generation_summary_path,
     verify_inherited_scale2000_rows,
@@ -714,6 +715,17 @@ def _supertonic_worker_config(config: dict[str, Any], worker: str) -> dict[str, 
                 "required_provider": "CUDAExecutionProvider",
                 "cpu_provider_fallback_allowed": False,
             },
+            "batch_synthesis": {
+                **base.get("batch_synthesis", {}),
+                "batch_size": 32,
+                "oom_fallback_batch_sizes": [16, 8, 4, 2, 1],
+                "fallback_rationale": "RTX 2080 Ti continuation host has 11 GiB VRAM; tail completion uses small batches and recorded OOM fallback for pathological long examples.",
+            },
+            "conversion": {
+                **base.get("conversion", {}),
+                "max_workers": 16,
+                "bounded_queue_multiplier": 64,
+            },
             "inputs": {
                 "scale200_fixed_text": str(fixed_combined_text_path(config)),
                 "scale200_fixed_text_sha256": sha256_file(fixed_combined_text_path(config)),
@@ -1047,13 +1059,30 @@ def stage_preflight(config_path: Path) -> dict[str, Any]:
 def _markdown_report(payload: dict[str, Any]) -> str:
     preflight = payload.get("storage_preflight", {})
     plan = payload["scale8000_plan"]
+    clean_audio = payload.get("clean_audio", {})
+    piper = clean_audio.get("piper", {})
+    supertonic = clean_audio.get("supertonic", {})
+    augmented = clean_audio.get("augmented_audio", {})
     lines = [
         "# Scale-8000 Dual-GPU Generation",
         "",
         f"Status: `{payload['status']}`",
         "",
-        "This report is privacy-safe planning and preflight evidence. It contains no raw generated text, audio paths, hypotheses, model artifacts, or monitor CSV data.",
+        "This report is privacy-safe scale-8000 generation evidence. It contains no raw generated text, audio paths, hypotheses, model artifacts, or monitor CSV data.",
         "",
+    ]
+    canonical = payload.get("canonical_pass", {})
+    if canonical:
+        lines.extend(["## Canonical Pass", ""])
+        for command in canonical.get("commands", []):
+            detail = command.get("detail")
+            suffix = f", {detail}" if detail else ""
+            lines.append(f"- `{command.get('command')}`: `{command.get('result')}`{suffix}")
+        for note in canonical.get("notes", []):
+            lines.append(f"- Note: {note}")
+        lines.append("")
+    lines.extend(
+        [
         "## Corpus",
         "",
         f"- Corpus ID: `{payload['corpus_id']}`",
@@ -1071,7 +1100,8 @@ def _markdown_report(payload: dict[str, Any]) -> str:
         "",
         "## Dual-GPU Plan",
         "",
-    ]
+        ]
+    )
     for worker, worker_payload in payload["dual_gpu_plan"]["workers"].items():
         lines.append(
             f"- `{worker}`: physical GPU `{worker_payload['physical_gpu']}`, "
@@ -1088,9 +1118,24 @@ def _markdown_report(payload: dict[str, Any]) -> str:
             f"- Required free bytes with safety margin: `{preflight.get('required_free_bytes', 'unknown')}`",
             f"- Sufficient: `{preflight.get('sufficient', 'unknown')}`",
             "",
+            "## Clean TTS Evidence",
+            "",
+            f"- Clean-audio status: `{clean_audio.get('status', 'unknown')}`",
+            f"- Planned clean files/views: `{clean_audio.get('planned_clean_files', 'unknown')}`",
+            f"- Generated clean files/views: `{clean_audio.get('generated_clean_files', 'unknown')}`",
+            f"- Piper rows: `{piper.get('rows', 0)}`",
+            f"- Piper manifest SHA256: `{piper.get('audio_manifest_sha256', 'unknown')}`",
+            f"- Piper duration seconds: `{piper.get('total_audio_duration_seconds', 'unknown')}`",
+            f"- Supertonic rows: `{supertonic.get('rows', 0)}`",
+            f"- Supertonic manifest SHA256: `{supertonic.get('audio_manifest_sha256', 'unknown')}`",
+            f"- Supertonic native manifest SHA256: `{supertonic.get('native_manifest_sha256', 'unknown')}`",
+            f"- Supertonic duration seconds: `{supertonic.get('total_audio_duration_seconds', 'unknown')}`",
+            f"- Augmented-audio status: `{augmented.get('status', 'unknown')}`",
+            f"- Generated augmented files/views: `{augmented.get('generated_augmented_files', 'unknown')}`",
+            "",
             "## Decision",
             "",
-            "Generation must not begin while storage preflight is insufficient. This is an environment blocker, not a corpus acceptance decision.",
+            "Scale-8000 text is accepted and the nine clean synthetic voice realizations have been generated. The current runner does not generate the eleven augmentation views, so the full 1,280,000-view scale-8000 dataset remains incomplete.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -1102,12 +1147,49 @@ def stage_write_report(config_path: Path, canonical_results_path: Path | None = 
     if canonical_results_path and canonical_results_path.exists():
         canonical = json.loads(canonical_results_path.read_text(encoding="utf-8"))
     preflight = storage_preflight(config)
-    payload = safe_public_status_report(config, canonical_results=canonical, preflight=preflight)
     report_paths = config["public_reports"]
     json_path = REPO_ROOT / report_paths["planning_report_json"]
     md_path = REPO_ROOT / report_paths["planning_report_markdown"]
+    existing = json.loads(json_path.read_text(encoding="utf-8")) if json_path.exists() else {}
+    payload = safe_public_status_report(config, canonical_results=canonical, preflight=preflight)
+    for key in (
+        "status",
+        "diagnostic_status",
+        "text_status",
+        "review_capsule",
+        "dual_gpu_generation",
+        "generation_model",
+        "new_addition",
+        "text_generation",
+        "canonical_pass",
+    ):
+        if key in existing:
+            payload[key] = existing[key]
+    payload["clean_audio"] = clean_audio_status(config)
+    payload["audio_status"] = payload["clean_audio"]["status"]
+    payload.setdefault("safety", {})
+    payload["safety"]["audio_generated"] = payload["clean_audio"]["clean_audio_complete"]
+    payload["safety"]["generated_audio_committed"] = False
+    payload["limitations"] = [
+        "Scale-8000 is synthetic dataset construction evidence, not checkpoint acceptance.",
+        "The 8000x figure is exposure count, not independent linguistic information.",
+        "Clean Piper and Supertonic audio were generated locally and remain ignored.",
+        "The current scale-8000 runner does not generate the eleven augmentation views, so the full 1,280,000-view dataset remains incomplete.",
+        "No training, ASR evaluation, checkpoint acceptance, or publication is authorized by this report.",
+    ]
     atomic_write_json(json_path, payload)
     atomic_write_text(md_path, _markdown_report(payload))
+    certificate_path = REPO_ROOT / config["public_certificates"]["dataset_certificate"]
+    if certificate_path.exists():
+        certificate = json.loads(certificate_path.read_text(encoding="utf-8"))
+        certificate["audio_status"] = payload["audio_status"]
+        certificate["clean_audio"] = payload["clean_audio"]
+        certificate.setdefault("safety", {})
+        certificate["safety"]["audio_generated"] = payload["clean_audio"]["clean_audio_complete"]
+        certificate["safety"]["generated_audio_committed"] = False
+        certificate["status"] = certificate.get("text_status", certificate.get("status", "TEXT_ACCEPTED"))
+        certificate["diagnostic_status"] = certificate.get("status", "TEXT_ACCEPTED")
+        atomic_write_json(certificate_path, certificate)
     print(json.dumps({"status": payload["status"], "json": str(json_path), "markdown": str(md_path)}, sort_keys=True))
     return payload
 
