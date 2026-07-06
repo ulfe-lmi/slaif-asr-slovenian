@@ -11,7 +11,7 @@ if [[ ! -x "${venv_dir}/bin/python" ]]; then
 fi
 
 if [[ ! -d "${cuda_home}/nvvm" ]]; then
-  echo "Missing CUDA 12.6 NVCC/NVVM wheel under ${cuda_home}." >&2
+  echo "Missing CUDA NVCC/NVVM wheel under ${cuda_home}." >&2
   echo "Install requirements/nemotron-training-cu126.txt into .venv." >&2
   return 1 2>/dev/null || exit 1
 fi

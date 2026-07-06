@@ -5,5 +5,5 @@ torchaudio==2.7.1+cu126
 numba==0.61.2
 llvmlite==0.44.0
 numpy==2.2.6
-nvidia-cuda-nvcc-cu12==12.6.85
+nvidia-cuda-nvcc-cu12==12.9.86
 cuda-bindings<13

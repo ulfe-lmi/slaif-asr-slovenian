@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "scale8000-clean-only-2080ti-directional-v1",
+  "work_order_id": "0028",
+  "status": "DIAGNOSTIC_ONLY",
+  "accepted_parent": "none",
+  "scale8000_certificate": "docs/data-certificates/sl-corpus-v5-scale8000-dataset-v1.json",
+  "scale8000_report": "docs/data-reports/0015-scale8000-dual-gpu-generation.json",
+  "scale2000_reference_report": {
+    "path": "docs/experiments/0014-gams16000-scale2000-text-only-directional.json",
+    "sha256": "849bdd57d628e54f2b867b066bb7ad1dea2b62dde50f90f66ed36d15cdc75e91",
+    "scale2000_burden": 0.0
+  },
+  "data": {
+    "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+    "text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "text_rows": 64000,
+    "inherited_rows": 16000,
+    "new_rows": 48000,
+    "fixed_text": "runs/data-quality/sl-corpus-v5-scale8000-training-v1/fixed-combined-training-text.local.jsonl",
+    "piper_manifest": "runs/data-quality/sl-corpus-v5-scale8000-training-v1/piper-clean/audio-manifest.local.jsonl",
+    "piper_manifest_sha256": "290c733207ee08a58d6a707b241b65ed25121d19da11472caed99f562c0fde9f",
+    "piper_rows": 64000,
+    "supertonic_manifest": "runs/data-quality/sl-corpus-v5-scale8000-training-v1/supertonic-clean/training-audio-manifest.local.jsonl",
+    "supertonic_manifest_sha256": "c6b3152ee2d8925dfbeb4c7acd2c6f6656f8aa26a32f65570f425a3c5004d5a4",
+    "supertonic_native_manifest": "runs/data-quality/sl-corpus-v5-scale8000-training-v1/supertonic-clean/native-manifest.local.jsonl",
+    "supertonic_native_manifest_sha256": "b61ac8d7ce223f2c9eca0a09b719627016b2de68b4fd759fdf1cb21bffdbea3b",
+    "supertonic_rows": 512000,
+    "clean_views": 576000,
+    "augmented_views": 0,
+    "piper_synthetic_holdout_manifest": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/audio-manifest.local.jsonl",
+    "piper_synthetic_holdout_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "piper_synthetic_holdout_rows": 96,
+    "supertonic_heldout_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/holdout-audio-manifest.local.jsonl",
+    "supertonic_heldout_rows": 192,
+    "fleurs_v2_manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+    "fleurs_v2_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+    "fleurs_v2_rows": 834,
+    "artur_j_manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+    "artur_j_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+    "artur_j_rows": 256
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
+  },
+  "adapter": {
+    "config": "configs/adapters/sl_si_joint_adapter_v1.json",
+    "module": "model.joint",
+    "name": "sl-si-joint-adapter-v1",
+    "type": "nemo.collections.common.parts.adapter_modules.LinearAdapter",
+    "bottleneck_dimension": 32,
+    "expected_trainable_parameters": 42240
+  },
+  "hardware": {
+    "required_gpu_name_fragment": "RTX 2080 Ti",
+    "forbidden_gpu_name_fragments": ["A100"],
+    "training_visible_gpu_count": 1,
+    "minimum_free_vram_mib_after_warmup": 500
+  },
+  "training": {
+    "arm": "scale8000_clean_only_joint_adapter_dim32",
+    "seed": 1234,
+    "semantic_rows": 64000,
+    "exposure_rounds": 9,
+    "sample_exposures": 576000,
+    "effective_batch_size": 8,
+    "physical_microbatch_candidates": [8, 4, 2, 1],
+    "optimizer_steps": 72000,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "gradient_clipping": "none",
+    "precision": "fp32",
+    "tf32": false,
+    "spec_augment": false,
+    "waveform_augmentation": false,
+    "early_stopping": false,
+    "anchor_probe_rows": 32,
+    "scale_probe_rows": 320
+  },
+  "evaluation": {
+    "policy": "configs/evaluation/rtx2080ti-directional-batch32-v1.json",
+    "batch_size": 32,
+    "duration_bucketing": true,
+    "att_context_size": [56, 3],
+    "target_lang": "sl-SI",
+    "precision": "fp32",
+    "tf32": false,
+    "suite_rows": 1378,
+    "canonical": false,
+    "promotion_eligible": false
+  },
+  "protected_unchanged_files": [
+    "configs/evaluation/a100-directional-batch32-v1.json",
+    "configs/adapters/sl_si_joint_adapter_v1.json",
+    "configs/augmentation/scale200_transcript_preserving_v1.json",
+    "slaif_asr/slovenian_joint_adapter.py",
+    "slaif_asr/corpus_v2_training.py"
+  ],
+  "run_dir": "runs/experiments/scale8000-clean-only-2080ti-directional-v1",
+  "local_data_run_dir": "runs/data-quality/sl-corpus-v5-scale8000-training-v1",
+  "reports": {
+    "json": "docs/experiments/0015-scale8000-clean-only-2080ti-directional.json",
+    "markdown": "docs/experiments/0015-scale8000-clean-only-2080ti-directional.md"
+  },
+  "certificate": "docs/data-certificates/sl-corpus-v5-scale8000-clean-only-diagnostic-v1.json"
+}
