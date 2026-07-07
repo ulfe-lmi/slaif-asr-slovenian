@@ -289,9 +289,20 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
     return payload
 
 
-def mean_loss(model: Any, prompt_index: int, records: Sequence[Any], *, torch: Any) -> float:
+def mean_loss(
+    model: Any,
+    prompt_index: int,
+    records: Sequence[Any],
+    *,
+    torch: Any,
+    reporter: LiveProgressReporter | None = None,
+    message: str = "loss_probe",
+    interval_seconds: float = 10.0,
+) -> float:
     losses = []
     ordered = sorted(records, key=lambda record: (-record.duration, record.selected_training_id))
+    started = time.perf_counter()
+    last_emit = started
     with torch.no_grad():
         for index, record in enumerate(ordered, start=1):
             batch = make_training_batch(model, [record], device="cuda")
@@ -304,6 +315,18 @@ def mean_loss(model: Any, prompt_index: int, records: Sequence[Any], *, torch: A
             if index % 8 == 0:
                 gc.collect()
                 torch.cuda.empty_cache()
+            now = time.perf_counter()
+            if reporter is not None and (now - last_emit >= interval_seconds or index == len(ordered)):
+                elapsed = now - started
+                reporter.progress(
+                    step=index,
+                    total_steps=len(ordered),
+                    examples_per_second=round(index / elapsed, 6) if elapsed else None,
+                    cuda_alloc_mib=round(torch.cuda.memory_allocated(0) / 1024 / 1024, 3),
+                    cuda_reserved_mib=round(torch.cuda.memory_reserved(0) / 1024 / 1024, 3),
+                    message=message,
+                )
+                last_emit = now
     return sum(losses) / len(losses)
 
 
@@ -333,8 +356,8 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     prompt = derive_prompt_column_selection(model, "sl-SI")
     optimizer = torch.optim.AdamW(trainable_parameters(model), lr=float(config["training"]["learning_rate"]), weight_decay=0.0)
     verify_optimizer_scope(optimizer, model)
-    initial_anchor = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch)
-    initial_scale = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch)
+    initial_anchor = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch, reporter=reporter, message="initial_anchor_probe", interval_seconds=interval)
+    initial_scale = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch, reporter=reporter, message="initial_scale_probe", interval_seconds=interval)
     probe_curve = [{"round": 0, "anchor_probe_loss": round(initial_anchor, 6), "scale_probe_loss": round(initial_scale, 6)}]
     decoder_joint_norm_curve: list[dict[str, Any]] = []
     grad_norms: list[float] = []
@@ -351,6 +374,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     monitor = NvidiaSmiMonitor(physical_gpu_index=hardware.physical_selector, output_csv=monitor_path, interval_seconds=0.5)
     torch.cuda.reset_peak_memory_stats(0)
     started = time.perf_counter()
+    last_progress = started
     monitor.start()
     try:
         total_steps = int(config["training"]["optimizer_steps"])
@@ -373,6 +397,23 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
                     step_loss += float(loss.detach().cpu()) * scale
                     del loss
                     del batch
+                    now = time.perf_counter()
+                    if now - last_progress >= interval:
+                        elapsed = now - started
+                        reporter.progress(
+                            epoch=round_index,
+                            total_epochs=20,
+                            step=optimizer_steps,
+                            total_steps=total_steps,
+                            current_loss=round(step_loss, 6) if step_loss else None,
+                            rolling_mean_loss=round(sum(rolling_losses) / len(rolling_losses), 6) if rolling_losses else None,
+                            examples_per_second=round(sample_exposures / elapsed, 6) if elapsed else None,
+                            audio_seconds_per_wall_second=round(audio_seconds / elapsed, 6) if elapsed else None,
+                            cuda_alloc_mib=round(torch.cuda.memory_allocated(0) / 1024 / 1024, 3),
+                            cuda_reserved_mib=round(torch.cuda.memory_reserved(0) / 1024 / 1024, 3),
+                            message="training microbatch in progress",
+                        )
+                        last_progress = now
                 grad_norm, finite = finite_grad_norm(trainable_parameters(model))
                 if not finite:
                     raise RuntimeError("non-finite decoder+joint RNNT training gradient")
@@ -392,7 +433,8 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
                 rolling_losses.append(step_loss)
                 rolling_losses = rolling_losses[-25:]
                 grad_norms.append(grad_norm)
-                if optimizer_steps % 500 == 0:
+                now = time.perf_counter()
+                if optimizer_steps % 500 == 0 or now - last_progress >= interval:
                     elapsed = time.perf_counter() - started
                     reporter.progress(
                         epoch=round_index,
@@ -406,8 +448,9 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
                         cuda_alloc_mib=round(torch.cuda.memory_allocated(0) / 1024 / 1024, 3),
                         cuda_reserved_mib=round(torch.cuda.memory_reserved(0) / 1024 / 1024, 3),
                     )
-            anchor_loss = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch)
-            scale_loss = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch)
+                    last_progress = now
+            anchor_loss = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch, reporter=reporter, message=f"round_{round_index}_anchor_probe", interval_seconds=interval)
+            scale_loss = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch, reporter=reporter, message=f"round_{round_index}_scale_probe", interval_seconds=interval)
             probe_curve.append({"round": round_index, "anchor_probe_loss": round(anchor_loss, 6), "scale_probe_loss": round(scale_loss, 6)})
             decoder_norm = sum(float(torch.linalg.vector_norm(parameter.detach()).cpu()) for name, parameter in model.named_parameters() if name.startswith("decoder."))
             joint_norm = sum(float(torch.linalg.vector_norm(parameter.detach()).cpu()) for name, parameter in model.named_parameters() if name.startswith("joint."))
@@ -421,8 +464,8 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
         raise RuntimeError(f"optimizer step count mismatch: {optimizer_steps}")
     with heartbeat_thread(reporter, interval_seconds=interval, message="post-training integrity checks"):
         wall = time.perf_counter() - started
-        final_anchor = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch)
-        final_scale = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch)
+        final_anchor = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch, reporter=reporter, message="final_anchor_probe", interval_seconds=interval)
+        final_scale = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch, reporter=reporter, message="final_scale_probe", interval_seconds=interval)
         trained_state = state_dict_cpu(model)
         integrity = changed_tensor_summary(initial_state, trained_state)
         if not integrity["only_decoder_joint_changed"]:
