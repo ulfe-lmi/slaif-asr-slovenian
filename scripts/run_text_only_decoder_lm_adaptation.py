@@ -454,9 +454,16 @@ def stage_evaluate_directional(config_path: Path, interval: float) -> dict[str, 
     predictions = {}
     started = time.perf_counter()
     for index, batch in enumerate(layout.batches, start=1):
-        audio = [record.audio_filepath for record in batch]
+        batch_manifest = run_dir(config) / "evaluation" / ARM_NAME / "directional-suite" / "batch-manifests" / f"batch-{index:04d}.local.jsonl"
+        atomic_write_jsonl(
+            batch_manifest,
+            [
+                {"audio_filepath": record.audio_filepath, "duration": record.duration, "text": "", "lang": "sl-SI"}
+                for record in batch
+            ],
+        )
         with torch.no_grad():
-            outputs = model.transcribe(audio=audio, batch_size=len(audio), target_lang="sl-SI", verbose=False)
+            outputs = model.transcribe(audio=str(batch_manifest), batch_size=len(batch), target_lang="sl-SI", verbose=False)
         for record, output in zip(batch, outputs):
             predictions[record.sample_id] = _prediction_text(output)
         elapsed = time.perf_counter() - started

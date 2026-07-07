@@ -228,8 +228,7 @@ def make_lm_batch(rows: Sequence[TokenizedRow], *, bos_id: int, eos_id: int, pad
 
 
 def decoder_lm_forward_loss(model: Any, lm_head: torch.nn.Module, batch: dict[str, torch.Tensor], *, pad_id: int) -> torch.Tensor:
-    decoder, _target_length, _state = model.decoder(targets=batch["input_ids"], target_length=batch["lengths"])
-    hidden = decoder.transpose(1, 2)
+    hidden, _state = model.decoder.predict(batch["input_ids"], add_sos=False)
     logits = lm_head(hidden)
     return F.cross_entropy(logits.reshape(-1, logits.shape[-1]), batch["labels"].reshape(-1), ignore_index=int(pad_id))
 

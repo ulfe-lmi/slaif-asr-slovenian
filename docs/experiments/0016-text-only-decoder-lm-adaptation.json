@@ -1,0 +1,234 @@
+{
+  "accepted_parent": "none",
+  "adapter": {
+    "bottleneck_dimension": 128,
+    "location": "RNNT prediction decoder output representation before joint consumption",
+    "name": "sl-si-decoder-lm-adapter-v1",
+    "temporary_lm_head": "training_only_excluded_from_asr_inference",
+    "trainable_parameters": 165888,
+    "type": "bottleneck_residual_mlp"
+  },
+  "authorization": {
+    "certificate": "docs/data-certificates/sl-text-only-decoder-lm-adaptation-diagnostic-v1.json",
+    "status": "DIAGNOSTIC_ONLY"
+  },
+  "canonical": false,
+  "data": {
+    "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+    "decision_id": "human-scale8000-decision-v1",
+    "rows": 64000,
+    "text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "train_rows": 60800,
+    "validation_rows": 3200,
+    "whole_file_decision": "ACCEPT"
+  },
+  "directional_evaluation": {
+    "burdens": {
+      "scale2000_augmented": 0.0,
+      "scale8000_clean_only": 0.0,
+      "text_only": 234.967
+    },
+    "decision": {
+      "accepted_parent": "none",
+      "classification": "TEXT_ONLY_DECODER_LM_DEGRADES_ASR",
+      "empty_hypotheses_not_increased_vs_base": false,
+      "real_gate_improves_vs_base": false,
+      "real_not_worse_than_base_by_0_25": false,
+      "real_regression_burden": 234.967,
+      "synthetic_holdout_gain_vs_base": false,
+      "text_validation_loss_improved": true
+    },
+    "metrics": {
+      "base": {
+        "artur_j": {
+          "cer": 28.62,
+          "empty": 12,
+          "wer": 67.322
+        },
+        "fleurs_v2": {
+          "cer": 16.406,
+          "empty": 1,
+          "wer": 52.685
+        },
+        "piper_synthetic_holdout": {
+          "cer": 46.762,
+          "empty": 17,
+          "wer": 86.025
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 27.712,
+          "empty": 32,
+          "wer": 58.307
+        }
+      },
+      "scale2000_augmented": {
+        "artur_j": {
+          "cer": 20.63,
+          "empty": 0,
+          "wer": 60.114
+        },
+        "fleurs_v2": {
+          "cer": 16.238,
+          "empty": 0,
+          "wer": 51.589
+        },
+        "piper_synthetic_holdout": {
+          "cer": 20.073,
+          "empty": 0,
+          "wer": 55.435
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 7.597,
+          "empty": 0,
+          "wer": 27.407
+        }
+      },
+      "scale8000_clean_only": {
+        "artur_j": {
+          "cer": 20.708,
+          "empty": 0,
+          "wer": 60.856
+        },
+        "fleurs_v2": {
+          "cer": 16.259,
+          "empty": 0,
+          "wer": 51.268
+        },
+        "piper_synthetic_holdout": {
+          "cer": 21.979,
+          "empty": 0,
+          "wer": 62.267
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 8.004,
+          "empty": 0,
+          "wer": 28.882
+        }
+      },
+      "text_only_decoder_lm": {
+        "artur_j": {
+          "cer": 100.0,
+          "empty": 256,
+          "wer": 100.0
+        },
+        "fleurs_v2": {
+          "cer": 100.0,
+          "empty": 834,
+          "wer": 100.0
+        },
+        "piper_synthetic_holdout": {
+          "cer": 100.0,
+          "empty": 96,
+          "wer": 100.0
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 100.0,
+          "empty": 192,
+          "wer": 100.0
+        }
+      }
+    },
+    "policy": {
+      "att_context_size": [
+        56,
+        3
+      ],
+      "batch_size": 32,
+      "canonical": false,
+      "duration_bucketing": true,
+      "policy_a100": "configs/evaluation/a100-directional-batch32-v1.json",
+      "policy_rtx2080ti": "configs/evaluation/rtx2080ti-directional-batch32-v1.json",
+      "precision": "fp32",
+      "promotion_eligible": false,
+      "suite_rows": 1378,
+      "target_lang": "sl-SI",
+      "tf32": false
+    },
+    "suite_summary": {
+      "audio_duration_seconds": 10129.779368,
+      "padding_ratio": 1.043495,
+      "real_time_factor": 0.003871,
+      "utterances_per_second": 35.13821,
+      "wall_time_seconds": 39.216568
+    }
+  },
+  "experiment_id": "text-only-decoder-lm-adaptation-v1",
+  "limitations": [
+    "Text-only diagnostic adaptation used accepted synthetic text but no acoustic learning.",
+    "Directional batch-32 ASR evaluation is noncanonical and promotion-ineligible.",
+    "No batch-1 canonical evaluation was run.",
+    "No model, adapter, checkpoint, raw text, tokenized text, or predictions are committed."
+  ],
+  "model": {
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "parameter_integrity": {
+    "changed_pretrained_tensors": [],
+    "missing_tensors": [],
+    "pretrained_tensors_unchanged": true,
+    "unexpected_tensors": []
+  },
+  "promotion_eligible": false,
+  "repository_commit": "c7dc25b1ec089f2d2d4b921fc79e7f02c199b13c",
+  "safety": {
+    "accepted_parent": "none",
+    "audio_training_used": false,
+    "pretrained_tensors_changed": false,
+    "real_gate_transcripts_used_for_training": false,
+    "training_eligible_issued": false
+  },
+  "schema_version": "1.0",
+  "secondary_arm": "SECONDARY_ARM_SKIPPED_UNSUPPORTED",
+  "status": "completed in PR; pending strategic review",
+  "tokenizer": {
+    "bos_id": 0,
+    "empty_token_rows": 0,
+    "eos_id": 13086,
+    "oov_events": 0,
+    "pad_id": 0,
+    "rows_rejected_by_tokenization": 0,
+    "token_count": 1536676,
+    "token_counts": {
+      "train": 1460379,
+      "validation": 76297
+    },
+    "token_length": {
+      "max": 125,
+      "mean": 24.010562,
+      "min": 2
+    },
+    "tokenized_rows": {
+      "train": 60800,
+      "validation": 3200
+    },
+    "vocabulary_size": 13087
+  },
+  "training": {
+    "effective_batch_size": 128,
+    "epochs": 20,
+    "final_train_loss": 2.329578,
+    "final_train_perplexity": 10.273606,
+    "final_validation_loss": 2.37086,
+    "final_validation_perplexity": 10.706596,
+    "gradient_accumulation_steps": 1,
+    "initial_train_loss": 9.476401,
+    "initial_train_perplexity": 13048.141259,
+    "initial_validation_loss": 9.47637,
+    "initial_validation_perplexity": 13047.74044,
+    "learning_rate": 0.001,
+    "optimizer_steps": 9500,
+    "peak_allocated_mib": 5138.433,
+    "peak_reserved_mib": 5792.0,
+    "physical_microbatch": 128,
+    "rows_per_second": 3269.40459,
+    "scheduler": "linear_warmup_5_percent_then_cosine",
+    "tokens_per_second": 81798.513239,
+    "wall_time_seconds": 371.933166,
+    "weight_decay": 0.01
+  },
+  "work_order_id": "0029"
+}

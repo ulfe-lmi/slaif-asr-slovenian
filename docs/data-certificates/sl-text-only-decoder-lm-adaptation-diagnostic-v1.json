@@ -1,0 +1,24 @@
+{
+  "accepted_parent": "none",
+  "adapter_name": "sl-si-decoder-lm-adapter-v1",
+  "authorized_actions": [
+    "train text-only decoder LM adapter",
+    "run directional batch-32 ASR evaluation",
+    "write privacy-safe aggregate evidence"
+  ],
+  "certificate_id": "sl-text-only-decoder-lm-adaptation-diagnostic-v1",
+  "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+  "prohibited_actions": [
+    "use audio for training",
+    "use real-gate transcripts",
+    "train pretrained tensors",
+    "publish model or adapter",
+    "issue TRAINING_ELIGIBLE"
+  ],
+  "schema_version": "1.0",
+  "status": "DIAGNOSTIC_ONLY",
+  "text_rows": 64000,
+  "text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+  "training_eligible_issued": false,
+  "work_order_id": "0029"
+}

@@ -91,6 +91,11 @@ def install_decoder_lm_adapter(model: Any, spec: DecoderLMAdapterSpec | None = N
     if not hasattr(decoder, "decoder_lm_adapter"):
         decoder.add_module("decoder_lm_adapter", DecoderLMAdapter(hidden, spec.bottleneck_dim, spec.dropout))
     adapter = decoder.decoder_lm_adapter
+    try:
+        decoder_device = next(decoder.parameters()).device
+        adapter.to(decoder_device)
+    except StopIteration:
+        pass
     adapter.enabled = False
     if not hasattr(decoder, "_slaif_decoder_lm_original_predict"):
         decoder._slaif_decoder_lm_original_predict = decoder.predict
@@ -232,4 +237,3 @@ def load_text_only_artifact(path: Path, *, model: Any, lm_head: nn.Module) -> di
     lm_head.load_state_dict(payload["lm_head_state"])
     disable_decoder_lm_adapter(model)
     return dict(payload.get("metadata", {}))
-
