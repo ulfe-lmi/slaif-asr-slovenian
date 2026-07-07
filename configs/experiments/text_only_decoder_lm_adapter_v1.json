@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "text-only-decoder-lm-adaptation-v1",
+  "work_order_id": "0029",
+  "status": "DIAGNOSTIC_ONLY",
+  "accepted_parent": "none",
+  "data": {
+    "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+    "text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+    "text_rows": 64000,
+    "fixed_text": "runs/data-quality/sl-corpus-v5-scale8000-training-v1/fixed-combined-training-text.local.jsonl",
+    "train_rows": 60800,
+    "validation_rows": 3200,
+    "whole_file_decision": "ACCEPT",
+    "decision_id": "human-scale8000-decision-v1",
+    "piper_synthetic_holdout_manifest": "runs/data-quality/sl-corpus-v2-independent-synthetic-holdout-v1/audio-manifest.local.jsonl",
+    "piper_synthetic_holdout_manifest_sha256": "7848f57e1fb65a2ef514815eec8092cd0a205b29819f6afeb767ea951473990d",
+    "piper_synthetic_holdout_rows": 96,
+    "supertonic_heldout_manifest": "runs/data-quality/sl-corpus-v2-supertonic3-multivoice-batched-replay-v1/holdout-audio-manifest.local.jsonl",
+    "supertonic_heldout_rows": 192,
+    "fleurs_v2_manifest": "runs/evaluation-gates/fleurs-sl-si-test-full-v2/manifest.jsonl",
+    "fleurs_v2_manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+    "fleurs_v2_rows": 834,
+    "artur_j_manifest": "runs/evaluation-gates/artur-j-public-gate-v1/manifest.jsonl",
+    "artur_j_manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+    "artur_j_rows": 256
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575"
+  },
+  "adapter": {
+    "name": "sl-si-decoder-lm-adapter-v1",
+    "location": "RNNT prediction decoder output representation before joint consumption",
+    "type": "bottleneck_residual_mlp",
+    "bottleneck_dimension": 128,
+    "dropout": 0.0,
+    "activation": "silu",
+    "zero_effect_initialization": true,
+    "enabled_by_default": false
+  },
+  "temporary_lm_head": {
+    "status": "training_only",
+    "weight_tying_preferred": true,
+    "retained_for_asr_inference": false
+  },
+  "training": {
+    "arm": "text_only_decoder_lm_adapter_v1",
+    "seed": 1234,
+    "epochs": 20,
+    "effective_batch_size": 128,
+    "microbatch_candidates": [128, 64, 32, 16, 8],
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "scheduler": "linear_warmup_5_percent_then_cosine",
+    "warmup_fraction": 0.05,
+    "gradient_clipping": 1.0,
+    "precision": "fp32",
+    "tf32": false,
+    "early_stopping": false
+  },
+  "evaluation": {
+    "policy_rtx2080ti": "configs/evaluation/rtx2080ti-directional-batch32-v1.json",
+    "policy_a100": "configs/evaluation/a100-directional-batch32-v1.json",
+    "batch_size": 32,
+    "duration_bucketing": true,
+    "att_context_size": [56, 3],
+    "target_lang": "sl-SI",
+    "precision": "fp32",
+    "tf32": false,
+    "suite_rows": 1378,
+    "canonical": false,
+    "promotion_eligible": false
+  },
+  "reference_reports": {
+    "scale2000": {
+      "path": "docs/experiments/0014-gams16000-scale2000-text-only-directional.json"
+    },
+    "scale8000_clean": {
+      "path": "docs/experiments/0015-scale8000-clean-only-2080ti-directional.json",
+      "classification": "SCALE8000_CLEAN_BEATS_BASE_BUT_NOT_SCALE2000"
+    }
+  },
+  "reference_metrics": {
+    "base": {
+      "piper_synthetic_holdout": {"wer": 86.025, "cer": 46.762, "empty": 17},
+      "supertonic_heldout_voice_holdout": {"wer": 58.307, "cer": 27.712, "empty": 32},
+      "fleurs_v2": {"wer": 52.685, "cer": 16.406, "empty": 1},
+      "artur_j": {"wer": 67.322, "cer": 28.620, "empty": 12}
+    },
+    "scale2000_augmented": {
+      "piper_synthetic_holdout": {"wer": 55.435, "cer": 20.073, "empty": 0},
+      "supertonic_heldout_voice_holdout": {"wer": 27.407, "cer": 7.597, "empty": 0},
+      "fleurs_v2": {"wer": 51.589, "cer": 16.238, "empty": 0},
+      "artur_j": {"wer": 60.114, "cer": 20.630, "empty": 0}
+    },
+    "scale8000_clean_only": {
+      "piper_synthetic_holdout": {"wer": 62.267, "cer": 21.979, "empty": 0},
+      "supertonic_heldout_voice_holdout": {"wer": 28.882, "cer": 8.004, "empty": 0},
+      "fleurs_v2": {"wer": 51.268, "cer": 16.259, "empty": 0},
+      "artur_j": {"wer": 60.856, "cer": 20.708, "empty": 0}
+    }
+  },
+  "run_dir": "runs/experiments/text-only-decoder-lm-adaptation-v1",
+  "reports": {
+    "json": "docs/experiments/0016-text-only-decoder-lm-adaptation.json",
+    "markdown": "docs/experiments/0016-text-only-decoder-lm-adaptation.md"
+  },
+  "certificate": "docs/data-certificates/sl-text-only-decoder-lm-adaptation-diagnostic-v1.json"
+}
