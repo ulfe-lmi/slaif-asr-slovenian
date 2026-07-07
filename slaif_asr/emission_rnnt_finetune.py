@@ -7,15 +7,17 @@ import subprocess
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Sequence, TYPE_CHECKING
 
 from slaif_asr.batched_streaming import StreamingRecord, file_sha256, load_gate_records, metrics_for, resolve_manifest_audio_path
 from slaif_asr.config import REPO_ROOT
-from slaif_asr.corpus_v2_training import TrainingRecord
 from slaif_asr.data_quality import sha256_file
 from slaif_asr.real_eval import atomic_write_json, atomic_write_jsonl
 from slaif_asr.scale2000_corpus import burden as real_regression_burden
 from slaif_asr.tts import validate_wav
+
+if TYPE_CHECKING:
+    from slaif_asr.corpus_v2_training import TrainingRecord
 
 
 ARM_NAME = "scale2000_augmented_decoder_joint_rnnt"
@@ -98,6 +100,27 @@ def local_path(path_text: str | Path) -> Path:
     if parts and parts[0] == "runs":
         return local_runs_root().joinpath(*parts[1:])
     return REPO_ROOT / path
+
+
+def resolve_local_artifact_path(path_text: str | Path) -> Path:
+    path = Path(path_text).expanduser()
+    if path.exists():
+        return path.resolve()
+    parts = path.parts
+    if "runs" in parts:
+        index = parts.index("runs")
+        candidate = local_path(Path(*parts[index:]))
+        if candidate.exists():
+            return candidate.resolve()
+        repo_candidate = REPO_ROOT.joinpath(*parts[index:])
+        if repo_candidate.exists():
+            return repo_candidate.resolve()
+    if "slaif-asr-slovenian" in parts:
+        index = parts.index("slaif-asr-slovenian")
+        candidate = REPO_ROOT.joinpath(*parts[index + 1 :])
+        if candidate.exists():
+            return candidate.resolve()
+    raise FileNotFoundError(path_text)
 
 
 def read_json(path: str | Path) -> dict[str, Any]:
@@ -451,9 +474,9 @@ def _view_lookup(config: dict[str, Any]) -> dict[tuple[str, str, str, str], dict
 
 
 def training_record_from_view(text_row: dict[str, Any], view_row: dict[str, Any], *, reason: str) -> TrainingRecord:
-    path = Path(str(view_row["audio_filepath"]))
-    if not path.exists():
-        raise FileNotFoundError(path)
+    from slaif_asr.corpus_v2_training import TrainingRecord
+
+    path = resolve_local_artifact_path(str(view_row["audio_filepath"]))
     text = str(text_row["target_text"])
     if str(view_row["target_text_sha256"]) != stable_sha256(text):
         raise RuntimeError("scale-2000 text/audio text-hash mismatch")

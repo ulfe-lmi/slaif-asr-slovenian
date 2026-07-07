@@ -75,12 +75,50 @@ _JOINT = importlib.util.module_from_spec(_JOINT_SPEC)
 _JOINT_SPEC.loader.exec_module(_JOINT)
 
 
+def ensure_cuda_nvcc_process_env() -> None:
+    cuda_home = REPO_ROOT / ".venv" / "lib" / "python3.12" / "site-packages" / "nvidia" / "cuda_nvcc"
+    if not cuda_home.exists():
+        return
+    cuda_bin = str(cuda_home / "bin")
+    nvvm_lib = str(cuda_home / "nvvm" / "lib64")
+    path_entries = os.environ.get("PATH", "").split(os.pathsep)
+    ld_entries = [entry for entry in os.environ.get("LD_LIBRARY_PATH", "").split(os.pathsep) if entry]
+    needs_reexec = (
+        os.environ.get("CUDA_HOME") != str(cuda_home)
+        or os.environ.get("CUDA_PATH") != str(cuda_home)
+        or cuda_bin not in path_entries
+        or nvvm_lib not in ld_entries
+    )
+    if needs_reexec and os.environ.get("SLAIF_NVCC_ENV_READY") != "1":
+        env = os.environ.copy()
+        env["CUDA_HOME"] = str(cuda_home)
+        env["CUDA_PATH"] = str(cuda_home)
+        env["PATH"] = cuda_bin + os.pathsep + env.get("PATH", "")
+        env["LD_LIBRARY_PATH"] = nvvm_lib + (os.pathsep + env["LD_LIBRARY_PATH"] if env.get("LD_LIBRARY_PATH") else "")
+        env["SLAIF_NVCC_ENV_READY"] = "1"
+        os.execve(sys.executable, [sys.executable, *sys.argv], env)
+    os.environ.setdefault("CUDA_HOME", str(cuda_home))
+    os.environ.setdefault("CUDA_PATH", str(cuda_home))
+    if cuda_bin not in path_entries:
+        os.environ["PATH"] = cuda_bin + os.pathsep + os.environ.get("PATH", "")
+    if nvvm_lib not in ld_entries:
+        os.environ["LD_LIBRARY_PATH"] = nvvm_lib + (os.pathsep + os.environ["LD_LIBRARY_PATH"] if os.environ.get("LD_LIBRARY_PATH") else "")
+    os.environ.setdefault("NUMBA_CUDA_USE_NVIDIA_BINDING", "1")
+
+
 def configure_torch() -> Any:
+    ensure_cuda_nvcc_process_env()
     torch = _JOINT.configure_torch()
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
     torch.set_float32_matmul_precision("highest")
     return torch
+
+
+def seed_torch(torch: Any, seed: int) -> None:
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 
 def restore_base_model(config: dict[str, Any], *, reporter: LiveProgressReporter | None = None) -> Any:
@@ -224,7 +262,9 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
     correctness = None
     if selected["status"] == "PASSED":
         physical = int(selected["physical_microbatch"])
+        seed_torch(torch, int(config["training"]["seed"]) + 3000)
         correctness = _accumulated_probe(model, prompt.prompt_index, records, physical_microbatch=physical, torch=torch)
+        seed_torch(torch, int(config["training"]["seed"]) + 3000)
         singleton = _accumulated_probe(model, prompt.prompt_index, records, physical_microbatch=1, torch=torch)
         rel = abs(correctness["weighted_loss"] - singleton["weighted_loss"]) / singleton["weighted_loss"] if singleton["weighted_loss"] else 0.0
         correctness.update({"singleton_weighted_loss": singleton["weighted_loss"], "relative_loss_difference_vs_singletons": round(rel, 8), "passed": rel <= 0.005})
