@@ -6,10 +6,10 @@ import math
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
-import torch
-import torch.nn.functional as F
+if TYPE_CHECKING:
+    import torch
 
 from slaif_asr.batched_streaming import StreamingRecord, load_gate_records, metrics_for, resolve_manifest_audio_path
 from slaif_asr.config import REPO_ROOT
@@ -210,7 +210,16 @@ def tokenize_split(split: dict[str, list[TextRow]], tokenizer: Any) -> tuple[dic
     return tokenized, stats
 
 
-def make_lm_batch(rows: Sequence[TokenizedRow], *, bos_id: int, eos_id: int, pad_id: int, device: str | torch.device) -> dict[str, torch.Tensor]:
+def _require_torch() -> Any:
+    try:
+        import torch
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("PyTorch is required for text-only tensor operations") from exc
+    return torch
+
+
+def make_lm_batch(rows: Sequence[TokenizedRow], *, bos_id: int, eos_id: int, pad_id: int, device: str | "torch.device") -> dict[str, "torch.Tensor"]:
+    torch = _require_torch()
     sequences = [[bos_id, *row.token_ids] for row in rows]
     targets = [[*row.token_ids, eos_id] for row in rows]
     max_len = max(len(seq) for seq in sequences)
@@ -227,7 +236,9 @@ def make_lm_batch(rows: Sequence[TokenizedRow], *, bos_id: int, eos_id: int, pad
     return {"input_ids": input_ids, "labels": labels, "mask": mask, "lengths": lengths}
 
 
-def decoder_lm_forward_loss(model: Any, lm_head: torch.nn.Module, batch: dict[str, torch.Tensor], *, pad_id: int) -> torch.Tensor:
+def decoder_lm_forward_loss(model: Any, lm_head: "torch.nn.Module", batch: dict[str, "torch.Tensor"], *, pad_id: int) -> "torch.Tensor":
+    import torch.nn.functional as F
+
     hidden, _state = model.decoder.predict(batch["input_ids"], add_sos=False)
     logits = lm_head(hidden)
     return F.cross_entropy(logits.reshape(-1, logits.shape[-1]), batch["labels"].reshape(-1), ignore_index=int(pad_id))

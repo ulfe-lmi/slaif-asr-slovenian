@@ -1,6 +1,9 @@
 import unittest
 
-import torch
+try:
+    import torch
+except ModuleNotFoundError:
+    torch = None
 
 from slaif_asr.text_only_decoder_lm import (
     TextRow,
@@ -42,6 +45,7 @@ class TextOnlyDecoderLMTests(unittest.TestCase):
         self.assertEqual(stats["rows_rejected_by_tokenization"], 0)
         self.assertEqual(len(tokenized["train"]), 3)
 
+    @unittest.skipIf(torch is None, "PyTorch is not installed in the CPU repository-check environment")
     def test_label_shift_and_padding_mask(self):
         rows = [TokenizedRow("a", [3, 4], "train"), TokenizedRow("b", [5], "train")]
         batch = make_lm_batch(rows, bos_id=10, eos_id=11, pad_id=0, device="cpu")
@@ -59,6 +63,7 @@ class TextOnlyDecoderLMTests(unittest.TestCase):
         self.assertAlmostEqual(perplexity(0.0), 1.0)
         self.assertGreater(perplexity(1.0), 2.0)
 
+    @unittest.skipIf(torch is None, "PyTorch is not installed in the CPU repository-check environment")
     def test_decoder_lm_loss_uses_matching_timesteps(self):
         calls = []
 
