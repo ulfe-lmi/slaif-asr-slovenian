@@ -717,6 +717,24 @@ def _public_metrics(evaluation: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _public_suite_summary(evaluation: dict[str, Any]) -> dict[str, Any]:
+    suite = dict(evaluation["suite_summary"])
+    suite["shards"] = [
+        {
+            "shard_index": shard["shard_index"],
+            "physical_gpu_index": shard["physical_gpu_index"],
+            "rows": shard["rows"],
+            "run_dir_token": shard["run_dir_token"],
+            "wall_time_seconds": shard["wall_time_seconds"],
+            "audio_duration_seconds": shard["audio_duration_seconds"],
+            "utterances_per_second": shard["utterances_per_second"],
+            "gpu_monitor": shard["gpu_monitor"],
+        }
+        for shard in suite.get("shards", [])
+    ]
+    return suite
+
+
 def stage_summarize(config_path: Path) -> dict[str, Any]:
     config = load_config(config_path)
     inputs = verify_common_inputs(config)
@@ -798,7 +816,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
         "microbatch_probe": micro,
         "directional_evaluation": {
             "policy": evaluation["policy"],
-            "suite_summary": evaluation["suite_summary"],
+            "suite_summary": _public_suite_summary(evaluation),
             "metrics": _public_metrics(evaluation),
             "decision": evaluation["decision"],
         },
