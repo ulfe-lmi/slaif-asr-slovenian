@@ -1,0 +1,496 @@
+{
+  "accepted_parent": "none",
+  "authorization": {
+    "status": "DIAGNOSTIC_ONLY",
+    "work_order_id": "0028"
+  },
+  "directional_evaluation": {
+    "decision": {
+      "accepted_parent": "none",
+      "classification": "SCALE8000_CLEAN_BEATS_BASE_BUT_NOT_SCALE2000",
+      "no_real_metric_more_than_half_point_worse_than_scale2000": false,
+      "piper_holdout_gain": true,
+      "real_burden": 0.0,
+      "real_metrics_improved_vs_scale2000": 1,
+      "supertonic_holdout_gain": true,
+      "synthetic_holdouts_no_more_than_one_point_worse_than_scale2000": false
+    },
+    "metrics": {
+      "base": {
+        "artur_j": {
+          "cer": 28.62,
+          "empty": 12,
+          "wer": 67.322
+        },
+        "fleurs_v2": {
+          "cer": 16.406,
+          "empty": 1,
+          "wer": 52.685
+        },
+        "piper_synthetic_holdout": {
+          "cer": 46.762,
+          "empty": 17,
+          "wer": 86.025
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 27.712,
+          "empty": 32,
+          "wer": 58.307
+        }
+      },
+      "scale2000_augmented": {
+        "artur_j": {
+          "cer": 20.63,
+          "empty": 0,
+          "wer": 60.114
+        },
+        "fleurs_v2": {
+          "cer": 16.238,
+          "empty": 0,
+          "wer": 51.589
+        },
+        "piper_synthetic_holdout": {
+          "cer": 20.073,
+          "empty": 0,
+          "wer": 55.435
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 7.597,
+          "empty": 0,
+          "wer": 27.407
+        }
+      },
+      "scale8000_clean_only": {
+        "artur_j": {
+          "cer": 20.708,
+          "empty": 0,
+          "wer": 60.856
+        },
+        "fleurs_v2": {
+          "cer": 16.259,
+          "empty": 0,
+          "wer": 51.268
+        },
+        "piper_synthetic_holdout": {
+          "cer": 21.979,
+          "empty": 0,
+          "wer": 62.267
+        },
+        "supertonic_heldout_voice_holdout": {
+          "cer": 8.004,
+          "empty": 0,
+          "wer": 28.882
+        }
+      }
+    },
+    "policy": {
+      "att_context_size": [
+        56,
+        3
+      ],
+      "batch_size": 32,
+      "canonical": false,
+      "duration_bucketing": true,
+      "policy": "configs/evaluation/rtx2080ti-directional-batch32-v1.json",
+      "precision": "fp32",
+      "promotion_eligible": false,
+      "suite_rows": 1378,
+      "target_lang": "sl-SI",
+      "tf32": false
+    },
+    "suite_summary": {
+      "audio_duration_seconds": 10129.779368,
+      "real_time_factor": 0.009946,
+      "second_gpu_used": true,
+      "sharded_evaluation": true,
+      "shards": [
+        {
+          "audio_duration_seconds": 5040.029182,
+          "gpu_monitor": {
+            "fraction_at_or_above_80_percent": 0.3375,
+            "mean_power_watts": 98.558437,
+            "mean_utilization_percent": 34.55,
+            "median_utilization_percent": 0.0,
+            "p95_power_watts": 247.48,
+            "p95_utilization_percent": 91.0,
+            "peak_memory_mib": 5223.0,
+            "sample_count": 160
+          },
+          "physical_gpu_index": "0",
+          "rows": 689,
+          "run_dir_token": "shard-00-gpu0",
+          "shard_index": 0,
+          "utterances_per_second": 7.858851,
+          "wall_time_seconds": 87.671848
+        },
+        {
+          "audio_duration_seconds": 5089.750186,
+          "gpu_monitor": {
+            "fraction_at_or_above_80_percent": 0.3625,
+            "mean_power_watts": 96.101875,
+            "mean_utilization_percent": 33.71875,
+            "median_utilization_percent": 0.0,
+            "p95_power_watts": 246.58,
+            "p95_utilization_percent": 92.0,
+            "peak_memory_mib": 5223.0,
+            "sample_count": 160
+          },
+          "physical_gpu_index": "1",
+          "rows": 689,
+          "run_dir_token": "shard-01-gpu1",
+          "shard_index": 1,
+          "utterances_per_second": 7.865873,
+          "wall_time_seconds": 87.593588
+        }
+      ],
+      "utterances_per_second": 13.677435,
+      "wall_time_seconds": 100.749883
+    }
+  },
+  "experiment_id": "scale8000-clean-only-2080ti-directional-v1",
+  "hardware": {
+    "evaluation_gpus": [
+      "0",
+      "1"
+    ],
+    "inventory": {
+      "nvidia_smi_inventory": [
+        {
+          "index": 0,
+          "memory_total_mib": 11264,
+          "memory_used_mib": 6,
+          "name": "NVIDIA GeForce RTX 2080 Ti",
+          "utilization_percent": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mib": 11264,
+          "memory_used_mib": 6,
+          "name": "NVIDIA GeForce RTX 2080 Ti",
+          "utilization_percent": 0
+        }
+      ],
+      "physical_gpu_count": 2,
+      "rtx2080ti_count": 2,
+      "second_2080ti_detected": true,
+      "status": "PASSED"
+    },
+    "second_gpu_used": true,
+    "selected": {
+      "cuda_visible_devices": "0",
+      "device_name": "NVIDIA GeForce RTX 2080 Ti",
+      "free_vram_mib": 10656,
+      "logical_device": "cuda:0",
+      "physical_selector": "0",
+      "pytorch_cuda": "12.6",
+      "total_vram_mib": 10820,
+      "visible_device_count": 1
+    }
+  },
+  "input_integrity": {
+    "local_inputs": {
+      "fixed_text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+      "nfs_heavy_inputs_used": false,
+      "piper_manifest_sha256": "290c733207ee08a58d6a707b241b65ed25121d19da11472caed99f562c0fde9f",
+      "piper_rows": 64000,
+      "supertonic_manifest_sha256": "c6b3152ee2d8925dfbeb4c7acd2c6f6656f8aa26a32f65570f425a3c5004d5a4",
+      "supertonic_native_manifest_sha256": "b61ac8d7ce223f2c9eca0a09b719627016b2de68b4fd759fdf1cb21bffdbea3b",
+      "supertonic_rows": 512000,
+      "text_rows": 64000
+    },
+    "protected_file_fingerprints": {
+      "configs/adapters/sl_si_joint_adapter_v1.json": {
+        "byte_sha256": "2c970413e7668e79f8e9fd61c2af213ae1095b988c76ec61d02c5be15c605eb7",
+        "git_blob_sha": "eff300691f8a1656c40cf85f2a5eb3afd3ca3afa"
+      },
+      "configs/augmentation/scale200_transcript_preserving_v1.json": {
+        "byte_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
+        "git_blob_sha": "81c319712df040924b061f97e4fa476e0e5e994e"
+      },
+      "configs/evaluation/a100-directional-batch32-v1.json": {
+        "byte_sha256": "4ad1765396899a47befe1cabe9bb87b7e219e0bf1b8c280d8f42a98ad1a927cb",
+        "git_blob_sha": "5add91d1a5385c72c4c93ad310738151e95b9783"
+      },
+      "slaif_asr/corpus_v2_training.py": {
+        "byte_sha256": "6a2c2d5128d1cd0821b8f0d8114efcd7f592a4f98505934e2e5be44d40f0eefe",
+        "git_blob_sha": "10615fa86d996d17b8945817a10bf658233c69e3"
+      },
+      "slaif_asr/slovenian_joint_adapter.py": {
+        "byte_sha256": "b75f4424b9c7835bfb5c54501f485283c36917cab3fbb253b481b18c9e36be9d",
+        "git_blob_sha": "49988728f2389d334678d9b45bbd48806a64bd0b"
+      }
+    },
+    "public_evidence": {
+      "certificate_sha256": "503fd0c3ccd26bcab05958ba6a81f55a186332ae14879d86d4e7b5cdf451a123",
+      "clean_views": 576000,
+      "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+      "piper_manifest_sha256": "290c733207ee08a58d6a707b241b65ed25121d19da11472caed99f562c0fde9f",
+      "report_sha256": "330149e20773006e6eb8228c93f0031c84331c95eb7bcf4a52b0d52bc0f34e93",
+      "supertonic_manifest_sha256": "c6b3152ee2d8925dfbeb4c7acd2c6f6656f8aa26a32f65570f425a3c5004d5a4",
+      "supertonic_native_manifest_sha256": "b61ac8d7ce223f2c9eca0a09b719627016b2de68b4fd759fdf1cb21bffdbea3b",
+      "text_rows": 64000,
+      "text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd"
+    },
+    "scale2000_reference": {
+      "classification": "SCALE2000_TEXT_REAL_GAIN_DIRECTIONAL",
+      "path": "docs/experiments/0014-gams16000-scale2000-text-only-directional.json",
+      "scale2000_burden": 0.0,
+      "sha256": "849bdd57d628e54f2b867b066bb7ad1dea2b62dde50f90f66ed36d15cdc75e91"
+    }
+  },
+  "limitations": [
+    "Clean-only scale-8000 uses synthetic TTS audio only.",
+    "The 3600x figure is exposure count relative to the original 160-item reference, not independent linguistic information.",
+    "Directional batch-32 evaluation is not canonical acceptance evidence.",
+    "No batch-1 canonical evaluation was run."
+  ],
+  "microbatch_probe": {
+    "adapter": {
+      "adapter_name": "sl-si-joint-adapter-v1",
+      "bottleneck_dim": 32,
+      "enabled_adapters": [],
+      "expected_trainable_parameters": 42240,
+      "joint_hidden": 640,
+      "trainable_names": [
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.0.weight",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.0.bias",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.1.weight",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.3.weight"
+      ],
+      "trainable_parameters": 42240
+    },
+    "candidate_outcomes": {
+      "1": {
+        "free_vram_mib_after_warmup": 3402,
+        "gradient_norm": 764.856686,
+        "loss": 265.454956,
+        "peak_allocated_mib": 7346.508,
+        "peak_reserved_mib": 8848.0,
+        "status": "PASSED"
+      },
+      "2": {
+        "error": "CUDA out of memory. Tried to allocate 4.10 GiB. GPU 0 has a total capacity of 10.57 GiB of which 3.18 GiB is free. Including non-PyTorch memory, this process has 7.38 GiB memory in use. Of the allocated memory 7.16 GiB is allocated by PyTor",
+        "error_type": "OutOfMemoryError",
+        "status": "FAILED"
+      },
+      "4": {
+        "error": "CUDA out of memory. Tried to allocate 4.10 GiB. GPU 0 has a total capacity of 10.57 GiB of which 2.93 GiB is free. Including non-PyTorch memory, this process has 7.62 GiB memory in use. Of the allocated memory 7.16 GiB is allocated by PyTor",
+        "error_type": "OutOfMemoryError",
+        "status": "FAILED"
+      },
+      "8": {
+        "error": "CUDA out of memory. Tried to allocate 4.10 GiB. GPU 0 has a total capacity of 10.57 GiB of which 2.49 GiB is free. Including non-PyTorch memory, this process has 8.07 GiB memory in use. Of the allocated memory 7.17 GiB is allocated by PyTor",
+        "error_type": "OutOfMemoryError",
+        "status": "FAILED"
+      }
+    },
+    "correctness": {
+      "finite": true,
+      "gradient_norm": 195.66031,
+      "passed": true,
+      "relative_loss_difference_vs_singletons": 0.0,
+      "singleton_weighted_loss": 138.258057,
+      "weighted_loss": 138.258057
+    },
+    "hardware": {
+      "cuda_visible_devices": "0",
+      "device_name": "NVIDIA GeForce RTX 2080 Ti",
+      "free_vram_mib": 10656,
+      "logical_device": "cuda:0",
+      "physical_selector": "0",
+      "pytorch_cuda": "12.6",
+      "total_vram_mib": 10820,
+      "visible_device_count": 1
+    },
+    "selected": {
+      "effective_batch_size": 8,
+      "gradient_accumulation_steps": 8,
+      "physical_microbatch": 1,
+      "status": "PASSED"
+    },
+    "status": "PASSED"
+  },
+  "model": {
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7"
+  },
+  "repository_commit": "a12ed8989a69dd850fdacb21e29d5fb9c45ff072",
+  "safety": {
+    "accepted_parent": "none",
+    "generated_audio_committed": false,
+    "model_or_adapter_committed": false,
+    "raw_predictions_committed": false,
+    "training_eligible_issued": false
+  },
+  "schema_version": "1.0",
+  "status": "completed in PR; pending strategic review",
+  "training": {
+    "adapter_integrity": {
+      "adapter_tensor_count": 4,
+      "adapter_tensors_changed": [
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.0.bias",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.0.weight",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.1.weight",
+        "joint.adapter_layer.sl-si-joint-adapter-v1.module.3.weight"
+      ],
+      "adapter_tensors_unchanged": [],
+      "only_adapter_tensors_may_change": true
+    },
+    "adapter_norm_curve": [
+      {
+        "adapter_parameter_norm": 44.485286,
+        "round": 1
+      },
+      {
+        "adapter_parameter_norm": 47.436417,
+        "round": 2
+      },
+      {
+        "adapter_parameter_norm": 49.883605,
+        "round": 3
+      },
+      {
+        "adapter_parameter_norm": 51.844504,
+        "round": 4
+      },
+      {
+        "adapter_parameter_norm": 53.978622,
+        "round": 5
+      },
+      {
+        "adapter_parameter_norm": 55.906442,
+        "round": 6
+      },
+      {
+        "adapter_parameter_norm": 57.824955,
+        "round": 7
+      },
+      {
+        "adapter_parameter_norm": 59.614003,
+        "round": 8
+      },
+      {
+        "adapter_parameter_norm": 61.296862,
+        "round": 9
+      }
+    ],
+    "audio_seconds_per_wall_second": 75.617401,
+    "base_integrity": {
+      "base_tensors_identical": true,
+      "changed_pretrained_tensors": [],
+      "missing_pretrained_tensors": [],
+      "unexpected_pretrained_tensors": []
+    },
+    "effective_batch_size": 8,
+    "examples_per_second": 19.064717,
+    "exposure_rounds": 9,
+    "final_anchor_probe_loss": 19.021183,
+    "final_scale_probe_loss": 22.009992,
+    "gpu_monitor": {
+      "fraction_at_or_above_80_percent": 0.004967,
+      "mean_power_watts": 217.377147,
+      "mean_utilization_percent": 46.099243,
+      "median_utilization_percent": 45.0,
+      "p95_power_watts": 246.94,
+      "p95_utilization_percent": 63.0,
+      "peak_memory_mib": 7203.0,
+      "sample_count": 55369
+    },
+    "gradient_accumulation_steps": 8,
+    "gradient_norm": {
+      "final": 22.833769,
+      "max": 322.783256,
+      "min": 3.875925
+    },
+    "initial_anchor_probe_loss": 44.888786,
+    "initial_scale_probe_loss": 51.494,
+    "learning_rate": 0.001,
+    "loss_by_voice": {
+      "piper-sl_SI-artur-medium": 17.419227,
+      "supertonic-F1": 4.316166,
+      "supertonic-F2": 4.54414,
+      "supertonic-F3": 5.431837,
+      "supertonic-F4": 5.027444,
+      "supertonic-M1": 5.201159,
+      "supertonic-M2": 4.745598,
+      "supertonic-M3": 6.411541,
+      "supertonic-M4": 4.414946
+    },
+    "optimizer_steps": 72000,
+    "padding_ratio": 1.000316,
+    "peak_allocated_mib": 6838.545,
+    "peak_reserved_mib": 6978.0,
+    "physical_microbatch": 1,
+    "probe_curve": [
+      {
+        "anchor_probe_loss": 44.888786,
+        "round": 0,
+        "scale_probe_loss": 51.494
+      },
+      {
+        "anchor_probe_loss": 13.023228,
+        "round": 1,
+        "scale_probe_loss": 15.650383
+      },
+      {
+        "anchor_probe_loss": 17.502274,
+        "round": 2,
+        "scale_probe_loss": 21.026991
+      },
+      {
+        "anchor_probe_loss": 18.906929,
+        "round": 3,
+        "scale_probe_loss": 21.512545
+      },
+      {
+        "anchor_probe_loss": 17.981883,
+        "round": 4,
+        "scale_probe_loss": 20.702108
+      },
+      {
+        "anchor_probe_loss": 19.726002,
+        "round": 5,
+        "scale_probe_loss": 22.837251
+      },
+      {
+        "anchor_probe_loss": 17.233871,
+        "round": 6,
+        "scale_probe_loss": 21.079782
+      },
+      {
+        "anchor_probe_loss": 18.152665,
+        "round": 7,
+        "scale_probe_loss": 21.867971
+      },
+      {
+        "anchor_probe_loss": 18.144741,
+        "round": 8,
+        "scale_probe_loss": 21.115448
+      },
+      {
+        "anchor_probe_loss": 19.021183,
+        "round": 9,
+        "scale_probe_loss": 22.009992
+      }
+    ],
+    "restore_integrity": {
+      "artifact_name": "sl-si-joint-adapter-v1",
+      "base_integrity": {
+        "base_tensors_identical": true,
+        "changed_pretrained_tensors": [],
+        "missing_pretrained_tensors": [],
+        "unexpected_pretrained_tensors": []
+      },
+      "disabled_after_restore": true,
+      "status": "PASSED"
+    },
+    "sample_exposures": 576000,
+    "schedule_sha256": "9eadd2cf3c5e450643f3d7a12cc1b6abfb82cbe6dffd38ff186e76168a8cd572",
+    "semantic_rows": 64000,
+    "status": "PASSED",
+    "trainable_parameter_count": 42240,
+    "wall_time_seconds": 30212.879174
+  }
+}

@@ -27,6 +27,7 @@ assert torch.__version__ == "2.7.1+cu126", torch.__version__
 assert torch.version.cuda == "12.6", torch.version.cuda
 assert numba.__version__ == "0.61.2", numba.__version__
 assert llvmlite.__version__ == "0.44.0", llvmlite.__version__
+assert importlib.metadata.version('nvidia-cuda-nvcc-cu12') == "12.9.86"
 assert torch.cuda.is_available()
 assert torch.cuda.device_count() == 1
 assert any(name in torch.cuda.get_device_name(0) for name in ("2080 Ti", "A100"))

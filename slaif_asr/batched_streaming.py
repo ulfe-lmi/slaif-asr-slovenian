@@ -175,12 +175,18 @@ def load_gate_records(path: Path, *, expected_sha256: str, expected_rows: int, g
 
 def resolve_manifest_audio_path(manifest: Path, audio_filepath: str) -> Path:
     path = Path(audio_filepath).expanduser()
-    if path.exists():
-        return path.resolve()
     if path.is_absolute():
+        runs_root = os.environ.get("SLAIF_ASR_RUNS_ROOT")
+        if runs_root and "runs" in path.parts:
+            suffix = Path(*path.parts[path.parts.index("runs") + 1 :])
+            relocated_root = Path(runs_root).expanduser().resolve() / suffix
+            if relocated_root.exists():
+                return relocated_root.resolve()
         relocated = manifest.parent / "audio" / path.name
         if relocated.exists():
             return relocated.resolve()
+    if path.exists():
+        return path.resolve()
     relative = (manifest.parent / path).resolve()
     if relative.exists():
         return relative

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "rtx2080ti-directional-batch32-v1",
+  "policy_type": "directional_only",
+  "canonical": false,
+  "promotion_eligible": false,
+  "batch_size": 32,
+  "duration_bucketing": true,
+  "att_context_size": [56, 3],
+  "target_lang": "sl-SI",
+  "precision": "fp32",
+  "tf32": false,
+  "exact_transcript_parity_required": false,
+  "hardware_target": "NVIDIA GeForce RTX 2080 Ti",
+  "notes": [
+    "Directional RTX 2080 Ti metrics are not canonical acceptance evidence.",
+    "No batch-1 replay is authorized by this policy."
+  ]
+}
