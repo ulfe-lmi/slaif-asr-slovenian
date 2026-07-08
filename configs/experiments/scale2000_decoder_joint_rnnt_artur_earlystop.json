@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "scale2000-decoder-joint-rnnt-artur-earlystop-v1",
+  "work_order_id": "0032",
+  "status": "DIAGNOSTIC_ONLY",
+  "accepted_parent": "none",
+  "base_experiment": "scale2000-decoder-joint-rnnt-directional-v1",
+  "data": {
+    "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+    "semantic_rows": 16000,
+    "view_records": 320000,
+    "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+    "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+    "exposure_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842"
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "target_lang": "sl-SI",
+    "att_context_size": [56, 3]
+  },
+  "training": {
+    "arm": "scale2000_augmented_decoder_joint_rnnt_artur_earlystop",
+    "semantic_rows": 16000,
+    "sample_exposures": 320000,
+    "effective_batch_size": 8,
+    "max_optimizer_steps": 40000,
+    "max_rounds": 20,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "gradient_clipping": "none",
+    "precision": "fp32",
+    "tf32": false,
+    "physical_microbatch_default": 1,
+    "gradient_accumulation": "preserve_effective_batch_8",
+    "objective": "audio_conditioned_rnnt_loss",
+    "trainable_surface": ["decoder.", "joint."],
+    "forbid_text_only_path": true,
+    "retain_per_round_checkpoints": true
+  },
+  "controller_dev": {
+    "partition_id": "artur-controller-dev-v1",
+    "certificate": "docs/data-certificates/artur-controller-dev-v1.json",
+    "manifest": "runs/evaluation-gates/artur-controller-dev-v1/manifest.local.jsonl",
+    "manifest_sha256": "7944cbd82107e4aa8cfd3c5ca991d652e4ec3450ba8805efbc98e7c3aeec34f9",
+    "rows": 256,
+    "policy": "configs/evaluation/artur-controller-dev-batch1-v1.json",
+    "batch_size": 1,
+    "duration_bucketing": false,
+    "allowed_for": "aggregate_run_control_and_early_stopping_only"
+  },
+  "early_stop_rule": {
+    "policy": "configs/run_control/artur-controller-dev-early-stop-v1.json",
+    "min_rounds_before_stop": 3,
+    "patience_rounds": 2,
+    "min_delta_WER_absolute_points": 0.5,
+    "tie_breaker_min_delta_CER_absolute_points": 0.25,
+    "selection": "earliest_checkpoint_within_tolerance_of_best",
+    "human_runtime_override": {
+      "applied": true,
+      "reason": "Continue from the best checkpoint and stop after no improvement in the best controller-dev checkpoint for three further evaluated rounds.",
+      "operational_stop_rule": "stop_after_three_evaluated_rounds_without_new_raw_best_controller_dev_wer",
+      "patience_rounds_without_new_raw_best": 3
+    }
+  },
+  "post_selection_directional": {
+    "policy": "configs/evaluation/a100-directional-batch32-v1.json",
+    "batch_size": 32,
+    "duration_bucketing": true,
+    "canonical": false,
+    "promotion_eligible": false,
+    "target_lang": "sl-SI",
+    "att_context_size": [56, 3],
+    "suite_rows": 1378
+  },
+  "local_outputs": {
+    "run_root": "runs/scale2000-decoder-joint-artur-earlystop"
+  }
+}
