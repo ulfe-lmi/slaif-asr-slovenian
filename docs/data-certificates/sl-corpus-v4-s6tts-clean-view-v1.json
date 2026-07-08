@@ -1,22 +1,107 @@
 {
-  "actual_clean_files": 14528,
+  "actual_clean_files": 16000,
   "allowed_uses": [
     "internal synthetic diagnostic audio",
     "future training only by explicit work order",
     "aggregate reporting"
   ],
-  "audio_manifest_sha256": "62e309cd576ee83ec323c8b9a76e7f06abb0310a5334af4a3d91b9a9e80c6e11",
+  "audio_manifest_sha256": "355a85134e81d9e3ea4089ea9a941f62fb101902b4e151c394eaaf1d1de416d5",
   "certificate_id": "sl-corpus-v4-s6tts-clean-view-v1",
   "channels": 1,
   "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
   "duplicate_audio_hash_count": 3,
+  "duplicate_audio_hash_groups_redacted": {
+    "duplicate_extra_file_count": 3,
+    "duplicate_group_count": 3,
+    "groups": [
+      {
+        "audio_sha256": "0ae7560cbdbd3ecb3750d57010277ec855a95b595147ec728e59c2e73123cd1b",
+        "count": 2,
+        "rows": [
+          {
+            "chars": 31,
+            "duration_seconds": 2.94525,
+            "frames": 47124,
+            "peak_ratio": 0.711731,
+            "row_index": 6084,
+            "safe_key": "s6tts-scale2000-06084",
+            "text_sha256": "08b47f889caf3aca73de3638e16ae3e3ff6cd73bb8733759b954c26ca403dbf6",
+            "utf8_bytes": 32
+          },
+          {
+            "chars": 33,
+            "duration_seconds": 2.94525,
+            "frames": 47124,
+            "peak_ratio": 0.711731,
+            "row_index": 6192,
+            "safe_key": "s6tts-scale2000-06192",
+            "text_sha256": "63d9ea984897262248c42e46f19d6d5f063f4f9ec14278ef072d6815c8543678",
+            "utf8_bytes": 34
+          }
+        ]
+      },
+      {
+        "audio_sha256": "6c3cf12f9fa7dfe7491a11cd4064778d1b9f7cf9bf8ed2234380208d00487f83",
+        "count": 2,
+        "rows": [
+          {
+            "chars": 31,
+            "duration_seconds": 3.314,
+            "frames": 53024,
+            "peak_ratio": 0.720734,
+            "row_index": 6182,
+            "safe_key": "s6tts-scale2000-06182",
+            "text_sha256": "722a9adb205e3be477f890149c5f924bb8dd0526f67d9856d7d5ec12f8e48617",
+            "utf8_bytes": 31
+          },
+          {
+            "chars": 39,
+            "duration_seconds": 3.314,
+            "frames": 53024,
+            "peak_ratio": 0.720734,
+            "row_index": 6210,
+            "safe_key": "s6tts-scale2000-06210",
+            "text_sha256": "ea2e61052017d5edd45ef960b929f70c7e4a920311cab1156c33ef21d127b4e7",
+            "utf8_bytes": 40
+          }
+        ]
+      },
+      {
+        "audio_sha256": "df35ad734e2607cc80c3b0d7c5eb1f5435fbf4441417c6cd06a964ee7c4b6d26",
+        "count": 2,
+        "rows": [
+          {
+            "chars": 27,
+            "duration_seconds": 2.464375,
+            "frames": 39430,
+            "peak_ratio": 0.711731,
+            "row_index": 6010,
+            "safe_key": "s6tts-scale2000-06010",
+            "text_sha256": "09b234521a70c4c03fafccafe611b62ee467911b22918f11cf7c14a3f833ae02",
+            "utf8_bytes": 27
+          },
+          {
+            "chars": 25,
+            "duration_seconds": 2.464375,
+            "frames": 39430,
+            "peak_ratio": 0.711731,
+            "row_index": 6014,
+            "safe_key": "s6tts-scale2000-06014",
+            "text_sha256": "fefd988717d8c24ce07f769fe21f5382b7a4cad1eaf68883fa3b0157fbe23c6c",
+            "utf8_bytes": 25
+          }
+        ]
+      }
+    ],
+    "schema_version": "1.0"
+  },
   "duplicate_path_count": 0,
   "duration_distribution": {
     "max": 23.555375,
-    "mean": 4.183237,
+    "mean": 4.262118,
     "min": 1.161812,
-    "p50": 3.84375,
-    "p95": 7.444375
+    "p50": 3.896438,
+    "p95": 7.662312
   },
   "expected_clean_files": 16000,
   "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
@@ -27,31 +112,9 @@
     "checkpoint acceptance",
     "real-gate acceptance evidence"
   ],
-  "representative_failure_reproduction": {
-    "argv_template": [
-      "s6cli",
-      "--ini",
-      "data/sl-si-s6/sint.ini",
-      "--text",
-      "<RAW_TEXT>",
-      "-o",
-      "row_00001.fail.wav"
-    ],
-    "expected_result": "exit status 1, no stdout/stderr, no WAV",
-    "raw_text_committed": false,
-    "row_index": 1,
-    "safe_key": "s6tts-scale2000-00001",
-    "s6tts_revision": "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6",
-    "standalone_reproduction_bundle": "retained locally under ignored run storage",
-    "text_length_chars": 21,
-    "text_length_utf8_bytes": 21,
-    "text_sha256": "ef112110a8a2dbee814ae2f9452928f3934cbac326d6f62b6f5ac8eb4381d3c5"
-  },
   "generated_audio_committed": false,
   "issues_by_reason": {
-    "duplicate_audio_hashes": 3,
-    "row_count_mismatch": 1472,
-    "synthesis_failure:RuntimeError": 1472
+    "duplicate_audio_hashes": 3
   },
   "limitations": [
     "S6TTS voice/runtime provenance is treated as internal diagnostic pending release review.",
@@ -60,7 +123,7 @@
   "local_manifest_committed": false,
   "peak_distribution": {
     "max": 0.733093,
-    "mean": 0.700989,
+    "mean": 0.701291,
     "min": 0.197784,
     "p50": 0.719879,
     "p95": 0.724609
@@ -68,7 +131,7 @@
   "prohibited_statuses": [
     "TRAINING_ELIGIBLE"
   ],
-  "provenance_manifest_sha256": "432fafde49a29ac9854f373c24816562413ab9d5088708079123c4b26dd8599b",
+  "provenance_manifest_sha256": "025eed3448a2c35c019534cae8b1a0e772969b2a667adf50acac4e30d48fe134",
   "s6tts_provenance_certificate": "s6tts-lab-provenance-v1",
   "s6tts_runtime_data_file_count": 20,
   "s6tts_runtime_data_hash": "2e71b1ed2df53b7959fa748d9cd1366478895202a874d884ed3986abb581e6dc",
@@ -77,11 +140,11 @@
   "schema_version": "1.0",
   "semantic_rows": 16000,
   "status": "S6TTS_REJECTED_SYNTHESIS_QUALITY",
-  "synthesis_failure_count": 1472,
-  "total_duration_seconds": 60774.060757,
+  "synthesis_failure_count": 0,
+  "total_duration_seconds": 68193.891926,
   "tts_engine": "s6tts",
   "tts_engine_repository": "ulfe-lmi/s6tts",
-  "tts_engine_revision": "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6",
+  "tts_engine_revision": "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c",
   "view_id": "sl-corpus-v4-s6tts-clean-view-v1",
   "voice_label": "s6tts-sl-si-s6-vintage"
 }

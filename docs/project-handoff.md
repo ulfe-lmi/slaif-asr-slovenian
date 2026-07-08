@@ -142,7 +142,7 @@
 - Selected initial TTS voice: `rhasspy/piper-voices` `sl_SI-artur-medium`.
 - Additional governed TTS candidate under Work Order 0034: external lab-origin
   `ulfe-lmi/s6tts` at pinned revision
-  `b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6`, voice label
+  `6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c`, voice label
   `s6tts-sl-si-s6-vintage`. S6TTS output is internal synthetic diagnostic
   audio only; public audio/model release is not authorized.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.

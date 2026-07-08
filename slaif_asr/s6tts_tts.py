@@ -17,7 +17,7 @@ from slaif_asr.tts import WavInfo, atomic_write_json, atomic_write_text, sha256_
 
 CONFIG_PATH = REPO_ROOT / "configs" / "tts" / "s6tts_sl_si_vintage_v1.json"
 PINNED_REPOSITORY = "ulfe-lmi/s6tts"
-PINNED_REVISION = "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6"
+PINNED_REVISION = "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c"
 TTS_ID = "s6tts-sl-si-vintage-v1"
 VIEW_ID = "sl-corpus-v4-s6tts-clean-view-v1"
 VOICE_LABEL = "s6tts-sl-si-s6-vintage"
@@ -413,13 +413,21 @@ def write_public_evidence(summary: dict[str, Any], *, report_json: Path, report_
     validate_public_payload(summary)
     atomic_write_json(certificate_json, summary)
     atomic_write_json(report_json, summary)
+    if summary["status"] == "S6TTS_SCALE2000_CLEAN_VIEW_AUDIO_ACCEPTED":
+        status_sentence = (
+            "This report admits one internal diagnostic S6TTS clean synthetic voice view for the fixed scale-2000 text corpus."
+        )
+    else:
+        status_sentence = (
+            "This report records a failed internal diagnostic S6TTS clean synthetic voice-view admission attempt for the fixed scale-2000 text corpus."
+        )
     md = "\n".join(
         [
             "# S6TTS Vintage Clean-View Admission",
             "",
             f"Classification: `{summary['status']}`",
             "",
-            "This report admits one internal diagnostic S6TTS clean synthetic voice view for the fixed scale-2000 text corpus. It does not authorize model training, public audio release, checkpoint acceptance, or `TRAINING_ELIGIBLE` status.",
+            f"{status_sentence} It does not authorize model training, public audio release, checkpoint acceptance, or `TRAINING_ELIGIBLE` status.",
             "",
             "## Identity",
             "",

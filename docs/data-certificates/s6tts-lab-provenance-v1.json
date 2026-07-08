@@ -3,7 +3,7 @@
   "certificate_id": "s6tts-lab-provenance-v1",
   "engine_name": "s6tts",
   "repository": "ulfe-lmi/s6tts",
-  "pinned_revision": "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6",
+  "pinned_revision": "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c",
   "voice_id": "sl-si-s6",
   "voice_label": "s6tts-sl-si-s6-vintage",
   "claimed_origin": {

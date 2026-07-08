@@ -10,7 +10,11 @@ additional clean synthetic voice view of the existing scale-2000 text corpus.
 ## Scope
 
 - Pin `ulfe-lmi/s6tts` to
-  `b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6`.
+  `6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c`.
+  The original work order named
+  `b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6`; the human lead explicitly
+  authorized updating to the fixed S6TTS revision after the missing-diphone
+  bug fix landed upstream.
 - Build `s6cli` locally under ignored `.external/s6tts`.
 - Synthesize one clean S6TTS view for the fixed 16,000-row scale-2000 text
   corpus when local runtime data is available.
