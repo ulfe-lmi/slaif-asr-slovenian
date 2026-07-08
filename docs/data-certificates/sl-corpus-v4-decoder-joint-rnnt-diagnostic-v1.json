@@ -1,0 +1,29 @@
+{
+  "accepted_parent": "none",
+  "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+  "certificate_id": "sl-corpus-v4-decoder-joint-rnnt-diagnostic-v1",
+  "classification": "DECODER_JOINT_RNNT_BEATS_SCALE2000_DIRECTIONAL",
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "decoder_parameter_count": 14940160,
+  "directional_batch_size": 32,
+  "effective_batch_size": 8,
+  "encoder_and_prompt_unchanged": true,
+  "exposure_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842",
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "gradient_accumulation_steps": 8,
+  "joint_parameter_count": 9455648,
+  "optimizer_steps": 40000,
+  "prohibited_actions": [
+    "TRAINING_ELIGIBLE",
+    "model publication",
+    "checkpoint acceptance",
+    "text-only objective",
+    "temporary LM head"
+  ],
+  "schema_version": "1.0",
+  "selected_physical_microbatch": 1,
+  "status": "DIAGNOSTIC_ONLY",
+  "trainable_parameter_count": 24395808,
+  "training_arm": "scale2000_augmented_decoder_joint_rnnt",
+  "work_order_id": "0030"
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -51,6 +52,28 @@ def repo_path(path_text: str | Path) -> Path:
     if path.is_absolute():
         return path
     return REPO_ROOT / path
+
+
+def resolve_local_run_artifact(path_text: str | Path) -> Path:
+    path = Path(path_text).expanduser()
+    if path.exists():
+        return path.resolve()
+    parts = path.parts
+    if "runs" not in parts:
+        raise FileNotFoundError(path_text)
+    index = parts.index("runs")
+    suffix = Path(*parts[index:])
+    roots = [
+        Path(item).expanduser()
+        for item in [os.environ.get("SLAIF_ASR_RUNS_ROOT", ""), *os.environ.get("SLAIF_ASR_EXTRA_RUNS_ROOTS", "").split(os.pathsep)]
+        if item
+    ]
+    candidates = [root / Path(*parts[index + 1 :]) for root in roots]
+    candidates.append(REPO_ROOT / suffix)
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate.resolve()
+    raise FileNotFoundError(path_text)
 
 
 def git_blob_sha(path: Path) -> str:
@@ -152,7 +175,7 @@ def load_supertonic_heldout_records(config: dict[str, Any]) -> list[StreamingRec
             raise RuntimeError("training voice leaked into Supertonic held-out evaluation")
         source_key = str(row["source_key"])
         item = holdout_text[source_key]
-        path = Path(str(row["audio_filepath"]))
+        path = resolve_local_run_artifact(str(row["audio_filepath"]))
         validate_wav(path, sample_rate=16000)
         if file_sha256(path) != str(row["audio_sha256"]):
             raise RuntimeError("Supertonic held-out audio hash mismatch")
