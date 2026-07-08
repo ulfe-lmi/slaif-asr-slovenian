@@ -18,11 +18,14 @@ from slaif_asr.artur_earlystop import (
     assert_no_raw_report_material,
     classify_artur_earlystop,
     concurrent_gpu_contract,
+    load_controller_dev_records,
     redacted_checkpoint_row,
     select_round,
     validate_agents_controller_dev_exception,
     validate_earlystop_config,
 )
+from slaif_asr.batched_streaming import load_local_predictions, metrics_for, run_batched_arm
+from slaif_asr.corpus_v2_scoring import nemo_streaming_script, runtime_environment
 from slaif_asr.batched_streaming import file_sha256
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.data_quality import atomic_write_json, atomic_write_text
@@ -164,6 +167,105 @@ def stage_train(config_path: Path, progress_interval_seconds: float) -> dict[str
         for row in source.get("rounds", []):
             rows.append({**row, "artur_controller_dev_wer": None, "artur_controller_dev_cer": None, "empty_count": None, "delete": None, "insert": None, "substitute": None})
         atomic_write_json(target, {"rounds": rows, "controller_dev_status": "NOT_RUN_PENDING_BATCH1_EVALUATION"})
+    return payload
+
+
+def _controller_metric_row(metrics: dict[str, Any]) -> dict[str, Any]:
+    normalized = metrics["normalized"]
+    raw = metrics["raw"]
+    return {
+        "wer": round(float(normalized["corpus_wer"]), 3),
+        "cer": round(float(normalized["corpus_cer"]), 3),
+        "empty": int(raw["empty_hypothesis_count"]),
+        "delete": round(float(normalized.get("delete_rate", normalized.get("deletion_rate", 0.0))), 6),
+        "insert": round(float(normalized.get("insert_rate", normalized.get("insertion_rate", 0.0))), 6),
+        "substitute": round(float(normalized.get("substitute_rate", normalized.get("substitution_rate", 0.0))), 6),
+    }
+
+
+def stage_evaluate_controller_dev(config_path: Path, *, validation_gpu: str) -> dict[str, Any]:
+    config = load_config(config_path)
+    manifest = local_path(config["controller_dev"]["manifest"])
+    records = load_controller_dev_records(
+        manifest,
+        expected_sha256=config["controller_dev"]["manifest_sha256"],
+        expected_rows=int(config["controller_dev"]["rows"]),
+    )
+    arm_root = run_root(config) / "scale2000_augmented_decoder_joint_rnnt"
+    checkpoint_root = arm_root / "checkpoints"
+    checkpoints = []
+    for round_index in range(0, int(config["training"]["max_rounds"]) + 1):
+        checkpoint = checkpoint_root / f"round_{round_index:02d}" / "model.local.nemo"
+        if checkpoint.exists():
+            checkpoints.append((round_index, checkpoint))
+    if not checkpoints:
+        raise RuntimeError("no retained round checkpoints found")
+    env = runtime_environment()
+    env["CUDA_VISIBLE_DEVICES"] = validation_gpu
+    env["NVIDIA_TF32_OVERRIDE"] = "0"
+    env["PYTHONUNBUFFERED"] = "1"
+    rows = []
+    for round_index, checkpoint in checkpoints:
+        output_dir = run_root(config) / "controller-dev" / f"round_{round_index:02d}"
+        arm = run_batched_arm(
+            records=records,
+            batch_size=1,
+            bucketed=False,
+            run_dir=output_dir,
+            python_executable=Path(sys.executable),
+            nemo_script=nemo_streaming_script(),
+            checkpoint=checkpoint,
+            context=config["model"]["att_context_size"],
+            env=env,
+            physical_gpu_index=validation_gpu,
+            monitor_interval_seconds=1.0,
+        )
+        if arm.get("status") != "PASSED":
+            raise RuntimeError(f"controller-dev evaluation failed at round {round_index}: {arm.get('status')}")
+        predictions = load_local_predictions(output_dir / "predictions.local.jsonl")
+        metrics = metrics_for(records, predictions)
+        row = {
+            "round": round_index,
+            "checkpoint_sha256": file_sha256(checkpoint),
+            "available": True,
+            **_controller_metric_row(metrics),
+            "artur_controller_dev_wer": _controller_metric_row(metrics)["wer"],
+            "artur_controller_dev_cer": _controller_metric_row(metrics)["cer"],
+            "empty_count": _controller_metric_row(metrics)["empty"],
+            "wall_time_seconds": arm["execution"]["wall_time_seconds"],
+            "rows_per_second": arm["utterances_per_second"],
+            "real_time_factor": arm["end_to_end_real_time_factor"],
+            "peak_validation_gpu_memory_mib": arm["execution"]["monitor"].get("peak_memory_mib"),
+        }
+        marker = checkpoint.parent / "checkpoint-complete.local.json"
+        if marker.exists():
+            marker_payload = read_json(marker)
+            row.update(
+                {
+                    "optimizer_step": int(marker_payload.get("optimizer_step", 0)),
+                    "exposures_seen": int(marker_payload.get("exposures_seen", 0)),
+                    "train_loss": marker_payload.get("train_loss"),
+                    "synthetic_anchor_probe_loss": marker_payload.get("synthetic_anchor_probe_loss"),
+                    "synthetic_scale_probe_loss": marker_payload.get("synthetic_scale_probe_loss"),
+                }
+            )
+        rows.append(row)
+        atomic_write_json(run_root(config) / "controller-dev" / "round-metrics.local.json", {"rounds": rows, "controller_dev_status": "PARTIAL" if len(rows) < len(checkpoints) else "PASSED"})
+        print(json.dumps({"status": "PASSED", "round": round_index, "wer": row["wer"], "cer": row["cer"], "empty": row["empty"]}, ensure_ascii=False, sort_keys=True), flush=True)
+    base_empty = int(next(row for row in rows if row["round"] == 0)["empty"])
+    selected = select_round(rows, base_empty_count=base_empty)
+    for row in rows:
+        row["selected_by_rule"] = selected is not None and int(row["round"]) == int(selected["round"])
+    payload = {
+        "status": "PASSED",
+        "partition_id": config["controller_dev"]["partition_id"],
+        "rows": rows,
+        "selected_round": int(selected["round"]) if selected else None,
+        "base_empty_count": base_empty,
+        "checkpoint_count": len(checkpoints),
+    }
+    atomic_write_json(run_root(config) / "controller-dev" / "round-metrics.local.json", payload)
+    print(json.dumps({"status": "PASSED", "selected_round": payload["selected_round"], "checkpoint_count": len(checkpoints)}, ensure_ascii=False, sort_keys=True))
     return payload
 
 
@@ -398,7 +500,7 @@ def _write_md(report: dict[str, Any], path: Path) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=str(DEFAULT_CONFIG))
-    parser.add_argument("--stage", required=True, choices=["verify-inputs", "probe-run-control", "probe-microbatch", "train", "summarize"])
+    parser.add_argument("--stage", required=True, choices=["verify-inputs", "probe-run-control", "probe-microbatch", "train", "evaluate-controller-dev", "summarize"])
     parser.add_argument("--progress-interval-seconds", type=float, default=10.0)
     parser.add_argument("--training-gpu", default=os.environ.get("SLAIF_TRAINING_GPU", "0"))
     parser.add_argument("--validation-gpu", default=os.environ.get("SLAIF_VALIDATION_GPU", "1"))
@@ -417,6 +519,8 @@ def main() -> int:
         stage_probe_microbatch(config_path, args.progress_interval_seconds)
     elif args.stage == "train":
         stage_train(config_path, args.progress_interval_seconds)
+    elif args.stage == "evaluate-controller-dev":
+        stage_evaluate_controller_dev(config_path, validation_gpu=args.validation_gpu)
     elif args.stage == "summarize":
         stage_summarize(config_path)
     return 0
