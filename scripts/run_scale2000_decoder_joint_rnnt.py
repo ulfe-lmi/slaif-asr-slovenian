@@ -262,12 +262,18 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
     correctness = None
     if selected["status"] == "PASSED":
         physical = int(selected["physical_microbatch"])
-        seed_torch(torch, int(config["training"]["seed"]) + 3000)
-        correctness = _accumulated_probe(model, prompt.prompt_index, records, physical_microbatch=physical, torch=torch)
-        seed_torch(torch, int(config["training"]["seed"]) + 3000)
-        singleton = _accumulated_probe(model, prompt.prompt_index, records, physical_microbatch=1, torch=torch)
-        rel = abs(correctness["weighted_loss"] - singleton["weighted_loss"]) / singleton["weighted_loss"] if singleton["weighted_loss"] else 0.0
-        correctness.update({"singleton_weighted_loss": singleton["weighted_loss"], "relative_loss_difference_vs_singletons": round(rel, 8), "passed": rel <= 0.005})
+        was_training = bool(getattr(model, "training", False))
+        model.eval()
+        try:
+            seed_torch(torch, int(config["training"]["seed"]) + 3000)
+            correctness = _accumulated_probe(model, prompt.prompt_index, records, physical_microbatch=physical, torch=torch)
+            seed_torch(torch, int(config["training"]["seed"]) + 3000)
+            singleton = _accumulated_probe(model, prompt.prompt_index, records, physical_microbatch=1, torch=torch)
+            rel = abs(correctness["weighted_loss"] - singleton["weighted_loss"]) / singleton["weighted_loss"] if singleton["weighted_loss"] else 0.0
+            correctness.update({"singleton_weighted_loss": singleton["weighted_loss"], "relative_loss_difference_vs_singletons": round(rel, 8), "passed": rel <= 0.005, "model_mode": "eval"})
+        finally:
+            if was_training:
+                model.train()
     payload = {
         "status": selected["status"],
         "hardware": hardware.to_dict(),
