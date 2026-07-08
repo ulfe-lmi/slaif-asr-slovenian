@@ -438,6 +438,168 @@
     "initial_anchor_probe_loss": 56.371024,
     "initial_scale_probe_loss": 53.587624,
     "learning_rate": 0.001,
+    "loss_history": {
+      "column_definitions": {
+        "anchor_probe_loss": "No-optimizer RNNT loss on the fixed 32-row inherited synthetic anchor probe after the round.",
+        "last_rolling_training_loss": "Final rolling mean training loss reported near the end of that round by the live progress reporter.",
+        "round": "Exposure round, equivalent to the training epoch index for this schedule. Round 0 is the pre-training probe before optimizer updates.",
+        "sampled_training_loss_mean": "Mean of privacy-safe sampled current RNNT training-loss events emitted by the live progress reporter during that round. It is not a full-corpus train loss.",
+        "scale_probe_loss": "No-optimizer RNNT loss on the fixed 320-row deterministic synthetic scale probe after the round."
+      },
+      "data_scope": "All probes use synthetic scale-2000 training data only. Real gates were not used for training, probing, early stopping, or steering.",
+      "final_probe_note": "The scalar final probe fields in this report were recorded by a separate final probe pass: anchor 12.483167, scale 13.510591. The curve rows above are the per-round probe history.",
+      "privacy": "All rows are aggregate losses. No raw text, target strings, model output strings, row IDs, or audio paths are included.",
+      "rows": [
+        {
+          "anchor_probe_loss": 56.371024,
+          "last_rolling_training_loss": null,
+          "round": 0,
+          "sampled_training_loss_mean": null,
+          "scale_probe_loss": 53.587624
+        },
+        {
+          "anchor_probe_loss": 12.763065,
+          "last_rolling_training_loss": 17.053941,
+          "round": 1,
+          "sampled_training_loss_mean": 11.783467,
+          "scale_probe_loss": 14.51232
+        },
+        {
+          "anchor_probe_loss": 17.815314,
+          "last_rolling_training_loss": 6.453925,
+          "round": 2,
+          "sampled_training_loss_mean": 4.435306,
+          "scale_probe_loss": 18.725917
+        },
+        {
+          "anchor_probe_loss": 15.379771,
+          "last_rolling_training_loss": 6.034154,
+          "round": 3,
+          "sampled_training_loss_mean": 3.354649,
+          "scale_probe_loss": 20.171593
+        },
+        {
+          "anchor_probe_loss": 21.447982,
+          "last_rolling_training_loss": 7.208736,
+          "round": 4,
+          "sampled_training_loss_mean": 4.761063,
+          "scale_probe_loss": 19.017373
+        },
+        {
+          "anchor_probe_loss": 15.323834,
+          "last_rolling_training_loss": 6.016095,
+          "round": 5,
+          "sampled_training_loss_mean": 4.380733,
+          "scale_probe_loss": 19.838635
+        },
+        {
+          "anchor_probe_loss": 15.458512,
+          "last_rolling_training_loss": 4.869731,
+          "round": 6,
+          "sampled_training_loss_mean": 2.86999,
+          "scale_probe_loss": 20.396806
+        },
+        {
+          "anchor_probe_loss": 15.295158,
+          "last_rolling_training_loss": 6.05621,
+          "round": 7,
+          "sampled_training_loss_mean": 3.548117,
+          "scale_probe_loss": 22.006537
+        },
+        {
+          "anchor_probe_loss": 20.546945,
+          "last_rolling_training_loss": 5.24239,
+          "round": 8,
+          "sampled_training_loss_mean": 3.384298,
+          "scale_probe_loss": 20.269093
+        },
+        {
+          "anchor_probe_loss": 17.912642,
+          "last_rolling_training_loss": 6.638689,
+          "round": 9,
+          "sampled_training_loss_mean": 3.91471,
+          "scale_probe_loss": 19.746135
+        },
+        {
+          "anchor_probe_loss": 13.529069,
+          "last_rolling_training_loss": 6.920688,
+          "round": 10,
+          "sampled_training_loss_mean": 3.95241,
+          "scale_probe_loss": 15.139419
+        },
+        {
+          "anchor_probe_loss": 14.795531,
+          "last_rolling_training_loss": 5.591946,
+          "round": 11,
+          "sampled_training_loss_mean": 4.440331,
+          "scale_probe_loss": 16.675765
+        },
+        {
+          "anchor_probe_loss": 15.027045,
+          "last_rolling_training_loss": 4.729253,
+          "round": 12,
+          "sampled_training_loss_mean": 3.86704,
+          "scale_probe_loss": 14.983512
+        },
+        {
+          "anchor_probe_loss": 13.097276,
+          "last_rolling_training_loss": 9.218785,
+          "round": 13,
+          "sampled_training_loss_mean": 4.813731,
+          "scale_probe_loss": 15.444951
+        },
+        {
+          "anchor_probe_loss": 12.480814,
+          "last_rolling_training_loss": 5.039987,
+          "round": 14,
+          "sampled_training_loss_mean": 3.41133,
+          "scale_probe_loss": 14.297896
+        },
+        {
+          "anchor_probe_loss": 11.193043,
+          "last_rolling_training_loss": 7.294305,
+          "round": 15,
+          "sampled_training_loss_mean": 3.800282,
+          "scale_probe_loss": 14.967169
+        },
+        {
+          "anchor_probe_loss": 12.745133,
+          "last_rolling_training_loss": 5.117029,
+          "round": 16,
+          "sampled_training_loss_mean": 3.138924,
+          "scale_probe_loss": 14.600564
+        },
+        {
+          "anchor_probe_loss": 12.291492,
+          "last_rolling_training_loss": 5.982534,
+          "round": 17,
+          "sampled_training_loss_mean": 3.700003,
+          "scale_probe_loss": 15.980405
+        },
+        {
+          "anchor_probe_loss": 11.887834,
+          "last_rolling_training_loss": 5.730756,
+          "round": 18,
+          "sampled_training_loss_mean": 3.227766,
+          "scale_probe_loss": 14.485165
+        },
+        {
+          "anchor_probe_loss": 11.447855,
+          "last_rolling_training_loss": 5.893649,
+          "round": 19,
+          "sampled_training_loss_mean": 2.885866,
+          "scale_probe_loss": 14.806939
+        },
+        {
+          "anchor_probe_loss": 11.249896,
+          "last_rolling_training_loss": 7.069312,
+          "round": 20,
+          "sampled_training_loss_mean": 4.431061,
+          "scale_probe_loss": 12.896747
+        }
+      ],
+      "units": "RNNT loss; lower is better"
+    },
     "optimizer_scope": {
       "all_decoder_or_joint": true,
       "contains_adapter": false,
