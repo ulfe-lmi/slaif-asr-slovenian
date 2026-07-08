@@ -359,6 +359,8 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     initial_anchor = mean_loss(model, prompt.prompt_index, anchor_probe, torch=torch, reporter=reporter, message="initial_anchor_probe", interval_seconds=interval)
     initial_scale = mean_loss(model, prompt.prompt_index, scale_probe, torch=torch, reporter=reporter, message="initial_scale_probe", interval_seconds=interval)
     probe_curve = [{"round": 0, "anchor_probe_loss": round(initial_anchor, 6), "scale_probe_loss": round(initial_scale, 6)}]
+    retain_round_checkpoints = os.environ.get("SLAIF_RETAIN_ROUND_CHECKPOINTS") == "1"
+    round_checkpoint_rows: list[dict[str, Any]] = []
     decoder_joint_norm_curve: list[dict[str, Any]] = []
     grad_norms: list[float] = []
     optimizer_steps = 0
@@ -375,6 +377,24 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     torch.cuda.reset_peak_memory_stats(0)
     started = time.perf_counter()
     last_progress = started
+    if retain_round_checkpoints:
+        base_checkpoint_dir = arm_dir / "checkpoints" / "round_00_base"
+        base_checkpoint = base_checkpoint_dir / "model.local.nemo"
+        base_checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        model.save_to(str(base_checkpoint))
+        round_checkpoint_rows.append(
+            {
+                "round": 0,
+                "checkpoint_sha256": file_sha256(base_checkpoint),
+                "optimizer_step": 0,
+                "exposures_seen": 0,
+                "train_loss": None,
+                "synthetic_anchor_probe_loss": round(initial_anchor, 6),
+                "synthetic_scale_probe_loss": round(initial_scale, 6),
+                "available": True,
+            }
+        )
+        write_json(base_checkpoint_dir / "checkpoint-complete.local.json", round_checkpoint_rows[-1])
     monitor.start()
     try:
         total_steps = int(config["training"]["optimizer_steps"])
@@ -455,6 +475,24 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
             decoder_norm = sum(float(torch.linalg.vector_norm(parameter.detach()).cpu()) for name, parameter in model.named_parameters() if name.startswith("decoder."))
             joint_norm = sum(float(torch.linalg.vector_norm(parameter.detach()).cpu()) for name, parameter in model.named_parameters() if name.startswith("joint."))
             decoder_joint_norm_curve.append({"round": round_index, "decoder_norm": round(decoder_norm, 6), "joint_norm": round(joint_norm, 6)})
+            if retain_round_checkpoints:
+                checkpoint_dir = arm_dir / "checkpoints" / f"round_{round_index:02d}"
+                checkpoint_dir.mkdir(parents=True, exist_ok=True)
+                checkpoint = checkpoint_dir / "model.local.nemo"
+                model.save_to(str(checkpoint))
+                row = {
+                    "round": round_index,
+                    "checkpoint_sha256": file_sha256(checkpoint),
+                    "optimizer_step": optimizer_steps,
+                    "exposures_seen": sample_exposures,
+                    "train_loss": round(sum(rolling_losses) / len(rolling_losses), 6) if rolling_losses else None,
+                    "synthetic_anchor_probe_loss": round(anchor_loss, 6),
+                    "synthetic_scale_probe_loss": round(scale_loss, 6),
+                    "available": True,
+                }
+                round_checkpoint_rows.append(row)
+                write_json(checkpoint_dir / "checkpoint-complete.local.json", row)
+                write_json(arm_dir / "controller-dev" / "round-checkpoints.local.json", {"rounds": round_checkpoint_rows})
     except Exception as exc:
         reporter.failed(message="training failed", error_type=type(exc).__name__)
         raise
@@ -508,6 +546,8 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
         "microbatch_plan": plan,
         "runtime": runtime_summary(hardware, torch),
         "runtime_identities": runtime_id,
+        "round_checkpoints_retained": retain_round_checkpoints,
+        "round_checkpoint_count": len(round_checkpoint_rows),
     }
     write_json(arm_dir / "training-summary.local.json", payload)
     reporter.complete("training complete", step=optimizer_steps, total_steps=int(config["training"]["optimizer_steps"]))

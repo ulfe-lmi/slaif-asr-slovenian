@@ -118,7 +118,11 @@ The repository will not own:
    - Synthetic improvement alone is insufficient.
    - Real Slovenian acoustic data is validation-only and must not be used for
      training, synthetic prompt construction, selected-training membership,
-     early stopping, or per-sample steering.
+     early stopping, or per-sample steering, except that
+     `artur-controller-dev-v1` may be used for aggregate run-control and early
+     stopping only when ADR 0008 and an explicit work order authorize it.
+     Immutable gates and final blind tests remain unavailable for early
+     stopping or selection.
 8. **Skipped is not passed.**
    - Every report distinguishes passed, failed, skipped, not run, blocked, and out of scope.
 9. **No performance claim without a committed protocol.**

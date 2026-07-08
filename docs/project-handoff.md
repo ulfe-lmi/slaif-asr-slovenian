@@ -228,6 +228,13 @@ not a benchmark and does not start training.
 
 ## Next recommended task
 
+ADR 0008 now permits `artur-controller-dev-v1` for aggregate real-acoustic
+run-control and early stopping only when an explicit work order authorizes it.
+Work Order 0032 applies that exception to a scale-2000 decoder+joint RNNT rerun
+with per-round ignored checkpoints. FLEURS-v2, ARTUR-J immutable gate data, and
+any final blind test remain unavailable for early stopping, checkpoint
+selection, hyperparameter selection, prompt construction, or training.
+
 Do not prepare another prompt-column training rerun from the current
 single-voice corpus as if it were promotion-eligible. The next useful
 development work is governed synthetic-scale data construction followed by
