@@ -140,6 +140,11 @@
   [`gams-generation-bf16-debugging.md`](reviews/gams-generation-bf16-debugging.md).
 - Selected initial TTS engine: external `OHF-Voice/piper1-gpl`.
 - Selected initial TTS voice: `rhasspy/piper-voices` `sl_SI-artur-medium`.
+- Additional governed TTS candidate under Work Order 0034: external lab-origin
+  `ulfe-lmi/s6tts` at pinned revision
+  `b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6`, voice label
+  `s6tts-sl-si-s6-vintage`. S6TTS output is internal synthetic diagnostic
+  audio only; public audio/model release is not authorized.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

@@ -141,6 +141,13 @@ and publication policy.
 Generated Piper audio is local/internal synthetic material in M2. It must not
 be committed, published, or labeled as real speech or Apache-2.0 content.
 
+S6TTS may be used as an additional external local synthetic TTS candidate only
+under an explicit work order. Its lab-origin source/runtime provenance must be
+recorded separately from Piper and Supertonic provenance. Generated S6TTS audio
+is synthetic diagnostic material, must remain ignored, and is not authorized
+for public audio release or model-release claims until a later provenance and
+release review clears that use.
+
 The first adaptation phase uses:
 
 ```text

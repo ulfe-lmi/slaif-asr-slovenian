@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "certificate_id": "s6tts-lab-provenance-v1",
+  "engine_name": "s6tts",
+  "repository": "ulfe-lmi/s6tts",
+  "pinned_revision": "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6",
+  "voice_id": "sl-si-s6",
+  "voice_label": "s6tts-sl-si-s6-vintage",
+  "claimed_origin": {
+    "statement": "Developed in lab, per human lead statement on 2026-07-08.",
+    "recorded_by": "Work Order 0034"
+  },
+  "source_code_provenance": {
+    "status": "lab_origin_claimed",
+    "evidence": "Human lead statement and ulfe-lmi/s6tts repository identity."
+  },
+  "voice_runtime_data_provenance": {
+    "status": "lab_origin_claimed_not_release_cleared",
+    "entry_point": "data/sl-si-s6/sint.ini"
+  },
+  "dictionary_data_provenance": {
+    "status": "bundled_with_s6tts_not_release_cleared",
+    "location": "data/sl-si-s6/slovarji"
+  },
+  "diphone_acoustic_resource_provenance": {
+    "status": "bundled_with_s6tts_not_release_cleared",
+    "location": "data/sl-si-s6/baza"
+  },
+  "encryption_or_resource_loader_provenance": {
+    "status": "requires_later_review",
+    "note": "S6TTS upstream license audit flags IDEA/resource-loader code for review before publication."
+  },
+  "third_party_snippet_review": {
+    "status": "not_complete",
+    "note": "S6TTS upstream license audit flags possible legacy utility snippets for review."
+  },
+  "redistribution_status": "not_cleared",
+  "internal_diagnostic_status": "permitted_by_work_order_0034_only",
+  "public_audio_release_authorized": false,
+  "model_release_with_s6tts_audio_authorized": false,
+  "forbidden_uses": [
+    "public audio release",
+    "model release claim",
+    "checkpoint acceptance",
+    "TRAINING_ELIGIBLE"
+  ],
+  "limitations": [
+    "This certificate records internal diagnostic provenance only.",
+    "It does not change repository licensing.",
+    "It does not authorize distribution of S6TTS source, runtime data, generated audio, or trained model artifacts."
+  ]
+}

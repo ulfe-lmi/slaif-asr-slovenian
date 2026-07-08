@@ -1,0 +1,87 @@
+{
+  "actual_clean_files": 14528,
+  "allowed_uses": [
+    "internal synthetic diagnostic audio",
+    "future training only by explicit work order",
+    "aggregate reporting"
+  ],
+  "audio_manifest_sha256": "62e309cd576ee83ec323c8b9a76e7f06abb0310a5334af4a3d91b9a9e80c6e11",
+  "certificate_id": "sl-corpus-v4-s6tts-clean-view-v1",
+  "channels": 1,
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "duplicate_audio_hash_count": 3,
+  "duplicate_path_count": 0,
+  "duration_distribution": {
+    "max": 23.555375,
+    "mean": 4.183237,
+    "min": 1.161812,
+    "p50": 3.84375,
+    "p95": 7.444375
+  },
+  "expected_clean_files": 16000,
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "forbidden_uses": [
+    "public audio release",
+    "model release claim",
+    "TRAINING_ELIGIBLE",
+    "checkpoint acceptance",
+    "real-gate acceptance evidence"
+  ],
+  "representative_failure_reproduction": {
+    "argv_template": [
+      "s6cli",
+      "--ini",
+      "data/sl-si-s6/sint.ini",
+      "--text",
+      "<RAW_TEXT>",
+      "-o",
+      "row_00001.fail.wav"
+    ],
+    "expected_result": "exit status 1, no stdout/stderr, no WAV",
+    "raw_text_committed": false,
+    "row_index": 1,
+    "safe_key": "s6tts-scale2000-00001",
+    "s6tts_revision": "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6",
+    "standalone_reproduction_bundle": "retained locally under ignored run storage",
+    "text_length_chars": 21,
+    "text_length_utf8_bytes": 21,
+    "text_sha256": "ef112110a8a2dbee814ae2f9452928f3934cbac326d6f62b6f5ac8eb4381d3c5"
+  },
+  "generated_audio_committed": false,
+  "issues_by_reason": {
+    "duplicate_audio_hashes": 3,
+    "row_count_mismatch": 1472,
+    "synthesis_failure:RuntimeError": 1472
+  },
+  "limitations": [
+    "S6TTS voice/runtime provenance is treated as internal diagnostic pending release review.",
+    "The view is a synthetic clean voice addition only and does not authorize model training."
+  ],
+  "local_manifest_committed": false,
+  "peak_distribution": {
+    "max": 0.733093,
+    "mean": 0.700989,
+    "min": 0.197784,
+    "p50": 0.719879,
+    "p95": 0.724609
+  },
+  "prohibited_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "provenance_manifest_sha256": "432fafde49a29ac9854f373c24816562413ab9d5088708079123c4b26dd8599b",
+  "s6tts_provenance_certificate": "s6tts-lab-provenance-v1",
+  "s6tts_runtime_data_file_count": 20,
+  "s6tts_runtime_data_hash": "2e71b1ed2df53b7959fa748d9cd1366478895202a874d884ed3986abb581e6dc",
+  "sample_rate": 16000,
+  "sample_width": 2,
+  "schema_version": "1.0",
+  "semantic_rows": 16000,
+  "status": "S6TTS_REJECTED_SYNTHESIS_QUALITY",
+  "synthesis_failure_count": 1472,
+  "total_duration_seconds": 60774.060757,
+  "tts_engine": "s6tts",
+  "tts_engine_repository": "ulfe-lmi/s6tts",
+  "tts_engine_revision": "b0c7d3fe7e7b0a06e05bf50e61f774a9daa5e8b6",
+  "view_id": "sl-corpus-v4-s6tts-clean-view-v1",
+  "voice_label": "s6tts-sl-si-s6-vintage"
+}

@@ -291,6 +291,15 @@ model-card, and ARTUR source records. Apply the conservative ARTUR CC BY-SA 4.0
 attribution and publication policy until later legal review. Public synthetic
 audio release is not authorized by M2 ingestion work.
 
+S6TTS is a lab-origin legacy Slovenian TTS system that may be used only as an
+external local executable dependency for synthetic diagnostic audio when a work
+order explicitly authorizes it. Keep S6TTS source, binaries, runtime data,
+dictionaries, diphone/acoustic resources, generated WAVs, logs, and local
+manifests outside this repository unless a later import/license ADR authorizes
+otherwise. Generated S6TTS audio remains ignored synthetic material. Public
+distribution of S6TTS-generated audio, or models trained on it, is not
+authorized until a provenance and release review permits it.
+
 ## GaMS boundary
 
 GaMS is an external local candidate-text generator. Use only pinned Hugging Face
