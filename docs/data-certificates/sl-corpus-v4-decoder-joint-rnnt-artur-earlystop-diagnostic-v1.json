@@ -1,0 +1,15 @@
+{
+  "TRAINING_ELIGIBLE_issued": false,
+  "accepted_parent": "none",
+  "certificate_id": "sl-corpus-v4-decoder-joint-rnnt-artur-earlystop-diagnostic-v1",
+  "controller_dev_manifest_sha256": "7944cbd82107e4aa8cfd3c5ca991d652e4ec3450ba8805efbc98e7c3aeec34f9",
+  "controller_dev_partition_id": "artur-controller-dev-v1",
+  "experiment_id": "scale2000-decoder-joint-rnnt-artur-earlystop-v1",
+  "objective": "audio-conditioned RNNT loss only",
+  "prohibited_artifacts_committed": false,
+  "schema_version": "1.0",
+  "status": "DIAGNOSTIC_ONLY",
+  "trainable_surface": "model.decoder + model.joint only",
+  "training_source": "scale-2000 augmented corpus v4",
+  "work_order_id": "0032"
+}

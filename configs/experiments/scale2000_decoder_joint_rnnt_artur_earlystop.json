@@ -59,7 +59,13 @@
     "patience_rounds": 2,
     "min_delta_WER_absolute_points": 0.5,
     "tie_breaker_min_delta_CER_absolute_points": 0.25,
-    "selection": "earliest_checkpoint_within_tolerance_of_best"
+    "selection": "earliest_checkpoint_within_tolerance_of_best",
+    "human_runtime_override": {
+      "applied": true,
+      "reason": "Continue from the best checkpoint and stop after no improvement in the best controller-dev checkpoint for three further evaluated rounds.",
+      "operational_stop_rule": "stop_after_three_evaluated_rounds_without_new_raw_best_controller_dev_wer",
+      "patience_rounds_without_new_raw_best": 3
+    }
   },
   "post_selection_directional": {
     "policy": "configs/evaluation/a100-directional-batch32-v1.json",

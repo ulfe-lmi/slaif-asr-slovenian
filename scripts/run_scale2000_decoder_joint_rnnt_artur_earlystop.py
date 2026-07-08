@@ -29,11 +29,13 @@ from slaif_asr.corpus_v2_scoring import nemo_streaming_script, runtime_environme
 from slaif_asr.batched_streaming import file_sha256
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.data_quality import atomic_write_json, atomic_write_text
+from slaif_asr.directional_evaluation import load_directional_suite, normalized_metric_row, split_predictions, write_privacy_safe_suite_manifest
 from slaif_asr.emission_rnnt_finetune import BASE_DIRECTIONAL_METRICS, SCALE2000_JOINT_ADAPTER_METRICS, verify_all_inputs
 
 
 DEFAULT_CONFIG = REPO_ROOT / "configs/experiments/scale2000_decoder_joint_rnnt_artur_earlystop.json"
 BASE_CONFIG = REPO_ROOT / "configs/experiments/scale2000_decoder_joint_rnnt_v1.json"
+FAST_DIRECTIONAL_CONFIG = REPO_ROOT / "configs/experiments/fast_batched_directional_replay_v1.json"
 REPORT_JSON = REPO_ROOT / "docs/experiments/0019-scale2000-decoder-joint-rnnt-artur-earlystop.json"
 REPORT_MD = REPO_ROOT / "docs/experiments/0019-scale2000-decoder-joint-rnnt-artur-earlystop.md"
 CERTIFICATE_PATH = REPO_ROOT / "docs/data-certificates/sl-corpus-v4-decoder-joint-rnnt-artur-earlystop-diagnostic-v1.json"
@@ -183,6 +185,87 @@ def _controller_metric_row(metrics: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _round_output_dir(config: dict[str, Any], round_index: int) -> Path:
+    return run_root(config) / "controller-dev" / f"round_{round_index:02d}"
+
+
+def _checkpoint_path(checkpoint_root: Path, round_index: int) -> Path:
+    if round_index == 0:
+        return checkpoint_root / "round_00_base" / "model.local.nemo"
+    return checkpoint_root / f"round_{round_index:02d}" / "model.local.nemo"
+
+
+def _row_from_metrics(
+    *,
+    config: dict[str, Any],
+    checkpoint: Path,
+    round_index: int,
+    metrics: dict[str, Any],
+    arm: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    controller = _controller_metric_row(metrics)
+    row: dict[str, Any] = {
+        "round": round_index,
+        "checkpoint_sha256": file_sha256(checkpoint),
+        "available": True,
+        **controller,
+        "artur_controller_dev_wer": controller["wer"],
+        "artur_controller_dev_cer": controller["cer"],
+        "empty_count": controller["empty"],
+    }
+    if arm is not None:
+        row.update(
+            {
+                "wall_time_seconds": arm["execution"]["wall_time_seconds"],
+                "rows_per_second": arm["utterances_per_second"],
+                "real_time_factor": arm["end_to_end_real_time_factor"],
+                "peak_validation_gpu_memory_mib": arm["execution"]["monitor"].get("peak_memory_mib"),
+            }
+        )
+    marker = checkpoint.parent / "checkpoint-complete.local.json"
+    if marker.exists():
+        marker_payload = read_json(marker)
+        row.update(
+            {
+                "optimizer_step": int(marker_payload.get("optimizer_step", 0)),
+                "exposures_seen": int(marker_payload.get("exposures_seen", 0)),
+                "train_loss": marker_payload.get("train_loss"),
+                "synthetic_anchor_probe_loss": marker_payload.get("synthetic_anchor_probe_loss"),
+                "synthetic_scale_probe_loss": marker_payload.get("synthetic_scale_probe_loss"),
+            }
+        )
+    return row
+
+
+def _existing_controller_rows(config: dict[str, Any], records: list[dict[str, Any]], checkpoints: list[tuple[int, Path]]) -> dict[int, dict[str, Any]]:
+    rows: dict[int, dict[str, Any]] = {}
+    metrics_path = run_root(config) / "controller-dev" / "round-metrics.local.json"
+    if metrics_path.exists():
+        payload = read_json(metrics_path)
+        for row in payload.get("rows", []):
+            if not isinstance(row, dict):
+                continue
+            if row.get("wer") is None or row.get("cer") is None or row.get("empty") is None:
+                continue
+            rows[int(row["round"])] = row
+    for round_index, checkpoint in checkpoints:
+        if round_index in rows:
+            continue
+        predictions_path = _round_output_dir(config, round_index) / "predictions.local.jsonl"
+        if not predictions_path.exists():
+            continue
+        predictions = load_local_predictions(predictions_path)
+        if len(predictions) != len(records):
+            continue
+        rows[round_index] = _row_from_metrics(
+            config=config,
+            checkpoint=checkpoint,
+            round_index=round_index,
+            metrics=metrics_for(records, predictions),
+        )
+    return rows
+
+
 def stage_evaluate_controller_dev(config_path: Path, *, validation_gpu: str) -> dict[str, Any]:
     config = load_config(config_path)
     manifest = local_path(config["controller_dev"]["manifest"])
@@ -195,7 +278,7 @@ def stage_evaluate_controller_dev(config_path: Path, *, validation_gpu: str) -> 
     checkpoint_root = arm_root / "checkpoints"
     checkpoints = []
     for round_index in range(0, int(config["training"]["max_rounds"]) + 1):
-        checkpoint = checkpoint_root / f"round_{round_index:02d}" / "model.local.nemo"
+        checkpoint = _checkpoint_path(checkpoint_root, round_index)
         if checkpoint.exists():
             checkpoints.append((round_index, checkpoint))
     if not checkpoints:
@@ -204,9 +287,15 @@ def stage_evaluate_controller_dev(config_path: Path, *, validation_gpu: str) -> 
     env["CUDA_VISIBLE_DEVICES"] = validation_gpu
     env["NVIDIA_TF32_OVERRIDE"] = "0"
     env["PYTHONUNBUFFERED"] = "1"
-    rows = []
+    row_map = _existing_controller_rows(config, records, checkpoints)
+    rows = [row_map[index] for index, _checkpoint in checkpoints if index in row_map]
+    if rows:
+        atomic_write_json(run_root(config) / "controller-dev" / "round-metrics.local.json", {"rounds": rows, "controller_dev_status": "PARTIAL" if len(rows) < len(checkpoints) else "PASSED"})
     for round_index, checkpoint in checkpoints:
-        output_dir = run_root(config) / "controller-dev" / f"round_{round_index:02d}"
+        if round_index in row_map:
+            print(json.dumps({"status": "SKIPPED_ALREADY_SCORED", "round": round_index, "wer": row_map[round_index]["wer"], "cer": row_map[round_index]["cer"], "empty": row_map[round_index]["empty"]}, ensure_ascii=False, sort_keys=True), flush=True)
+            continue
+        output_dir = _round_output_dir(config, round_index)
         arm = run_batched_arm(
             records=records,
             batch_size=1,
@@ -223,33 +312,9 @@ def stage_evaluate_controller_dev(config_path: Path, *, validation_gpu: str) -> 
         if arm.get("status") != "PASSED":
             raise RuntimeError(f"controller-dev evaluation failed at round {round_index}: {arm.get('status')}")
         predictions = load_local_predictions(output_dir / "predictions.local.jsonl")
-        metrics = metrics_for(records, predictions)
-        row = {
-            "round": round_index,
-            "checkpoint_sha256": file_sha256(checkpoint),
-            "available": True,
-            **_controller_metric_row(metrics),
-            "artur_controller_dev_wer": _controller_metric_row(metrics)["wer"],
-            "artur_controller_dev_cer": _controller_metric_row(metrics)["cer"],
-            "empty_count": _controller_metric_row(metrics)["empty"],
-            "wall_time_seconds": arm["execution"]["wall_time_seconds"],
-            "rows_per_second": arm["utterances_per_second"],
-            "real_time_factor": arm["end_to_end_real_time_factor"],
-            "peak_validation_gpu_memory_mib": arm["execution"]["monitor"].get("peak_memory_mib"),
-        }
-        marker = checkpoint.parent / "checkpoint-complete.local.json"
-        if marker.exists():
-            marker_payload = read_json(marker)
-            row.update(
-                {
-                    "optimizer_step": int(marker_payload.get("optimizer_step", 0)),
-                    "exposures_seen": int(marker_payload.get("exposures_seen", 0)),
-                    "train_loss": marker_payload.get("train_loss"),
-                    "synthetic_anchor_probe_loss": marker_payload.get("synthetic_anchor_probe_loss"),
-                    "synthetic_scale_probe_loss": marker_payload.get("synthetic_scale_probe_loss"),
-                }
-            )
-        rows.append(row)
+        row = _row_from_metrics(config=config, checkpoint=checkpoint, round_index=round_index, metrics=metrics_for(records, predictions), arm=arm)
+        row_map[round_index] = row
+        rows = [row_map[index] for index, _checkpoint in checkpoints if index in row_map]
         atomic_write_json(run_root(config) / "controller-dev" / "round-metrics.local.json", {"rounds": rows, "controller_dev_status": "PARTIAL" if len(rows) < len(checkpoints) else "PASSED"})
         print(json.dumps({"status": "PASSED", "round": round_index, "wer": row["wer"], "cer": row["cer"], "empty": row["empty"]}, ensure_ascii=False, sort_keys=True), flush=True)
     base_empty = int(next(row for row in rows if row["round"] == 0)["empty"])
@@ -273,7 +338,8 @@ def _round_table_from_local(config: dict[str, Any]) -> list[dict[str, Any]]:
     path = run_root(config) / "controller-dev" / "round-metrics.local.json"
     if not path.exists():
         return []
-    rows = read_json(path).get("rounds", [])
+    payload = read_json(path)
+    rows = payload.get("rounds", payload.get("rows", []))
     if not isinstance(rows, list):
         raise RuntimeError("round-metrics.local.json has malformed rounds")
     return rows
@@ -288,6 +354,127 @@ def _directional_metrics_from_local(config: dict[str, Any]) -> dict[str, dict[st
     if not isinstance(metrics, dict):
         raise RuntimeError("post-selection directional summary has malformed metric_table")
     return metrics
+
+
+def _directional_suite_summary_from_local(config: dict[str, Any]) -> dict[str, Any] | None:
+    path = run_root(config) / "post-selection-directional" / "summary.local.json"
+    if not path.exists():
+        return None
+    suite = read_json(path).get("suite")
+    if not isinstance(suite, dict):
+        return None
+    layout = suite.get("layout", {})
+    return {
+        "rows": suite.get("rows"),
+        "prediction_count": suite.get("prediction_count"),
+        "audio_duration_seconds": suite.get("audio_duration_seconds"),
+        "wall_time_seconds": suite.get("wall_time_seconds"),
+        "real_time_factor": suite.get("real_time_factor"),
+        "rows_per_second": suite.get("rows_per_second"),
+        "audio_seconds_per_wall_second": suite.get("audio_seconds_per_wall_second"),
+        "batch_size": layout.get("batch_size"),
+        "duration_bucketing": layout.get("bucketed"),
+        "batch_count": layout.get("batch_count"),
+        "padding_ratio": layout.get("padding_ratio"),
+        "gpu_monitor": suite.get("gpu_monitor"),
+        "validation_gpu_selector": suite.get("validation_gpu_selector"),
+        "sharded_evaluation": suite.get("sharded_evaluation"),
+    }
+
+
+def _base_empty_count(round_rows: list[dict[str, Any]]) -> int:
+    for row in round_rows:
+        if int(row.get("round", -1)) == 0:
+            value = row.get("empty_count")
+            if value is None:
+                value = row.get("empty")
+            return int(value)
+    raise RuntimeError("round 0/base controller-dev metrics are required")
+
+
+def stage_evaluate_directional(config_path: Path, *, validation_gpu: str) -> dict[str, Any]:
+    config = load_config(config_path)
+    round_rows = _round_table_from_local(config)
+    if not round_rows:
+        raise RuntimeError("controller-dev round metrics are required before post-selection directional evaluation")
+    selected = select_round(round_rows, base_empty_count=_base_empty_count(round_rows))
+    if selected is None:
+        raise RuntimeError("controller-dev rule did not select a checkpoint")
+    selected_round = int(selected["round"])
+    checkpoint_root = run_root(config) / "scale2000_augmented_decoder_joint_rnnt" / "checkpoints"
+    checkpoint = _checkpoint_path(checkpoint_root, selected_round)
+    if not checkpoint.exists():
+        raise RuntimeError(f"selected checkpoint for round {selected_round} is missing")
+
+    fast_config = read_json(FAST_DIRECTIONAL_CONFIG)
+    suite_records, split_records = load_directional_suite(fast_config)
+    output_dir = run_root(config) / "post-selection-directional"
+    suite_manifest_sha = write_privacy_safe_suite_manifest(output_dir / "suite-plan.local.jsonl", suite_records)
+    arm_dir = output_dir / f"selected_round_{selected_round:02d}"
+
+    env = runtime_environment()
+    env["CUDA_VISIBLE_DEVICES"] = validation_gpu
+    env["NVIDIA_TF32_OVERRIDE"] = "0"
+    env["PYTHONUNBUFFERED"] = "1"
+    arm = run_batched_arm(
+        records=suite_records,
+        batch_size=int(config["post_selection_directional"]["batch_size"]),
+        bucketed=bool(config["post_selection_directional"]["duration_bucketing"]),
+        run_dir=arm_dir,
+        python_executable=Path(sys.executable),
+        nemo_script=nemo_streaming_script(),
+        checkpoint=checkpoint,
+        context=config["post_selection_directional"]["att_context_size"],
+        env=env,
+        physical_gpu_index=validation_gpu,
+        monitor_interval_seconds=0.5,
+    )
+    if arm.get("status") != "PASSED":
+        raise RuntimeError(f"post-selection directional evaluation failed: {arm.get('status')}")
+    predictions = load_local_predictions(arm_dir / "predictions.local.jsonl")
+    split_predictions_map = split_predictions(suite_records, split_records, predictions)
+    split_summaries = {}
+    metric_table = {}
+    for split, records in split_records.items():
+        metrics = metrics_for(records, split_predictions_map[split])
+        split_summaries[split] = {
+            "rows": len(records),
+            "audio_duration_seconds": round(sum(row.duration for row in records), 6),
+            "metrics": metrics,
+        }
+        metric_table[split] = normalized_metric_row(split_summaries[split])
+
+    before = int(selected["round"])
+    after = int(select_round(round_rows, base_empty_count=_base_empty_count(round_rows))["round"])
+    if before != after:
+        raise RuntimeError("post-selection directional metrics must not change selected round")
+
+    payload = {
+        "status": "PASSED",
+        "selected_round": selected_round,
+        "selected_checkpoint_sha256": file_sha256(checkpoint),
+        "suite_rows": int(arm["rows"]),
+        "suite_manifest_sha256": suite_manifest_sha,
+        "policy": config["post_selection_directional"],
+        "suite": {
+            "rows": int(arm["rows"]),
+            "prediction_count": int(arm["prediction_count"]),
+            "audio_duration_seconds": arm["audio_duration_seconds"],
+            "wall_time_seconds": arm["execution"]["wall_time_seconds"],
+            "real_time_factor": arm["end_to_end_real_time_factor"],
+            "rows_per_second": arm["utterances_per_second"],
+            "audio_seconds_per_wall_second": arm["end_to_end_audio_seconds_per_wall_second"],
+            "layout": arm["layout"],
+            "gpu_monitor": arm["execution"]["monitor"],
+            "validation_gpu_selector": validation_gpu,
+            "sharded_evaluation": False,
+        },
+        "splits": split_summaries,
+        "metric_table": metric_table,
+    }
+    atomic_write_json(output_dir / "summary.local.json", payload)
+    print(json.dumps({"status": "PASSED", "selected_round": selected_round, "metric_table": metric_table}, ensure_ascii=False, sort_keys=True))
+    return payload
 
 
 def _summary_rows(round_rows: list[dict[str, Any]], selected_round: int | None) -> list[dict[str, Any]]:
@@ -321,7 +508,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
     round_rows = _round_table_from_local(config)
     if not round_rows:
         round_rows = [{"round": 0, "available": False, "status": "NOT_RUN"}]
-    selected = select_round(round_rows, base_empty_count=0)
+    selected = select_round(round_rows, base_empty_count=_base_empty_count(round_rows))
     selected_round = int(selected["round"]) if selected is not None else None
     directional_metrics = _directional_metrics_from_local(config)
     decision = classify_artur_earlystop(
@@ -332,6 +519,8 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
     )
     public_rows = _summary_rows(round_rows, selected_round)
     checkpoint_rows = [redacted_checkpoint_row({**row, "checkpoint_sha256": row.get("checkpoint_sha256")}) for row in round_rows if "round" in row]
+    stopped_round = max(int(row["round"]) for row in round_rows if "round" in row)
+    final_round = max((row for row in round_rows if "round" in row), key=lambda row: int(row["round"]))
     certificate = {
         "schema_version": "1.0",
         "certificate_id": CERTIFICATE_ID,
@@ -374,6 +563,10 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "trainable_surface": config["training"]["trainable_surface"],
             "effective_batch": config["training"]["effective_batch_size"],
             "max_rounds": config["training"]["max_rounds"],
+            "stopped_round": stopped_round,
+            "optimizer_steps_completed": final_round.get("optimizer_step"),
+            "exposures_seen": final_round.get("exposures_seen"),
+            "operational_stop_rule": config["early_stop_rule"].get("human_runtime_override"),
         },
         "controller_dev_curve": public_rows,
         "selection": {
@@ -387,6 +580,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "pr36_round20_decoder_joint": PR36_DECODER_JOINT_METRICS,
             "selected_early_stop_checkpoint": directional_metrics,
         },
+        "post_selection_directional_evaluation": _directional_suite_summary_from_local(config),
         "round_checkpoint_manifest": checkpoint_rows,
         "artifact_integrity": {
             "per_round_checkpoints_retained_locally": any(row.get("checkpoint_sha256") for row in round_rows),
@@ -436,6 +630,10 @@ def _write_md(report: dict[str, Any], path: Path) -> None:
         f"Classification: `{report['classification']}`",
         "",
         "This is diagnostic-only evidence. ARTUR controller-dev may be used for aggregate run-control under ADR 0008; immutable gates remain unavailable for checkpoint selection.",
+        "",
+        f"Stopped round: `{report['training']['stopped_round']}`. Selected round: `{report['selection']['selected_round']}`.",
+        "",
+        "Operational stop rule: after the human runtime override, training stopped after three further evaluated rounds failed to produce a new raw best ARTUR controller-dev WER. The checkpoint selection rule remained the predeclared earliest-within-tolerance ARTUR controller-dev rule.",
         "",
         "## Controller-Dev Early-Stop Curve",
         "",
@@ -500,7 +698,7 @@ def _write_md(report: dict[str, Any], path: Path) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=str(DEFAULT_CONFIG))
-    parser.add_argument("--stage", required=True, choices=["verify-inputs", "probe-run-control", "probe-microbatch", "train", "evaluate-controller-dev", "summarize"])
+    parser.add_argument("--stage", required=True, choices=["verify-inputs", "probe-run-control", "probe-microbatch", "train", "evaluate-controller-dev", "evaluate-directional", "summarize"])
     parser.add_argument("--progress-interval-seconds", type=float, default=10.0)
     parser.add_argument("--training-gpu", default=os.environ.get("SLAIF_TRAINING_GPU", "0"))
     parser.add_argument("--validation-gpu", default=os.environ.get("SLAIF_VALIDATION_GPU", "1"))
@@ -521,6 +719,8 @@ def main() -> int:
         stage_train(config_path, args.progress_interval_seconds)
     elif args.stage == "evaluate-controller-dev":
         stage_evaluate_controller_dev(config_path, validation_gpu=args.validation_gpu)
+    elif args.stage == "evaluate-directional":
+        stage_evaluate_directional(config_path, validation_gpu=args.validation_gpu)
     elif args.stage == "summarize":
         stage_summarize(config_path)
     return 0
