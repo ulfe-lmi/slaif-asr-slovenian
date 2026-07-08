@@ -1,0 +1,15 @@
+{
+  "att_context_size": [
+    56,
+    3
+  ],
+  "batch_size": 1,
+  "canonical": false,
+  "duration_bucketing": false,
+  "partition_id": "artur-controller-dev-v1",
+  "precision": "FP32",
+  "promotion_eligible": false,
+  "purpose": "controller_development_run_control",
+  "target_lang": "sl-SI",
+  "tf32": false
+}

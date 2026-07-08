@@ -1,0 +1,24 @@
+{
+  "eligible_round_rule": {
+    "cer_within_best_absolute_points": 0.25,
+    "empty_count_max": "untouched_base_empty_count",
+    "wer_within_best_absolute_points": 0.5
+  },
+  "future_online_rule": {
+    "evaluate_after_each_exposure_round": true,
+    "min_delta_WER_absolute_points": 0.5,
+    "min_rounds_before_stop": 3,
+    "patience_rounds": 2,
+    "retain": "earliest checkpoint within tolerance of best",
+    "tie_breaker_min_delta_CER_absolute_points": 0.25
+  },
+  "hard_guards": [
+    "empty hypotheses must not exceed untouched base empty count",
+    "no catastrophic CER regression versus untouched base"
+  ],
+  "partition_id": "artur-controller-dev-v1",
+  "policy_id": "artur-controller-dev-early-stop-v1",
+  "primary_metric": "normalized WER",
+  "secondary_metric": "normalized CER",
+  "selection_preference": "earliest checkpoint within tolerance of best WER"
+}

@@ -18,6 +18,10 @@
   because v1 represented only 347 unique sample identities. FLEURS v2 now has
   a valid untouched-base ASR baseline from Experiment 0006.
 - The deterministic ARTUR-J public-speech gate remains valid and unaffected.
+- ADR 0008 introduces `artur-controller-dev-v1` as a separate ARTUR
+  controller-development partition for aggregate run-control. It is spent
+  development data if used for checkpoint selection and must not be treated as
+  an immutable acceptance gate.
 - Project-generated Slovenian curriculum Round 1 has run without GaMS or an
   external LLM. Its prompt-column challenger is rejected: it improved selected
   synthetic training examples, did not meet the fixed synthetic-holdout

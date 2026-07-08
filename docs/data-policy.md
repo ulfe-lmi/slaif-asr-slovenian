@@ -62,6 +62,14 @@ Synthetic records additionally require:
 
 The active loop may inspect references and hypotheses. Metrics from this set are not an unbiased final result.
 
+`artur-controller-dev-v1` is the first governed real-acoustic
+controller-development partition. It may be used for aggregate run-control
+metrics and future early stopping only when an explicit work order authorizes
+that use. Once used for checkpoint selection it is spent development data, not
+unbiased acceptance evidence. It must not be used for training, GaMS prompt
+content, selected-training construction, hard-example mining from raw
+references or hypotheses, public quality claims, or model-release claims.
+
 ### Immutable gate
 
 Used after rounds for acceptance. GaMS receives aggregate categories only, not raw reference sentences.
@@ -73,6 +81,9 @@ generation, synthetic-data selection, or a GaMS prompt. Only aggregate
 categories and metrics may steer later generation when a work order explicitly
 permits it. Historical FLEURS v1 evidence is deprecated because it did not
 preserve unique audio occurrences.
+
+Immutable gates and final blind tests must not be used for early stopping,
+hyperparameter selection, or checkpoint selection.
 
 ### Final blind test
 

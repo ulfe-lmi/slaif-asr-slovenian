@@ -118,6 +118,12 @@ adapter-surface selection. Aggregate real-gate metrics may compare completed
 challengers and determine whether a completed challenger is worth the next
 governed step.
 
+`artur-controller-dev-v1` is a separate controller-development partition under
+ADR 0008. It may support aggregate per-round run-control and future
+early-stopping rules only when a work order explicitly authorizes that use. It
+is not an immutable gate and cannot support checkpoint acceptance, public
+quality claims, or release claims.
+
 The untouched-base FLEURS-v2 baseline is recorded in
 [`docs/experiments/0006-a100-batched-streaming-evaluation.md`](experiments/0006-a100-batched-streaming-evaluation.md).
 Historical FLEURS-v1 numbers in Experiment 0003 remain deprecated audit
