@@ -1,0 +1,457 @@
+{
+  "accepted_parent": "none",
+  "audio_duration_seconds": {
+    "count": 256,
+    "max": 11.474,
+    "median": 3.708,
+    "min": 2.0,
+    "total": 1045.746
+  },
+  "base_metrics": "NOT_RUN_CHECKPOINT_CURVE_BLOCKED",
+  "checkpoint_availability": [
+    {
+      "available": true,
+      "checkpoint": "base",
+      "round": 0,
+      "status": "BASELINE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_1",
+      "round": 1,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_2",
+      "round": 2,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_3",
+      "round": 3,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_4",
+      "round": 4,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_5",
+      "round": 5,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_6",
+      "round": 6,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_7",
+      "round": 7,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_8",
+      "round": 8,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_9",
+      "round": 9,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_10",
+      "round": 10,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_11",
+      "round": 11,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_12",
+      "round": 12,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_13",
+      "round": 13,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_14",
+      "round": 14,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_15",
+      "round": 15,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_16",
+      "round": 16,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_17",
+      "round": 17,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_18",
+      "round": 18,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_19",
+      "round": 19,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    },
+    {
+      "available": false,
+      "checkpoint": "round_20",
+      "round": 20,
+      "sha256": null,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE"
+    }
+  ],
+  "classification": "ARTUR_CONTROLLER_DEV_READY_CURVE_BLOCKED_CHECKPOINTS_UNAVAILABLE",
+  "evaluation_policy": "configs/evaluation/artur-controller-dev-batch1-v1.json",
+  "limitations": [
+    "Per-round PR #36 checkpoints were not available locally, so no retrospective real-dev curve was evaluated.",
+    "This partition is controller-development data and is not unbiased acceptance evidence.",
+    "No new training run was started."
+  ],
+  "manifest_sha256": "7944cbd82107e4aa8cfd3c5ca991d652e4ec3450ba8805efbc98e7c3aeec34f9",
+  "new_training_run_started": false,
+  "normalization_policy": "sl-asr-normalization-v1",
+  "partition_id": "artur-controller-dev-v1",
+  "per_round_metrics": [
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": true,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 0,
+      "status": "BASELINE",
+      "substitute": null,
+      "synthetic_anchor_probe": 56.371024,
+      "synthetic_scale_probe": 53.587624
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 1,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 12.763065,
+      "synthetic_scale_probe": 14.51232
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 2,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 17.815314,
+      "synthetic_scale_probe": 18.725917
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 3,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 15.379771,
+      "synthetic_scale_probe": 20.171593
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 4,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 21.447982,
+      "synthetic_scale_probe": 19.017373
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 5,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 15.323834,
+      "synthetic_scale_probe": 19.838635
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 6,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 15.458512,
+      "synthetic_scale_probe": 20.396806
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 7,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 15.295158,
+      "synthetic_scale_probe": 22.006537
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 8,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 20.546945,
+      "synthetic_scale_probe": 20.269093
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 9,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 17.912642,
+      "synthetic_scale_probe": 19.746135
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 10,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 13.529069,
+      "synthetic_scale_probe": 15.139419
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 11,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 14.795531,
+      "synthetic_scale_probe": 16.675765
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 12,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 15.027045,
+      "synthetic_scale_probe": 14.983512
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 13,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 13.097276,
+      "synthetic_scale_probe": 15.444951
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 14,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 12.480814,
+      "synthetic_scale_probe": 14.297896
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 15,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 11.193043,
+      "synthetic_scale_probe": 14.967169
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 16,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 12.745133,
+      "synthetic_scale_probe": 14.600564
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 17,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 12.291492,
+      "synthetic_scale_probe": 15.980405
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 18,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 11.887834,
+      "synthetic_scale_probe": 14.485165
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 19,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 11.447855,
+      "synthetic_scale_probe": 14.806939
+    },
+    {
+      "artur_controller_dev_cer": null,
+      "artur_controller_dev_wer": null,
+      "available": false,
+      "delete": null,
+      "empty": null,
+      "insert": null,
+      "round": 20,
+      "status": "NOT_RUN_CHECKPOINT_UNAVAILABLE",
+      "substitute": null,
+      "synthetic_anchor_probe": 11.249896,
+      "synthetic_scale_probe": 12.896747
+    }
+  ],
+  "promotion_eligible": false,
+  "row_count": 256,
+  "safety_confirmations": {
+    "accepted_parent": "none",
+    "no_immutable_gate_for_early_stopping": true,
+    "no_raw_audio_or_checkpoints_committed": true,
+    "no_raw_transcripts_or_model_outputs_in_report": true,
+    "no_training_run": true
+  },
+  "selected_round_by_controller_dev_rule": null,
+  "selected_round_differs_from_final_round_20": null,
+  "training_eligible_issued": false
+}

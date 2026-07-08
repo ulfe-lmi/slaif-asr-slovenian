@@ -147,6 +147,13 @@ Current canonical real development gates:
 - `artur-j-public-gate-v1`, the deterministic ARTUR-J public-speech project
   gate.
 
+Current real controller-development partition:
+
+- `artur-controller-dev-v1`, an ARTUR public-speech partition governed by ADR
+  0008. It may be used only for aggregate run-control and explicitly
+  authorized future early stopping. It is spent development data, not immutable
+  acceptance evidence.
+
 Historical `fleurs-sl-si-test-full-v1` evidence is deprecated because repeated
 upstream source IDs caused duplicate sample IDs and WAV overwrites. It must not
 be used as complete-split quality evidence.

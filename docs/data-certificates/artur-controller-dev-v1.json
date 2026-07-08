@@ -1,0 +1,69 @@
+{
+  "audio_duration_seconds": {
+    "count": 256,
+    "max": 11.474,
+    "median": 3.708,
+    "min": 2.0,
+    "total": 1045.746
+  },
+  "audio_hash_set_sha256": "65a8c720198b8c1205c0bd4f4c4827e686f789d8b44a6b335471f3780ebcd461",
+  "created_at": "2026-07-08T00:00:00Z",
+  "created_by_script": "scripts/build_artur_controller_dev.py",
+  "distinct_source_recordings": 22,
+  "excluded_gate_ids": [
+    "artur-j-public-gate-v1",
+    "fleurs-sl-si-test-full-v2"
+  ],
+  "forbidden_uses": [
+    "training",
+    "gradient updates",
+    "synthetic prompt construction",
+    "GaMS prompt content",
+    "selected-training construction",
+    "hard-example mining from raw references or hypotheses",
+    "immutable-gate acceptance",
+    "public quality claims",
+    "model release claims"
+  ],
+  "license": "CC BY-SA 4.0",
+  "manifest_sha256": "7944cbd82107e4aa8cfd3c5ca991d652e4ec3450ba8805efbc98e7c3aeec34f9",
+  "max_segments_per_recording": 12,
+  "normalization_policy": "sl-asr-normalization-v1",
+  "normalized_reference_hash_set_sha256": "5827dfd3afe9b5165eadc101a380aff824c727e9a9a70c078aa5c90a5f9aedf0",
+  "overlap_checks": {
+    "audio_checksum_overlap_with_artur_j": 0,
+    "audio_checksum_overlap_with_fleurs_v2": 0,
+    "membership_overlap_with_artur_j_public_gate_v1": 0,
+    "membership_overlap_with_fleurs_sl_si_test_full_v2": 0,
+    "normalized_reference_overlap_with_protected_indexes": 0,
+    "number_masked_hash_overlap_with_protected_indexes": 0,
+    "source_recording_overlap_with_artur_j": 0,
+    "surface_hash_overlap_with_protected_indexes": 0
+  },
+  "partition_id": "artur-controller-dev-v1",
+  "permitted_uses": [
+    "aggregate per-round validation WER",
+    "aggregate CER",
+    "aggregate empty hypothesis count",
+    "aggregate insertion/deletion/substitution rates",
+    "aggregate RNNT validation loss if implemented",
+    "future early stopping and checkpoint selection only under explicit work order authorization"
+  ],
+  "privacy_classification": "public_real_controller_development; references and audio kept local",
+  "redistribution_status": "local_audio_and_manifest_not_committed; privacy-safe aggregate certificate only",
+  "repository_commit": "e6d10d8937834931424aac49e7167ca441a7fe06",
+  "row_count": 256,
+  "source": "ARTUR public speech material",
+  "source_family": "ARTUR public speech material",
+  "source_version_or_revision": {
+    "audio_archive_md5": [
+      "bc8b4e0625fce2b47d99ed7da8db7393",
+      "6e4e6684a424d8efeefe1c891536899d"
+    ],
+    "audio_handle": "11356/1776",
+    "transcript_archive_md5": "6f21947593ccdea7dc23ecc3c9a7c012",
+    "transcript_handle": "11356/1772"
+  },
+  "split_level": "source-recording group split",
+  "status": "CONTROLLER_DEV_READY"
+}

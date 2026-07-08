@@ -13,3 +13,24 @@ license = { text = "Apache-2.0" }
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["slaif_asr*"]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  ".",
+]
+testpaths = [
+  "tests",
+]
+norecursedirs = [
+  ".git",
+  ".external",
+  ".venv",
+  ".venv-gams",
+  ".venv-piper",
+  ".venv-supertonic",
+  "codex-session-backups",
+  "models",
+  "runs",
+  "runs-move-logs",
+  "runs-tar-staging",
+]
