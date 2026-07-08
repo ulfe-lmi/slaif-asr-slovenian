@@ -21,6 +21,54 @@ This is synthetic-only, directional batch-32 evidence. The acoustic encoder and 
 - Optimizer steps: 40000
 - Trainable parameters: 24395808
 
+## Loss History
+
+All losses below are RNNT losses where lower is better. All probe rows use
+synthetic scale-2000 training data only; FLEURS-v2 and ARTUR-J were not used for
+training, probing, early stopping, or steering.
+
+Column meanings:
+
+- `Round`: exposure round, equivalent to the training epoch index for this
+  schedule. Round 0 is the pre-training probe before optimizer updates.
+- `Train sampled mean`: mean of privacy-safe sampled current training-loss
+  events emitted by the live progress reporter during that round. This is not a
+  full-corpus training loss.
+- `Train last rolling`: final rolling mean training loss reported near the end
+  of that round by the live progress reporter.
+- `Anchor probe`: no-optimizer loss on the fixed 32-row inherited synthetic
+  anchor probe after the round.
+- `Scale probe`: no-optimizer loss on the fixed 320-row deterministic synthetic
+  scale probe after the round.
+
+| Round | Train sampled mean | Train last rolling | Anchor probe | Scale probe |
+|---:|---:|---:|---:|---:|
+| 0 | - | - | 56.371 | 53.588 |
+| 1 | 11.783 | 17.054 | 12.763 | 14.512 |
+| 2 | 4.435 | 6.454 | 17.815 | 18.726 |
+| 3 | 3.355 | 6.034 | 15.380 | 20.172 |
+| 4 | 4.761 | 7.209 | 21.448 | 19.017 |
+| 5 | 4.381 | 6.016 | 15.324 | 19.839 |
+| 6 | 2.870 | 4.870 | 15.459 | 20.397 |
+| 7 | 3.548 | 6.056 | 15.295 | 22.007 |
+| 8 | 3.384 | 5.242 | 20.547 | 20.269 |
+| 9 | 3.915 | 6.639 | 17.913 | 19.746 |
+| 10 | 3.952 | 6.921 | 13.529 | 15.139 |
+| 11 | 4.440 | 5.592 | 14.796 | 16.676 |
+| 12 | 3.867 | 4.729 | 15.027 | 14.984 |
+| 13 | 4.814 | 9.219 | 13.097 | 15.445 |
+| 14 | 3.411 | 5.040 | 12.481 | 14.298 |
+| 15 | 3.800 | 7.294 | 11.193 | 14.967 |
+| 16 | 3.139 | 5.117 | 12.745 | 14.601 |
+| 17 | 3.700 | 5.983 | 12.291 | 15.980 |
+| 18 | 3.228 | 5.731 | 11.888 | 14.485 |
+| 19 | 2.886 | 5.894 | 11.448 | 14.807 |
+| 20 | 4.431 | 7.069 | 11.250 | 12.897 |
+
+The scalar final probe fields in the JSON report were recorded by a separate
+final probe pass: anchor `12.483167`, scale `13.510591`. The table above is the
+per-round probe history.
+
 ## Directional Metrics
 
 | Split | Base WER/CER | Scale-2000 joint WER/CER | Decoder+Joint RNNT WER/CER | Empty base/scale2000/decoder+joint |
