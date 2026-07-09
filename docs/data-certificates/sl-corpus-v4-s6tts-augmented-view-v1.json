@@ -1,0 +1,644 @@
+{
+  "actual_augmented_files": 176000,
+  "allowed_uses": [
+    "internal synthetic diagnostic audio",
+    "future training only by explicit work order",
+    "aggregate reporting"
+  ],
+  "augmentation_algorithm_version": "s6tts-transcript-preserving-augmentation-v1",
+  "augmentation_config_sha256": "b686f549c6873b4a919acfe47712a2ff4dcbb0baa898a67bb8604c15eb42faee",
+  "augmentation_profiles_per_row": 11,
+  "augmented_audio_manifest_sha256": "8d39606dc276a7730e032e83c1811f6c71ece3de6f0b68aa1bd5f4c0a8f50251",
+  "augmented_provenance_manifest_sha256": "d18a2c8245e75d94d18c97ae02a3194ddcdc8fdf864bc44cc21fcec8941603ec",
+  "augmented_view_id": "sl-corpus-v4-s6tts-augmented-view-v1",
+  "certificate_id": "sl-corpus-v4-s6tts-augmented-view-v1",
+  "channels": 1,
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "decision_date": "2026-07-09",
+  "duplicate_audio_hash_count": 19,
+  "duplicate_audio_hash_groups_redacted": {
+    "duplicate_extra_file_count": 19,
+    "duplicate_group_count": 19,
+    "explained_duplicate_extra_file_count": 19,
+    "groups": [
+      {
+        "audio_sha256": "0f675e5a4bb9d62e036a743df8cd393060b05e58a7590069e4431e7362b9f6ae",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "coupled_speed_pitch_resampling",
+          "tempo_preserving_pitch"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.45025,
+            "frames": 55204,
+            "peak_ratio": 0.66922,
+            "row_index": 9325,
+            "safe_key": "s6tts-scale2000-09325__aug01",
+            "source_clean_safe_key": "s6tts-scale2000-09325",
+            "text_sha256": "7a24af8c23e01381110d129c0dd8cbae67c9d1b3bf562329a6db13f624e5a7cc"
+          },
+          {
+            "duration_seconds": 3.45025,
+            "frames": 55204,
+            "peak_ratio": 0.66922,
+            "row_index": 9325,
+            "safe_key": "s6tts-scale2000-09325__aug02",
+            "source_clean_safe_key": "s6tts-scale2000-09325",
+            "text_sha256": "7a24af8c23e01381110d129c0dd8cbae67c9d1b3bf562329a6db13f624e5a7cc"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "131fcb2dcfc505a1cfe70495a99e7db9e3452f9d5243aef4312a5d5fd8d25b60",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 2.890938,
+            "frames": 46255,
+            "peak_ratio": 0.739655,
+            "row_index": 3271,
+            "safe_key": "s6tts-scale2000-03271__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-03271",
+            "text_sha256": "175ec93274aed83a0262f2ee79681d8550394797ea2c9aba02cd60ad36e2fc52"
+          },
+          {
+            "duration_seconds": 2.890938,
+            "frames": 46255,
+            "peak_ratio": 0.739655,
+            "row_index": 3271,
+            "safe_key": "s6tts-scale2000-03271__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-03271",
+            "text_sha256": "175ec93274aed83a0262f2ee79681d8550394797ea2c9aba02cd60ad36e2fc52"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "16ab78a5d8f58ba7caa48f001397ea8a4b70af7fcc4f0d4c2cf4a8d33a272d21",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 6.991562,
+            "frames": 111865,
+            "peak_ratio": 0.767334,
+            "row_index": 10896,
+            "safe_key": "s6tts-scale2000-10896__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-10896",
+            "text_sha256": "8372ceeaa6d30135f4f1ddcb5645e214bd08be2b312d4bb1029aeaee316d68c3"
+          },
+          {
+            "duration_seconds": 6.991562,
+            "frames": 111865,
+            "peak_ratio": 0.767334,
+            "row_index": 10896,
+            "safe_key": "s6tts-scale2000-10896__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-10896",
+            "text_sha256": "8372ceeaa6d30135f4f1ddcb5645e214bd08be2b312d4bb1029aeaee316d68c3"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "1a7d04c3bee94e89aa9555514000a0f5f12053b19eb30bf169f8bc27919e4091",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "coupled_speed_pitch_resampling",
+          "tempo_preserving_pitch"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.195187,
+            "frames": 51123,
+            "peak_ratio": 0.723053,
+            "row_index": 4853,
+            "safe_key": "s6tts-scale2000-04853__aug01",
+            "source_clean_safe_key": "s6tts-scale2000-04853",
+            "text_sha256": "4ffecaea4c85383b78d6e62345322a5341f757f3b6f194f465530964ad44c1c5"
+          },
+          {
+            "duration_seconds": 3.195187,
+            "frames": 51123,
+            "peak_ratio": 0.723053,
+            "row_index": 4853,
+            "safe_key": "s6tts-scale2000-04853__aug02",
+            "source_clean_safe_key": "s6tts-scale2000-04853",
+            "text_sha256": "4ffecaea4c85383b78d6e62345322a5341f757f3b6f194f465530964ad44c1c5"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "1d278043c867d298f68dc35af18492194091bf54d1c42879a35df51d10b15167",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 5.121562,
+            "frames": 81945,
+            "peak_ratio": 0.708923,
+            "row_index": 15253,
+            "safe_key": "s6tts-scale2000-15253__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-15253",
+            "text_sha256": "448338ff77f5653019b4cc841c53e322aee39524edc8e956669be2b5d745b3da"
+          },
+          {
+            "duration_seconds": 5.121562,
+            "frames": 81945,
+            "peak_ratio": 0.708923,
+            "row_index": 15253,
+            "safe_key": "s6tts-scale2000-15253__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-15253",
+            "text_sha256": "448338ff77f5653019b4cc841c53e322aee39524edc8e956669be2b5d745b3da"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "30443d2ab8d6699cab99e73d6a39fb5539ddb8c75d44e8456f59afdc4caf9241",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.17175,
+            "frames": 50748,
+            "peak_ratio": 0.743805,
+            "row_index": 8327,
+            "safe_key": "s6tts-scale2000-08327__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-08327",
+            "text_sha256": "ca8c3a3c88579573db3ae0d768de32b57f5dcf26e7c3189af3465e2c5080d337"
+          },
+          {
+            "duration_seconds": 3.17175,
+            "frames": 50748,
+            "peak_ratio": 0.743805,
+            "row_index": 8327,
+            "safe_key": "s6tts-scale2000-08327__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-08327",
+            "text_sha256": "ca8c3a3c88579573db3ae0d768de32b57f5dcf26e7c3189af3465e2c5080d337"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "33bf2de241d59e691764cf0c0e21227b582cdced81450de60372069a71cd4d52",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.10825,
+            "frames": 49732,
+            "peak_ratio": 0.740143,
+            "row_index": 7207,
+            "safe_key": "s6tts-scale2000-07207__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-07207",
+            "text_sha256": "4f4ee188d3d0bca7634f46345f526f7c5b01d1eb4277f8a306a218e6c2952b71"
+          },
+          {
+            "duration_seconds": 3.10825,
+            "frames": 49732,
+            "peak_ratio": 0.740143,
+            "row_index": 7207,
+            "safe_key": "s6tts-scale2000-07207__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-07207",
+            "text_sha256": "4f4ee188d3d0bca7634f46345f526f7c5b01d1eb4277f8a306a218e6c2952b71"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "34bcc982b8e591b2bb7a8580fa91e29860740432688ae06e14bd1885e30ae7bd",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.597313,
+            "frames": 57557,
+            "peak_ratio": 0.658356,
+            "row_index": 11502,
+            "safe_key": "s6tts-scale2000-11502__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-11502",
+            "text_sha256": "f4ea5ca014d7492d72838119b8703175348974b77ebc2d4b4d1959847debc5a9"
+          },
+          {
+            "duration_seconds": 3.597313,
+            "frames": 57557,
+            "peak_ratio": 0.658356,
+            "row_index": 11502,
+            "safe_key": "s6tts-scale2000-11502__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-11502",
+            "text_sha256": "f4ea5ca014d7492d72838119b8703175348974b77ebc2d4b4d1959847debc5a9"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "46f46cdae3f88c1b6d7e916e94d7dc746b3fd7fc09f9a0f6a324a7938400eae2",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 2.966188,
+            "frames": 47459,
+            "peak_ratio": 0.660339,
+            "row_index": 2394,
+            "safe_key": "s6tts-scale2000-02394__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-02394",
+            "text_sha256": "73eb49cf51d1c1431f707a070153988308b40bf028400da916f72f35f0fe6346"
+          },
+          {
+            "duration_seconds": 2.966188,
+            "frames": 47459,
+            "peak_ratio": 0.660339,
+            "row_index": 2394,
+            "safe_key": "s6tts-scale2000-02394__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-02394",
+            "text_sha256": "73eb49cf51d1c1431f707a070153988308b40bf028400da916f72f35f0fe6346"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "5465d6205b203eb1957820758877d845c05f0264e9390e72345cac08cb8094db",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 4.323625,
+            "frames": 69178,
+            "peak_ratio": 0.734436,
+            "row_index": 4849,
+            "safe_key": "s6tts-scale2000-04849__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-04849",
+            "text_sha256": "536d45173268ba6cd7c1a8e28b1981b2dfeab446e2c6b8639175ba277cf4f200"
+          },
+          {
+            "duration_seconds": 4.323625,
+            "frames": 69178,
+            "peak_ratio": 0.734436,
+            "row_index": 4849,
+            "safe_key": "s6tts-scale2000-04849__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-04849",
+            "text_sha256": "536d45173268ba6cd7c1a8e28b1981b2dfeab446e2c6b8639175ba277cf4f200"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "69e405e7886e9fd091ab75d3b7854aec853c1664f28af7c6f8e9ccfcd40829ba",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "coupled_speed_pitch_resampling",
+          "tempo_preserving_pitch"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 4.408313,
+            "frames": 70533,
+            "peak_ratio": 0.727844,
+            "row_index": 14990,
+            "safe_key": "s6tts-scale2000-14990__aug01",
+            "source_clean_safe_key": "s6tts-scale2000-14990",
+            "text_sha256": "fa992b4f4ee5694ba9b5454ede641fb2232782e15045621b656d9a7eced96611"
+          },
+          {
+            "duration_seconds": 4.408313,
+            "frames": 70533,
+            "peak_ratio": 0.727844,
+            "row_index": 14990,
+            "safe_key": "s6tts-scale2000-14990__aug02",
+            "source_clean_safe_key": "s6tts-scale2000-14990",
+            "text_sha256": "fa992b4f4ee5694ba9b5454ede641fb2232782e15045621b656d9a7eced96611"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "8a6ef6efe5180127d12ca047bb849929834b865a4fa9bbc0738a9f56f78050aa",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 1.722,
+            "frames": 27552,
+            "peak_ratio": 0.646942,
+            "row_index": 12236,
+            "safe_key": "s6tts-scale2000-12236__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-12236",
+            "text_sha256": "8738fdd847d4cbb9b11dbf2bd1a2351c411bb3b84e995445aa7c4f20e3607dd2"
+          },
+          {
+            "duration_seconds": 1.722,
+            "frames": 27552,
+            "peak_ratio": 0.646942,
+            "row_index": 12236,
+            "safe_key": "s6tts-scale2000-12236__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-12236",
+            "text_sha256": "8738fdd847d4cbb9b11dbf2bd1a2351c411bb3b84e995445aa7c4f20e3607dd2"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "a64bba83a8ae30e9b847ae043b859fd18dd2248f44bc97a90f6ec01cc780910d",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "coupled_speed_pitch_resampling",
+          "tempo_preserving_pitch"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 4.146438,
+            "frames": 66343,
+            "peak_ratio": 0.727356,
+            "row_index": 11947,
+            "safe_key": "s6tts-scale2000-11947__aug01",
+            "source_clean_safe_key": "s6tts-scale2000-11947",
+            "text_sha256": "d19ada6eb7d603abefa11877266fcb971e1095ed3c2a1488fac89521ee536b3c"
+          },
+          {
+            "duration_seconds": 4.146438,
+            "frames": 66343,
+            "peak_ratio": 0.727356,
+            "row_index": 11947,
+            "safe_key": "s6tts-scale2000-11947__aug02",
+            "source_clean_safe_key": "s6tts-scale2000-11947",
+            "text_sha256": "d19ada6eb7d603abefa11877266fcb971e1095ed3c2a1488fac89521ee536b3c"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "bb03e69e2c0962728e287988a44980ad44ae24956699883d24ab215062da65f2",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "coupled_speed_pitch_resampling",
+          "tempo_preserving_pitch"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.572938,
+            "frames": 57167,
+            "peak_ratio": 0.717072,
+            "row_index": 15642,
+            "safe_key": "s6tts-scale2000-15642__aug01",
+            "source_clean_safe_key": "s6tts-scale2000-15642",
+            "text_sha256": "a3d2fb91299e985db31c95f7aa103a4442f9ea87618a1bfd9808d4b1a752c7e9"
+          },
+          {
+            "duration_seconds": 3.572938,
+            "frames": 57167,
+            "peak_ratio": 0.717072,
+            "row_index": 15642,
+            "safe_key": "s6tts-scale2000-15642__aug02",
+            "source_clean_safe_key": "s6tts-scale2000-15642",
+            "text_sha256": "a3d2fb91299e985db31c95f7aa103a4442f9ea87618a1bfd9808d4b1a752c7e9"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "d3d92cf9e2992a8ad45cf6f44e269f377f8c0cd5e706b9e9c229933a63b82ffa",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 4.132062,
+            "frames": 66113,
+            "peak_ratio": 0.731537,
+            "row_index": 7670,
+            "safe_key": "s6tts-scale2000-07670__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-07670",
+            "text_sha256": "6a5245fc40ea8e77eb1b11b452899bfa181ad9e6c74c0e39a5bcbbf8a85d8d41"
+          },
+          {
+            "duration_seconds": 4.132062,
+            "frames": 66113,
+            "peak_ratio": 0.731537,
+            "row_index": 7670,
+            "safe_key": "s6tts-scale2000-07670__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-07670",
+            "text_sha256": "6a5245fc40ea8e77eb1b11b452899bfa181ad9e6c74c0e39a5bcbbf8a85d8d41"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "e0b1253c26ae39151f9f469a7581d4f3167f0b57b3edc0c7f69082fdb6faa493",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 6.725187,
+            "frames": 107603,
+            "peak_ratio": 0.767365,
+            "row_index": 10478,
+            "safe_key": "s6tts-scale2000-10478__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-10478",
+            "text_sha256": "3b32bb6d80d19d83c0b0bd616d96b55eea663dc4bae755dda87615a7164f7411"
+          },
+          {
+            "duration_seconds": 6.725187,
+            "frames": 107603,
+            "peak_ratio": 0.767365,
+            "row_index": 10478,
+            "safe_key": "s6tts-scale2000-10478__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-10478",
+            "text_sha256": "3b32bb6d80d19d83c0b0bd616d96b55eea663dc4bae755dda87615a7164f7411"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "e54f038a6322a2052d768a9d55e178f27bee68e20450d0b73e371a6fef28dc14",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "coupled_speed_pitch_resampling",
+          "tempo_preserving_pitch"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 3.359313,
+            "frames": 53749,
+            "peak_ratio": 0.700317,
+            "row_index": 4604,
+            "safe_key": "s6tts-scale2000-04604__aug01",
+            "source_clean_safe_key": "s6tts-scale2000-04604",
+            "text_sha256": "6d0f5d43dbc7be493b8b30c20857bd79120ad123d80e1a7a2570bb489aeecf9b"
+          },
+          {
+            "duration_seconds": 3.359313,
+            "frames": 53749,
+            "peak_ratio": 0.700317,
+            "row_index": 4604,
+            "safe_key": "s6tts-scale2000-04604__aug02",
+            "source_clean_safe_key": "s6tts-scale2000-04604",
+            "text_sha256": "6d0f5d43dbc7be493b8b30c20857bd79120ad123d80e1a7a2570bb489aeecf9b"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "f48ee6ec1f66287c4ebe0f5ca3e0d20b6187be42915e4440cb49a81e579c785a",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 5.717812,
+            "frames": 91485,
+            "peak_ratio": 0.741821,
+            "row_index": 1301,
+            "safe_key": "s6tts-scale2000-01301__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-01301",
+            "text_sha256": "4413efc2febeb1b366591c711935cec0a549b410ad966544bffe2b8d76206145"
+          },
+          {
+            "duration_seconds": 5.717812,
+            "frames": 91485,
+            "peak_ratio": 0.741821,
+            "row_index": 1301,
+            "safe_key": "s6tts-scale2000-01301__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-01301",
+            "text_sha256": "4413efc2febeb1b366591c711935cec0a549b410ad966544bffe2b8d76206145"
+          }
+        ]
+      },
+      {
+        "audio_sha256": "fee46318ad2bf91a4d75c8c14b280e209e07a9175bc085b7636bfb0ac0d3db2f",
+        "count": 2,
+        "explanation": "deterministic_augmentation_profile_equivalence",
+        "profile_ids": [
+          "microphone_channel_filtering",
+          "mild_pitch_formant_vtlp_proxy"
+        ],
+        "rows": [
+          {
+            "duration_seconds": 6.744125,
+            "frames": 107906,
+            "peak_ratio": 0.7677,
+            "row_index": 13100,
+            "safe_key": "s6tts-scale2000-13100__aug07",
+            "source_clean_safe_key": "s6tts-scale2000-13100",
+            "text_sha256": "ed24482fb6eb3a7ed25bb731863cf9e1bdf29911b2592a14b46cee38eb800a67"
+          },
+          {
+            "duration_seconds": 6.744125,
+            "frames": 107906,
+            "peak_ratio": 0.7677,
+            "row_index": 13100,
+            "safe_key": "s6tts-scale2000-13100__aug03",
+            "source_clean_safe_key": "s6tts-scale2000-13100",
+            "text_sha256": "ed24482fb6eb3a7ed25bb731863cf9e1bdf29911b2592a14b46cee38eb800a67"
+          }
+        ]
+      }
+    ],
+    "schema_version": "1.0",
+    "unexplained_duplicate_extra_file_count": 0
+  },
+  "duplicate_path_count": 0,
+  "duration_distribution": {
+    "max": 25.439812,
+    "mean": 4.297861,
+    "min": 1.060188,
+    "p50": 3.930438,
+    "p95": 7.718063
+  },
+  "expected_augmented_files": 176000,
+  "explained_duplicate_audio_hash_count": 19,
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "forbidden_uses": [
+    "public audio release",
+    "model release claim",
+    "TRAINING_ELIGIBLE",
+    "checkpoint acceptance",
+    "real-gate acceptance evidence"
+  ],
+  "generated_audio_committed": false,
+  "issues_by_reason": {},
+  "limitations": [
+    "S6TTS-generated and S6TTS-augmented audio remain internal diagnostic synthetic material only.",
+    "This certificate admits an audio bank but does not define a training sampling schedule.",
+    "Public distribution of S6TTS-generated or S6TTS-augmented audio is not authorized."
+  ],
+  "local_manifest_committed": false,
+  "peak_distribution": {
+    "max": 0.97998,
+    "mean": 0.670026,
+    "min": 0.158112,
+    "p50": 0.717041,
+    "p95": 0.848145
+  },
+  "profile_ids": [
+    "coupled_speed_pitch_resampling",
+    "tempo_preserving_pitch",
+    "mild_pitch_formant_vtlp_proxy",
+    "procedural_room_impulse_response",
+    "environmental_background_noise",
+    "coloured_electrical_noise",
+    "microphone_channel_filtering",
+    "codec_sample_rate_simulation",
+    "gain_dynamic_range_variation",
+    "timing_silence_variation",
+    "compound_realistic_condition"
+  ],
+  "prohibited_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "raw_text_committed": false,
+  "s6tts_runtime_data_hash": "2e71b1ed2df53b7959fa748d9cd1366478895202a874d884ed3986abb581e6dc",
+  "sample_rate": 16000,
+  "sample_width": 2,
+  "schema_version": "1.0",
+  "semantic_rows": 16000,
+  "source_clean_audio_manifest_sha256": "355a85134e81d9e3ea4089ea9a941f62fb101902b4e151c394eaaf1d1de416d5",
+  "source_clean_files": 16000,
+  "source_clean_provenance_manifest_sha256": "025eed3448a2c35c019534cae8b1a0e772969b2a667adf50acac4e30d48fe134",
+  "source_clean_view_id": "sl-corpus-v4-s6tts-clean-view-v1",
+  "status": "S6TTS_AUGMENTED_VIEW_AUDIO_ACCEPTED",
+  "synthesis_or_augmentation_failure_count": 0,
+  "total_duration_seconds": 756423.611653,
+  "tts_engine_repository": "ulfe-lmi/s6tts",
+  "tts_engine_revision": "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c",
+  "unexplained_duplicate_audio_hash_count": 0
+}

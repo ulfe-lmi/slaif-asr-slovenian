@@ -145,6 +145,11 @@
   `6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c`, voice label
   `s6tts-sl-si-s6-vintage`. S6TTS output is internal synthetic diagnostic
   audio only; public audio/model release is not authorized.
+- Work Order 0035 applies the existing transcript-preserving augmentation
+  policy to that admitted S6TTS clean view, producing an internal diagnostic
+  176000-file S6TTS augmented bank for the fixed scale-2000 corpus. The bank
+  is admitted as synthetic audio evidence only; it does not authorize training,
+  `TRAINING_ELIGIBLE`, checkpoint acceptance, or public audio/model release.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
