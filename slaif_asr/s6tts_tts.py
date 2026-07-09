@@ -316,6 +316,92 @@ def distribution(values: list[float]) -> dict[str, float]:
     }
 
 
+SLOVENIAN_NUMBER_WORDS = {
+    "0": "nic",
+    "1": "ena",
+    "2": "dva",
+    "3": "tri",
+    "4": "stiri",
+    "5": "pet",
+    "6": "sest",
+    "7": "sedem",
+    "8": "osem",
+    "9": "devet",
+    "10": "deset",
+    "20": "dvajset",
+    "30": "trideset",
+    "40": "stirideset",
+    "50": "petdeset",
+    "60": "sestdeset",
+    "70": "sedemdeset",
+    "80": "osemdeset",
+    "90": "devetdeset",
+    "100": "sto",
+}
+
+
+def numeric_spoken_equivalence_key(text: str) -> str:
+    """Return a conservative key for digit/word equivalence in local manifests."""
+    import re
+    import unicodedata
+
+    normalized = unicodedata.normalize("NFKD", text.lower())
+    normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+
+    def replace_number(match: re.Match[str]) -> str:
+        return SLOVENIAN_NUMBER_WORDS.get(match.group(0), match.group(0))
+
+    normalized = re.sub(r"\b\d+\b", replace_number, normalized)
+    normalized = re.sub(r"[^a-z0-9]+", " ", normalized)
+    return " ".join(normalized.split())
+
+
+def duplicate_audio_hash_groups(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(str(row["audio_sha256"]), []).append(row)
+    duplicate_groups = {audio_hash: group for audio_hash, group in grouped.items() if len(group) > 1}
+    redacted_groups = []
+    explained_extra = 0
+    unexplained_extra = 0
+    for audio_hash, group in sorted(duplicate_groups.items()):
+        equivalence_keys = {numeric_spoken_equivalence_key(str(row.get("text", ""))) for row in group}
+        explanation = "numeric_normalization_equivalence" if len(equivalence_keys) == 1 else "unexplained"
+        extra = len(group) - 1
+        if explanation == "numeric_normalization_equivalence":
+            explained_extra += extra
+        else:
+            unexplained_extra += extra
+        redacted_groups.append(
+            {
+                "audio_sha256": audio_hash,
+                "count": len(group),
+                "explanation": explanation,
+                "rows": [
+                    {
+                        "row_index": int(row["row_index"]),
+                        "safe_key": str(row["safe_key"]),
+                        "text_sha256": str(row.get("text_hash", "")),
+                        "chars": len(str(row.get("text", ""))),
+                        "utf8_bytes": len(str(row.get("text", "")).encode("utf-8")),
+                        "duration_seconds": row.get("duration_seconds"),
+                        "frames": row.get("frames"),
+                        "peak_ratio": row.get("peak_ratio"),
+                    }
+                    for row in sorted(group, key=lambda item: int(item["row_index"]))
+                ],
+            }
+        )
+    return {
+        "schema_version": "1.0",
+        "duplicate_group_count": len(redacted_groups),
+        "duplicate_extra_file_count": sum(len(group) - 1 for group in duplicate_groups.values()),
+        "explained_duplicate_extra_file_count": explained_extra,
+        "unexplained_duplicate_extra_file_count": unexplained_extra,
+        "groups": redacted_groups,
+    }
+
+
 def summarize_local_view(config: dict[str, Any], paths: S6Paths) -> dict[str, Any]:
     if not paths.audio_manifest.exists() or not paths.provenance_manifest.exists():
         raise FileNotFoundError("S6TTS local manifests are missing")
@@ -333,6 +419,8 @@ def summarize_local_view(config: dict[str, Any], paths: S6Paths) -> dict[str, An
                     failures.append(json.loads(line))
     duplicate_paths = len(rows) - len({row["audio_relative_path"] for row in rows})
     duplicate_hashes = len(rows) - len({row["audio_sha256"] for row in rows})
+    duplicate_groups = duplicate_audio_hash_groups(rows)
+    unexplained_duplicate_hashes = int(duplicate_groups["unexplained_duplicate_extra_file_count"])
     durations = [float(row["duration_seconds"]) for row in rows]
     peaks = [float(row["peak_ratio"]) for row in rows]
     issues: dict[str, int] = {}
@@ -346,8 +434,8 @@ def summarize_local_view(config: dict[str, Any], paths: S6Paths) -> dict[str, An
             issues[f"synthesis_failure:{reason}"] = count
     if duplicate_paths:
         issues["duplicate_paths"] = duplicate_paths
-    if duplicate_hashes:
-        issues["duplicate_audio_hashes"] = duplicate_hashes
+    if unexplained_duplicate_hashes:
+        issues["unexplained_duplicate_audio_hashes"] = unexplained_duplicate_hashes
     runtime_tree = tree_hash(paths.source_dir / "data" / "sl-si-s6", relative_prefix="data/sl-si-s6")
     summary = {
         "schema_version": "1.0",
@@ -376,6 +464,9 @@ def summarize_local_view(config: dict[str, Any], paths: S6Paths) -> dict[str, An
         "sample_width": 2,
         "duplicate_path_count": duplicate_paths,
         "duplicate_audio_hash_count": duplicate_hashes,
+        "explained_duplicate_audio_hash_count": int(duplicate_groups["explained_duplicate_extra_file_count"]),
+        "unexplained_duplicate_audio_hash_count": unexplained_duplicate_hashes,
+        "duplicate_audio_hash_groups_redacted": duplicate_groups,
         "synthesis_failure_count": len(failures),
         "issues_by_reason": issues,
         "local_manifest_committed": False,
@@ -421,6 +512,40 @@ def write_public_evidence(summary: dict[str, Any], *, report_json: Path, report_
         status_sentence = (
             "This report records a failed internal diagnostic S6TTS clean synthetic voice-view admission attempt for the fixed scale-2000 text corpus."
         )
+    duplicate_lines = []
+    duplicate_groups = summary.get("duplicate_audio_hash_groups_redacted", {})
+    if duplicate_groups.get("duplicate_group_count"):
+        duplicate_lines = [
+            "",
+            "## Duplicate Audio Hashes",
+            "",
+            f"- Duplicate groups: {duplicate_groups['duplicate_group_count']}",
+            f"- Extra duplicate files: {duplicate_groups['duplicate_extra_file_count']}",
+            f"- Explained by numeric normalization: {duplicate_groups['explained_duplicate_extra_file_count']}",
+            f"- Unexplained duplicate files: {duplicate_groups['unexplained_duplicate_extra_file_count']}",
+            "",
+            "| Audio SHA256 | Explanation | Rows | Text SHA256 values | Duration seconds | Frames |",
+            "|---|---|---:|---|---:|---:|",
+        ]
+        for group in duplicate_groups.get("groups", []):
+            rows = group["rows"]
+            duplicate_lines.append(
+                "| `{audio}` | `{explanation}` | {row_indexes} | `{text_hashes}` | {duration} | {frames} |".format(
+                    audio=group["audio_sha256"],
+                    explanation=group["explanation"],
+                    row_indexes=", ".join(str(row["row_index"]) for row in rows),
+                    text_hashes=", ".join(row["text_sha256"] for row in rows),
+                    duration=rows[0]["duration_seconds"],
+                    frames=rows[0]["frames"],
+                )
+            )
+        duplicate_lines.extend(
+            [
+                "",
+                "Raw text for these duplicate cases is retained only in ignored local debugging files and is not committed.",
+                "",
+            ]
+        )
     md = "\n".join(
         [
             "# S6TTS Vintage Clean-View Admission",
@@ -444,8 +569,11 @@ def write_public_evidence(summary: dict[str, Any], *, report_json: Path, report_
             f"- Actual clean files: {summary['actual_clean_files']}",
             f"- Duplicate paths: {summary['duplicate_path_count']}",
             f"- Duplicate audio hashes: {summary['duplicate_audio_hash_count']}",
+            f"- Explained duplicate audio hashes: {summary.get('explained_duplicate_audio_hash_count', 0)}",
+            f"- Unexplained duplicate audio hashes: {summary.get('unexplained_duplicate_audio_hash_count', 0)}",
             f"- Synthesis failures: {summary['synthesis_failure_count']}",
             "",
+            *duplicate_lines,
             "## Audio",
             "",
             f"- Format: mono signed 16-bit PCM WAV at {summary['sample_rate']} Hz",

@@ -11,7 +11,9 @@ from unittest import mock
 from slaif_asr.s6tts_tts import (
     PINNED_REVISION,
     build_s6_command,
+    duplicate_audio_hash_groups,
     local_path,
+    numeric_spoken_equivalence_key,
     summarize_local_view,
     validate_public_payload,
     validate_s6_config,
@@ -129,6 +131,119 @@ class S6TtsTests(unittest.TestCase):
             self.assertEqual(summary["status"], "S6TTS_REJECTED_SYNTHESIS_QUALITY")
             self.assertEqual(summary["actual_clean_files"], 1)
             self.assertIn("TRAINING_ELIGIBLE", summary["prohibited_statuses"])
+
+    def test_numeric_duplicate_audio_hashes_are_explained(self):
+        rows = [
+            {
+                "audio_sha256": "a" * 64,
+                "row_index": 1,
+                "safe_key": "row-1",
+                "text_hash": "b" * 64,
+                "text": "Vsak dan pretečem 5 kilometrov.",
+                "duration_seconds": 1.0,
+                "frames": 16000,
+                "peak_ratio": 0.5,
+            },
+            {
+                "audio_sha256": "a" * 64,
+                "row_index": 2,
+                "safe_key": "row-2",
+                "text_hash": "c" * 64,
+                "text": "Vsak dan pretečem pet kilometrov.",
+                "duration_seconds": 1.0,
+                "frames": 16000,
+                "peak_ratio": 0.5,
+            },
+        ]
+        self.assertEqual(
+            numeric_spoken_equivalence_key(rows[0]["text"]),
+            numeric_spoken_equivalence_key(rows[1]["text"]),
+        )
+        groups = duplicate_audio_hash_groups(rows)
+        self.assertEqual(groups["explained_duplicate_extra_file_count"], 1)
+        self.assertEqual(groups["unexplained_duplicate_extra_file_count"], 0)
+        self.assertEqual(groups["groups"][0]["explanation"], "numeric_normalization_equivalence")
+
+    def test_unexplained_duplicate_audio_hashes_remain_rejected(self):
+        rows = [
+            {
+                "audio_sha256": "a" * 64,
+                "row_index": 1,
+                "safe_key": "row-1",
+                "text_hash": "b" * 64,
+                "text": "Danes dežuje.",
+                "duration_seconds": 1.0,
+                "frames": 16000,
+                "peak_ratio": 0.5,
+            },
+            {
+                "audio_sha256": "a" * 64,
+                "row_index": 2,
+                "safe_key": "row-2",
+                "text_hash": "c" * 64,
+                "text": "Včeraj sem popravil kolo.",
+                "duration_seconds": 1.0,
+                "frames": 16000,
+                "peak_ratio": 0.5,
+            },
+        ]
+        groups = duplicate_audio_hash_groups(rows)
+        self.assertEqual(groups["explained_duplicate_extra_file_count"], 0)
+        self.assertEqual(groups["unexplained_duplicate_extra_file_count"], 1)
+        self.assertEqual(groups["groups"][0]["explanation"], "unexplained")
+
+    def test_summary_accepts_complete_explained_numeric_duplicates(self):
+        config = load_s6_config()
+        with tempfile.TemporaryDirectory() as tmp, mock.patch("slaif_asr.s6tts_tts.EXPECTED_ROWS", 2):
+            root = Path(tmp)
+            source = root / "s6tts"
+            (source / "data" / "sl-si-s6").mkdir(parents=True)
+            (source / "data" / "sl-si-s6" / "sint.ini").write_text("fixture", encoding="utf-8")
+            paths = s6_paths(config)
+            paths = paths.__class__(
+                source_dir=source,
+                build_dir=root / "build",
+                cli_path=root / "s6cli",
+                runtime_ini=source / "data" / "sl-si-s6" / "sint.ini",
+                run_root=root / "run",
+                audio_manifest=root / "run" / "audio-manifest.local.jsonl",
+                provenance_manifest=root / "run" / "provenance.local.jsonl",
+                validation=root / "run" / "audio-validation.local.json",
+                summary=root / "run" / "summary.local.json",
+                logs_dir=root / "run" / "logs",
+            )
+            rows = [
+                {
+                    "audio_relative_path": "wav/a.wav",
+                    "audio_sha256": "a" * 64,
+                    "row_index": 1,
+                    "safe_key": "row-1",
+                    "text_hash": "b" * 64,
+                    "text": "Za rojstni dan sem star 40 let.",
+                    "duration_seconds": 1.0,
+                    "frames": 16000,
+                    "peak_ratio": 0.5,
+                },
+                {
+                    "audio_relative_path": "wav/b.wav",
+                    "audio_sha256": "a" * 64,
+                    "row_index": 2,
+                    "safe_key": "row-2",
+                    "text_hash": "c" * 64,
+                    "text": "Za rojstni dan sem star štirideset let.",
+                    "duration_seconds": 1.0,
+                    "frames": 16000,
+                    "peak_ratio": 0.5,
+                },
+            ]
+            write_jsonl(paths.audio_manifest, rows)
+            write_jsonl(paths.provenance_manifest, rows)
+            summary = summarize_local_view(config, paths)
+            self.assertEqual(summary["status"], "S6TTS_SCALE2000_CLEAN_VIEW_AUDIO_ACCEPTED")
+            self.assertEqual(summary["duplicate_audio_hash_count"], 1)
+            self.assertEqual(summary["explained_duplicate_audio_hash_count"], 1)
+            self.assertEqual(summary["unexplained_duplicate_audio_hash_count"], 0)
+            self.assertEqual(summary["issues_by_reason"], {})
 
     def test_no_tracked_wav_or_s6_external_artifacts(self):
         root = Path(__file__).resolve().parents[1]

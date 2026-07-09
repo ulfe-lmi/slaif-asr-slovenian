@@ -13,10 +13,12 @@
   "duplicate_audio_hash_groups_redacted": {
     "duplicate_extra_file_count": 3,
     "duplicate_group_count": 3,
+    "explained_duplicate_extra_file_count": 3,
     "groups": [
       {
         "audio_sha256": "0ae7560cbdbd3ecb3750d57010277ec855a95b595147ec728e59c2e73123cd1b",
         "count": 2,
+        "explanation": "numeric_normalization_equivalence",
         "rows": [
           {
             "chars": 31,
@@ -43,6 +45,7 @@
       {
         "audio_sha256": "6c3cf12f9fa7dfe7491a11cd4064778d1b9f7cf9bf8ed2234380208d00487f83",
         "count": 2,
+        "explanation": "numeric_normalization_equivalence",
         "rows": [
           {
             "chars": 31,
@@ -69,6 +72,7 @@
       {
         "audio_sha256": "df35ad734e2607cc80c3b0d7c5eb1f5435fbf4441417c6cd06a964ee7c4b6d26",
         "count": 2,
+        "explanation": "numeric_normalization_equivalence",
         "rows": [
           {
             "chars": 27,
@@ -93,7 +97,8 @@
         ]
       }
     ],
-    "schema_version": "1.0"
+    "schema_version": "1.0",
+    "unexplained_duplicate_extra_file_count": 0
   },
   "duplicate_path_count": 0,
   "duration_distribution": {
@@ -104,6 +109,7 @@
     "p95": 7.662312
   },
   "expected_clean_files": 16000,
+  "explained_duplicate_audio_hash_count": 3,
   "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
   "forbidden_uses": [
     "public audio release",
@@ -113,9 +119,7 @@
     "real-gate acceptance evidence"
   ],
   "generated_audio_committed": false,
-  "issues_by_reason": {
-    "duplicate_audio_hashes": 3
-  },
+  "issues_by_reason": {},
   "limitations": [
     "S6TTS voice/runtime provenance is treated as internal diagnostic pending release review.",
     "The view is a synthetic clean voice addition only and does not authorize model training."
@@ -139,12 +143,13 @@
   "sample_width": 2,
   "schema_version": "1.0",
   "semantic_rows": 16000,
-  "status": "S6TTS_REJECTED_SYNTHESIS_QUALITY",
+  "status": "S6TTS_SCALE2000_CLEAN_VIEW_AUDIO_ACCEPTED",
   "synthesis_failure_count": 0,
   "total_duration_seconds": 68193.891926,
   "tts_engine": "s6tts",
   "tts_engine_repository": "ulfe-lmi/s6tts",
   "tts_engine_revision": "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c",
+  "unexplained_duplicate_audio_hash_count": 0,
   "view_id": "sl-corpus-v4-s6tts-clean-view-v1",
   "voice_label": "s6tts-sl-si-s6-vintage"
 }
