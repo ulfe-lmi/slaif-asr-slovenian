@@ -1,0 +1,146 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "scale2000-decoder-joint-rnnt-s6tts-hardvoice20-v1",
+  "work_order_id": "0036",
+  "status": "DIAGNOSTIC_ONLY",
+  "accepted_parent": "none",
+  "schedule": {
+    "schedule_id": "scale2000_plus_s6tts_hardvoice_20pct_v1",
+    "semantic_rows": 16000,
+    "exposures_per_semantic_row": 20,
+    "total_exposures": 320000,
+    "original_scale2000_exposures_per_row": 16,
+    "original_scale2000_exposures": 256000,
+    "s6tts_exposures_per_row": 4,
+    "s6tts_total_exposures": 64000,
+    "s6tts_share": 0.2,
+    "s6tts_clean_exposures_per_row": 1,
+    "s6tts_augmented_exposures_per_row": 3,
+    "s6tts_replacement_rounds": [5, 10, 15, 20]
+  },
+  "data": {
+    "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+    "semantic_rows": 16000,
+    "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+    "base_scale2000_all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+    "base_scale2000_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842",
+    "base_scale2000_audio_certificate": "docs/data-certificates/sl-corpus-v4-scale2000-audio-v1.json",
+    "s6_clean_certificate": "docs/data-certificates/sl-corpus-v4-s6tts-clean-view-v1.json",
+    "s6_augmented_certificate": "docs/data-certificates/sl-corpus-v4-s6tts-augmented-view-v1.json",
+    "s6_clean_manifest_sha256": "355a85134e81d9e3ea4089ea9a941f62fb101902b4e151c394eaaf1d1de416d5",
+    "s6_augmented_manifest_sha256": "8d39606dc276a7730e032e83c1811f6c71ece3de6f0b68aa1bd5f4c0a8f50251",
+    "s6_augmented_provenance_manifest_sha256": "d18a2c8245e75d94d18c97ae02a3194ddcdc8fdf864bc44cc21fcec8941603ec",
+    "s6tts_revision": "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c",
+    "s6tts_runtime_data_hash": "2e71b1ed2df53b7959fa748d9cd1366478895202a874d884ed3986abb581e6dc",
+    "fixed_text": "runs/data-quality/sl-corpus-v4-gams-16000-training-v1/fixed-combined-training-text.local.jsonl",
+    "base_all_views": "runs/data-quality/sl-corpus-v4-gams-16000-training-v1/all-views.local.jsonl",
+    "base_exposure_schedule": "runs/data-quality/sl-corpus-v4-gams-16000-training-v1/exposure-schedule.local.jsonl",
+    "base_audio_validation": "runs/data-quality/sl-corpus-v4-gams-16000-training-v1/audio-validation.local.json",
+    "s6_clean_manifest": "runs/data-quality/sl-corpus-v4-s6tts-vintage-clean-view-v1/audio-manifest.local.jsonl",
+    "s6_augmented_manifest": "runs/data-quality/sl-corpus-v4-s6tts-augmented-view-v1/audio-manifest.local.jsonl",
+    "s6_augmented_provenance_manifest": "runs/data-quality/sl-corpus-v4-s6tts-augmented-view-v1/provenance.local.jsonl"
+  },
+  "hardvoice_holdout": {
+    "source_holdout": "sl-corpus-v2-independent-synthetic-holdout-v1",
+    "source_text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+    "rows": 96,
+    "s6tts_clean_files": 96,
+    "s6tts_augmented_files": 1056
+  },
+  "model": {
+    "repository": "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "revision": "3fc30f3e2ae5d78d462441f3ce89dda694f89bd7",
+    "checkpoint_path": "models/checkpoints/nemotron-3.5-asr-streaming-0.6b.nemo",
+    "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "target_lang": "sl-SI",
+    "streaming_context": [56, 3]
+  },
+  "trainable_surface": {
+    "allowed_prefixes": ["decoder.", "joint."],
+    "forbidden_substrings": ["adapter_layer", "lm_adapter", "lm_head"],
+    "freeze_encoder": true,
+    "freeze_prompt_kernel": true,
+    "freeze_tokenizer": true,
+    "text_only_path_allowed": false
+  },
+  "training": {
+    "arm": "scale2000_s6tts_hardvoice20_decoder_joint_rnnt",
+    "semantic_rows": 16000,
+    "sample_exposures": 320000,
+    "effective_batch_size": 8,
+    "optimizer_steps": 40000,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "gradient_accumulation": "selected_by_microbatch_probe",
+    "gradient_clipping": "none",
+    "seed": 1234,
+    "precision": "fp32",
+    "tf32": false,
+    "spec_augment": "exact_experiment_0014_schedule_policy_for_retained_scale2000_views",
+    "waveform_augmentation": "pre_existing_scale2000_and_s6tts_views_only",
+    "early_stopping": false,
+    "retain_per_round_checkpoints": true,
+    "physical_microbatch_candidates": [8, 4, 2, 1],
+    "minimum_free_vram_mib_after_warmup": 500,
+    "anchor_probe_rows": 32,
+    "scale_probe_rows": 320,
+    "s6_clean_probe_rows": 32,
+    "s6_augmented_probe_rows": 320
+  },
+  "evaluation": {
+    "policy": "configs/evaluation/a100-directional-batch32-v1.json",
+    "batch_size": 32,
+    "duration_bucketing": true,
+    "canonical": false,
+    "promotion_eligible": false,
+    "target_lang": "sl-SI",
+    "att_context_size": [56, 3],
+    "base_suite_rows": 1378,
+    "s6_hardvoice_rows": 1152
+  },
+  "controller_dev": {
+    "partition_id": "artur-controller-dev-v1",
+    "certificate": "docs/data-certificates/artur-controller-dev-v1.json",
+    "manifest": "runs/evaluation-gates/artur-controller-dev-v1/manifest.local.jsonl",
+    "manifest_sha256": "7944cbd82107e4aa8cfd3c5ca991d652e4ec3450ba8805efbc98e7c3aeec34f9",
+    "rows": 256,
+    "policy": "configs/evaluation/artur-controller-dev-batch1-v1.json",
+    "batch_size": 1,
+    "duration_bucketing": false,
+    "allowed_for": "aggregate_run_control_and_early_stopping_only"
+  },
+  "early_stop_rule": {
+    "policy": "configs/run_control/artur-controller-dev-early-stop-v1.json",
+    "min_rounds_before_stop": 3,
+    "patience_rounds_without_new_raw_best": 3,
+    "operational_stop_rule": "stop_after_three_evaluated_rounds_without_new_raw_best_controller_dev_wer",
+    "selection": "earliest_checkpoint_within_tolerance_of_best",
+    "human_runtime_override": {
+      "applied": true,
+      "reason": "Avoid wasting a five-hour synthetic training run when real-acoustic controller-dev stops improving."
+    }
+  },
+  "references": {
+    "experiment_0017_report": "docs/experiments/0017-scale2000-decoder-joint-rnnt-directional.json",
+    "experiment_0017_classification": "DECODER_JOINT_RNNT_BEATS_SCALE2000_DIRECTIONAL",
+    "pr36_round20_checkpoint_optional": true
+  },
+  "protected_files": [
+    "configs/augmentation/scale200_transcript_preserving_v1.json",
+    "configs/evaluation/a100-directional-batch32-v1.json",
+    "configs/adapters/sl_si_joint_adapter_v1.json",
+    "slaif_asr/corpus_v2_training.py",
+    "slaif_asr/slovenian_joint_adapter.py",
+    "slaif_asr/text_only_decoder_lm.py",
+    "scripts/run_text_only_decoder_lm_adaptation.py",
+    "scripts/run_scale2000_text_only_diagnostic.py"
+  ],
+  "local_outputs": {
+    "run_root": "runs/experiments/scale2000-decoder-joint-rnnt-s6tts-hardvoice20-v1",
+    "schedule": "runs/experiments/scale2000-decoder-joint-rnnt-s6tts-hardvoice20-v1/schedule/exposure-schedule.local.jsonl",
+    "schedule_summary": "runs/experiments/scale2000-decoder-joint-rnnt-s6tts-hardvoice20-v1/schedule/summary.local.json"
+  }
+}

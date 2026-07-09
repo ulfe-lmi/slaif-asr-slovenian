@@ -1,0 +1,37 @@
+{
+  "allowed_uses": [
+    "synthetic-only hard-voice diagnostic evaluation for Work Order 0036"
+  ],
+  "augmented_manifest_sha256": "72408f74ff59ec1de1c621be313de24146cd1a5ff9853c3034a8211db688bd59",
+  "certificate_id": "sl-corpus-v2-s6tts-hardvoice-holdout-v1",
+  "clean_manifest_sha256": "2c345c6a8a2de70cc09d6a0361529c4ed09343ae319cbbccf62f9686ee89b713",
+  "duration_distribution": {
+    "max": 10.611062,
+    "mean": 3.64356,
+    "min": 1.762063
+  },
+  "forbidden_uses": [
+    "TRAINING_ELIGIBLE",
+    "checkpoint acceptance",
+    "model release claim",
+    "public audio release"
+  ],
+  "generated_audio_committed": false,
+  "local_manifest_committed": false,
+  "peak_distribution": {
+    "max": 0.97998,
+    "mean": 0.66849,
+    "min": 0.227112
+  },
+  "raw_text_committed": false,
+  "report_id": "0022-s6tts-hardvoice-holdout-admission",
+  "rows": 96,
+  "s6tts_augmented_files": 1056,
+  "s6tts_clean_files": 96,
+  "s6tts_revision": "6e55c9dad7a9414d8f67e2612862e6fb8b7ff37c",
+  "s6tts_runtime_data_hash": "2e71b1ed2df53b7959fa748d9cd1366478895202a874d884ed3986abb581e6dc",
+  "schema_version": "1.0",
+  "source_holdout": "sl-corpus-v2-independent-synthetic-holdout-v1",
+  "source_text_sha256": "078fab68fe82914fb1dfb0755c3fcc3f1603dae2dc52adf9397c9d5080c08fc5",
+  "status": "S6TTS_HARDVOICE_HOLDOUT_AUDIO_ACCEPTED"
+}

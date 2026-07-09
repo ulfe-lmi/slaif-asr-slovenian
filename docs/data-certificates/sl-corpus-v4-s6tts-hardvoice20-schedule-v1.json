@@ -1,0 +1,51 @@
+{
+  "allowed_uses": [
+    "internal synthetic diagnostic training by Work Order 0036",
+    "aggregate reporting"
+  ],
+  "base_scale2000_all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+  "certificate_id": "sl-corpus-v4-s6tts-hardvoice20-schedule-v1",
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "duplicate_path_count": 0,
+  "exposures_per_semantic_row": 20,
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "forbidden_uses": [
+    "TRAINING_ELIGIBLE",
+    "checkpoint acceptance",
+    "model release claim",
+    "public audio release"
+  ],
+  "generated_audio_committed": false,
+  "limitations": [
+    "This balanced schedule admits a diagnostic training recipe only.",
+    "It does not authorize S6TTS audio or trained models for public release.",
+    "Synthetic-only training cannot accept a checkpoint."
+  ],
+  "local_manifest_committed": false,
+  "missing_audio_count": 0,
+  "original_scale2000_exposures": 256000,
+  "profile_distribution": {
+    "codec_sample_rate_simulation": 4363,
+    "coloured_electrical_noise": 4364,
+    "compound_realistic_condition": 4363,
+    "coupled_speed_pitch_resampling": 4364,
+    "environmental_background_noise": 4364,
+    "gain_dynamic_range_variation": 4363,
+    "microphone_channel_filtering": 4364,
+    "mild_pitch_formant_vtlp_proxy": 4364,
+    "procedural_room_impulse_response": 4364,
+    "tempo_preserving_pitch": 4364,
+    "timing_silence_variation": 4363
+  },
+  "s6_augmented_manifest_sha256": "8d39606dc276a7730e032e83c1811f6c71ece3de6f0b68aa1bd5f4c0a8f50251",
+  "s6_clean_manifest_sha256": "355a85134e81d9e3ea4089ea9a941f62fb101902b4e151c394eaaf1d1de416d5",
+  "s6tts_exposures": 64000,
+  "s6tts_share": 0.2,
+  "schedule_id": "scale2000_plus_s6tts_hardvoice_20pct_v1",
+  "schedule_sha256": "07c30ea48dd1a155aef7bb42ab804367bf53cddd6e41448db7485b475aa170b6",
+  "schema_version": "1.0",
+  "semantic_rows": 16000,
+  "status": "DIAGNOSTIC_ONLY",
+  "total_exposures": 320000,
+  "training_eligible_issued": false
+}
