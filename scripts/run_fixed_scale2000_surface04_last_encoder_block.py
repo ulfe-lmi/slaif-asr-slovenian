@@ -302,18 +302,22 @@ def stage_probe_surface(config_path: Path) -> dict[str, Any]:
     return payload
 
 
-def _representative_records(config: dict[str, Any], count: int = 8) -> list[Any]:
+def _representative_records(config: dict[str, Any], count: int = 8, *, longest: bool = True) -> list[Any]:
     rounds, _meta, _summary = load_scheduled_round_records(config)
-    return sorted(rounds[1], key=lambda row: (-row.duration, row.selected_training_id))[:count]
+    return sorted(
+        rounds[1],
+        key=(lambda row: (-row.duration, row.selected_training_id)) if longest else (lambda row: (row.duration, row.selected_training_id)),
+    )[:count]
 
 
 def _run_gradient_partition(config: dict[str, Any], records: Sequence[Any], physical: int, torch: Any) -> tuple[dict[str, Any], dict[str, Any]]:
     model = restore_base_model(config)
     configure_surface04_trainable(model)
-    # Accumulation equivalence must compare the same deterministic objective;
-    # dropout and SpecAugment would otherwise consume different RNG shapes for
-    # grouped versus singleton partitions while still producing valid grads.
+    # Keep the parent in eval mode to disable SpecAugment and encoder dropout,
+    # while cuDNN requires the prediction RNN itself in training mode for its
+    # backward pass. The pinned prediction-network dropout is zero.
     model.eval()
+    model.decoder.train()
     prompt = derive_prompt_column_selection(model, "sl-SI")
     _zero_grad(model)
     weighted_loss = 0.0
@@ -344,7 +348,7 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
     require_single_visible_rtx2080ti()
     torch = configure_torch()
     verify_runtime_identities(check_gpu=False)
-    records = _representative_records(config)
+    records = _representative_records(config, longest=True)
     outcomes: dict[int, dict[str, Any]] = {}
     reporter = LiveProgressReporter(stage="probe_microbatch", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "microbatch.local.ndjson")
     reporter.start("probing SURFACE_04 microbatch")
@@ -394,12 +398,14 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
         raise RuntimeError("SURFACE_04 does not fit physical microbatch 1")
 
     physical = int(selected["physical_microbatch"])
+    correctness_records = _representative_records(config, longest=False)
+    comparison_physical = 2 if physical == 1 else physical
     torch.manual_seed(int(config["training"]["seed"]) + 3700)
     torch.cuda.manual_seed_all(int(config["training"]["seed"]) + 3700)
-    first, first_grads = _run_gradient_partition(config, records, physical, torch)
+    first, first_grads = _run_gradient_partition(config, correctness_records, comparison_physical, torch)
     torch.manual_seed(int(config["training"]["seed"]) + 3700)
     torch.cuda.manual_seed_all(int(config["training"]["seed"]) + 3700)
-    second, second_grads = _run_gradient_partition(config, records, 1, torch)
+    second, second_grads = _run_gradient_partition(config, correctness_records, 1, torch)
     squared_diff = 0.0
     squared_ref = 0.0
     for name in first_grads:
@@ -409,7 +415,8 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
     relative_gradient_difference = (squared_diff**0.5 / squared_ref**0.5) if squared_ref else 0.0
     relative_loss_difference = abs(first["weighted_loss"] - second["weighted_loss"]) / second["weighted_loss"] if second["weighted_loss"] else 0.0
     correctness = {
-        "selected_partition": physical,
+        "selected_training_microbatch": physical,
+        "comparison_partition": comparison_physical,
         "reference_partition": 1,
         "relative_loss_difference": relative_loss_difference,
         "relative_gradient_difference": relative_gradient_difference,
