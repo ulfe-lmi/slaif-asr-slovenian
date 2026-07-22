@@ -5,6 +5,7 @@ from slaif_asr.s6tts_hardvoice import (
     EXPECTED_PROFILE_IDS,
     PR36_DECODER_JOINT_METRICS,
     classify_hardvoice,
+    should_stop_for_controller_dev,
     validate_config,
     validate_hardvoice_schedule,
 )
@@ -51,7 +52,8 @@ VALID_CONFIG = {
         "seed": 1234,
         "precision": "fp32",
         "tf32": False,
-        "early_stopping": False,
+        "early_stopping": True,
+        "early_stopping_partition": "artur-controller-dev-v1",
         "retain_per_round_checkpoints": True,
         "physical_microbatch_candidates": [8, 4, 2, 1],
     },
@@ -139,6 +141,44 @@ class S6TtsHardvoiceScheduleTests(unittest.TestCase):
         schedule[0]["voice"] = "supertonic-M5"
         with self.assertRaises(ValueError):
             validate_hardvoice_schedule(schedule)
+
+    def test_controller_dev_stop_after_three_rounds_without_raw_best(self):
+        config = {**VALID_CONFIG, "early_stop_rule": {**VALID_CONFIG["early_stop_rule"], "min_rounds_before_stop": 3}}
+        self.assertFalse(
+            should_stop_for_controller_dev(
+                config,
+                [
+                    {"round": 0, "wer": 66.0},
+                    {"round": 1, "wer": 61.0},
+                    {"round": 2, "wer": 62.0},
+                    {"round": 3, "wer": 63.0},
+                ],
+            )
+        )
+        self.assertTrue(
+            should_stop_for_controller_dev(
+                config,
+                [
+                    {"round": 0, "wer": 66.0},
+                    {"round": 1, "wer": 61.0},
+                    {"round": 2, "wer": 62.0},
+                    {"round": 3, "wer": 63.0},
+                    {"round": 4, "wer": 64.0},
+                ],
+            )
+        )
+        self.assertFalse(
+            should_stop_for_controller_dev(
+                config,
+                [
+                    {"round": 0, "wer": 66.0},
+                    {"round": 1, "wer": 61.0},
+                    {"round": 2, "wer": 62.0},
+                    {"round": 3, "wer": 60.5},
+                    {"round": 4, "wer": 61.5},
+                ],
+            )
+        )
 
     def test_positive_real_safe_classification(self):
         metrics = {

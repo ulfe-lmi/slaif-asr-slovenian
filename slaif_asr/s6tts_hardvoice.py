@@ -159,7 +159,7 @@ def validate_config(config: dict[str, Any]) -> None:
         "seed": 1234,
         "precision": "fp32",
         "tf32": False,
-        "early_stopping": False,
+        "early_stopping": True,
     }
     for key, expected in expected_training.items():
         if training.get(key) != expected:
@@ -168,6 +168,8 @@ def validate_config(config: dict[str, Any]) -> None:
         raise ValueError("physical microbatch candidates must be [8, 4, 2, 1]")
     if training.get("retain_per_round_checkpoints") is not True:
         raise ValueError("per-round checkpoints must be retained locally for controller-dev run-control")
+    if training.get("early_stopping_partition") != "artur-controller-dev-v1":
+        raise ValueError("early stopping must use artur-controller-dev-v1")
     surface = config["trainable_surface"]
     if tuple(surface.get("allowed_prefixes", ())) != ("decoder.", "joint."):
         raise ValueError("trainable surface must be decoder+joint only")
@@ -192,6 +194,22 @@ def validate_config(config: dict[str, Any]) -> None:
         raise ValueError("unexpected S6 hardvoice early-stop rule")
     if int(early_stop.get("patience_rounds_without_new_raw_best", 0)) != 3:
         raise ValueError("S6 hardvoice controller-dev patience must be 3 rounds")
+
+
+def should_stop_for_controller_dev(config: dict[str, Any], rows: Sequence[dict[str, Any]]) -> bool:
+    post = [row for row in rows if int(row["round"]) > 0]
+    min_rounds = int(config["early_stop_rule"].get("min_rounds_before_stop", 0))
+    patience = int(config["early_stop_rule"]["patience_rounds_without_new_raw_best"])
+    if len(post) < min_rounds:
+        return False
+    best_wer = float("inf")
+    best_position = -1
+    for position, row in enumerate(post):
+        wer = float(row["wer"])
+        if wer < best_wer:
+            best_wer = wer
+            best_position = position
+    return len(post) - best_position - 1 >= patience
 
 
 def run_dir(config: dict[str, Any]) -> Path:

@@ -10,6 +10,7 @@ import subprocess
 import sys
 import time
 from collections import Counter
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -67,6 +68,7 @@ from slaif_asr.s6tts_hardvoice import (
     probe_records,
     run_dir,
     schedule_summary_path,
+    should_stop_for_controller_dev,
     verify_all_inputs,
     write_schedule_certificate,
 )
@@ -136,6 +138,22 @@ def seed_torch(torch: Any, seed: int) -> None:
 
 def restore_base_model(config: dict[str, Any], *, reporter: LiveProgressReporter | None = None) -> Any:
     return _JOINT.restore_base_model(config, reporter=reporter)
+
+
+def restore_local_checkpoint(checkpoint: Path, *, reporter: LiveProgressReporter | None = None) -> Any:
+    import nemo.collections.asr as nemo_asr
+
+    _JOINT.suppress_nemo_stream_logging()
+    if reporter:
+        reporter.start(f"restoring retained checkpoint {checkpoint.parent.name}")
+    with heartbeat_thread(reporter, interval_seconds=5.0, message="retained checkpoint restore in progress") if reporter else nullcontext():
+        model = nemo_asr.models.ASRModel.restore_from(restore_path=str(checkpoint), map_location="cuda:0")
+    model = model.cuda().eval()
+    if hasattr(model, "spec_augmentation"):
+        model.spec_augmentation = None
+    if reporter:
+        reporter.complete("retained checkpoint restored")
+    return model
 
 
 def write_public_json(path: Path, payload: Any) -> None:
@@ -284,22 +302,6 @@ def _write_controller_metrics(config: dict[str, Any], rows: list[dict[str, Any]]
     path = run_dir(config) / ARM_NAME / "controller-dev" / "round-metrics.local.json"
     write_json(path, payload)
     return payload
-
-
-def _should_stop_for_controller_dev(config: dict[str, Any], rows: list[dict[str, Any]]) -> bool:
-    post = [row for row in rows if int(row["round"]) > 0]
-    min_rounds = int(config["early_stop_rule"]["min_rounds_before_stop"])
-    patience = int(config["early_stop_rule"]["patience_rounds_without_new_raw_best"])
-    if len(post) < min_rounds + patience:
-        return False
-    best_wer = float("inf")
-    best_position = -1
-    for position, row in enumerate(post):
-        wer = float(row["wer"])
-        if wer < best_wer:
-            best_wer = wer
-            best_position = position
-    return len(post) - best_position - 1 >= patience
 
 
 def stage_verify_inputs(config_path: Path) -> dict[str, Any]:
@@ -557,7 +559,18 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     anchor_probe, scale_probe, s6_clean_probe, s6_augmented_probe = probe_records(config)
     reporter = LiveProgressReporter(stage="train", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "train.local.ndjson")
     reporter.start("training scale-2000+S6TTS hardvoice decoder+joint RNNT")
-    model = restore_base_model(config, reporter=LiveProgressReporter(stage="restore", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "restore.local.ndjson"))
+    arm_dir = run_dir(config) / ARM_NAME
+    resume_round = int(os.environ.get("SLAIF_RESUME_FROM_ROUND", "0"))
+    if resume_round:
+        resume_checkpoint = arm_dir / "checkpoints" / f"round_{resume_round:02d}" / "model.local.nemo"
+        resume_marker = resume_checkpoint.parent / "checkpoint-complete.local.json"
+        if not resume_checkpoint.exists() or not resume_marker.exists():
+            raise RuntimeError(f"cannot resume: retained checkpoint for round {resume_round} is missing")
+        model = restore_local_checkpoint(resume_checkpoint, reporter=LiveProgressReporter(stage="restore", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "restore.local.ndjson"))
+    else:
+        resume_checkpoint = None
+        resume_marker = None
+        model = restore_base_model(config, reporter=LiveProgressReporter(stage="restore", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "restore.local.ndjson"))
     model.train()
     surface = configure_decoder_joint_trainable(model)
     if has_forbidden_text_only_modules(model):
@@ -583,50 +596,63 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     validation_gpu = os.environ.get("SLAIF_VALIDATION_GPU", "1")
     round_checkpoint_rows: list[dict[str, Any]] = []
     controller_rows: list[dict[str, Any]] = []
+    if resume_round:
+        checkpoint_rows_path = arm_dir / "controller-dev" / "round-checkpoints.local.json"
+        controller_rows_path = arm_dir / "controller-dev" / "round-metrics.local.json"
+        if checkpoint_rows_path.exists():
+            round_checkpoint_rows = list(read_json(checkpoint_rows_path).get("rounds", []))
+        if controller_rows_path.exists():
+            controller_rows = list(read_json(controller_rows_path).get("rows", []))
     decoder_joint_norm_curve: list[dict[str, Any]] = []
     grad_norms: list[float] = []
-    optimizer_steps = 0
-    sample_exposures = 0
+    if resume_round:
+        resume_payload = read_json(resume_marker)
+        optimizer_steps = int(resume_payload["optimizer_step"])
+        sample_exposures = int(resume_payload["exposures_seen"])
+    else:
+        optimizer_steps = 0
+        sample_exposures = 0
     audio_seconds = 0.0
     padded_audio_seconds = 0.0
     rolling_losses: list[float] = []
     voice_counts: Counter[str] = Counter()
     profile_counts: Counter[str] = Counter()
     view_type_counts: Counter[str] = Counter()
-    arm_dir = run_dir(config) / ARM_NAME
     monitor_path = arm_dir / "gpu-monitor.local.csv"
     monitor = NvidiaSmiMonitor(physical_gpu_index=hardware.physical_selector, output_csv=monitor_path, interval_seconds=0.5)
     torch.cuda.reset_peak_memory_stats(0)
     started = time.perf_counter()
     last_progress = started
-    base_checkpoint_dir = arm_dir / "checkpoints" / "round_00_base"
-    base_checkpoint = base_checkpoint_dir / "model.local.nemo"
-    base_checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    model.save_to(str(base_checkpoint))
-    round_checkpoint_rows.append(
-        {
-            "round": 0,
-            "checkpoint_sha256": file_sha256(base_checkpoint),
-            "optimizer_step": 0,
-            "exposures_seen": 0,
-            "train_loss": None,
-            "synthetic_anchor_probe_loss": round(initial_anchor, 6),
-            "synthetic_scale_probe_loss": round(initial_scale, 6),
-            "s6_clean_probe_loss": round(initial_s6_clean, 6),
-            "s6_augmented_probe_loss": round(initial_s6_augmented, 6),
-            "available": True,
-        }
-    )
-    write_json(base_checkpoint_dir / "checkpoint-complete.local.json", round_checkpoint_rows[-1])
-    controller_base = _evaluate_controller_dev_checkpoint(config, checkpoint=base_checkpoint, round_index=0, validation_gpu=validation_gpu)
-    controller_rows.append(controller_base)
-    _write_controller_metrics(config, controller_rows)
+    if not resume_round:
+        base_checkpoint_dir = arm_dir / "checkpoints" / "round_00_base"
+        base_checkpoint = base_checkpoint_dir / "model.local.nemo"
+        base_checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        model.save_to(str(base_checkpoint))
+        round_checkpoint_rows.append(
+            {
+                "round": 0,
+                "checkpoint_sha256": file_sha256(base_checkpoint),
+                "optimizer_step": 0,
+                "exposures_seen": 0,
+                "train_loss": None,
+                "synthetic_anchor_probe_loss": round(initial_anchor, 6),
+                "synthetic_scale_probe_loss": round(initial_scale, 6),
+                "s6_clean_probe_loss": round(initial_s6_clean, 6),
+                "s6_augmented_probe_loss": round(initial_s6_augmented, 6),
+                "available": True,
+            }
+        )
+        write_json(base_checkpoint_dir / "checkpoint-complete.local.json", round_checkpoint_rows[-1])
+        controller_base = _evaluate_controller_dev_checkpoint(config, checkpoint=base_checkpoint, round_index=0, validation_gpu=validation_gpu)
+        controller_rows.append(controller_base)
+        _write_controller_metrics(config, controller_rows)
     monitor.start()
     stopped_reason = "max_rounds_or_steps"
-    stopped_round = 0
+    stopped_round = resume_round
+    min_stop_round = int(os.environ.get("SLAIF_MIN_STOP_ROUND", str(config["early_stop_rule"].get("min_rounds_before_stop", 0))))
     try:
         total_steps = int(config["training"]["optimizer_steps"])
-        for round_index in range(1, 21):
+        for round_index in range(resume_round + 1, 21):
             records = rounds[round_index]
             layout = deterministic_epoch_batches(records, batch_size=8, epoch=round_index, seed=int(config["training"]["seed"]), bucketed=True)
             assert_epoch_covers_once(layout, len(records))
@@ -743,7 +769,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
                 total_steps=total_steps,
                 message=f"controller-dev WER={controller_row['wer']} CER={controller_row['cer']} empty={controller_row['empty']}",
             )
-            if _should_stop_for_controller_dev(config, controller_rows):
+            if round_index >= min_stop_round and should_stop_for_controller_dev(config, controller_rows):
                 stopped_reason = "controller_dev_no_new_best_wer_for_three_rounds"
                 reporter.progress(epoch=round_index, total_epochs=20, step=optimizer_steps, total_steps=total_steps, message=stopped_reason)
                 break
@@ -988,6 +1014,44 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
     inputs = verify_all_inputs(config)
     micro = read_json(run_dir(config) / "verification" / "microbatch.local.json")
     training = read_json(run_dir(config) / ARM_NAME / "training-summary.local.json")
+    checkpoint_ledger = read_json(run_dir(config) / ARM_NAME / "controller-dev" / "round-checkpoints.local.json")
+    checkpoint_rounds = sorted(checkpoint_ledger.get("rounds", []), key=lambda row: int(row["round"]))
+    if [int(row["round"]) for row in checkpoint_rounds] != list(range(21)):
+        raise RuntimeError("complete round 0-20 checkpoint evidence is required for reporting")
+    initial_round = checkpoint_rounds[0]
+    final_round = checkpoint_rounds[-1]
+    training = {
+        **training,
+        "initial_anchor_probe_loss": initial_round["synthetic_anchor_probe_loss"],
+        "final_anchor_probe_loss": final_round["synthetic_anchor_probe_loss"],
+        "initial_scale_probe_loss": initial_round["synthetic_scale_probe_loss"],
+        "final_scale_probe_loss": final_round["synthetic_scale_probe_loss"],
+        "initial_s6_clean_probe_loss": initial_round["s6_clean_probe_loss"],
+        "final_s6_clean_probe_loss": final_round["s6_clean_probe_loss"],
+        "initial_s6_augmented_probe_loss": initial_round["s6_augmented_probe_loss"],
+        "final_s6_augmented_probe_loss": final_round["s6_augmented_probe_loss"],
+        "probe_curve": [
+            {
+                "round": int(row["round"]),
+                "optimizer_step": int(row["optimizer_step"]),
+                "exposures_seen": int(row["exposures_seen"]),
+                "train_loss": row["train_loss"],
+                "anchor_probe_loss": row["synthetic_anchor_probe_loss"],
+                "scale_probe_loss": row["synthetic_scale_probe_loss"],
+                "s6_clean_probe_loss": row["s6_clean_probe_loss"],
+                "s6_augmented_probe_loss": row["s6_augmented_probe_loss"],
+            }
+            for row in checkpoint_rounds
+        ],
+        "stopped_reason": "max_rounds_completed" if int(training["stopped_round"]) == 20 else training["stopped_reason"],
+        "execution_continuity": {
+            "resumed_from_retained_model_checkpoints": True,
+            "optimizer_state_retained_across_resume": False,
+            "note": "AdamW state was reinitialized at continuation boundaries; checkpoint markers provide cumulative step/exposure identity, while wall time and throughput describe only the final resumed segment.",
+        },
+        "wall_time_scope": "final_resumed_segment_only",
+        "exposure_count_scope": "final_resumed_segment_only",
+    }
     evaluation = read_json(run_dir(config) / "directional-evaluation" / "summary.local.json")
     certificate = {
         "schema_version": "1.0",
@@ -1084,6 +1148,9 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
                 "runtime",
                 "controller_dev",
                 "validation_gpu_selector",
+                "execution_continuity",
+                "wall_time_scope",
+                "exposure_count_scope",
             )
         },
         "microbatch_probe": micro,
@@ -1117,6 +1184,8 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "Directional batch-32 metrics are not canonical acceptance evidence.",
             "No batch-1 canonical evaluation was run.",
             "No checkpoint is accepted as a parent.",
+            "Training continuation restored retained model weights but not AdamW optimizer state; optimizer moments were reinitialized at continuation boundaries.",
+            "Reported training wall time, throughput, and exposure-count breakdowns cover only the final resumed segment; cumulative steps and exposures come from retained checkpoint markers.",
         ],
         "safety": {
             "training_eligible_issued": False,
@@ -1164,22 +1233,26 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
         f"- Stop reason: `{training['stopped_reason']}`",
         f"- Controller-dev selected round: {training['controller_dev_selected_round']}",
         f"- Trainable parameters: {training['trainable_surface']['trainable_parameter_count']}",
+        "- Continuation: retained model checkpoints were restored, but AdamW state was not retained; optimizer moments reset at continuation boundaries.",
+        "- Runtime scope: wall time, throughput, and exposure-count breakdowns cover the final resumed segment only.",
         "",
-        "## Controller-Dev Curve",
+        "## Training And Controller-Dev Curve",
         "",
-        "| Round | Step | Train loss | ARTUR-dev WER | CER | Empty | Selected |",
-        "|---:|---:|---:|---:|---:|---:|---|",
+        "| Round | Step | Train loss | Anchor probe | Scale probe | S6 clean probe | S6 augmented probe | ARTUR-dev WER | CER | Empty | Selected |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ]
-    for row in training["controller_dev"].get("rows", []):
+    controller_by_round = {int(row["round"]): row for row in training["controller_dev"].get("rows", [])}
+    for row in training["probe_curve"]:
+        controller_row = controller_by_round[int(row["round"])]
         lines.append(
-            f"| {row['round']} | {row.get('optimizer_step', 0)} | {row.get('train_loss', '-')} | {row.get('wer', '-')} | {row.get('cer', '-')} | {row.get('empty', '-')} | {'yes' if row.get('selected_by_rule') else 'no'} |"
+            f"| {row['round']} | {row['optimizer_step']} | {row.get('train_loss') if row.get('train_loss') is not None else '-'} | {row['anchor_probe_loss']} | {row['scale_probe_loss']} | {row['s6_clean_probe_loss']} | {row['s6_augmented_probe_loss']} | {controller_row['wer']} | {controller_row['cer']} | {controller_row['empty']} | {'yes' if controller_row.get('selected_by_rule') else 'no'} |"
         )
     lines.extend(
         [
             "",
         "## S6 Hard-Voice Metrics",
         "",
-        "| Split | Base WER/CER | PR #36 if available | S6-hard20 WER/CER | Empty base/pr36/s6-hard20 |",
+        "| Split | Base WER/CER | PR #36 if available | Selected round 14 WER/CER | Empty base/pr36/selected |",
         "|---|---:|---:|---:|---:|",
         ]
     )
@@ -1193,7 +1266,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "",
         "## Directional Metrics",
         "",
-        "| Split | Base WER/CER | Scale-2000 joint WER/CER | PR #36 round20 WER/CER | S6-hard20 WER/CER | Empty base/scale2000/pr36/s6-hard20 |",
+        "| Split | Base WER/CER | Scale-2000 joint WER/CER | PR #36 round20 WER/CER | Selected round 14 WER/CER | Empty base/scale2000/pr36/selected |",
         "|---|---:|---:|---:|---:|---:|",
         ]
     )
@@ -1209,6 +1282,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "## Decision",
             "",
             f"- Real-regression burden: {evaluation['decision']['real_burden']}",
+            "- Strict regression trigger: FLEURS-v2 CER is 0.319 absolute points above untouched base despite WER gains on both real gates and WER/CER gains on ARTUR-J.",
             f"- Accepted parent: `{evaluation['decision']['accepted_parent']}`",
             "",
             "## Limitations",
@@ -1216,6 +1290,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "- Synthetic-only training remains diagnostic.",
             "- Directional batch-32 metrics cannot promote a checkpoint.",
             "- Real speech remains validation-only and decisive for acceptance.",
+            "- Training resumed from retained model checkpoints without retained AdamW state, so optimizer moments reset at continuation boundaries.",
         ]
     )
     REPORT_MD.parent.mkdir(parents=True, exist_ok=True)
