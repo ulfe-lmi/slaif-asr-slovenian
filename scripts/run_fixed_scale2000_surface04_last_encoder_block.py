@@ -310,7 +310,10 @@ def _representative_records(config: dict[str, Any], count: int = 8) -> list[Any]
 def _run_gradient_partition(config: dict[str, Any], records: Sequence[Any], physical: int, torch: Any) -> tuple[dict[str, Any], dict[str, Any]]:
     model = restore_base_model(config)
     configure_surface04_trainable(model)
-    set_surface04_training_mode(model)
+    # Accumulation equivalence must compare the same deterministic objective;
+    # dropout and SpecAugment would otherwise consume different RNG shapes for
+    # grouped versus singleton partitions while still producing valid grads.
+    model.eval()
     prompt = derive_prompt_column_selection(model, "sl-SI")
     _zero_grad(model)
     weighted_loss = 0.0
@@ -413,6 +416,13 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
         "passed": relative_loss_difference <= 0.005 and relative_gradient_difference <= 0.01,
     }
     if not correctness["passed"]:
+        payload = {
+            "status": "FAILED_ACCUMULATION_CORRECTNESS",
+            "candidate_outcomes": {str(key): value for key, value in outcomes.items()},
+            "selected": selected,
+            "correctness": correctness,
+        }
+        write_json(run_dir(config) / "verification" / "microbatch.local.json", payload)
         raise RuntimeError("gradient accumulation correctness probe failed")
     payload = {"status": "PASSED", "candidate_outcomes": {str(key): value for key, value in outcomes.items()}, "selected": selected, "correctness": correctness}
     write_json(run_dir(config) / "verification" / "microbatch.local.json", payload)
