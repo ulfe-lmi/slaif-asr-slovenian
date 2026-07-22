@@ -313,11 +313,18 @@ def _representative_records(config: dict[str, Any], count: int = 8, *, longest: 
 def _run_gradient_partition(config: dict[str, Any], records: Sequence[Any], physical: int, torch: Any) -> tuple[dict[str, Any], dict[str, Any]]:
     model = restore_base_model(config)
     configure_surface04_trainable(model)
-    # Keep the parent in eval mode to disable SpecAugment and encoder dropout,
-    # while cuDNN requires the prediction RNN itself in training mode for its
-    # backward pass. The pinned prediction-network dropout is zero.
+    # Keep RNNTDecoder itself in eval mode so random_state_sampling cannot
+    # replace the deterministic zero LSTM state. cuDNN still requires its
+    # underlying LSTM in training mode for backward, with probe-only dropout
+    # disabled to make grouped and singleton partitions comparable.
     model.eval()
-    model.decoder.train()
+    decoder_rnn = model.decoder.prediction["dec_rnn"]
+    decoder_rnn.train()
+    if getattr(decoder_rnn, "dropout", None) is not None:
+        decoder_rnn.dropout.eval()
+    if hasattr(decoder_rnn, "lstm"):
+        decoder_rnn.lstm.train()
+        decoder_rnn.lstm.dropout = 0.0
     prompt = derive_prompt_column_selection(model, "sl-SI")
     _zero_grad(model)
     weighted_loss = 0.0
