@@ -1,0 +1,33 @@
+{
+  "accepted_parent": "none",
+  "base_scale2000_all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+  "base_scale2000_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842",
+  "certificate_id": "sl-corpus-v4-decoder-joint-rnnt-s6tts-hardvoice20-diagnostic-v1",
+  "classification": "S6TTS_HARDVOICE_REAL_REGRESSION",
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "decoder_parameter_count": 14940160,
+  "directional_batch_size": 32,
+  "effective_batch_size": 8,
+  "encoder_and_prompt_unchanged": true,
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "gradient_accumulation_steps": 8,
+  "hardvoice_schedule_sha256": "07c30ea48dd1a155aef7bb42ab804367bf53cddd6e41448db7485b475aa170b6",
+  "joint_parameter_count": 9455648,
+  "optimizer_steps": 40000,
+  "prohibited_actions": [
+    "TRAINING_ELIGIBLE",
+    "model publication",
+    "checkpoint acceptance",
+    "text-only objective",
+    "temporary LM head"
+  ],
+  "s6_augmented_manifest_sha256": "8d39606dc276a7730e032e83c1811f6c71ece3de6f0b68aa1bd5f4c0a8f50251",
+  "s6_clean_manifest_sha256": "355a85134e81d9e3ea4089ea9a941f62fb101902b4e151c394eaaf1d1de416d5",
+  "schedule_certificate": "docs/data-certificates/sl-corpus-v4-s6tts-hardvoice20-schedule-v1.json",
+  "schema_version": "1.0",
+  "selected_physical_microbatch": 1,
+  "status": "DIAGNOSTIC_ONLY",
+  "trainable_parameter_count": 24395808,
+  "training_arm": "scale2000_s6tts_hardvoice20_decoder_joint_rnnt",
+  "work_order_id": "0036"
+}
