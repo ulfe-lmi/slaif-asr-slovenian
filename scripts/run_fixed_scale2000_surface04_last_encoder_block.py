@@ -103,11 +103,39 @@ _BASE = importlib.util.module_from_spec(_BASE_SPEC)
 _BASE_SPEC.loader.exec_module(_BASE)
 
 
+def ensure_cuda_nvcc_process_env() -> None:
+    cuda_home = REPO_ROOT / ".venv" / "lib" / "python3.12" / "site-packages" / "nvidia" / "cuda_nvcc"
+    if not cuda_home.exists():
+        return
+    cuda_bin = str(cuda_home / "bin")
+    nvvm_lib = str(cuda_home / "nvvm" / "lib64")
+    path_entries = os.environ.get("PATH", "").split(os.pathsep)
+    ld_entries = [entry for entry in os.environ.get("LD_LIBRARY_PATH", "").split(os.pathsep) if entry]
+    needs_reexec = (
+        os.environ.get("CUDA_HOME") != str(cuda_home)
+        or os.environ.get("CUDA_PATH") != str(cuda_home)
+        or cuda_bin not in path_entries
+        or nvvm_lib not in ld_entries
+    )
+    if needs_reexec and os.environ.get("SLAIF_NVCC_ENV_READY") != "1":
+        env = os.environ.copy()
+        env["CUDA_HOME"] = str(cuda_home)
+        env["CUDA_PATH"] = str(cuda_home)
+        env["PATH"] = cuda_bin + os.pathsep + env.get("PATH", "")
+        env["LD_LIBRARY_PATH"] = nvvm_lib + (os.pathsep + env["LD_LIBRARY_PATH"] if env.get("LD_LIBRARY_PATH") else "")
+        env["SLAIF_NVCC_ENV_READY"] = "1"
+        os.execve(sys.executable, [sys.executable, *sys.argv], env)
+    os.environ.setdefault("CUDA_HOME", str(cuda_home))
+    os.environ.setdefault("CUDA_PATH", str(cuda_home))
+    os.environ.setdefault("NUMBA_CUDA_USE_NVIDIA_BINDING", "1")
+
+
 def run_dir(config: dict[str, Any]) -> Path:
     return local_path(config["local_outputs"]["run_root"])
 
 
 def configure_torch() -> Any:
+    ensure_cuda_nvcc_process_env()
     torch = _BASE.configure_torch()
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
