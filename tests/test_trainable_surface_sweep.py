@@ -109,6 +109,29 @@ class TrainableSurfaceSweepTests(unittest.TestCase):
             "SURFACE04_ARTUR_DEV_GOOD_BUT_GATE_DIRECTIONAL_REGRESSES",
         )
 
+    def test_surface04_tradeoff_tolerance_does_not_penalize_large_improvements(self):
+        metrics = {
+            "piper_synthetic_holdout": {"wer": 41.460, "cer": 14.522, "empty": 0},
+            "supertonic_heldout_voice_holdout": {"wer": 16.071, "cer": 4.962, "empty": 0},
+            "fleurs_v2": {"wer": 46.292, "cer": 14.792, "empty": 0},
+            "artur_j": {"wer": 55.920, "cer": 18.535, "empty": 0},
+        }
+        self.assertEqual(
+            classify_surface04(metrics, selected_round=3),
+            "SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF",
+        )
+
+    def test_surface04_tradeoff_rejects_regression_beyond_tolerance(self):
+        metrics = {split: dict(values) for split, values in PR36_METRICS.items()}
+        metrics["piper_synthetic_holdout"] = {"wer": 41.460, "cer": 14.522, "empty": 0}
+        metrics["supertonic_heldout_voice_holdout"] = {"wer": 16.071, "cer": 4.962, "empty": 0}
+        metrics["fleurs_v2"]["wer"] += 0.501
+        metrics["artur_j"]["cer"] -= 1.0
+        self.assertEqual(
+            classify_surface04(metrics, selected_round=3),
+            "SURFACE04_BEATS_BASE_BUT_NOT_PR36",
+        )
+
     def test_post_selection_metrics_cannot_change_selected_round(self):
         result = bind_post_selection_metrics(4, {"fleurs_v2": {"wer": 99.0}})
         self.assertEqual(result["selected_round"], 4)

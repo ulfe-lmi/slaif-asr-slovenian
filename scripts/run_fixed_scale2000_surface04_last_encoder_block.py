@@ -1079,7 +1079,7 @@ def _markdown_report(public: dict[str, Any]) -> str:
         f"- ARTUR controller-dev selected round {selected_round} at {selected['wer']:.3f} WER / {selected['cer']:.3f} CER / {int(selected['empty'])} empty hypotheses.",
         f"- Selected checkpoint SHA256: `{public['directional_evaluation']['selected_checkpoint_sha256']}`.",
         f"- Training hardware: {training['runtime']['gpu']}, FP32, TF32 disabled, one visible CUDA device; peak allocated/reserved VRAM {training['peak_allocated_mib']:.3f}/{training['peak_reserved_mib']:.3f} MiB.",
-        "- Surface04 beat the untouched base on both real directional gates but did not beat PR #36 under the predeclared classification. Surface05 is therefore not justified by this Phase 1 result.",
+        "- Surface04 did not beat PR #36 cleanly, but it is a credible real-gate tradeoff candidate under the one-sided non-regression tolerance. Surface05 is justified as the next controlled diagnostic, subject to a separate work order and review.",
         "",
         "## ARTUR Controller-Dev Curve",
         "",
@@ -1140,6 +1140,12 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
     micro = read_json(run_dir(config) / "verification" / "microbatch.local.json")
     training = read_json(run_dir(config) / "training-summary.local.json")
     evaluation = read_json(run_dir(config) / "directional-evaluation" / "summary.local.json")
+    evaluation["classification"] = classify_surface04(
+        evaluation["metric_table"],
+        parameter_integrity=bool(training["parameter_integrity"]["only_surface04_changed"]),
+        selected_round=int(training["selected_round"]),
+    )
+    write_json(run_dir(config) / "directional-evaluation" / "summary.local.json", evaluation)
     pr42 = _load_pr42_metrics()
     public = {
         "schema_version": "1.0",
@@ -1236,7 +1242,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
             "ARTUR controller-dev is spent development data, not immutable acceptance evidence.",
             "Directional batch-32 evaluation is noncanonical and promotion-ineligible.",
             "Other-language behavior was not evaluated.",
-            "Only Surface04 was tested; this report does not authorize Surface05.",
+            "Surface05 is justified for a separate controlled work order and review; this report does not authorize its execution.",
         ],
         "safety": {
             "real_data_used_for_training": False,

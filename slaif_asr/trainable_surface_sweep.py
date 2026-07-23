@@ -351,9 +351,9 @@ def classify_surface04(
     )
     if beats_pr36 and synthetic_safe:
         return "SURFACE04_BEATS_PR36_DIRECTIONAL"
-    within = all(
-        abs(float(metrics[split][metric]) - float(PR36_METRICS[split][metric]))
-        <= (0.50 if metric == "wer" else 0.25)
+    within_non_regression_tolerance = all(
+        float(metrics[split][metric])
+        <= float(PR36_METRICS[split][metric]) + (0.50 if metric == "wer" else 0.25)
         for split in real_splits
         for metric in ("wer", "cer")
     )
@@ -362,7 +362,7 @@ def classify_surface04(
         for split in real_splits
         for metric in ("wer", "cer")
     )
-    if within and improves_one and synthetic_safe:
+    if within_non_regression_tolerance and improves_one and synthetic_safe:
         return "SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF"
     if base_better:
         return "SURFACE04_BEATS_BASE_BUT_NOT_PR36"

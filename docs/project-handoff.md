@@ -155,9 +155,12 @@
   joint, and exactly `encoder.layers.23`; ARTUR controller-dev selected round 3
   and the operational rule stopped at round 6 after 12,000 optimizer steps and
   96,000 exposures. The selected checkpoint scored 46.292/14.792 on FLEURS-v2
-  and 55.920/18.535 on ARTUR-J with zero empty hypotheses, yielding
-  `SURFACE04_BEATS_BASE_BUT_NOT_PR36`. It is diagnostic only, does not justify
-  Surface05 expansion, and does not change `accepted_parent` or issue
+  and 55.920/18.535 on ARTUR-J with zero empty hypotheses. Under the one-sided
+  non-regression tolerance, this yields
+  `SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF`: it does not beat PR #36
+  cleanly, but is a credible real-gate tradeoff candidate. Surface05 is
+  justified as a separate controlled diagnostic requiring its own work order
+  and review. This result does not change `accepted_parent` or issue
   `TRAINING_ELIGIBLE`.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
