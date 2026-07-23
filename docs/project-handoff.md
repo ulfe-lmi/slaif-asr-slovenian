@@ -170,8 +170,13 @@
   53.473/17.473 on ARTUR-J with zero empty hypotheses. It stayed within the
   best-known one-sided envelope and improved both ARTUR-J metrics, yielding
   `SURFACE05_MATCHES_BEST_WITH_ACCEPTABLE_TRADEOFF`. This is diagnostic
-  evidence only; Surface06 remains unauthorized pending separate strategic
-  review.
+  evidence only.
+- ADR 0009 Phase 3 and Work Order 0039 authorize one boundary diagnostic from
+  the untouched base: decoder, joint, and exactly `encoder.layers.20` through
+  `encoder.layers.23`. It keeps the original scale-2000 augmented data,
+  schedule, ARTUR controller-dev run-control, and post-selection directional
+  suite fixed. Surface07 and prompt/acoustic fusion remain unauthorized pending
+  separate review of Surface06 evidence.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

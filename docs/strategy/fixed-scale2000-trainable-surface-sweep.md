@@ -20,8 +20,8 @@ large sweep PR.
 | `SURFACE_02_DECODER_JOINT_PLUS_PREDICTION_DECODER_EXPANDED` | decoder + joint + separable prediction-network internals | Planned |
 | `SURFACE_03_DECODER_JOINT_PLUS_PROMPT_ACOUSTIC_FUSION` | decoder + joint + separable post-concat prompt/acoustic fusion bridge | Planned |
 | `SURFACE_04_DECODER_JOINT_PLUS_LAST_ENCODER_BLOCK` | decoder + joint + final encoder block | Reviewed: acceptable tradeoff in PR #43 |
-| `SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS` | decoder + joint + final two encoder blocks | Completed diagnostic evidence in PR #44; strategic review pending |
-| `SURFACE_06_DECODER_JOINT_PLUS_LAST_FOUR_ENCODER_BLOCKS` | decoder + joint + final four encoder blocks | Requires prior positive Surface04/05 evidence |
+| `SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS` | decoder + joint + final two encoder blocks | Reviewed: acceptable tradeoff in PR #44 |
+| `SURFACE_06_DECODER_JOINT_PLUS_LAST_FOUR_ENCODER_BLOCKS` | decoder + joint + final four encoder blocks | Active Phase 3 boundary diagnostic, Work Order 0039 |
 | `SURFACE_07_TOP_ENCODER_PLUS_FUSION_COMBINED` | decoder + joint + best top-encoder depth + fusion bridge | Planned |
 | `SURFACE_08_FULL_ENCODER` | full encoder | Prohibited under synthetic-only training |
 | `SURFACE_09_FULL_MODEL` | full model | Prohibited without future real training data and governance review |
@@ -38,5 +38,7 @@ Surface04 matched PR #36 with an acceptable one-sided tradeoff, so Work Order
 selected round 3. The selected checkpoint stayed within the best-known
 one-sided real-gate envelope, improved both ARTUR-J metrics, and retained zero
 empty hypotheses, yielding
-`SURFACE05_MATCHES_BEST_WITH_ACCEPTABLE_TRADEOFF`. Surface06 remains
-unauthorized until this evidence is reviewed in a separate strategic decision.
+`SURFACE05_MATCHES_BEST_WITH_ACCEPTABLE_TRADEOFF`. Work Order 0039 authorizes
+Surface06 as the sole Phase 3 boundary diagnostic. Surface07 and fusion changes
+remain unauthorized until Surface06 evidence receives separate strategic
+review.

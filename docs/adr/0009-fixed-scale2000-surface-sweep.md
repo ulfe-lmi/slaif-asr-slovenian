@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for the bounded diagnostic program defined by Work Orders 0037 and
-0038.
+Accepted for the bounded diagnostic program defined by Work Orders 0037,
+0038, and 0039.
 
 ## Decision
 
@@ -45,6 +45,33 @@ Phase 2 forbids:
 - Surface06, checkpoint acceptance, model publication, `TRAINING_ELIGIBLE`, or
   an `accepted_parent` change.
 
+## Phase 3 / Work Order 0039
+
+Authorize
+`SURFACE_06_DECODER_JOINT_PLUS_LAST_FOUR_ENCODER_BLOCKS`: the RNNT decoder,
+RNNT joint, and exactly the final four encoder blocks. In the pinned live model
+these must resolve to `encoder.layers.20` through `encoder.layers.23`;
+execution fails closed if that identity cannot be proved.
+
+Phase 3 permits:
+
+- training the decoder and joint;
+- training exactly the final four encoder blocks at `1.0e-5`;
+- using only the original scale-2000 augmented corpus v4 and its fixed
+  exposure schedule;
+- using ARTUR controller-dev aggregate run-control under ADR 0008.
+
+Phase 3 forbids:
+
+- full encoder training or encoder blocks below the final four;
+- frontend, subsampling, or preprocessor training;
+- tokenizer or prompt labels, tables, embeddings, or fusion-path changes;
+- S6TTS, scale-8000, database-extension, or real-speech training data;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- Surface07 or any fusion-combined experiment;
+- checkpoint acceptance, model publication, `TRAINING_ELIGIBLE`, or an
+  `accepted_parent` change.
+
 ## Reason
 
 The strongest clean WER/CER reduction came from original scale-2000 augmented
@@ -75,6 +102,6 @@ not which data variant should be added.
 ## Consequences
 
 These are diagnostic exceptions to the default synthetic-only encoder freeze,
-not a general authorization to train encoder parameters. Surface06 and later
-encoder depths require separate work orders and evidence. Full-encoder training
+not a general authorization to train encoder parameters. Surface07 and later
+surfaces require separate work orders and evidence. Full-encoder training
 remains prohibited.
