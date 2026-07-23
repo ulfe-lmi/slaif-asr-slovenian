@@ -31,6 +31,17 @@ SURFACE06_ENCODER_BLOCKS = (
 )
 SURFACE06_ENCODER_BLOCK_PREFIXES = tuple(f"{name}." for name in SURFACE06_ENCODER_BLOCKS)
 SURFACE06_ALLOWED_TRAINABLE_PREFIXES = ("decoder.", "joint.", *SURFACE06_ENCODER_BLOCK_PREFIXES)
+SURFACE07_ID = "SURFACE_07_TOP_ENCODER_PLUS_PROMPT_ACOUSTIC_FUSION"
+SURFACE07_ENCODER_BLOCKS = SURFACE06_ENCODER_BLOCKS
+SURFACE07_ENCODER_BLOCK_PREFIXES = SURFACE06_ENCODER_BLOCK_PREFIXES
+SURFACE07_FUSION_BRIDGE_MODULE = "prompt_kernel"
+SURFACE07_FUSION_BRIDGE_PREFIX = f"{SURFACE07_FUSION_BRIDGE_MODULE}."
+SURFACE07_ALLOWED_TRAINABLE_PREFIXES = (
+    "decoder.",
+    "joint.",
+    *SURFACE07_ENCODER_BLOCK_PREFIXES,
+    SURFACE07_FUSION_BRIDGE_PREFIX,
+)
 FORBIDDEN_PUBLIC_KEYS = {
     "audio_filepath",
     "checkpoint_path",
@@ -86,6 +97,24 @@ SURFACE06_BEST_REAL_GATE_ENVELOPE = {
     },
 }
 
+SURFACE06_METRICS = {
+    "piper_synthetic_holdout": {"wer": 34.161, "cer": 9.952, "empty": 0},
+    "supertonic_heldout_voice_holdout": {"wer": 9.783, "cer": 2.761, "empty": 0},
+    "fleurs_v2": {"wer": 44.506, "cer": 13.528, "empty": 0},
+    "artur_j": {"wer": 50.590, "cer": 15.803, "empty": 0},
+}
+
+SURFACE07_BEST_REAL_GATE_ENVELOPE = {
+    "fleurs_v2": {
+        "wer": {"value": 44.506, "source": "Surface06"},
+        "cer": {"value": 13.528, "source": "Surface06"},
+    },
+    "artur_j": {
+        "wer": {"value": 50.590, "source": "Surface06"},
+        "cer": {"value": 15.803, "source": "Surface06"},
+    },
+}
+
 
 @dataclass(frozen=True)
 class SurfaceSummary:
@@ -127,6 +156,24 @@ class Surface06Summary:
     final_four_encoder_blocks_parameter_count: int
     frozen_parameter_count: int
     trainable_prefixes: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class Surface07Summary:
+    surface_id: str
+    final_encoder_blocks: tuple[str, str, str, str]
+    fusion_bridge_module: str
+    trainable_parameter_count: int
+    decoder_parameter_count: int
+    joint_parameter_count: int
+    final_four_encoder_blocks_parameter_count: int
+    fusion_bridge_parameter_count: int
+    frozen_parameter_count: int
+    trainable_prefixes: tuple[str, ...]
+    fusion_discovery: dict[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -416,6 +463,126 @@ def validate_surface06_config(config: dict[str, Any], *, adr_text: str | None = 
         raise ValueError("controller policy or immutable-gate isolation drifted")
 
 
+def load_surface07_config(
+    path: str | Path = "configs/experiments/fixed-scale2000-surface07-topencoder-fusion.json",
+) -> dict[str, Any]:
+    path = Path(path)
+    if not path.is_absolute():
+        path = REPO_ROOT / path
+    config = json.loads(path.read_text(encoding="utf-8"))
+    validate_surface07_config(config)
+    return config
+
+
+def validate_surface07_config(config: dict[str, Any], *, adr_text: str | None = None) -> None:
+    if config.get("work_order_id") != "0040":
+        raise ValueError("work_order_id must be 0040")
+    if config.get("status") != "DIAGNOSTIC_ONLY" or config.get("accepted_parent") != "none":
+        raise ValueError("surface sweep must remain DIAGNOSTIC_ONLY with accepted_parent none")
+    if adr_text is None:
+        adr_path = REPO_ROOT / "docs/adr/0009-fixed-scale2000-surface-sweep.md"
+        if not adr_path.exists():
+            raise ValueError("ADR 0009 is required")
+        adr_text = adr_path.read_text(encoding="utf-8")
+    required_adr_markers = ("Phase 4 / Work Order 0040", SURFACE07_ID)
+    if any(marker not in adr_text for marker in required_adr_markers):
+        raise ValueError("ADR 0009 Phase 4 does not authorize SURFACE_07")
+
+    model = config.get("model", {})
+    if model.get("checkpoint_sha256") != "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74":
+        raise ValueError("Surface07 must start from the untouched base checkpoint")
+    if model.get("initialization") != "untouched_base":
+        raise ValueError("Surface07 initialization must be untouched_base")
+
+    data = config.get("data", {})
+    expected_data = {
+        "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+        "semantic_rows": 16000,
+        "exposure_records": 320000,
+        "fixed_text_sha256": EXPECTED_TEXT_SHA256,
+        "all_views_sha256": EXPECTED_ALL_VIEWS_SHA256,
+        "exposure_schedule_sha256": EXPECTED_SCHEDULE_SHA256,
+    }
+    for key, expected in expected_data.items():
+        if data.get(key) != expected:
+            raise ValueError(f"data.{key} must be {expected!r}")
+    serialized_data = json.dumps(data, sort_keys=True).lower()
+    forbidden_data_markers = ("s6tts", "scale8000", "scale-8000", "database-extension", "database_extension")
+    if any(marker in serialized_data for marker in forbidden_data_markers):
+        raise ValueError("fixed-data sweep forbids S6TTS, scale-8000, and database-extension data")
+
+    surface = config.get("trainable_surface", {})
+    if surface.get("surface_id") != SURFACE07_ID:
+        raise ValueError("Work Order 0040 permits only SURFACE_07")
+    if surface.get("encoder_layer_count") != 24:
+        raise ValueError("SURFACE_07 requires the pinned 24-layer encoder")
+    if surface.get("final_encoder_layer_indices") != [20, 21, 22, 23]:
+        raise ValueError("SURFACE_07 must select final encoder layers 20 through 23")
+    if tuple(surface.get("final_encoder_block_modules", ())) != SURFACE07_ENCODER_BLOCKS:
+        raise ValueError("SURFACE_07 final encoder block identities drifted")
+    if surface.get("fusion_bridge_module") != SURFACE07_FUSION_BRIDGE_MODULE:
+        raise ValueError("SURFACE_07 requires the proven prompt_kernel fusion bridge")
+    if surface.get("fusion_bridge_parameter_prefix") != SURFACE07_FUSION_BRIDGE_PREFIX:
+        raise ValueError("SURFACE_07 fusion bridge prefix drifted")
+    if tuple(surface.get("allowed_prefixes", ())) != SURFACE07_ALLOWED_TRAINABLE_PREFIXES:
+        raise ValueError("trainable prefixes must be decoder, joint, final four encoder blocks, and prompt_kernel")
+    required_false = (
+        "full_encoder_allowed",
+        "surface08_allowed",
+        "prompt_labels_tables_embeddings_allowed",
+        "language_id_mapping_changes_allowed",
+        "target_lang_machinery_changes_allowed",
+        "non_selected_prompt_fusion_changes_allowed",
+        "text_only_objective_allowed",
+        "temporary_lm_head_allowed",
+    )
+    if any(surface.get(key) is not False for key in required_false):
+        raise ValueError("Surface07 protected-surface policy drifted")
+    if surface.get("prompt_acoustic_fusion_allowed") is not True:
+        raise ValueError("Surface07 must explicitly authorize one prompt/acoustic fusion bridge")
+
+    training = config.get("training", {})
+    expected_training = {
+        "objective": "audio_conditioned_rnnt",
+        "effective_batch_size": 8,
+        "round_size_exposures": 16000,
+        "steps_per_round": 2000,
+        "max_rounds": 20,
+        "max_exposures": 320000,
+        "max_optimizer_steps": 40000,
+        "optimizer": "AdamW",
+        "weight_decay": 0.0,
+        "scheduler": "none",
+        "precision": "fp32",
+        "tf32": False,
+        "seed": 1234,
+    }
+    for key, expected in expected_training.items():
+        if training.get(key) != expected:
+            raise ValueError(f"training.{key} must be {expected!r}")
+    if training.get("physical_microbatch_candidates") != [4, 2, 1]:
+        raise ValueError("physical microbatch candidates must be [4, 2, 1]")
+    lrs = training.get("learning_rates", {})
+    expected_lrs = {
+        "decoder": 0.0005,
+        "joint": 0.0005,
+        "final_four_encoder_blocks": 0.00001,
+        "fusion_bridge": 0.00005,
+    }
+    if lrs != expected_lrs:
+        raise ValueError("learning-rate groups do not match Surface07")
+    if not float(lrs["final_four_encoder_blocks"]) < float(lrs["decoder"]):
+        raise ValueError("encoder learning rate must be lower than decoder/joint")
+    if not float(lrs["fusion_bridge"]) < float(lrs["decoder"]):
+        raise ValueError("fusion bridge learning rate must be lower than decoder/joint")
+
+    control = config.get("controller_dev", {})
+    if control.get("partition_id") != "artur-controller-dev-v1" or control.get("batch_size") != 1:
+        raise ValueError("ARTUR controller-dev batch-1 policy is required")
+    if control.get("duration_bucketing") is not False or control.get("immutable_gate_selection_allowed") is not False:
+        raise ValueError("controller policy or immutable-gate isolation drifted")
+
+
 def configure_surface04_trainable(model: Any) -> SurfaceSummary:
     for name, _module in model.named_modules():
         lowered = name.lower()
@@ -569,6 +736,172 @@ def configure_surface06_trainable(model: Any) -> Surface06Summary:
     )
 
 
+def discover_surface07_fusion_bridge(model: Any) -> dict[str, Any]:
+    keywords = (
+        "prompt",
+        "lang",
+        "language",
+        "fusion",
+        "concat",
+        "project",
+        "projection",
+        "adapter",
+        "conditioning",
+    )
+    modules = list(model.named_modules())
+    module_names = {name for name, _module in modules}
+    parameters = list(model.named_parameters())
+    parameter_names = [name for name, _parameter in parameters]
+    candidates: list[dict[str, Any]] = []
+    for name, module in modules:
+        if not name or not any(keyword in name.lower() for keyword in keywords):
+            continue
+        prefix = f"{name}."
+        recursive_names = [parameter_name for parameter_name in parameter_names if parameter_name.startswith(prefix)]
+        direct_names = [
+            parameter_name
+            for parameter_name in recursive_names
+            if "." not in parameter_name[len(prefix) :]
+        ]
+        by_name = dict(parameters)
+        candidates.append(
+            {
+                "module": name,
+                "module_type": f"{type(module).__module__}.{type(module).__name__}",
+                "included": name == SURFACE07_FUSION_BRIDGE_MODULE,
+                "direct_parameters": sum(by_name[item].numel() for item in direct_names),
+                "recursive_parameters": sum(by_name[item].numel() for item in recursive_names),
+                "reason": (
+                    "post-concat acoustic/prompt projection selected as the sole fusion bridge"
+                    if name == SURFACE07_FUSION_BRIDGE_MODULE
+                    else "nested bridge component or non-selected candidate"
+                ),
+            }
+        )
+
+    if SURFACE07_FUSION_BRIDGE_MODULE not in module_names:
+        return {
+            "status": "BLOCKED_FUSION_BRIDGE_UNRESOLVED",
+            "reason": "model does not expose prompt_kernel",
+            "candidate_modules": candidates,
+        }
+
+    bridge_names = sorted(
+        name for name in parameter_names if name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX)
+    )
+    expected_bridge_names = [
+        "prompt_kernel.0.bias",
+        "prompt_kernel.0.weight",
+        "prompt_kernel.2.bias",
+        "prompt_kernel.2.weight",
+    ]
+    if bridge_names != expected_bridge_names:
+        return {
+            "status": "BLOCKED_FUSION_BRIDGE_UNRESOLVED",
+            "reason": f"prompt_kernel parameter structure drifted: {bridge_names}",
+            "candidate_modules": candidates,
+        }
+
+    protected_markers = ("prompt", "fusion", "conditioning", "language_id", "target_lang")
+    protected_outside_bridge = sorted(
+        name
+        for name in parameter_names
+        if any(marker in name.lower() for marker in protected_markers)
+        and not name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX)
+    )
+    nested_forbidden = sorted(
+        name
+        for name in module_names
+        if name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX)
+        and any(marker in name.lower() for marker in ("embedding", "table", "adapter", "tokenizer"))
+    )
+    if protected_outside_bridge or nested_forbidden:
+        return {
+            "status": "BLOCKED_FUSION_BRIDGE_UNRESOLVED",
+            "reason": "prompt identity parameters or forbidden nested modules overlap the candidate bridge",
+            "protected_parameters_outside_bridge": protected_outside_bridge,
+            "forbidden_nested_modules": nested_forbidden,
+            "candidate_modules": candidates,
+        }
+
+    by_name = dict(parameters)
+    return {
+        "status": "PASSED",
+        "module_name": SURFACE07_FUSION_BRIDGE_MODULE,
+        "parameter_prefix": SURFACE07_FUSION_BRIDGE_PREFIX,
+        "parameter_names": bridge_names,
+        "parameter_count": sum(by_name[name].numel() for name in bridge_names),
+        "prompt_identity_storage": "one_hot_config_not_parameter",
+        "protected_parameters_outside_bridge": [],
+        "forbidden_nested_modules": [],
+        "candidate_modules": candidates,
+    }
+
+
+def configure_surface07_trainable(model: Any) -> Surface07Summary:
+    for name, _module in model.named_modules():
+        lowered = name.lower()
+        if "lm_head" in lowered or "lm_adapter" in lowered or "decoder_lm" in lowered:
+            raise RuntimeError(f"forbidden text-only module present: {name}")
+
+    layer_indices = _encoder_layer_indices(model)
+    if layer_indices != list(range(24)):
+        raise RuntimeError(
+            "EXPERIMENT_INVALID_ENCODER_SURFACE_UNRESOLVED: "
+            f"expected contiguous encoder layers 0..23, found {layer_indices}"
+        )
+
+    discovery = discover_surface07_fusion_bridge(model)
+    if discovery["status"] != "PASSED":
+        raise RuntimeError(f"BLOCKED_FUSION_BRIDGE_UNRESOLVED: {discovery['reason']}")
+
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
+
+    counts = {
+        "decoder": 0,
+        "joint": 0,
+        "final_four_encoder_blocks": 0,
+        "fusion_bridge": 0,
+    }
+    for name, parameter in model.named_parameters():
+        if name.startswith("decoder."):
+            parameter.requires_grad_(True)
+            counts["decoder"] += parameter.numel()
+        elif name.startswith("joint."):
+            parameter.requires_grad_(True)
+            counts["joint"] += parameter.numel()
+        elif name.startswith(SURFACE07_ENCODER_BLOCK_PREFIXES):
+            parameter.requires_grad_(True)
+            counts["final_four_encoder_blocks"] += parameter.numel()
+        elif name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX):
+            parameter.requires_grad_(True)
+            counts["fusion_bridge"] += parameter.numel()
+    if any(value <= 0 for value in counts.values()):
+        raise RuntimeError(f"required SURFACE_07 parameter group missing: {counts}")
+    unexpected = [
+        name
+        for name, parameter in model.named_parameters()
+        if parameter.requires_grad and not name.startswith(SURFACE07_ALLOWED_TRAINABLE_PREFIXES)
+    ]
+    if unexpected:
+        raise RuntimeError(f"unauthorized trainable parameters: {unexpected[:10]}")
+    frozen = sum(parameter.numel() for _name, parameter in model.named_parameters() if not parameter.requires_grad)
+    return Surface07Summary(
+        surface_id=SURFACE07_ID,
+        final_encoder_blocks=SURFACE07_ENCODER_BLOCKS,
+        fusion_bridge_module=SURFACE07_FUSION_BRIDGE_MODULE,
+        trainable_parameter_count=sum(counts.values()),
+        decoder_parameter_count=counts["decoder"],
+        joint_parameter_count=counts["joint"],
+        final_four_encoder_blocks_parameter_count=counts["final_four_encoder_blocks"],
+        fusion_bridge_parameter_count=counts["fusion_bridge"],
+        frozen_parameter_count=frozen,
+        trainable_prefixes=SURFACE07_ALLOWED_TRAINABLE_PREFIXES,
+        fusion_discovery=discovery,
+    )
+
+
 def set_surface04_training_mode(model: Any) -> None:
     # Match PR #36 training-mode semantics; requires_grad is the only changed
     # surface control. Evaluation probes switch the entire model to eval mode.
@@ -582,6 +915,11 @@ def set_surface05_training_mode(model: Any) -> None:
 
 def set_surface06_training_mode(model: Any) -> None:
     # Keep prior surface-sweep model-mode semantics; only requires_grad scope changes.
+    model.train()
+
+
+def set_surface07_training_mode(model: Any) -> None:
+    # Preserve Surface06 model-mode semantics; only the fusion bridge scope changes.
     model.train()
 
 
@@ -648,6 +986,34 @@ def surface06_optimizer_parameter_groups(model: Any, learning_rates: dict[str, f
     ]
 
 
+def surface07_optimizer_parameter_groups(model: Any, learning_rates: dict[str, float]) -> list[dict[str, Any]]:
+    groups: dict[str, list[Any]] = {
+        "decoder": [],
+        "joint": [],
+        "final_four_encoder_blocks": [],
+        "fusion_bridge": [],
+    }
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad:
+            continue
+        if name.startswith("decoder."):
+            groups["decoder"].append(parameter)
+        elif name.startswith("joint."):
+            groups["joint"].append(parameter)
+        elif name.startswith(SURFACE07_ENCODER_BLOCK_PREFIXES):
+            groups["final_four_encoder_blocks"].append(parameter)
+        elif name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX):
+            groups["fusion_bridge"].append(parameter)
+        else:
+            raise RuntimeError(f"unauthorized optimizer parameter: {name}")
+    if any(not values for values in groups.values()):
+        raise RuntimeError("optimizer is missing a SURFACE_07 parameter group")
+    return [
+        {"name": name, "params": groups[name], "lr": float(learning_rates[name])}
+        for name in ("decoder", "joint", "final_four_encoder_blocks", "fusion_bridge")
+    ]
+
+
 def verify_optimizer_scope(optimizer: Any, model: Any, learning_rates: dict[str, float]) -> None:
     expected = {id(parameter) for _name, parameter in model.named_parameters() if parameter.requires_grad}
     actual = {id(parameter) for group in optimizer.param_groups for parameter in group["params"]}
@@ -673,6 +1039,16 @@ def verify_surface06_optimizer_scope(optimizer: Any, model: Any, learning_rates:
     actual = {id(parameter) for group in optimizer.param_groups for parameter in group["params"]}
     if actual != expected:
         raise RuntimeError("optimizer parameters do not exactly match SURFACE_06")
+    by_name = {str(group.get("name")): float(group["lr"]) for group in optimizer.param_groups}
+    if by_name != {name: float(value) for name, value in learning_rates.items()}:
+        raise RuntimeError("optimizer learning-rate groups drifted")
+
+
+def verify_surface07_optimizer_scope(optimizer: Any, model: Any, learning_rates: dict[str, float]) -> None:
+    expected = {id(parameter) for _name, parameter in model.named_parameters() if parameter.requires_grad}
+    actual = {id(parameter) for group in optimizer.param_groups for parameter in group["params"]}
+    if actual != expected:
+        raise RuntimeError("optimizer parameters do not exactly match SURFACE_07")
     by_name = {str(group.get("name")): float(group["lr"]) for group in optimizer.param_groups}
     if by_name != {name: float(value) for name, value in learning_rates.items()}:
         raise RuntimeError("optimizer learning-rate groups drifted")
@@ -752,6 +1128,41 @@ def surface06_changed_tensor_summary(before: dict[str, Any], after: dict[str, An
     }
 
 
+def surface07_changed_tensor_summary(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    missing = sorted(set(before) - set(after))
+    extra = sorted(set(after) - set(before))
+    changed: list[str] = []
+    for name in sorted(set(before) & set(after)):
+        left, right = before[name], after[name]
+        if left.shape != right.shape or not bool((left == right).all()):
+            changed.append(name)
+    unauthorized = [name for name in changed if not name.startswith(SURFACE07_ALLOWED_TRAINABLE_PREFIXES)]
+    non_selected_prompt_or_fusion = [
+        name
+        for name in changed
+        if any(marker in name.lower() for marker in ("prompt", "fusion", "conditioning", "language_id", "target_lang"))
+        and not name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX)
+    ]
+    return {
+        "changed_tensor_count": len(changed),
+        "authorized_changed_tensor_count": len(changed) - len(unauthorized),
+        "unauthorized_changed_tensors": unauthorized,
+        "missing_tensors": missing,
+        "unexpected_tensors": extra,
+        "lower_encoder_unchanged": not any(
+            name.startswith("encoder.") and not name.startswith(SURFACE07_ENCODER_BLOCK_PREFIXES)
+            for name in changed
+        ),
+        "preprocessor_unchanged": not any(name.startswith("preprocessor.") for name in changed),
+        "fusion_bridge_changed": any(
+            name.startswith(SURFACE07_FUSION_BRIDGE_PREFIX) for name in changed
+        ),
+        "non_selected_prompt_or_fusion_unchanged": not non_selected_prompt_or_fusion,
+        "prompt_labels_tables_embeddings_unchanged": not non_selected_prompt_or_fusion,
+        "only_surface07_changed": not missing and not extra and not unauthorized,
+    }
+
+
 def microbatch_plan(physical_microbatch: int) -> dict[str, int]:
     if physical_microbatch not in (4, 2, 1):
         raise ValueError("physical microbatch must be one of 4, 2, 1")
@@ -792,6 +1203,18 @@ def select_surface06_microbatch(outcomes: dict[int, dict[str, Any]]) -> dict[str
             return {"status": "PASSED", **microbatch_plan(candidate)}
     return {
         "status": "BLOCKED_SURFACE06_OOM",
+        "physical_microbatch": None,
+        "gradient_accumulation_steps": None,
+        "effective_batch_size": 8,
+    }
+
+
+def select_surface07_microbatch(outcomes: dict[int, dict[str, Any]]) -> dict[str, Any]:
+    for candidate in (4, 2, 1):
+        if outcomes.get(candidate, {}).get("status") == "PASSED":
+            return {"status": "PASSED", **microbatch_plan(candidate)}
+    return {
+        "status": "BLOCKED_SURFACE07_OOM",
         "physical_microbatch": None,
         "gradient_accumulation_steps": None,
         "effective_batch_size": 8,
@@ -1042,6 +1465,74 @@ def classify_surface06(
     if synthetic_safe and base_better:
         return "SURFACE06_BEATS_BASE_BUT_NOT_PRIOR_CHALLENGERS"
     return "SURFACE06_SYNTHETIC_OR_REAL_REGRESSION"
+
+
+def surface07_envelope_comparison(metrics: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for split in ("fleurs_v2", "artur_j"):
+        for metric in ("wer", "cer"):
+            prior = SURFACE07_BEST_REAL_GATE_ENVELOPE[split][metric]
+            value = float(metrics[split][metric])
+            tolerance = 0.50 if metric == "wer" else 0.25
+            rows.append(
+                {
+                    "split": split,
+                    "metric": metric,
+                    "best_prior_value": float(prior["value"]),
+                    "prior_source": str(prior["source"]),
+                    "surface07_value": value,
+                    "within_tolerance": value <= float(prior["value"]) + tolerance,
+                    "improved": value < float(prior["value"]),
+                }
+            )
+    return rows
+
+
+def classify_surface07(
+    metrics: dict[str, dict[str, Any]],
+    *,
+    parameter_integrity: bool = True,
+    fusion_bridge_proven: bool = True,
+    selected_round: int | None = None,
+) -> str:
+    if not fusion_bridge_proven:
+        return "BLOCKED_FUSION_BRIDGE_UNRESOLVED"
+    if not parameter_integrity:
+        return "EXPERIMENT_INVALID"
+    real_splits = ("fleurs_v2", "artur_j")
+    if any(int(metrics[split].get("empty", 0)) > 0 for split in real_splits):
+        return "SURFACE07_SYNTHETIC_OR_REAL_REGRESSION"
+
+    synthetic_safe = all(
+        float(metrics[split][metric]) < float(BASE_DIRECTIONAL_METRICS[split][metric])
+        for split in ("piper_synthetic_holdout", "supertonic_heldout_voice_holdout")
+        for metric in ("wer", "cer")
+    )
+    base_better = all(
+        float(metrics[split][metric]) < float(BASE_DIRECTIONAL_METRICS[split][metric])
+        for split in real_splits
+        for metric in ("wer", "cer")
+    )
+    envelope = surface07_envelope_comparison(metrics)
+    within_envelope = all(row["within_tolerance"] for row in envelope)
+    improved_envelope_count = sum(bool(row["improved"]) for row in envelope)
+
+    if synthetic_safe and within_envelope and improved_envelope_count >= 3:
+        return "SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE"
+    if synthetic_safe and within_envelope and improved_envelope_count >= 1:
+        return "SURFACE07_MATCHES_BEST_WITH_ACCEPTABLE_TRADEOFF"
+
+    fleurs_within = all(
+        row["within_tolerance"] for row in envelope if row["split"] == "fleurs_v2"
+    )
+    artur_improves = any(
+        row["improved"] for row in envelope if row["split"] == "artur_j"
+    )
+    if selected_round is not None and selected_round > 0 and artur_improves and not fleurs_within:
+        return "SURFACE07_FUSION_GOOD_BUT_FLEURS_REGRESSES"
+    if synthetic_safe and base_better:
+        return "SURFACE07_BEATS_BASE_BUT_NOT_PRIOR_CHALLENGERS"
+    return "SURFACE07_SYNTHETIC_OR_REAL_REGRESSION"
 
 
 def assert_public_report_safe(payload: Any) -> None:

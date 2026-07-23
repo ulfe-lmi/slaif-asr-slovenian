@@ -114,10 +114,12 @@ The repository will not own:
      order and evidence.
    - Encoder training remains prohibited while training data is synthetic-only
      unless a later ADR and human approval explicitly change that rule. ADR
-   0009 and Work Orders 0037/0038/0039 provide bounded exceptions for exactly
-   the final encoder block, final two encoder blocks, and final four encoder
-   blocks on fixed scale-2000 surface diagnostics; they do not authorize
-   blocks below the final four, Surface07, or full-encoder training.
+   0009 and Work Orders 0037/0038/0039/0040 provide bounded exceptions for
+   exactly the final encoder block, final two encoder blocks, final four
+   encoder blocks, and the Work Order 0040 final-four-plus-`prompt_kernel`
+   fusion diagnostic on fixed scale-2000 data. They do not authorize blocks
+   below the final four, prompt identity changes, Surface08, or full-encoder
+   training.
 7. **Real speech decides checkpoint acceptance.**
    - Synthetic improvement alone is insufficient.
    - Real Slovenian acoustic data is validation-only and must not be used for
