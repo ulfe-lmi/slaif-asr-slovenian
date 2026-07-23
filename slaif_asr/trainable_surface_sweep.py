@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
+from slaif_asr.artur_controller_dev import select_earliest_within_tolerance
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.emission_rnnt_finetune import (
     BASE_DIRECTIONAL_METRICS,
@@ -282,6 +283,35 @@ def should_stop_controller_curve(rows: Sequence[dict[str, Any]]) -> dict[str, An
     if last_round - best_round >= 3:
         return {"stop": True, "reason": "three_rounds_without_new_raw_best", "best_round": best_round}
     return {"stop": False, "reason": "new_best_patience_active", "best_round": best_round}
+
+
+def mark_controller_selection(rows: Sequence[dict[str, Any]], *, base_empty_count: int) -> dict[str, Any]:
+    selected = select_earliest_within_tolerance(rows, base_empty_count=base_empty_count)
+    available = [row for row in rows if row.get("available") and row.get("wer") is not None and row.get("cer") is not None]
+    if not available:
+        return {"rows": [dict(row) for row in rows], "selected_round": None, "best_raw_wer_round": None}
+
+    best = min(available, key=lambda row: (float(row["wer"]), float(row["cer"]), int(row["round"])))
+    best_wer = float(best["wer"])
+    best_cer = float(best["cer"])
+    marked = []
+    for source in rows:
+        row = dict(source)
+        row["eligible"] = bool(
+            row.get("available")
+            and row.get("wer") is not None
+            and row.get("cer") is not None
+            and float(row["wer"]) <= best_wer + 0.50
+            and float(row["cer"]) <= best_cer + 0.25
+            and int(row.get("empty", 0)) <= base_empty_count
+        )
+        row["selected_by_rule"] = bool(selected and int(row["round"]) == int(selected["round"]))
+        marked.append(row)
+    return {
+        "rows": marked,
+        "selected_round": int(selected["round"]) if selected else None,
+        "best_raw_wer_round": int(best["round"]),
+    }
 
 
 def component_or_not_recorded(metrics: dict[str, Any], key: str) -> int | float | str:

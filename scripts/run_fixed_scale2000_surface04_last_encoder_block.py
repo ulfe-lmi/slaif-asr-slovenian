@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".external" / "NeMo
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 os.environ.setdefault("TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD", "1")
 
-from slaif_asr.artur_earlystop import load_controller_dev_records, select_round
+from slaif_asr.artur_earlystop import load_controller_dev_records
 from slaif_asr.batched_streaming import (
     NvidiaSmiMonitor,
     file_sha256,
@@ -72,6 +72,7 @@ from slaif_asr.trainable_surface_sweep import (
     component_or_not_recorded,
     configure_surface04_trainable,
     load_config,
+    mark_controller_selection,
     microbatch_plan,
     optimizer_parameter_groups,
     select_microbatch,
@@ -544,24 +545,25 @@ def evaluate_controller_checkpoint(config: dict[str, Any], checkpoint: Path, rou
 
 def _select_and_mark_controller_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
     base = next(row for row in rows if int(row["round"]) == 0)
-    selected = select_round(rows, base_empty_count=int(base["empty"]))
-    best_wer = min(float(row["wer"]) for row in rows)
-    best_cer = min(float(row["cer"]) for row in rows)
-    for row in rows:
-        row["eligible"] = (
-            float(row["wer"]) <= best_wer + 0.50
-            and float(row["cer"]) <= best_cer + 0.25
-            and int(row["empty"]) <= int(base["empty"])
-        )
-        row["selected_by_rule"] = bool(selected and int(row["round"]) == int(selected["round"]))
+    marked = mark_controller_selection(rows, base_empty_count=int(base["empty"]))
+    rows[:] = marked["rows"]
     return {
         "status": "PASSED",
         "partition_id": "artur-controller-dev-v1",
         "rows": rows,
-        "selected_round": int(selected["round"]) if selected else None,
-        "best_raw_wer_round": int(min(rows, key=lambda row: float(row["wer"]))["round"]),
+        "selected_round": marked["selected_round"],
+        "best_raw_wer_round": marked["best_raw_wer_round"],
         "base_empty_count": int(base["empty"]),
     }
+
+
+def _refresh_training_controller_selection(config: dict[str, Any], training: dict[str, Any]) -> dict[str, Any]:
+    controller = _select_and_mark_controller_rows(training["controller_curve"])
+    training["controller_curve"] = controller["rows"]
+    training["selected_round"] = controller["selected_round"]
+    write_json(run_dir(config) / "controller-dev" / "round-metrics.local.json", controller)
+    write_json(run_dir(config) / "training-summary.local.json", training)
+    return training
 
 
 def _checkpoint_dir(config: dict[str, Any], round_index: int) -> Path:
@@ -941,7 +943,10 @@ def stage_evaluate_directional(config_path: Path) -> dict[str, Any]:
     hardware = require_single_visible_rtx2080ti()
     verify_all_inputs(config)
     verify_runtime_identities(check_gpu=False)
-    training = read_json(run_dir(config) / "training-summary.local.json")
+    training = _refresh_training_controller_selection(
+        config,
+        read_json(run_dir(config) / "training-summary.local.json"),
+    )
     selected_round = int(training["selected_round"])
     checkpoint = _checkpoint_dir(config, selected_round) / "model.local.nemo"
     marker = read_json(_checkpoint_dir(config, selected_round) / "checkpoint-complete.local.json")
@@ -1056,12 +1061,25 @@ def _markdown_report(public: dict[str, Any]) -> str:
     training = public["training"]
     controller_rows = public["controller_dev"]["curve"]
     metrics = public["directional_evaluation"]["metrics"]
+    selected_round = int(training["selected_round"])
+    selected = next(row for row in controller_rows if int(row["round"]) == selected_round)
+    surface = public["surface"]
     lines = [
         "# Experiment 0024: Fixed Scale-2000 Surface04 Last Encoder Block",
         "",
         f"Classification: `{public['classification']}`",
         "",
         "This diagnostic changed only the trainable model surface. It used the original scale-2000 augmented corpus and its fixed exposure schedule.",
+        "",
+        "## Result",
+        "",
+        f"- Surface: `{surface['surface_id']}` (`{surface['final_encoder_block']}`).",
+        f"- Trainable parameters: {surface['trainable_parameter_count']:,} total; {surface['decoder_parameter_count']:,} decoder, {surface['joint_parameter_count']:,} joint, and {surface['final_encoder_block_parameter_count']:,} final encoder block.",
+        f"- Training stopped after round {training['stopped_round']} ({training['optimizer_steps']:,} optimizer steps and {training['sample_exposures']:,} exposures): `{training['stopped_reason']}`.",
+        f"- ARTUR controller-dev selected round {selected_round} at {selected['wer']:.3f} WER / {selected['cer']:.3f} CER / {int(selected['empty'])} empty hypotheses.",
+        f"- Selected checkpoint SHA256: `{public['directional_evaluation']['selected_checkpoint_sha256']}`.",
+        f"- Training hardware: {training['runtime']['gpu']}, FP32, TF32 disabled, one visible CUDA device; peak allocated/reserved VRAM {training['peak_allocated_mib']:.3f}/{training['peak_reserved_mib']:.3f} MiB.",
+        "- Surface04 beat the untouched base on both real directional gates but did not beat PR #36 under the predeclared classification. Surface05 is therefore not justified by this Phase 1 result.",
         "",
         "## ARTUR Controller-Dev Curve",
         "",
@@ -1210,6 +1228,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
                 "surface04_selected": evaluation["metric_table"],
             },
             "selected_round": training["selected_round"],
+            "selected_checkpoint_sha256": evaluation["checkpoint_sha256"],
             "classification": evaluation["classification"],
         },
         "limitations": [

@@ -12,6 +12,7 @@ from slaif_asr.trainable_surface_sweep import (
     classify_surface04,
     component_or_not_recorded,
     load_config,
+    mark_controller_selection,
     should_stop_controller_curve,
     validate_config,
 )
@@ -82,6 +83,19 @@ class TrainableSurfaceSweepTests(unittest.TestCase):
             {"round": 3, "wer": 58.0, "empty": 0},
         ]
         self.assertEqual(should_stop_controller_curve(rows)["reason"], "empty_hypotheses_reappeared")
+
+    def test_controller_selection_marker_matches_primary_wer_rule(self):
+        rows = [
+            {"round": 0, "available": True, "wer": 66.467, "cer": 27.409, "empty": 13},
+            {"round": 3, "available": True, "wer": 53.182, "cer": 19.037, "empty": 0},
+            {"round": 4, "available": True, "wer": 53.353, "cer": 17.760, "empty": 0},
+        ]
+        marked = mark_controller_selection(rows, base_empty_count=13)
+        self.assertEqual(marked["selected_round"], 3)
+        by_round = {row["round"]: row for row in marked["rows"]}
+        self.assertTrue(by_round[3]["eligible"])
+        self.assertTrue(by_round[3]["selected_by_rule"])
+        self.assertTrue(by_round[4]["eligible"])
 
     def test_surface04_classification_boundaries(self):
         beats = {split: dict(values) for split, values in PR36_METRICS.items()}
