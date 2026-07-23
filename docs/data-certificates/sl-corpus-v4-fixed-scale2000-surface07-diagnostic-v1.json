@@ -1,0 +1,29 @@
+{
+  "accepted_parent": "none",
+  "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+  "certificate_id": "sl-corpus-v4-fixed-scale2000-surface07-diagnostic-v1",
+  "checkpoint_accepted": false,
+  "classification": "SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE",
+  "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+  "exposure_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842",
+  "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+  "fusion_bridge_identity_proven": true,
+  "fusion_bridge_module": "prompt_kernel",
+  "fusion_bridge_parameter_count": 4459520,
+  "generated_audio_committed": false,
+  "local_checkpoint_committed": false,
+  "model_published": false,
+  "parameter_integrity_passed": true,
+  "predictions_committed": false,
+  "prohibited_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "promotion_eligible": false,
+  "schema_version": "1.0",
+  "selected_checkpoint_sha256": "349d06dd517b6e99b71a74f15a04d6020afe56223ef946014d3bdca1440706b0",
+  "selected_round": 13,
+  "status": "DIAGNOSTIC_ONLY",
+  "surface_id": "SURFACE_07_TOP_ENCODER_PLUS_PROMPT_ACOUSTIC_FUSION",
+  "training_eligible": false,
+  "work_order_id": "0040"
+}

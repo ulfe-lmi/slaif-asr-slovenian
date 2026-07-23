@@ -22,7 +22,7 @@ large sweep PR.
 | `SURFACE_04_DECODER_JOINT_PLUS_LAST_ENCODER_BLOCK` | decoder + joint + final encoder block | Reviewed: acceptable tradeoff in PR #43 |
 | `SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS` | decoder + joint + final two encoder blocks | Reviewed: acceptable tradeoff in PR #44 |
 | `SURFACE_06_DECODER_JOINT_PLUS_LAST_FOUR_ENCODER_BLOCKS` | decoder + joint + final four encoder blocks | Reviewed: new best directional candidate in PR #45 |
-| `SURFACE_07_TOP_ENCODER_PLUS_PROMPT_ACOUSTIC_FUSION` | decoder + joint + final four encoder blocks + proven `prompt_kernel` bridge | Active Phase 4 diagnostic, Work Order 0040 |
+| `SURFACE_07_TOP_ENCODER_PLUS_PROMPT_ACOUSTIC_FUSION` | decoder + joint + final four encoder blocks + proven `prompt_kernel` bridge | Reviewed: new best directional candidate in PR #46 |
 | `SURFACE_08_FULL_ENCODER` | full encoder | Prohibited under synthetic-only training |
 | `SURFACE_09_FULL_MODEL` | full model | Prohibited without future real training data and governance review |
 
@@ -44,7 +44,12 @@ selected round 5, and the selected checkpoint established the current
 best-known directional envelope on FLEURS-v2 and ARTUR-J with zero empty
 hypotheses, yielding `SURFACE06_NEW_BEST_DIRECTIONAL_CANDIDATE`.
 
-Work Order 0040 authorizes Surface07 as the sole Phase 4 diagnostic. It keeps
-the Surface06 top-encoder depth fixed and adds only the proven separable
-`prompt_kernel` fusion bridge. Surface08 and full-encoder training remain
-prohibited regardless of the Surface07 outcome.
+Work Order 0040 tested Surface07 as the sole Phase 4 diagnostic. It kept the
+Surface06 top-encoder depth fixed and added only the proven separable
+`prompt_kernel` fusion bridge. ARTUR controller-dev selected round 13. The
+selected checkpoint improved all four directional real-gate metrics versus
+Surface06, scoring 42.084/12.985 on FLEURS-v2 and 47.357/14.805 on ARTUR-J
+with zero empty hypotheses. This is
+`SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE`, diagnostic only. The next step is
+strategic review and canonical evaluation of named challengers. Surface08 and
+full-encoder training remain prohibited.

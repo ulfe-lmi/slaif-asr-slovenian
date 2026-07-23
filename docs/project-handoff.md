@@ -176,12 +176,15 @@
   ARTUR controller-dev selected round 5, which scored 44.506/13.528 on
   FLEURS-v2 and 50.590/15.803 on ARTUR-J with zero empty hypotheses. This is
   `SURFACE06_NEW_BEST_DIRECTIONAL_CANDIDATE`, diagnostic only.
-- ADR 0009 Phase 4 and Work Order 0040 authorize one fusion-bottleneck
-  diagnostic from the untouched base. It keeps the Surface06 final-four
-  encoder depth and adds only `prompt_kernel`, proven in the pinned live model
-  as the separable post-concatenation prompt/acoustic projection. Prompt
-  labels, mappings, embeddings, tokenizer machinery, lower encoder blocks, and
-  all other modules remain frozen. Surface08 and full-encoder training remain
+- ADR 0009 Phase 4 and Work Order 0040 tested one fusion-bottleneck diagnostic
+  from the untouched base. It kept the Surface06 final-four encoder depth and
+  added only `prompt_kernel`, proven in the pinned live model as the separable
+  post-concatenation prompt/acoustic projection. ARTUR controller-dev selected
+  round 13. The selected checkpoint scored 42.084/12.985 on FLEURS-v2 and
+  47.357/14.805 on ARTUR-J with zero empty hypotheses, improving all four
+  directional real-gate metrics versus Surface06 and yielding
+  `SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE`. This remains diagnostic,
+  noncanonical evidence. Surface08 and full-encoder training remain
   prohibited.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
