@@ -528,7 +528,7 @@
   },
   "model_published": false,
   "promotion_eligible": false,
-  "repository_commit": "258b9d7a289c089cf21031cddc7b527eb2e4c222",
+  "repository_commit": "c6256b36368bbb9beeccc41732aab6ceab6433e1",
   "safety": {
     "audio_or_predictions_committed": false,
     "checkpoint_or_model_committed": false,
