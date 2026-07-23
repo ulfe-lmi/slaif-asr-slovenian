@@ -3,7 +3,7 @@
 ## Status
 
 Accepted for the bounded diagnostic program defined by Work Orders 0037,
-0038, and 0039.
+0038, 0039, and 0040.
 
 ## Decision
 
@@ -72,6 +72,38 @@ Phase 3 forbids:
 - checkpoint acceptance, model publication, `TRAINING_ELIGIBLE`, or an
   `accepted_parent` change.
 
+## Phase 4 / Work Order 0040
+
+Authorize `SURFACE_07_TOP_ENCODER_PLUS_PROMPT_ACOUSTIC_FUSION`: the RNNT
+decoder, RNNT joint, exactly the final four encoder blocks, and exactly one
+separable prompt/acoustic fusion bridge. The pinned model exposes that bridge
+as `prompt_kernel`, a post-concatenation `1152 -> 2048 -> 1024` MLP over 1024
+encoder features and a 128-way one-hot prompt. The one-hot prompt dictionary is
+configuration, not a learnable embedding or table. Execution fails closed if
+this structure or ownership cannot be proved from the live model.
+
+Phase 4 permits:
+
+- training the decoder and joint;
+- training exactly `encoder.layers.20` through `encoder.layers.23` at
+  `1.0e-5`;
+- training exactly `prompt_kernel` at `5.0e-5`;
+- using only the original scale-2000 augmented corpus v4 and its fixed
+  exposure schedule;
+- using ARTUR controller-dev aggregate run-control under ADR 0008.
+
+Phase 4 forbids:
+
+- full encoder training or encoder blocks below the final four;
+- frontend, subsampling, or preprocessor training;
+- tokenizer, prompt labels, prompt tables, prompt embeddings, language-ID
+  mappings, or target-language machinery changes;
+- training any prompt/fusion module other than the proven `prompt_kernel`;
+- S6TTS, scale-8000, database-extension, or real-speech training data;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- Surface08, Surface09, checkpoint acceptance, model publication,
+  `TRAINING_ELIGIBLE`, or an `accepted_parent` change.
+
 ## Reason
 
 The strongest clean WER/CER reduction came from original scale-2000 augmented
@@ -102,6 +134,6 @@ not which data variant should be added.
 ## Consequences
 
 These are diagnostic exceptions to the default synthetic-only encoder freeze,
-not a general authorization to train encoder parameters. Surface07 and later
-surfaces require separate work orders and evidence. Full-encoder training
+not a general authorization to train encoder parameters. Surface08, Surface09,
+and any other expansion require separate governance. Full-encoder training
 remains prohibited.
