@@ -162,6 +162,12 @@
   justified as a separate controlled diagnostic requiring its own work order
   and review. This result does not change `accepted_parent` or issue
   `TRAINING_ELIGIBLE`.
+- ADR 0009 Phase 2 and Work Order 0038 authorize the next isolated surface
+  diagnostic: decoder, joint, and exactly `encoder.layers.22` plus
+  `encoder.layers.23`, starting again from the untouched Nemotron base. It
+  keeps the original scale-2000 augmented corpus, schedule, ARTUR controller-dev
+  run-control, and post-selection directional suite fixed. Surface06 remains
+  unauthorized pending review of Surface05 evidence.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

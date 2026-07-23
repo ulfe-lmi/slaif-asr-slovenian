@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted for the bounded diagnostic program defined by Work Order 0037.
+Accepted for the bounded diagnostic program defined by Work Orders 0037 and
+0038.
 
 ## Decision
 
@@ -16,6 +17,33 @@ Phase 1 authorizes only
 and exactly the final encoder block. ARTUR controller-dev may provide aggregate
 run-control under ADR 0008. FLEURS-v2 and ARTUR-J remain post-selection
 directional gates and cannot select a checkpoint.
+
+## Phase 2 / Work Order 0038
+
+Authorize
+`SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS`: the RNNT decoder, RNNT
+joint, and exactly the final two encoder blocks. In the pinned live model these
+must resolve to `encoder.layers.22` and `encoder.layers.23`; execution fails
+closed if that identity cannot be proved.
+
+Phase 2 permits:
+
+- training the decoder and joint;
+- training exactly the final two encoder blocks at the lower encoder learning
+  rate;
+- using only the original scale-2000 augmented corpus v4 and its fixed
+  exposure schedule;
+- using ARTUR controller-dev aggregate run-control under ADR 0008.
+
+Phase 2 forbids:
+
+- full encoder training or encoder blocks below the final two;
+- frontend, subsampling, or preprocessor training;
+- tokenizer or prompt labels, tables, embeddings, or fusion-path changes;
+- S6TTS, scale-8000, database-extension, or real-speech training data;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- Surface06, checkpoint acceptance, model publication, `TRAINING_ELIGIBLE`, or
+  an `accepted_parent` change.
 
 ## Reason
 
@@ -46,7 +74,7 @@ not which data variant should be added.
 
 ## Consequences
 
-This is a diagnostic exception to the default synthetic-only encoder freeze,
-not a general authorization to train encoder parameters. Later encoder depths
-require separate work orders and evidence. Full-encoder training remains
-prohibited.
+These are diagnostic exceptions to the default synthetic-only encoder freeze,
+not a general authorization to train encoder parameters. Surface06 and later
+encoder depths require separate work orders and evidence. Full-encoder training
+remains prohibited.
