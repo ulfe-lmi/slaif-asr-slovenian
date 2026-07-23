@@ -1120,8 +1120,11 @@ def _markdown_report(public: dict[str, Any]) -> str:
         "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for row in controller_rows:
+        display_row = dict(row)
+        if display_row["train_loss"] is None:
+            display_row["train_loss"] = "NOT_APPLICABLE"
         lines.append(
-            "| {round} | {optimizer_step} | {exposures_seen} | {train_loss} | {synthetic_anchor_probe_loss} | {synthetic_scale_probe_loss} | {wer} | {cer} | {empty} | {delete} | {insert} | {substitute} | {eligible} |".format(**row)
+            "| {round} | {optimizer_step} | {exposures_seen} | {train_loss} | {synthetic_anchor_probe_loss} | {synthetic_scale_probe_loss} | {wer} | {cer} | {empty} | {delete} | {insert} | {substitute} | {eligible} |".format(**display_row)
         )
     lines.extend(
         [

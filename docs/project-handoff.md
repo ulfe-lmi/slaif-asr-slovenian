@@ -162,12 +162,16 @@
   justified as a separate controlled diagnostic requiring its own work order
   and review. This result does not change `accepted_parent` or issue
   `TRAINING_ELIGIBLE`.
-- ADR 0009 Phase 2 and Work Order 0038 authorize the next isolated surface
-  diagnostic: decoder, joint, and exactly `encoder.layers.22` plus
-  `encoder.layers.23`, starting again from the untouched Nemotron base. It
-  keeps the original scale-2000 augmented corpus, schedule, ARTUR controller-dev
-  run-control, and post-selection directional suite fixed. Surface06 remains
-  unauthorized pending review of Surface05 evidence.
+- ADR 0009 Phase 2 and Work Order 0038 tested decoder, joint, and exactly
+  `encoder.layers.22` plus `encoder.layers.23`, starting again from the
+  untouched Nemotron base. ARTUR controller-dev selected round 3 and the
+  operational rule stopped at round 6 after 12,000 optimizer steps and 96,000
+  exposures. The selected checkpoint scored 46.564/14.950 on FLEURS-v2 and
+  53.473/17.473 on ARTUR-J with zero empty hypotheses. It stayed within the
+  best-known one-sided envelope and improved both ARTUR-J metrics, yielding
+  `SURFACE05_MATCHES_BEST_WITH_ACCEPTABLE_TRADEOFF`. This is diagnostic
+  evidence only; Surface06 remains unauthorized pending separate strategic
+  review.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

@@ -20,7 +20,7 @@ large sweep PR.
 | `SURFACE_02_DECODER_JOINT_PLUS_PREDICTION_DECODER_EXPANDED` | decoder + joint + separable prediction-network internals | Planned |
 | `SURFACE_03_DECODER_JOINT_PLUS_PROMPT_ACOUSTIC_FUSION` | decoder + joint + separable post-concat prompt/acoustic fusion bridge | Planned |
 | `SURFACE_04_DECODER_JOINT_PLUS_LAST_ENCODER_BLOCK` | decoder + joint + final encoder block | Reviewed: acceptable tradeoff in PR #43 |
-| `SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS` | decoder + joint + final two encoder blocks | Active Phase 2 diagnostic, Work Order 0038 |
+| `SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS` | decoder + joint + final two encoder blocks | Completed diagnostic evidence in PR #44; strategic review pending |
 | `SURFACE_06_DECODER_JOINT_PLUS_LAST_FOUR_ENCODER_BLOCKS` | decoder + joint + final four encoder blocks | Requires prior positive Surface04/05 evidence |
 | `SURFACE_07_TOP_ENCODER_PLUS_FUSION_COMBINED` | decoder + joint + best top-encoder depth + fusion bridge | Planned |
 | `SURFACE_08_FULL_ENCODER` | full encoder | Prohibited under synthetic-only training |
@@ -34,6 +34,9 @@ regresses, investigate smaller emission/fusion surfaces instead of expanding
 further into the encoder.
 
 Surface04 matched PR #36 with an acceptable one-sided tradeoff, so Work Order
-0038 authorizes Surface05 as the sole Phase 2 experiment. Surface06 remains
-unauthorized until Surface05 evidence is reviewed in a separate strategic
-decision.
+0038 authorized Surface05 as the sole Phase 2 experiment. ARTUR controller-dev
+selected round 3. The selected checkpoint stayed within the best-known
+one-sided real-gate envelope, improved both ARTUR-J metrics, and retained zero
+empty hypotheses, yielding
+`SURFACE05_MATCHES_BEST_WITH_ACCEPTABLE_TRADEOFF`. Surface06 remains
+unauthorized until this evidence is reviewed in a separate strategic decision.
