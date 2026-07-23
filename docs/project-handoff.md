@@ -150,6 +150,15 @@
   176000-file S6TTS augmented bank for the fixed scale-2000 corpus. The bank
   is admitted as synthetic audio evidence only; it does not authorize training,
   `TRAINING_ELIGIBLE`, checkpoint acceptance, or public audio/model release.
+- ADR 0009 and Work Order 0037 start a fixed-data trainable-surface sweep using
+  only the original scale-2000 augmented corpus. Phase 1 trained decoder,
+  joint, and exactly `encoder.layers.23`; ARTUR controller-dev selected round 3
+  and the operational rule stopped at round 6 after 12,000 optimizer steps and
+  96,000 exposures. The selected checkpoint scored 46.292/14.792 on FLEURS-v2
+  and 55.920/18.535 on ARTUR-J with zero empty hypotheses, yielding
+  `SURFACE04_BEATS_BASE_BUT_NOT_PR36`. It is diagnostic only, does not justify
+  Surface05 expansion, and does not change `accepted_parent` or issue
+  `TRAINING_ELIGIBLE`.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
