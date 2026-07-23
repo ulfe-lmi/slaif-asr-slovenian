@@ -1,6 +1,6 @@
 # Experiment 0024: Fixed Scale-2000 Surface04 Last Encoder Block
 
-Classification: `SURFACE04_BEATS_BASE_BUT_NOT_PR36`
+Classification: `SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF`
 
 This diagnostic changed only the trainable model surface. It used the original scale-2000 augmented corpus and its fixed exposure schedule.
 
@@ -12,7 +12,7 @@ This diagnostic changed only the trainable model surface. It used the original s
 - ARTUR controller-dev selected round 3 at 53.182 WER / 19.037 CER / 0 empty hypotheses.
 - Selected checkpoint SHA256: `56399d4d34c782430203be44071bf2c6fd432e2d228726e3587d83eed4ec412f`.
 - Training hardware: NVIDIA GeForce RTX 2080 Ti, FP32, TF32 disabled, one visible CUDA device; peak allocated/reserved VRAM 6788.154/8450.000 MiB.
-- Surface04 beat the untouched base on both real directional gates but did not beat PR #36 under the predeclared classification. Surface05 is therefore not justified by this Phase 1 result.
+- Surface04 did not beat PR #36 cleanly, but it is a credible real-gate tradeoff candidate under the one-sided non-regression tolerance. Surface05 is justified as the next controlled diagnostic, subject to a separate work order and review.
 
 ## ARTUR Controller-Dev Curve
 

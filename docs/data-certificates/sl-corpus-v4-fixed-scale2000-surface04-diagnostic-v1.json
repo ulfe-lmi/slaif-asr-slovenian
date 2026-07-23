@@ -3,7 +3,7 @@
   "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
   "certificate_id": "sl-corpus-v4-fixed-scale2000-surface04-diagnostic-v1",
   "checkpoint_accepted": false,
-  "classification": "SURFACE04_BEATS_BASE_BUT_NOT_PR36",
+  "classification": "SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF",
   "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
   "exposure_schedule_sha256": "6757018f3306839ce8564ba758e13e231ab4784bf98049b65701b963b55e5842",
   "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",

@@ -1,7 +1,7 @@
 {
   "accepted_parent": "none",
   "checkpoint_accepted": false,
-  "classification": "SURFACE04_BEATS_BASE_BUT_NOT_PR36",
+  "classification": "SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF",
   "controller_dev": {
     "curve": [
       {
@@ -204,7 +204,7 @@
     "semantic_rows": 16000
   },
   "directional_evaluation": {
-    "classification": "SURFACE04_BEATS_BASE_BUT_NOT_PR36",
+    "classification": "SURFACE04_MATCHES_PR36_WITH_ACCEPTABLE_TRADEOFF",
     "metrics": {
       "base": {
         "artur_j": {
@@ -481,7 +481,7 @@
     "ARTUR controller-dev is spent development data, not immutable acceptance evidence.",
     "Directional batch-32 evaluation is noncanonical and promotion-ineligible.",
     "Other-language behavior was not evaluated.",
-    "Only Surface04 was tested; this report does not authorize Surface05."
+    "Surface05 is justified for a separate controlled work order and review; this report does not authorize its execution."
   ],
   "microbatch_probe": {
     "candidate_outcomes": {
@@ -528,7 +528,7 @@
   },
   "model_published": false,
   "promotion_eligible": false,
-  "repository_commit": "c6256b36368bbb9beeccc41732aab6ceab6433e1",
+  "repository_commit": "258b9d7a289c089cf21031cddc7b527eb2e4c222",
   "safety": {
     "audio_or_predictions_committed": false,
     "checkpoint_or_model_committed": false,
