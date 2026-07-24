@@ -59,12 +59,12 @@ class TrainableSurfaceSweepTests(unittest.TestCase):
 
     def test_agents_records_narrow_encoder_exception(self):
         text = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
-        self.assertIn("Work Orders 0037/0038/0039/0040 provide bounded exceptions", text)
+        self.assertIn("Work Orders 0037/0038/0039/0040/0043 provide bounded exceptions", text)
         self.assertIn("final two encoder blocks, final four", text)
         self.assertIn("final-four-plus-`prompt_kernel`", text)
-        self.assertIn("do not authorize", text)
-        self.assertIn("below the final four", text)
-        self.assertIn("full-encoder", text)
+        self.assertIn("exactly one Surface08 boundary diagnostic", text)
+        self.assertIn("not general full-encoder authorization", text)
+        self.assertIn("Surface09", text)
 
     def test_controller_stop_after_three_rounds_without_new_raw_best(self):
         rows = [

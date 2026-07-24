@@ -192,6 +192,12 @@
   all four real-gate metrics at 42.090/12.988 on FLEURS-v2 and 47.532/15.025
   on ARTUR-J, with zero empty hypotheses. The classification is
   `CANONICAL_SURFACE07_CONFIRMED_NEW_BEST`; no checkpoint was accepted.
+- ADR 0009 Phase 5 and Work Order 0043 authorize exactly one Surface08
+  boundary diagnostic from the untouched base on the unchanged original
+  scale-2000 schedule. It may train decoder, joint, all 24 encoder layers, and
+  the proven `prompt_kernel`; frontend, tokenizer, prompt identity, Surface09,
+  and full-model training remain prohibited. This exception is diagnostic and
+  does not accept or promote a checkpoint.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
