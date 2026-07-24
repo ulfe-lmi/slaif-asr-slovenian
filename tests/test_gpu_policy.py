@@ -5,14 +5,22 @@ import types
 import unittest
 from unittest import mock
 
-from slaif_asr.gpu_policy import require_single_visible_cuda
+from slaif_asr.gpu_policy import RTX_3090_MIN_VRAM_MIB, require_single_visible_cuda
 
 
 class FakeCuda:
-    def __init__(self, *, available: bool = True, count: int = 1, name: str = "NVIDIA A100-SXM4-80GB") -> None:
+    def __init__(
+        self,
+        *,
+        available: bool = True,
+        count: int = 1,
+        name: str = "NVIDIA A100-SXM4-80GB",
+        total_vram_mib: int = 80 * 1024,
+    ) -> None:
         self._available = available
         self._count = count
         self._name = name
+        self._total_vram_mib = total_vram_mib
 
     def is_available(self) -> bool:
         return self._available
@@ -27,7 +35,7 @@ class FakeCuda:
         return (8, 0)
 
     def get_device_properties(self, index: int):
-        return types.SimpleNamespace(total_memory=80 * 1024 * 1024 * 1024)
+        return types.SimpleNamespace(total_memory=self._total_vram_mib * 1024 * 1024)
 
 
 class GpuPolicyTests(unittest.TestCase):
@@ -53,6 +61,28 @@ class GpuPolicyTests(unittest.TestCase):
             FakeCuda(name="NVIDIA GeForce RTX 2080 Ti")
         ):
             self.assertIn("2080 Ti", require_single_visible_cuda().device_name)
+
+    def test_rtx_3090_with_at_least_22_gib_is_accepted(self) -> None:
+        with mock.patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": "0"}), self.patch_torch(
+            FakeCuda(name="NVIDIA GeForce RTX 3090", total_vram_mib=24 * 1024)
+        ):
+            info = require_single_visible_cuda()
+        self.assertEqual(info.device_name, "NVIDIA GeForce RTX 3090")
+        self.assertEqual(info.visible_device_count, 1)
+
+    def test_rtx_3090_below_22_gib_is_rejected(self) -> None:
+        with mock.patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": "0"}), self.patch_torch(
+            FakeCuda(name="NVIDIA GeForce RTX 3090", total_vram_mib=RTX_3090_MIN_VRAM_MIB - 1)
+        ):
+            with self.assertRaisesRegex(RuntimeError, "requires at least"):
+                require_single_visible_cuda()
+
+    def test_rtx_3090_ti_is_not_implicitly_accepted(self) -> None:
+        with mock.patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": "0"}), self.patch_torch(
+            FakeCuda(name="NVIDIA GeForce RTX 3090 Ti", total_vram_mib=24 * 1024)
+        ):
+            with self.assertRaisesRegex(RuntimeError, "unsupported development GPU"):
+                require_single_visible_cuda()
 
     def test_multiple_visible_gpus_fail(self) -> None:
         with mock.patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": "0,1"}), self.patch_torch(FakeCuda(count=2)):
