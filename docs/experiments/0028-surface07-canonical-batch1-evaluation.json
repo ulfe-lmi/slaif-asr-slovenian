@@ -1,0 +1,261 @@
+{
+  "accepted_parent": "none",
+  "candidate_inventory": [
+    {
+      "available": true,
+      "candidate_id": "base",
+      "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+      "evaluated": true,
+      "source_experiment": "untouched-base",
+      "status": "PASSED"
+    },
+    {
+      "available": true,
+      "candidate_id": "pr36_round20",
+      "checkpoint_sha256": "b40b01027383a2c8b6886accbd7504e7b62ffbfa52d5cbcfbbb9553f809d3c9a",
+      "evaluated": true,
+      "source_experiment": "0017-scale2000-decoder-joint-rnnt-directional",
+      "status": "PASSED"
+    },
+    {
+      "available": true,
+      "candidate_id": "surface06_round05",
+      "checkpoint_sha256": "e82bd833fcbb622c73b7acb8f295e18d32fd605fcd49915286fd84ebee19cdf1",
+      "evaluated": true,
+      "source_experiment": "0026-fixed-scale2000-surface06-last-four-encoder-blocks",
+      "status": "PASSED"
+    },
+    {
+      "available": true,
+      "candidate_id": "surface07_round13",
+      "checkpoint_sha256": "349d06dd517b6e99b71a74f15a04d6020afe56223ef946014d3bdca1440706b0",
+      "evaluated": true,
+      "source_experiment": "0027-fixed-scale2000-surface07-topencoder-fusion",
+      "status": "PASSED"
+    }
+  ],
+  "canonical_metrics": {
+    "base": {
+      "artur_j": {
+        "cer": 29.016,
+        "empty": 12,
+        "wer": 67.453
+      },
+      "fleurs_v2": {
+        "cer": 16.423,
+        "empty": 1,
+        "wer": 52.703
+      }
+    },
+    "pr36_round20": {
+      "artur_j": {
+        "cer": 20.432,
+        "empty": 0,
+        "wer": 57.055
+      },
+      "fleurs_v2": {
+        "cer": 15.617,
+        "empty": 0,
+        "wer": 46.219
+      }
+    },
+    "surface06_round05": {
+      "artur_j": {
+        "cer": 16.093,
+        "empty": 0,
+        "wer": 50.939
+      },
+      "fleurs_v2": {
+        "cer": 13.533,
+        "empty": 0,
+        "wer": 44.512
+      }
+    },
+    "surface07_round13": {
+      "artur_j": {
+        "cer": 15.025,
+        "empty": 0,
+        "wer": 47.532
+      },
+      "fleurs_v2": {
+        "cer": 12.988,
+        "empty": 0,
+        "wer": 42.09
+      }
+    }
+  },
+  "checkpoint_accepted": false,
+  "checkpoint_selection_changed": false,
+  "classification": "CANONICAL_SURFACE07_CONFIRMED_NEW_BEST",
+  "configuration_sha256": "2f7176aefd22130bd9288ca414644af68ea4abec89f78f4ca81aa1d9069948b5",
+  "controller_development_used": false,
+  "directional_context": {
+    "pr36_round20": {
+      "artur_j": {
+        "cer": 20.177,
+        "empty": 0,
+        "raw_cer": 23.325,
+        "raw_wer": 66.332,
+        "wer": 56.793
+      },
+      "fleurs_v2": {
+        "cer": 15.604,
+        "empty": 0,
+        "raw_cer": 18.201,
+        "raw_wer": 55.313,
+        "wer": 46.195
+      }
+    },
+    "surface06_round05": {
+      "artur_j": {
+        "cer": 15.803,
+        "empty": 0,
+        "raw_cer": 19.105,
+        "raw_wer": 61.703,
+        "wer": 50.59
+      },
+      "fleurs_v2": {
+        "cer": 13.528,
+        "empty": 0,
+        "raw_cer": 16.41,
+        "raw_wer": 54.955,
+        "wer": 44.506
+      }
+    },
+    "surface07_round13": {
+      "artur_j": {
+        "cer": 14.805,
+        "empty": 0,
+        "raw_cer": 18.038,
+        "raw_wer": 58.865,
+        "wer": 47.357
+      },
+      "fleurs_v2": {
+        "cer": 12.985,
+        "empty": 0,
+        "raw_cer": 15.8,
+        "raw_wer": 52.459,
+        "wer": 42.084
+      }
+    }
+  },
+  "evaluation_runs": {
+    "base": {
+      "audio_duration_seconds": 9222.73,
+      "checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+      "mean_gpu_utilization_percent": 56.784553,
+      "p95_gpu_utilization_percent": 73.0,
+      "peak_gpu_memory_mib": 5339.0,
+      "real_time_factor": 0.05599,
+      "rows": 1090,
+      "rows_per_second": 2.110832,
+      "wall_time_seconds": 516.384176
+    },
+    "pr36_round20": {
+      "audio_duration_seconds": 9222.73,
+      "checkpoint_sha256": "b40b01027383a2c8b6886accbd7504e7b62ffbfa52d5cbcfbbb9553f809d3c9a",
+      "mean_gpu_utilization_percent": 59.44102,
+      "p95_gpu_utilization_percent": 72.0,
+      "peak_gpu_memory_mib": 5271.0,
+      "real_time_factor": 0.053408,
+      "rows": 1090,
+      "rows_per_second": 2.212877,
+      "wall_time_seconds": 492.571439
+    },
+    "surface06_round05": {
+      "audio_duration_seconds": 9222.73,
+      "checkpoint_sha256": "e82bd833fcbb622c73b7acb8f295e18d32fd605fcd49915286fd84ebee19cdf1",
+      "mean_gpu_utilization_percent": 61.047357,
+      "p95_gpu_utilization_percent": 72.0,
+      "peak_gpu_memory_mib": 5339.0,
+      "real_time_factor": 0.051767,
+      "rows": 1090,
+      "rows_per_second": 2.283022,
+      "wall_time_seconds": 477.437305
+    },
+    "surface07_round13": {
+      "audio_duration_seconds": 9222.73,
+      "checkpoint_sha256": "349d06dd517b6e99b71a74f15a04d6020afe56223ef946014d3bdca1440706b0",
+      "mean_gpu_utilization_percent": 64.092593,
+      "p95_gpu_utilization_percent": 72.0,
+      "peak_gpu_memory_mib": 5339.0,
+      "real_time_factor": 0.049149,
+      "rows": 1090,
+      "rows_per_second": 2.404643,
+      "wall_time_seconds": 453.289736
+    }
+  },
+  "experiment_id": "surface07-canonical-batch1-evaluation-v1",
+  "limitations": [
+    "Only the two immutable Slovenian real gates were evaluated; optional synthetic holdouts were out of scope.",
+    "Canonical evidence remains evaluation-only and does not accept or publish a checkpoint."
+  ],
+  "model_published": false,
+  "promotion_eligible": false,
+  "protocol": {
+    "att_context_size": [
+      56,
+      3
+    ],
+    "batch_size": 1,
+    "canonical": true,
+    "duration_bucketing": false,
+    "normalization": "sl-asr-normalization-v1",
+    "notes": [
+      "Batch size 1 without duration bucketing is the scientific reference mode.",
+      "This policy does not accept, promote, or publish a checkpoint."
+    ],
+    "policy_id": "single-gpu-canonical-batch1-v1",
+    "policy_type": "canonical_reference",
+    "precision": "fp32",
+    "promotion_eligible": false,
+    "schema_version": "1.0",
+    "target_lang": "sl-SI",
+    "tf32": false,
+    "visible_cuda_devices": 1
+  },
+  "repository_commit": "70da91edbef60b8ffee9a55532d728b805c614c8",
+  "runtime": {
+    "cuda_version": "12.6",
+    "cuda_visible_devices": "0",
+    "gpu_model": "NVIDIA GeForce RTX 3090",
+    "idle_probe": {
+      "memory_used_mib": 18.0,
+      "utilization_percent": 0.0
+    },
+    "logical_device": "cuda:0",
+    "nemo_revision": "8044a3924bfcfe8ef71d792bb73bf274fe853575",
+    "pytorch_version": "2.7.1+cu126",
+    "tf32_cudnn": false,
+    "tf32_matmul": false,
+    "total_vram_mib": 24123,
+    "visible_device_count": 1
+  },
+  "safety": {
+    "checkpoint_or_model_committed": false,
+    "controller_development_used": false,
+    "local_manifests_committed": false,
+    "predictions_committed": false,
+    "raw_references_or_hypotheses_committed": false,
+    "training_eligible_issued": false,
+    "training_started": false
+  },
+  "schema_version": "1.0",
+  "splits": {
+    "artur_j": {
+      "audio_duration_seconds": 1049.59,
+      "gate_id": "artur-j-public-gate-v1",
+      "manifest_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "rows": 256
+    },
+    "fleurs_v2": {
+      "audio_duration_seconds": 8173.14,
+      "gate_id": "fleurs-sl-si-test-full-v2",
+      "manifest_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "rows": 834
+    }
+  },
+  "status": "EVALUATION_ONLY",
+  "training_eligible": false,
+  "training_started": false
+}
