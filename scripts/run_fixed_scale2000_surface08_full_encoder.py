@@ -842,8 +842,8 @@ def _load_or_initialize_training(
     optimizer = torch.optim.AdamW(surface08_optimizer_parameter_groups(model, rates), weight_decay=0.0)
     saved = torch.load(checkpoint_dir / "optimizer.local.pt", map_location="cuda:0", weights_only=False)
     optimizer.load_state_dict(saved["optimizer"])
-    torch.set_rng_state(saved["torch_rng_state"])
-    torch.cuda.set_rng_state(saved["cuda_rng_state"], 0)
+    torch.set_rng_state(saved["torch_rng_state"].cpu())
+    torch.cuda.set_rng_state(saved["cuda_rng_state"].cpu(), 0)
     verify_surface08_optimizer_scope(optimizer, model, rates)
     if not _training_state_path(config).exists():
         if latest != 0:
