@@ -186,6 +186,12 @@
   `SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE`. This remains diagnostic,
   noncanonical evidence. Surface08 and full-encoder training remain
   prohibited.
+- Experiment 0028 evaluated the untouched base, PR #36 round 20, Surface06
+  round 5, and Surface07 round 13 under canonical batch-1, no-bucketing, FP32,
+  TF32-disabled evaluation on FLEURS-v2 and ARTUR-J. Surface07 remained best on
+  all four real-gate metrics at 42.090/12.988 on FLEURS-v2 and 47.532/15.025
+  on ARTUR-J, with zero empty hypotheses. The classification is
+  `CANONICAL_SURFACE07_CONFIRMED_NEW_BEST`; no checkpoint was accepted.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
