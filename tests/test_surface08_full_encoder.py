@@ -8,6 +8,7 @@ from slaif_asr.trainable_surface_sweep import (
     SURFACE07_METRICS,
     SURFACE08_ALLOWED_TRAINABLE_PREFIXES,
     SURFACE08_BEST_REAL_GATE_ENVELOPE,
+    apply_observed_training_ooms,
     assert_public_report_safe,
     bind_post_selection_metrics,
     classify_surface08,
@@ -203,6 +204,27 @@ class Surface08FullEncoderTests(unittest.TestCase):
             }
         )
         self.assertEqual(blocked["status"], "BLOCKED_SURFACE08_OOM")
+
+    def test_observed_training_oom_overrides_bounded_probe(self):
+        outcomes = {
+            4: {"status": "PASSED", "free_vram_mib": 2500},
+            2: {"status": "PASSED", "free_vram_mib": 1000},
+        }
+        adjusted = apply_observed_training_ooms(
+            outcomes,
+            [
+                {
+                    "status": "FAILED_TRAINING_OOM",
+                    "physical_microbatch": 4,
+                    "optimizer_step": 1211,
+                    "round": 1,
+                }
+            ],
+        )
+        self.assertEqual(adjusted[4]["status"], "FAILED")
+        self.assertEqual(adjusted[4]["probe_status_before_override"], "PASSED")
+        self.assertEqual(adjusted[4]["observed_optimizer_step"], 1211)
+        self.assertEqual(select_surface08_microbatch(adjusted)["physical_microbatch"], 2)
 
     def test_encoder_surface_must_resolve_exactly_24_layers(self):
         del self.model.params["encoder.layers.19.self_attn.weight"]

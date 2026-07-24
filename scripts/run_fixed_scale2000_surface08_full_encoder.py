@@ -72,6 +72,7 @@ from slaif_asr.trainable_surface_sweep import (
     SURFACE08_ENCODER_LAYER_PREFIX,
     SURFACE08_FUSION_BRIDGE_PREFIX,
     SURFACE08_ID,
+    apply_observed_training_ooms,
     assert_public_report_safe,
     bind_post_selection_metrics,
     classify_surface08,
@@ -142,6 +143,46 @@ def ensure_cuda_nvcc_process_env() -> None:
 
 def run_dir(config: dict[str, Any]) -> Path:
     return local_path(config["local_outputs"]["run_root"])
+
+
+def _training_memory_failures_path(config: dict[str, Any]) -> Path:
+    return run_dir(config) / "verification" / "training-memory-failures.local.json"
+
+
+def _training_memory_failures(config: dict[str, Any]) -> list[dict[str, Any]]:
+    path = _training_memory_failures_path(config)
+    if not path.exists():
+        return []
+    payload = read_json(path)
+    failures = payload.get("failures", [])
+    if not isinstance(failures, list):
+        raise RuntimeError("malformed local training-memory failure record")
+    return failures
+
+
+def _record_training_oom(
+    config: dict[str, Any],
+    *,
+    physical_microbatch: int,
+    optimizer_step: int,
+    round_index: int,
+) -> None:
+    failures = _training_memory_failures(config)
+    row = {
+        "status": "FAILED_TRAINING_OOM",
+        "physical_microbatch": physical_microbatch,
+        "optimizer_step": optimizer_step,
+        "round": round_index,
+    }
+    if not any(
+        int(existing.get("physical_microbatch", -1)) == physical_microbatch
+        for existing in failures
+    ):
+        failures.append(row)
+    write_json(
+        _training_memory_failures_path(config),
+        {"schema_version": "1.0", "failures": failures},
+    )
 
 
 def configure_torch() -> Any:
@@ -457,10 +498,23 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
     torch = configure_torch()
     verify_runtime_identities(check_gpu=False)
     outcomes: dict[int, dict[str, Any]] = {}
+    observed_failures = _training_memory_failures(config)
+    observed_failed_candidates = {
+        int(row["physical_microbatch"])
+        for row in observed_failures
+        if row.get("status") == "FAILED_TRAINING_OOM"
+    }
     reporter = LiveProgressReporter(stage="probe_microbatch", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "microbatch.local.ndjson")
     reporter.start("probing SURFACE_08 microbatch")
     for candidate in config["training"]["physical_microbatch_candidates"]:
         reporter.progress(step=len(outcomes), total_steps=4, message=f"candidate_{candidate}")
+        if int(candidate) in observed_failed_candidates:
+            outcomes[int(candidate)] = {
+                "status": "FAILED",
+                "error_type": "ObservedTrainingOOM",
+                "error": "full-schedule training OOM overrides the bounded memory probe",
+            }
+            continue
         model = None
         try:
             torch.cuda.empty_cache()
@@ -512,9 +566,15 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
                 del model
             gc.collect()
             torch.cuda.empty_cache()
+    outcomes = apply_observed_training_ooms(outcomes, observed_failures)
     selected = select_surface08_microbatch(outcomes)
     if selected["status"] != "PASSED":
-        payload = {"status": selected["status"], "candidate_outcomes": outcomes, "selected": selected}
+        payload = {
+            "status": selected["status"],
+            "candidate_outcomes": outcomes,
+            "observed_training_memory_failures": observed_failures,
+            "selected": selected,
+        }
         write_json(run_dir(config) / "verification" / "microbatch.local.json", payload)
         raise RuntimeError("BLOCKED_SURFACE08_OOM: SURFACE_08 does not fit physical microbatch 1")
 
@@ -547,12 +607,19 @@ def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]
         payload = {
             "status": "FAILED_ACCUMULATION_CORRECTNESS",
             "candidate_outcomes": {str(key): value for key, value in outcomes.items()},
+            "observed_training_memory_failures": observed_failures,
             "selected": selected,
             "correctness": correctness,
         }
         write_json(run_dir(config) / "verification" / "microbatch.local.json", payload)
         raise RuntimeError("gradient accumulation correctness probe failed")
-    payload = {"status": "PASSED", "candidate_outcomes": {str(key): value for key, value in outcomes.items()}, "selected": selected, "correctness": correctness}
+    payload = {
+        "status": "PASSED",
+        "candidate_outcomes": {str(key): value for key, value in outcomes.items()},
+        "observed_training_memory_failures": observed_failures,
+        "selected": selected,
+        "correctness": correctness,
+    }
     write_json(run_dir(config) / "verification" / "microbatch.local.json", payload)
     reporter.complete("microbatch probe complete")
     print(json.dumps(payload, sort_keys=True))
@@ -896,9 +963,11 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     profile_counts: Counter[str] = Counter()
     stopped_reason = "max_rounds"
     stopped_round = resume_round
+    active_round = resume_round
     monitor.start()
     try:
         for round_index in range(resume_round + 1, int(config["training"]["max_rounds"]) + 1):
+            active_round = round_index
             set_surface08_training_mode(model)
             layout = deterministic_epoch_batches(rounds[round_index], batch_size=8, epoch=round_index, seed=int(config["training"]["seed"]), bucketed=True)
             assert_epoch_covers_once(layout, len(rounds[round_index]))
@@ -999,6 +1068,13 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
                 stopped_reason = stop["reason"]
                 break
     except Exception as exc:
+        if type(exc).__name__ == "OutOfMemoryError" or "out of memory" in str(exc).lower():
+            _record_training_oom(
+                config,
+                physical_microbatch=physical,
+                optimizer_step=optimizer_steps,
+                round_index=active_round,
+            )
         reporter.failed("SURFACE_08 training failed", error_type=type(exc).__name__)
         raise
     finally:

@@ -1567,6 +1567,26 @@ def select_surface08_microbatch(outcomes: dict[int, dict[str, Any]]) -> dict[str
     }
 
 
+def apply_observed_training_ooms(
+    outcomes: dict[int, dict[str, Any]],
+    failures: Sequence[dict[str, Any]],
+) -> dict[int, dict[str, Any]]:
+    adjusted = {int(candidate): dict(outcome) for candidate, outcome in outcomes.items()}
+    for failure in failures:
+        if failure.get("status") != "FAILED_TRAINING_OOM":
+            continue
+        physical = int(failure["physical_microbatch"])
+        prior = adjusted.get(physical, {})
+        adjusted[physical] = {
+            "status": "FAILED",
+            "error_type": "ObservedTrainingOOM",
+            "error": "full-schedule training OOM overrides the bounded memory probe",
+            "probe_status_before_override": prior.get("status", "NOT_RUN"),
+            "observed_optimizer_step": int(failure["optimizer_step"]),
+        }
+    return adjusted
+
+
 def should_stop_controller_curve(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     post = [row for row in rows if int(row["round"]) > 0]
     if len(post) < 3:
