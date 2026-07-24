@@ -943,6 +943,9 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     evaluated_rounds = {int(row["round"]) for row in state["controller_rows"]}
     if resume_round not in evaluated_rounds:
         marker = read_json(_checkpoint_dir(config, resume_round) / "checkpoint-complete.local.json")
+        del prompt, optimizer, model
+        gc.collect()
+        torch.cuda.empty_cache()
         controller = evaluate_controller_checkpoint(
             config,
             _checkpoint_dir(config, resume_round) / "model.local.nemo",
@@ -951,6 +954,14 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
         )
         state["controller_rows"].append({**marker, **controller})
         write_json(_training_state_path(config), state)
+        model, optimizer, state, initial_fingerprints, restored_round = _load_or_initialize_training(
+            config,
+            torch,
+            restore_reporter,
+        )
+        if restored_round != resume_round:
+            raise RuntimeError("round changed while restoring after controller validation")
+        prompt = derive_prompt_column_selection(model, "sl-SI")
     monitor_path = run_dir(config) / "gpu-monitor.local.csv"
     monitor = NvidiaSmiMonitor(physical_gpu_index=hardware.physical_selector, output_csv=monitor_path, interval_seconds=0.5)
     torch.cuda.reset_peak_memory_stats(0)
@@ -1056,6 +1067,9 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
             state["round_rows"].append(marker)
             state.update({"optimizer_steps": optimizer_steps, "exposures_seen": exposures_seen, "gradient_norms": grad_norms})
             write_json(_training_state_path(config), state)
+            del prompt, optimizer, model
+            gc.collect()
+            torch.cuda.empty_cache()
             controller = evaluate_controller_checkpoint(config, _checkpoint_dir(config, round_index) / "model.local.nemo", round_index, validation_gpu)
             state["controller_rows"].append({**row, **controller, "checkpoint_sha256": marker["checkpoint_sha256"]})
             write_json(_training_state_path(config), state)
@@ -1064,6 +1078,14 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
             stopped_round = round_index
             reporter.progress(epoch=round_index, total_epochs=20, step=optimizer_steps, total_steps=40000, message=f"ARTUR-dev WER={controller['wer']} CER={controller['cer']} empty={controller['empty']}")
             stop = should_stop_surface08_controller_curve(state["controller_rows"])
+            model, optimizer, state, initial_fingerprints, restored_round = _load_or_initialize_training(
+                config,
+                torch,
+                restore_reporter,
+            )
+            if restored_round != round_index:
+                raise RuntimeError("round changed while restoring after controller validation")
+            prompt = derive_prompt_column_selection(model, "sl-SI")
             if stop["stop"]:
                 stopped_reason = stop["reason"]
                 break
