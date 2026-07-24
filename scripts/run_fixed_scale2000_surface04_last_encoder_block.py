@@ -60,7 +60,8 @@ from slaif_asr.emission_rnnt_finetune import (
 )
 from slaif_asr.live_progress import LiveProgressReporter, heartbeat_thread
 from slaif_asr.prompt_column import derive_prompt_column_selection
-from slaif_asr.rtx2080ti_policy import nvidia_smi_inventory, require_single_visible_rtx2080ti
+from slaif_asr.gpu_policy import is_approved_development_gpu, require_single_visible_cuda
+from slaif_asr.rtx2080ti_policy import nvidia_smi_inventory
 from slaif_asr.trainable_surface_sweep import (
     ALLOWED_TRAINABLE_PREFIXES,
     PR36_METRICS,
@@ -263,23 +264,25 @@ def stage_verify_inputs(config_path: Path) -> dict[str, Any]:
 def stage_probe_hardware(config_path: Path) -> dict[str, Any]:
     config = load_config(config_path)
     inventory = [row.to_dict() for row in nvidia_smi_inventory()]
+    approved = [row for row in inventory if is_approved_development_gpu(row["name"], row["memory_total_mib"])]
     rtx = [row for row in inventory if "RTX 2080 Ti" in row["name"]]
     payload = {
-        "status": "PASSED" if rtx else "ENVIRONMENT_BLOCKED",
+        "status": "PASSED" if approved else "ENVIRONMENT_BLOCKED",
         "inventory": inventory,
+        "approved_development_gpu_count": len(approved),
         "rtx2080ti_count": len(rtx),
         "second_2080ti_detected": len(rtx) >= 2,
     }
     write_json(run_dir(config) / "verification" / "hardware.local.json", payload)
     print(json.dumps(payload, sort_keys=True))
-    if not rtx:
-        raise RuntimeError("no RTX 2080 Ti available")
+    if not approved:
+        raise RuntimeError("no approved development GPU available")
     return payload
 
 
 def stage_probe_surface(config_path: Path) -> dict[str, Any]:
     config = load_config(config_path)
-    hardware = require_single_visible_rtx2080ti()
+    hardware = require_single_visible_cuda()
     torch = configure_torch()
     verify_runtime_identities(check_gpu=False)
     reporter = LiveProgressReporter(stage="probe_surface", arm=ARM_NAME, ndjson_path=run_dir(config) / "progress" / "surface.local.ndjson")
@@ -353,7 +356,7 @@ def _run_gradient_partition(config: dict[str, Any], records: Sequence[Any], phys
 
 def stage_probe_microbatch(config_path: Path, interval: float) -> dict[str, Any]:
     config = load_config(config_path)
-    require_single_visible_rtx2080ti()
+    require_single_visible_cuda()
     torch = configure_torch()
     verify_runtime_identities(check_gpu=False)
     records = _representative_records(config, longest=True)
@@ -710,7 +713,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
     config = load_config(config_path)
     inputs = verify_all_inputs(config)
     protected = protected_file_fingerprints(config)
-    hardware = require_single_visible_rtx2080ti()
+    hardware = require_single_visible_cuda()
     runtime_id = verify_runtime_identities(check_gpu=False)
     torch = configure_torch()
     micro = read_json(run_dir(config) / "verification" / "microbatch.local.json")
@@ -940,7 +943,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
 
 def stage_evaluate_directional(config_path: Path) -> dict[str, Any]:
     config = load_config(config_path)
-    hardware = require_single_visible_rtx2080ti()
+    hardware = require_single_visible_cuda()
     verify_all_inputs(config)
     verify_runtime_identities(check_gpu=False)
     training = _refresh_training_controller_selection(

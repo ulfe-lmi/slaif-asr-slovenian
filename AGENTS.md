@@ -248,9 +248,10 @@ Current development hardware policy:
   `CUDA_VISIBLE_DEVICES=1`; PyTorch must see exactly one logical CUDA device,
   `cuda:0`.
 - Project-owned GPU execution helpers must use the shared single-GPU policy:
-  exactly one visible A100 or RTX 2080 Ti is accepted, multiple visible GPUs are
-  rejected, CPU fallback is rejected, and code must not assume that the physical
-  selector is zero.
+  exactly one visible A100, RTX 2080 Ti, or NVIDIA GeForce RTX 3090 is accepted,
+  multiple visible GPUs are rejected, CPU fallback is rejected, and code must
+  not assume that the physical selector is zero. An RTX 3090 must expose at
+  least 22 GiB VRAM.
 - Other physical GPUs remain unused unless a later work order explicitly
   permits them.
 - A100 real-gate evaluation currently uses the measured batch policy in

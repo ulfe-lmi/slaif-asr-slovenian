@@ -20,6 +20,7 @@ import os
 import torch
 import numba
 import llvmlite
+from slaif_asr.gpu_policy import require_single_visible_cuda
 
 visible = os.environ.get("CUDA_VISIBLE_DEVICES")
 assert visible and "," not in visible, visible
@@ -28,16 +29,14 @@ assert torch.version.cuda == "12.6", torch.version.cuda
 assert numba.__version__ == "0.61.2", numba.__version__
 assert llvmlite.__version__ == "0.44.0", llvmlite.__version__
 assert importlib.metadata.version('nvidia-cuda-nvcc-cu12') == "12.9.86"
-assert torch.cuda.is_available()
-assert torch.cuda.device_count() == 1
-assert any(name in torch.cuda.get_device_name(0) for name in ("2080 Ti", "A100"))
+gpu = require_single_visible_cuda()
 print(f"Python={os.sys.version.split()[0]}")
 print(f"PyTorch={torch.__version__}")
 print(f"CUDA runtime={torch.version.cuda}")
 print(f"Numba={numba.__version__}")
 print(f"llvmlite={llvmlite.__version__}")
 print(f"NVCC wheel={importlib.metadata.version('nvidia-cuda-nvcc-cu12')}")
-print(f"CUDA device={torch.cuda.get_device_name(0)}")
+print(f"CUDA device={gpu.device_name}")
 PY
 "${venv_python}" - <<'PY'
 import torch
