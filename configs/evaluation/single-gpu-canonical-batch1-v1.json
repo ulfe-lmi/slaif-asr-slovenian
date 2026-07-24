@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "single-gpu-canonical-batch1-v1",
+  "policy_type": "canonical_reference",
+  "canonical": true,
+  "promotion_eligible": false,
+  "batch_size": 1,
+  "duration_bucketing": false,
+  "att_context_size": [56, 3],
+  "target_lang": "sl-SI",
+  "normalization": "sl-asr-normalization-v1",
+  "precision": "fp32",
+  "tf32": false,
+  "visible_cuda_devices": 1,
+  "notes": [
+    "Batch size 1 without duration bucketing is the scientific reference mode.",
+    "This policy does not accept, promote, or publish a checkpoint."
+  ]
+}
