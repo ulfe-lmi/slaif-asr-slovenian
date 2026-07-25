@@ -42,6 +42,16 @@ SURFACE07_ALLOWED_TRAINABLE_PREFIXES = (
     *SURFACE07_ENCODER_BLOCK_PREFIXES,
     SURFACE07_FUSION_BRIDGE_PREFIX,
 )
+SURFACE08_ID = "SURFACE_08_FULL_ENCODER"
+SURFACE08_ENCODER_LAYER_PREFIX = "encoder.layers."
+SURFACE08_FUSION_BRIDGE_MODULE = SURFACE07_FUSION_BRIDGE_MODULE
+SURFACE08_FUSION_BRIDGE_PREFIX = SURFACE07_FUSION_BRIDGE_PREFIX
+SURFACE08_ALLOWED_TRAINABLE_PREFIXES = (
+    "decoder.",
+    "joint.",
+    SURFACE08_ENCODER_LAYER_PREFIX,
+    SURFACE08_FUSION_BRIDGE_PREFIX,
+)
 FORBIDDEN_PUBLIC_KEYS = {
     "audio_filepath",
     "checkpoint_path",
@@ -115,6 +125,24 @@ SURFACE07_BEST_REAL_GATE_ENVELOPE = {
     },
 }
 
+SURFACE08_BEST_REAL_GATE_ENVELOPE = {
+    "fleurs_v2": {
+        "wer": {"value": 42.084, "source": "Surface07"},
+        "cer": {"value": 12.985, "source": "Surface07"},
+    },
+    "artur_j": {
+        "wer": {"value": 47.357, "source": "Surface07"},
+        "cer": {"value": 14.805, "source": "Surface07"},
+    },
+}
+
+SURFACE07_METRICS = {
+    "piper_synthetic_holdout": {"wer": 23.137, "cer": 7.429, "empty": 0},
+    "supertonic_heldout_voice_holdout": {"wer": 7.842, "cer": 2.145, "empty": 0},
+    "fleurs_v2": {"wer": 42.084, "cer": 12.985, "empty": 0},
+    "artur_j": {"wer": 47.357, "cer": 14.805, "empty": 0},
+}
+
 
 @dataclass(frozen=True)
 class SurfaceSummary:
@@ -170,6 +198,24 @@ class Surface07Summary:
     decoder_parameter_count: int
     joint_parameter_count: int
     final_four_encoder_blocks_parameter_count: int
+    fusion_bridge_parameter_count: int
+    frozen_parameter_count: int
+    trainable_prefixes: tuple[str, ...]
+    fusion_discovery: dict[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class Surface08Summary:
+    surface_id: str
+    encoder_layers: tuple[str, ...]
+    fusion_bridge_module: str
+    trainable_parameter_count: int
+    decoder_parameter_count: int
+    joint_parameter_count: int
+    encoder_all_layers_parameter_count: int
     fusion_bridge_parameter_count: int
     frozen_parameter_count: int
     trainable_prefixes: tuple[str, ...]
@@ -583,6 +629,146 @@ def validate_surface07_config(config: dict[str, Any], *, adr_text: str | None = 
         raise ValueError("controller policy or immutable-gate isolation drifted")
 
 
+def load_surface08_config(
+    path: str | Path = "configs/experiments/fixed-scale2000-surface08-full-encoder.json",
+) -> dict[str, Any]:
+    path = Path(path)
+    if not path.is_absolute():
+        path = REPO_ROOT / path
+    config = json.loads(path.read_text(encoding="utf-8"))
+    validate_surface08_config(config)
+    return config
+
+
+def validate_surface08_config(config: dict[str, Any], *, adr_text: str | None = None) -> None:
+    if config.get("work_order_id") != "0043":
+        raise ValueError("work_order_id must be 0043")
+    if config.get("status") != "DIAGNOSTIC_ONLY" or config.get("accepted_parent") != "none":
+        raise ValueError("surface sweep must remain DIAGNOSTIC_ONLY with accepted_parent none")
+    if adr_text is None:
+        adr_path = REPO_ROOT / "docs/adr/0009-fixed-scale2000-surface-sweep.md"
+        if not adr_path.exists():
+            raise ValueError("ADR 0009 is required")
+        adr_text = adr_path.read_text(encoding="utf-8")
+    required_adr_markers = ("Phase 5 / Work Order 0043", SURFACE08_ID)
+    if any(marker not in adr_text for marker in required_adr_markers):
+        raise ValueError("ADR 0009 Phase 5 does not authorize SURFACE_08")
+
+    model = config.get("model", {})
+    if model.get("checkpoint_sha256") != "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74":
+        raise ValueError("Surface08 must start from the untouched base checkpoint")
+    if model.get("initialization") != "untouched_base":
+        raise ValueError("Surface08 initialization must be untouched_base")
+
+    data = config.get("data", {})
+    expected_data = {
+        "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+        "semantic_rows": 16000,
+        "exposure_records": 320000,
+        "fixed_text_sha256": EXPECTED_TEXT_SHA256,
+        "all_views_sha256": EXPECTED_ALL_VIEWS_SHA256,
+        "exposure_schedule_sha256": EXPECTED_SCHEDULE_SHA256,
+    }
+    for key, expected in expected_data.items():
+        if data.get(key) != expected:
+            raise ValueError(f"data.{key} must be {expected!r}")
+    serialized_data = json.dumps(data, sort_keys=True).lower()
+    forbidden_data_markers = (
+        "s6tts",
+        "scale8000",
+        "scale-8000",
+        "database-extension",
+        "database_extension",
+        "real_speech",
+    )
+    if any(marker in serialized_data for marker in forbidden_data_markers):
+        raise ValueError("Surface08 forbids S6TTS, scale-8000, database-extension, and real training data")
+
+    surface = config.get("trainable_surface", {})
+    if surface.get("surface_id") != SURFACE08_ID:
+        raise ValueError("Work Order 0043 permits only SURFACE_08")
+    if surface.get("encoder_layer_count") != 24:
+        raise ValueError("SURFACE_08 requires the pinned 24-layer encoder")
+    if surface.get("encoder_layer_indices") != list(range(24)):
+        raise ValueError("SURFACE_08 must select encoder layers 0 through 23")
+    expected_modules = [f"encoder.layers.{index}" for index in range(24)]
+    if surface.get("encoder_layer_modules") != expected_modules:
+        raise ValueError("SURFACE_08 encoder layer identities drifted")
+    if surface.get("fusion_bridge_module") != SURFACE08_FUSION_BRIDGE_MODULE:
+        raise ValueError("SURFACE_08 requires the proven prompt_kernel fusion bridge")
+    if surface.get("fusion_bridge_parameter_prefix") != SURFACE08_FUSION_BRIDGE_PREFIX:
+        raise ValueError("SURFACE_08 fusion bridge prefix drifted")
+    if tuple(surface.get("allowed_prefixes", ())) != SURFACE08_ALLOWED_TRAINABLE_PREFIXES:
+        raise ValueError("trainable prefixes must be decoder, joint, all encoder layers, and prompt_kernel")
+    required_false = (
+        "surface09_allowed",
+        "full_model_allowed",
+        "preprocessor_training_allowed",
+        "frontend_subsampling_training_allowed",
+        "prompt_labels_tables_embeddings_allowed",
+        "prompt_identity_mapping_changes_allowed",
+        "language_id_mapping_changes_allowed",
+        "target_lang_machinery_changes_allowed",
+        "non_selected_prompt_fusion_changes_allowed",
+        "text_only_objective_allowed",
+        "temporary_lm_head_allowed",
+    )
+    if any(surface.get(key) is not False for key in required_false):
+        raise ValueError("Surface08 protected-surface policy drifted")
+    if surface.get("full_encoder_allowed") is not True:
+        raise ValueError("Surface08 must explicitly authorize all encoder layers")
+    if surface.get("prompt_acoustic_fusion_allowed") is not True:
+        raise ValueError("Surface08 must explicitly authorize the proven prompt_kernel bridge")
+
+    training = config.get("training", {})
+    expected_training = {
+        "objective": "audio_conditioned_rnnt",
+        "effective_batch_size": 8,
+        "round_size_exposures": 16000,
+        "steps_per_round": 2000,
+        "max_rounds": 20,
+        "max_exposures": 320000,
+        "max_optimizer_steps": 40000,
+        "optimizer": "AdamW",
+        "weight_decay": 0.0,
+        "scheduler": "none",
+        "precision": "fp32",
+        "tf32": False,
+        "seed": 1234,
+    }
+    for key, expected in expected_training.items():
+        if training.get(key) != expected:
+            raise ValueError(f"training.{key} must be {expected!r}")
+    if training.get("physical_microbatch_candidates") != [8, 4, 2, 1]:
+        raise ValueError("physical microbatch candidates must be [8, 4, 2, 1]")
+    lrs = training.get("learning_rates", {})
+    expected_lrs = {
+        "decoder": 0.0005,
+        "joint": 0.0005,
+        "encoder_all_layers": 0.000005,
+        "fusion_bridge": 0.00005,
+    }
+    if lrs != expected_lrs:
+        raise ValueError("learning-rate groups do not match Surface08")
+    if not float(lrs["encoder_all_layers"]) < float(lrs["fusion_bridge"]) < float(lrs["decoder"]):
+        raise ValueError("Surface08 encoder and fusion learning rates must remain below decoder/joint")
+
+    control = config.get("controller_dev", {})
+    if control.get("partition_id") != "artur-controller-dev-v1" or control.get("batch_size") != 1:
+        raise ValueError("ARTUR controller-dev batch-1 policy is required")
+    if control.get("duration_bucketing") is not False or control.get("immutable_gate_selection_allowed") is not False:
+        raise ValueError("controller policy or immutable-gate isolation drifted")
+    expected_guards = {
+        "surface07_selected_wer": 43.443,
+        "surface07_regression_delta": 5.0,
+        "surface07_regression_consecutive_rounds": 2,
+        "synthetic_real_divergence_delta": 8.0,
+    }
+    for key, expected in expected_guards.items():
+        if control.get(key) != expected:
+            raise ValueError(f"controller_dev.{key} must be {expected!r}")
+
+
 def configure_surface04_trainable(model: Any) -> SurfaceSummary:
     for name, _module in model.named_modules():
         lowered = name.lower()
@@ -902,6 +1088,69 @@ def configure_surface07_trainable(model: Any) -> Surface07Summary:
     )
 
 
+def configure_surface08_trainable(model: Any) -> Surface08Summary:
+    for name, _module in model.named_modules():
+        lowered = name.lower()
+        if "lm_head" in lowered or "lm_adapter" in lowered or "decoder_lm" in lowered:
+            raise RuntimeError(f"forbidden text-only module present: {name}")
+
+    layer_indices = _encoder_layer_indices(model)
+    if layer_indices != list(range(24)):
+        raise RuntimeError(
+            "EXPERIMENT_INVALID_ENCODER_SURFACE_UNRESOLVED: "
+            f"expected contiguous encoder layers 0..23, found {layer_indices}"
+        )
+    discovery = discover_surface07_fusion_bridge(model)
+    if discovery["status"] != "PASSED":
+        raise RuntimeError(f"BLOCKED_PROMPT_KERNEL_UNRESOLVED: {discovery['reason']}")
+
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
+
+    counts = {
+        "decoder": 0,
+        "joint": 0,
+        "encoder_all_layers": 0,
+        "fusion_bridge": 0,
+    }
+    for name, parameter in model.named_parameters():
+        if name.startswith("decoder."):
+            parameter.requires_grad_(True)
+            counts["decoder"] += parameter.numel()
+        elif name.startswith("joint."):
+            parameter.requires_grad_(True)
+            counts["joint"] += parameter.numel()
+        elif name.startswith(SURFACE08_ENCODER_LAYER_PREFIX):
+            parameter.requires_grad_(True)
+            counts["encoder_all_layers"] += parameter.numel()
+        elif name.startswith(SURFACE08_FUSION_BRIDGE_PREFIX):
+            parameter.requires_grad_(True)
+            counts["fusion_bridge"] += parameter.numel()
+    if any(value <= 0 for value in counts.values()):
+        raise RuntimeError(f"required SURFACE_08 parameter group missing: {counts}")
+    unexpected = [
+        name
+        for name, parameter in model.named_parameters()
+        if parameter.requires_grad and not name.startswith(SURFACE08_ALLOWED_TRAINABLE_PREFIXES)
+    ]
+    if unexpected:
+        raise RuntimeError(f"unauthorized trainable parameters: {unexpected[:10]}")
+    frozen = sum(parameter.numel() for _name, parameter in model.named_parameters() if not parameter.requires_grad)
+    return Surface08Summary(
+        surface_id=SURFACE08_ID,
+        encoder_layers=tuple(f"encoder.layers.{index}" for index in range(24)),
+        fusion_bridge_module=SURFACE08_FUSION_BRIDGE_MODULE,
+        trainable_parameter_count=sum(counts.values()),
+        decoder_parameter_count=counts["decoder"],
+        joint_parameter_count=counts["joint"],
+        encoder_all_layers_parameter_count=counts["encoder_all_layers"],
+        fusion_bridge_parameter_count=counts["fusion_bridge"],
+        frozen_parameter_count=frozen,
+        trainable_prefixes=SURFACE08_ALLOWED_TRAINABLE_PREFIXES,
+        fusion_discovery=discovery,
+    )
+
+
 def set_surface04_training_mode(model: Any) -> None:
     # Match PR #36 training-mode semantics; requires_grad is the only changed
     # surface control. Evaluation probes switch the entire model to eval mode.
@@ -920,6 +1169,11 @@ def set_surface06_training_mode(model: Any) -> None:
 
 def set_surface07_training_mode(model: Any) -> None:
     # Preserve Surface06 model-mode semantics; only the fusion bridge scope changes.
+    model.train()
+
+
+def set_surface08_training_mode(model: Any) -> None:
+    # Preserve prior sweep model-mode semantics; only requires_grad scope changes.
     model.train()
 
 
@@ -1014,6 +1268,34 @@ def surface07_optimizer_parameter_groups(model: Any, learning_rates: dict[str, f
     ]
 
 
+def surface08_optimizer_parameter_groups(model: Any, learning_rates: dict[str, float]) -> list[dict[str, Any]]:
+    groups: dict[str, list[Any]] = {
+        "decoder": [],
+        "joint": [],
+        "encoder_all_layers": [],
+        "fusion_bridge": [],
+    }
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad:
+            continue
+        if name.startswith("decoder."):
+            groups["decoder"].append(parameter)
+        elif name.startswith("joint."):
+            groups["joint"].append(parameter)
+        elif name.startswith(SURFACE08_ENCODER_LAYER_PREFIX):
+            groups["encoder_all_layers"].append(parameter)
+        elif name.startswith(SURFACE08_FUSION_BRIDGE_PREFIX):
+            groups["fusion_bridge"].append(parameter)
+        else:
+            raise RuntimeError(f"unauthorized optimizer parameter: {name}")
+    if any(not values for values in groups.values()):
+        raise RuntimeError("optimizer is missing a SURFACE_08 parameter group")
+    return [
+        {"name": name, "params": groups[name], "lr": float(learning_rates[name])}
+        for name in ("decoder", "joint", "encoder_all_layers", "fusion_bridge")
+    ]
+
+
 def verify_optimizer_scope(optimizer: Any, model: Any, learning_rates: dict[str, float]) -> None:
     expected = {id(parameter) for _name, parameter in model.named_parameters() if parameter.requires_grad}
     actual = {id(parameter) for group in optimizer.param_groups for parameter in group["params"]}
@@ -1049,6 +1331,16 @@ def verify_surface07_optimizer_scope(optimizer: Any, model: Any, learning_rates:
     actual = {id(parameter) for group in optimizer.param_groups for parameter in group["params"]}
     if actual != expected:
         raise RuntimeError("optimizer parameters do not exactly match SURFACE_07")
+    by_name = {str(group.get("name")): float(group["lr"]) for group in optimizer.param_groups}
+    if by_name != {name: float(value) for name, value in learning_rates.items()}:
+        raise RuntimeError("optimizer learning-rate groups drifted")
+
+
+def verify_surface08_optimizer_scope(optimizer: Any, model: Any, learning_rates: dict[str, float]) -> None:
+    expected = {id(parameter) for _name, parameter in model.named_parameters() if parameter.requires_grad}
+    actual = {id(parameter) for group in optimizer.param_groups for parameter in group["params"]}
+    if actual != expected:
+        raise RuntimeError("optimizer parameters do not exactly match SURFACE_08")
     by_name = {str(group.get("name")): float(group["lr"]) for group in optimizer.param_groups}
     if by_name != {name: float(value) for name, value in learning_rates.items()}:
         raise RuntimeError("optimizer learning-rate groups drifted")
@@ -1163,9 +1455,51 @@ def surface07_changed_tensor_summary(before: dict[str, Any], after: dict[str, An
     }
 
 
+def surface08_changed_tensor_summary(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    missing = sorted(set(before) - set(after))
+    extra = sorted(set(after) - set(before))
+    changed: list[str] = []
+    for name in sorted(set(before) & set(after)):
+        left, right = before[name], after[name]
+        if left.shape != right.shape or not bool((left == right).all()):
+            changed.append(name)
+    unauthorized = [name for name in changed if not name.startswith(SURFACE08_ALLOWED_TRAINABLE_PREFIXES)]
+    non_selected_prompt_or_fusion = [
+        name
+        for name in changed
+        if any(marker in name.lower() for marker in ("prompt", "fusion", "conditioning", "language_id", "target_lang"))
+        and not name.startswith(SURFACE08_FUSION_BRIDGE_PREFIX)
+    ]
+    frontend_changed = [
+        name
+        for name in changed
+        if name.startswith("preprocessor.")
+        or name.startswith("encoder.pre_encode.")
+        or (name.startswith("encoder.") and not name.startswith(SURFACE08_ENCODER_LAYER_PREFIX))
+    ]
+    return {
+        "changed_tensor_count": len(changed),
+        "authorized_changed_tensor_count": len(changed) - len(unauthorized),
+        "unauthorized_changed_tensors": unauthorized,
+        "missing_tensors": missing,
+        "unexpected_tensors": extra,
+        "encoder_all_layers_changed": any(
+            name.startswith(SURFACE08_ENCODER_LAYER_PREFIX) for name in changed
+        ),
+        "preprocessor_unchanged": not any(name.startswith("preprocessor.") for name in changed),
+        "subsampling_frontend_unchanged": not frontend_changed,
+        "fusion_bridge_changed": any(
+            name.startswith(SURFACE08_FUSION_BRIDGE_PREFIX) for name in changed
+        ),
+        "non_selected_prompt_or_fusion_unchanged": not non_selected_prompt_or_fusion,
+        "prompt_identity_unchanged": not non_selected_prompt_or_fusion,
+        "only_surface08_changed": not missing and not extra and not unauthorized,
+    }
+
+
 def microbatch_plan(physical_microbatch: int) -> dict[str, int]:
-    if physical_microbatch not in (4, 2, 1):
-        raise ValueError("physical microbatch must be one of 4, 2, 1")
+    if physical_microbatch not in (8, 4, 2, 1):
+        raise ValueError("physical microbatch must be one of 8, 4, 2, 1")
     return {
         "physical_microbatch": physical_microbatch,
         "gradient_accumulation_steps": 8 // physical_microbatch,
@@ -1221,6 +1555,38 @@ def select_surface07_microbatch(outcomes: dict[int, dict[str, Any]]) -> dict[str
     }
 
 
+def select_surface08_microbatch(outcomes: dict[int, dict[str, Any]]) -> dict[str, Any]:
+    for candidate in (8, 4, 2, 1):
+        if outcomes.get(candidate, {}).get("status") == "PASSED":
+            return {"status": "PASSED", **microbatch_plan(candidate)}
+    return {
+        "status": "BLOCKED_SURFACE08_OOM",
+        "physical_microbatch": None,
+        "gradient_accumulation_steps": None,
+        "effective_batch_size": 8,
+    }
+
+
+def apply_observed_training_ooms(
+    outcomes: dict[int, dict[str, Any]],
+    failures: Sequence[dict[str, Any]],
+) -> dict[int, dict[str, Any]]:
+    adjusted = {int(candidate): dict(outcome) for candidate, outcome in outcomes.items()}
+    for failure in failures:
+        if failure.get("status") != "FAILED_TRAINING_OOM":
+            continue
+        physical = int(failure["physical_microbatch"])
+        prior = adjusted.get(physical, {})
+        adjusted[physical] = {
+            "status": "FAILED",
+            "error_type": "ObservedTrainingOOM",
+            "error": "full-schedule training OOM overrides the bounded memory probe",
+            "probe_status_before_override": prior.get("status", "NOT_RUN"),
+            "observed_optimizer_step": int(failure["optimizer_step"]),
+        }
+    return adjusted
+
+
 def should_stop_controller_curve(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     post = [row for row in rows if int(row["round"]) > 0]
     if len(post) < 3:
@@ -1242,6 +1608,39 @@ def should_stop_controller_curve(rows: Sequence[dict[str, Any]]) -> dict[str, An
     if last_round - best_round >= 3:
         return {"stop": True, "reason": "three_rounds_without_new_raw_best", "best_round": best_round}
     return {"stop": False, "reason": "new_best_patience_active", "best_round": best_round}
+
+
+def should_stop_surface08_controller_curve(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    post = [row for row in rows if int(row["round"]) > 0]
+    if not post:
+        return {"stop": False, "reason": "minimum_rounds_not_reached"}
+    latest = post[-1]
+    if int(latest["round"]) > 1 and int(latest.get("empty", 0)) > 0:
+        return {"stop": True, "reason": "surface08_empty_hypotheses_reappeared"}
+
+    if len(post) >= 2 and all(float(row["wer"]) > 43.443 + 5.0 for row in post[-2:]):
+        return {
+            "stop": True,
+            "reason": "surface08_two_consecutive_rounds_worse_than_surface07_by_5",
+        }
+
+    base = next((row for row in rows if int(row["round"]) == 0), None)
+    best_wer = min(float(row["wer"]) for row in rows if row.get("wer") is not None)
+    synthetic_improved = bool(
+        base
+        and latest.get("synthetic_anchor_probe_loss") is not None
+        and latest.get("synthetic_scale_probe_loss") is not None
+        and base.get("synthetic_anchor_probe_loss") is not None
+        and base.get("synthetic_scale_probe_loss") is not None
+        and float(latest["synthetic_anchor_probe_loss"]) < float(base["synthetic_anchor_probe_loss"])
+        and float(latest["synthetic_scale_probe_loss"]) < float(base["synthetic_scale_probe_loss"])
+    )
+    if synthetic_improved and float(latest["wer"]) > best_wer + 8.0:
+        return {
+            "stop": True,
+            "reason": "surface08_synthetic_real_divergence_over_8",
+        }
+    return should_stop_controller_curve(rows)
 
 
 def mark_controller_selection(rows: Sequence[dict[str, Any]], *, base_empty_count: int) -> dict[str, Any]:
@@ -1533,6 +1932,68 @@ def classify_surface07(
     if synthetic_safe and base_better:
         return "SURFACE07_BEATS_BASE_BUT_NOT_PRIOR_CHALLENGERS"
     return "SURFACE07_SYNTHETIC_OR_REAL_REGRESSION"
+
+
+def surface08_envelope_comparison(metrics: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for split in ("fleurs_v2", "artur_j"):
+        for metric in ("wer", "cer"):
+            prior = SURFACE08_BEST_REAL_GATE_ENVELOPE[split][metric]
+            value = float(metrics[split][metric])
+            tolerance = 0.50 if metric == "wer" else 0.25
+            rows.append(
+                {
+                    "split": split,
+                    "metric": metric,
+                    "best_prior_value": float(prior["value"]),
+                    "prior_source": str(prior["source"]),
+                    "surface08_value": value,
+                    "within_tolerance": value <= float(prior["value"]) + tolerance,
+                    "improved": value < float(prior["value"]),
+                }
+            )
+    return rows
+
+
+def classify_surface08(
+    metrics: dict[str, dict[str, Any]],
+    *,
+    parameter_integrity: bool = True,
+    selected_round: int | None = None,
+) -> str:
+    if not parameter_integrity:
+        return "EXPERIMENT_INVALID"
+    real_splits = ("fleurs_v2", "artur_j")
+    if any(int(metrics[split].get("empty", 0)) > 0 for split in real_splits):
+        return "SURFACE08_SYNTHETIC_OVERFIT_OR_REAL_REGRESSION"
+
+    synthetic_safe = all(
+        float(metrics[split][metric]) < float(BASE_DIRECTIONAL_METRICS[split][metric])
+        for split in ("piper_synthetic_holdout", "supertonic_heldout_voice_holdout")
+        for metric in ("wer", "cer")
+    )
+    base_better = all(
+        float(metrics[split][metric]) < float(BASE_DIRECTIONAL_METRICS[split][metric])
+        for split in real_splits
+        for metric in ("wer", "cer")
+    )
+    envelope = surface08_envelope_comparison(metrics)
+    within_envelope = all(row["within_tolerance"] for row in envelope)
+    improved_envelope_count = sum(bool(row["improved"]) for row in envelope)
+
+    if synthetic_safe and within_envelope and improved_envelope_count >= 3:
+        return "SURFACE08_NEW_BEST_DIRECTIONAL_CANDIDATE"
+    if synthetic_safe and within_envelope and improved_envelope_count >= 1:
+        return "SURFACE08_MATCHES_SURFACE07_WITH_ACCEPTABLE_TRADEOFF"
+
+    fleurs_within = all(
+        row["within_tolerance"] for row in envelope if row["split"] == "fleurs_v2"
+    )
+    if selected_round is not None and selected_round > 0 and not fleurs_within:
+        return "SURFACE08_ARTUR_DEV_GOOD_BUT_FLEURS_REGRESSES"
+    if synthetic_safe and base_better:
+        return "SURFACE08_BEATS_BASE_BUT_NOT_SURFACE07"
+    return "SURFACE08_SYNTHETIC_OVERFIT_OR_REAL_REGRESSION"
 
 
 def assert_public_report_safe(payload: Any) -> None:

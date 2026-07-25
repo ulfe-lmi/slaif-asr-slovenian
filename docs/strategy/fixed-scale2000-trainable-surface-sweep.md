@@ -23,7 +23,7 @@ large sweep PR.
 | `SURFACE_05_DECODER_JOINT_PLUS_LAST_TWO_ENCODER_BLOCKS` | decoder + joint + final two encoder blocks | Reviewed: acceptable tradeoff in PR #44 |
 | `SURFACE_06_DECODER_JOINT_PLUS_LAST_FOUR_ENCODER_BLOCKS` | decoder + joint + final four encoder blocks | Reviewed: new best directional candidate in PR #45 |
 | `SURFACE_07_TOP_ENCODER_PLUS_PROMPT_ACOUSTIC_FUSION` | decoder + joint + final four encoder blocks + proven `prompt_kernel` bridge | Reviewed: new best directional candidate in PR #46 |
-| `SURFACE_08_FULL_ENCODER` | full encoder | Prohibited under synthetic-only training |
+| `SURFACE_08_FULL_ENCODER` | decoder + joint + all encoder layers + proven `prompt_kernel`, with frontend and prompt identity frozen | Reviewed: new best directional candidate in Experiment 0029 |
 | `SURFACE_09_FULL_MODEL` | full model | Prohibited without future real training data and governance review |
 
 ## Review Rule
@@ -51,5 +51,13 @@ selected checkpoint improved all four directional real-gate metrics versus
 Surface06, scoring 42.084/12.985 on FLEURS-v2 and 47.357/14.805 on ARTUR-J
 with zero empty hypotheses. This is
 `SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE`, diagnostic only. The next step is
-strategic review and canonical evaluation of named challengers. Surface08 and
-full-encoder training remain prohibited.
+strategic review and canonical evaluation of named challengers. Experiment
+0028 subsequently confirmed Surface07 as the strongest evaluated canonical
+challenger. Work Order 0043 now authorizes one exceptional Surface08 boundary
+diagnostic to test whether full encoder exposure helps or overfits. ARTUR
+controller-dev selected round 6, and the operational rule stopped at round 9
+after 18,000 optimizer steps and 144,000 exposures. The selected checkpoint
+scored 41.878/13.186 on FLEURS-v2 and 41.765/13.553 on ARTUR-J with zero empty
+hypotheses, yielding `SURFACE08_NEW_BEST_DIRECTIONAL_CANDIDATE`. This result
+remains diagnostic, does not make full-encoder training the default direction,
+and does not authorize Surface09.

@@ -184,14 +184,23 @@
   47.357/14.805 on ARTUR-J with zero empty hypotheses, improving all four
   directional real-gate metrics versus Surface06 and yielding
   `SURFACE07_NEW_BEST_DIRECTIONAL_CANDIDATE`. This remains diagnostic,
-  noncanonical evidence. Surface08 and full-encoder training remain
-  prohibited.
+  noncanonical evidence. At that point, Surface08 and full-encoder training
+  remained prohibited pending an explicit exception.
 - Experiment 0028 evaluated the untouched base, PR #36 round 20, Surface06
   round 5, and Surface07 round 13 under canonical batch-1, no-bucketing, FP32,
   TF32-disabled evaluation on FLEURS-v2 and ARTUR-J. Surface07 remained best on
   all four real-gate metrics at 42.090/12.988 on FLEURS-v2 and 47.532/15.025
   on ARTUR-J, with zero empty hypotheses. The classification is
   `CANONICAL_SURFACE07_CONFIRMED_NEW_BEST`; no checkpoint was accepted.
+- ADR 0009 Phase 5 and Work Order 0043 authorized exactly one Surface08
+  boundary diagnostic from the untouched base on the unchanged original
+  scale-2000 schedule. ARTUR controller-dev selected round 6, and the
+  operational rule stopped at round 9 after 18,000 optimizer steps and 144,000
+  exposures. The selected checkpoint scored 41.878/13.186 on FLEURS-v2 and
+  41.765/13.553 on ARTUR-J with zero empty hypotheses, yielding
+  `SURFACE08_NEW_BEST_DIRECTIONAL_CANDIDATE`. Frontend, tokenizer, prompt
+  identity, Surface09, and full-model training remain prohibited. This result
+  is diagnostic and does not accept or promote a checkpoint.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

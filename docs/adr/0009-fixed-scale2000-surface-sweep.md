@@ -3,7 +3,8 @@
 ## Status
 
 Accepted for the bounded diagnostic program defined by Work Orders 0037,
-0038, 0039, and 0040.
+0038, 0039, 0040, and the one-time Surface08 boundary diagnostic in Work Order
+0043.
 
 ## Decision
 
@@ -104,6 +105,35 @@ Phase 4 forbids:
 - Surface08, Surface09, checkpoint acceptance, model publication,
   `TRAINING_ELIGIBLE`, or an `accepted_parent` change.
 
+## Phase 5 / Work Order 0043
+
+Authorize exactly one `SURFACE_08_FULL_ENCODER` boundary diagnostic. This is not
+general authorization for full-encoder training, a release or promotion path,
+or authorization for full-model training.
+
+Phase 5 permits:
+
+- training the decoder and joint;
+- training exactly all 24 encoder layers at `5.0e-6`;
+- training the previously proven separable `prompt_kernel` bridge at `5.0e-5`;
+- using only the original scale-2000 augmented corpus v4 and its fixed
+  exposure schedule;
+- using ARTUR controller-dev aggregate run-control under ADR 0008;
+- using exactly one visible RTX 3090, or another already-authorized single GPU
+  only if the RTX 3090 is unavailable.
+
+Phase 5 forbids:
+
+- preprocessor, frontend, or subsampling training outside `encoder.layers`;
+- tokenizer, prompt labels, prompt tables, prompt embeddings, prompt identity,
+  language-ID mappings, or target-language machinery changes;
+- training any prompt/fusion module other than the proven `prompt_kernel`;
+- full-model training or Surface09;
+- S6TTS, scale-8000, database-extension, or real-speech training data;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- checkpoint acceptance, model publication, `TRAINING_ELIGIBLE`, or an
+  `accepted_parent` change.
+
 ## Reason
 
 The strongest clean WER/CER reduction came from original scale-2000 augmented
@@ -134,6 +164,6 @@ not which data variant should be added.
 ## Consequences
 
 These are diagnostic exceptions to the default synthetic-only encoder freeze,
-not a general authorization to train encoder parameters. Surface08, Surface09,
-and any other expansion require separate governance. Full-encoder training
-remains prohibited.
+not general authorization to train encoder parameters. Phase 5 permits one
+named Surface08 run only. Surface09, full-model training, and any later
+full-encoder run require separate governance.
