@@ -121,7 +121,11 @@ The repository will not own:
    exactly one Surface08 boundary diagnostic with all encoder layers and the
    proven `prompt_kernel`, while the frontend and prompt identity remain
    frozen. It is not general full-encoder authorization and does not authorize
-   prompt identity changes, Surface09, or full-model training.
+   prompt identity changes, Surface09, or full-model training. Work Order 0045
+   authorizes exactly one additional Surface08 run from the untouched base
+   using the admitted scale-8000 clean synthetic pool with deterministic
+   in-memory transcript-preserving augmentation; it is a data-axis diagnostic,
+   not general scale-8000 or full-encoder authorization.
 7. **Real speech decides checkpoint acceptance.**
    - Synthetic improvement alone is insufficient.
    - Real Slovenian acoustic data is validation-only and must not be used for

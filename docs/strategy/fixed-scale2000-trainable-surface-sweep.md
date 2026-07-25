@@ -61,3 +61,16 @@ scored 41.878/13.186 on FLEURS-v2 and 41.765/13.553 on ARTUR-J with zero empty
 hypotheses, yielding `SURFACE08_NEW_BEST_DIRECTIONAL_CANDIDATE`. This result
 remains diagnostic, does not make full-encoder training the default direction,
 and does not authorize Surface09.
+
+## Post-Sweep Data-Axis Diagnostic
+
+Work Order 0045 is a separate, named data-axis follow-up. It keeps the
+Surface08 boundary, untouched base initialization, exposure cap, controller
+policy, and directional suite fixed while replacing the scale-2000 offline
+training schedule with scale-8000 clean synthetic audio plus deterministic
+in-memory transcript-preserving augmentation.
+
+This follow-up is stacked on the PR #50 OTF infrastructure while that PR
+remains open. It does not alter the completed fixed-scale2000 surface ladder,
+does not authorize Surface09, and does not make scale-8000 full-encoder
+training a general policy.
