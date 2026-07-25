@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "benchmark_id": "otf-augmentation-scale2000-fill-rate-v1",
+  "data_source": {
+    "corpus_id": "sl-corpus-v4-gams-16000-training-v1",
+    "semantic_rows": 16000,
+    "clean_files": 144000,
+    "fixed_text_sha256": "dd38cf0ac0e36abc14559b379319bed0b27c2929e1342b6fc9bbeb0eed7efe14",
+    "all_views_sha256": "9207429fdd675d6a8ea491f6f6ce3647e1fc9ec22e439c9548ad1120268e3bca",
+    "fixed_text_relative_path": "data-quality/sl-corpus-v4-gams-16000-training-v1/fixed-combined-training-text.local.jsonl",
+    "all_views_relative_path": "data-quality/sl-corpus-v4-gams-16000-training-v1/all-views.local.jsonl"
+  },
+  "augmentation": {
+    "profile_config": "configs/augmentation/scale200_transcript_preserving_v1.json",
+    "profile_config_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
+    "otf_aug_random_key": "scale2000-otf-transcript-preserving-v1",
+    "algorithm_version": "otf-transcript-preserving-v1",
+    "profile_sampling": "hmac_sha256_modulo_profile_count",
+    "offline_replay_status": "SCALE2000_OFFLINE_AUGMENTATION_REPLAY_NOT_EXACT",
+    "expected_sample_rate": 16000
+  },
+  "pipeline": {
+    "worker_type": "multiprocessing_spawn",
+    "num_workers": 3,
+    "physical_microbatch": 2,
+    "gradient_accumulation": 4,
+    "effective_batch": 8,
+    "prefetch_microbatches": 16,
+    "ready_wait_threshold_ms": 1.0
+  },
+  "benchmark": {
+    "warmup_microbatches": 32,
+    "measured_microbatches": 512,
+    "target_examples_per_second": [
+      12.8,
+      16.0,
+      24.0,
+      32.0
+    ],
+    "primary_target_examples_per_second": 12.8,
+    "determinism_examples": 16
+  },
+  "thresholds": {
+    "minimum_fill_rate": 0.98,
+    "minimum_ready_microbatch_rate": 0.98,
+    "maximum_p95_consumer_wait_ms": 50.0
+  },
+  "local_output": "benchmarks/otf-augmentation-scale2000-fill-rate-v1/summary.local.json",
+  "public_outputs": {
+    "json": "docs/experiments/0030-otf-augmentation-fill-rate-scale2000.json",
+    "markdown": "docs/experiments/0030-otf-augmentation-fill-rate-scale2000.md"
+  }
+}
