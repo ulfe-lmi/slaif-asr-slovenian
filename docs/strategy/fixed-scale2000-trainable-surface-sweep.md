@@ -92,3 +92,11 @@ cap remain fixed. Only deterministic OTF augmentation intensity changes:
 rounds 1-4 use a 70/30 standard/strong mixture and rounds 5-9 use 25/75. This
 is an augmentation-boundary diagnostic, not another surface expansion and not
 general authorization for StrongAug training.
+
+Experiment 0032 completed that follow-up. ARTUR controller-dev selected round
+6, and training stopped at round 9 after 144,000 virtual exposures. StrongAug
+v1 improved ARTUR-J WER to 39.406 but scored 39.904/12.343 on FLEURS-v2,
+outside the predeclared tolerance from Experiment 0031 standard OTF. Its
+classification is `STRONGAUG_V1_REAL_GATE_REGRESSION`; the standard OTF recipe
+remains the stronger scale-8000 data-axis result. No checkpoint is accepted or
+promoted.
