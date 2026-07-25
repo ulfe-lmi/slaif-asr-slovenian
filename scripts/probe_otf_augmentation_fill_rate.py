@@ -66,6 +66,12 @@ def cpu_inventory() -> dict[str, Any]:
     logical = os.cpu_count() or 1
     physical = len(physical_cores) or logical
     available_ram = os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+    meminfo = Path("/proc/meminfo")
+    if meminfo.is_file():
+        for line in meminfo.read_text(encoding="utf-8").splitlines():
+            if line.startswith("MemAvailable:"):
+                available_ram = int(line.split()[1]) * 1024
+                break
     return {
         "cpu_model": model,
         "physical_cpu_count": physical,
@@ -84,7 +90,11 @@ def storage_description(root: Path) -> str:
             ["lsblk", "-n", "-o", "ROTA", source],
             text=True,
         ).splitlines()[0].strip()
-        return "non-rotational block storage" if rotational == "0" else "rotational block storage"
+        return (
+            "kernel-reported non-rotational block storage"
+            if rotational == "0"
+            else "kernel-reported rotational block storage"
+        )
     except (OSError, subprocess.CalledProcessError):
         return "storage type not reported"
 
@@ -410,7 +420,9 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
         raise FileNotFoundError("local benchmark summary is unavailable")
     with summary.open("r", encoding="utf-8") as stream:
         payload = json.load(stream)
+    payload["repository_commit"] = git_revision()
     validate_benchmark_result(payload)
+    atomic_write_json(summary, payload)
     public = config["public_outputs"]
     atomic_write_json(REPO_ROOT / str(public["json"]), payload)
     atomic_write_text(REPO_ROOT / str(public["markdown"]), markdown_report(payload))

@@ -672,13 +672,22 @@ def run_fill_rate_benchmark(
     ]
     for worker in workers:
         worker.start()
-    for task in tasks:
-        input_queue.put(task)
-    for _worker in workers:
-        input_queue.put(None)
+    next_task_index = 0
+
+    def submit_next() -> bool:
+        nonlocal next_task_index
+        if next_task_index >= len(tasks):
+            return False
+        input_queue.put(tasks[next_task_index])
+        next_task_index += 1
+        return True
+
+    for _index in range(min(prefetch_microbatches, len(tasks))):
+        submit_next()
 
     prefill_started = time.perf_counter()
-    while _queue_size(output_queue) < prefetch_microbatches:
+    prefill_target = min(prefetch_microbatches, len(tasks))
+    while _queue_size(output_queue) < prefill_target:
         if time.perf_counter() - prefill_started > 120.0:
             raise TimeoutError("prefetch queue did not fill before timeout")
         if any(not worker.is_alive() for worker in workers):
@@ -692,6 +701,7 @@ def run_fill_rate_benchmark(
             time.sleep(interval)
             warmup, _ready = _take_expected(output_queue, microbatch_index, buffered)
             del warmup
+            submit_next()
 
         waits: list[float] = []
         ready_flags: list[bool] = []
@@ -704,10 +714,15 @@ def run_fill_rate_benchmark(
             prepared, ready = _take_expected(output_queue, microbatch_index, buffered)
             waits.append(time.perf_counter() - wait_started)
             ready_flags.append(ready)
-            queue_levels.append(_queue_size(output_queue) + len(buffered))
+            queue_levels.append(
+                min(prefetch_microbatches, _queue_size(output_queue) + len(buffered))
+            )
             measured_rows.append(prepared)
+            submit_next()
         measured_wall = time.perf_counter() - measured_started
     finally:
+        for _worker in workers:
+            input_queue.put(None)
         for worker in workers:
             worker.join(timeout=30.0)
             if worker.is_alive():
