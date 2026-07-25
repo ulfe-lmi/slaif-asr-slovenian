@@ -201,3 +201,40 @@ Phase 6 forbids:
 This is not general authorization for scale-8000 full-encoder training. Any
 follow-up schedule, surface, initialization, or data change requires separate
 human review and authorization.
+
+## Phase 7 / Work Order 0046
+
+Work Order 0046 authorizes exactly one matched augmentation-intensity
+diagnostic against Experiment 0031:
+
+- retain `SURFACE_08_FULL_ENCODER`, including decoder, joint, all 24 encoder
+  layers, and the proven separable `prompt_kernel`;
+- start again from the untouched Nemotron base;
+- use only the admitted scale-8000 clean synthetic pool;
+- retain FP32, TF32-disabled, effective-batch-8 training and the 144,000
+  virtual-exposure cap;
+- replace the standard single-profile OTF policy with deterministic StrongAug
+  v1 chains, using a 70/30 standard/strong mixture in rounds 1-4 and a 25/75
+  mixture in rounds 5-9;
+- use ARTUR controller-dev only for aggregate run-control under ADR 0008.
+
+StrongAug v1 permits only in-memory transcript-preserving procedural
+degradations. Chains contain at most three bounded operations, procedural noise
+never falls below 8 dB SNR, and no augmented WAV is rendered.
+
+Phase 7 forbids:
+
+- changing the model surface, base checkpoint, scale-8000 text, clean audio
+  reservoir, effective batch, optimizer, or learning-rate groups;
+- scale-2000, S6TTS, database-extension, or real speech as training sources;
+- external uncertified noise data or pre-rendered augmented WAVs;
+- initialization from Experiment 0031 or any adapted checkpoint;
+- preprocessor, frontend, subsampling, tokenizer, prompt-identity,
+  language-ID, or target-language machinery changes;
+- Surface09 or full-model training;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- checkpoint acceptance, `TRAINING_ELIGIBLE`, model publication, or accepted
+  parent changes.
+
+This is a single augmentation-policy comparison, not general StrongAug or
+scale-8000 full-encoder authorization.

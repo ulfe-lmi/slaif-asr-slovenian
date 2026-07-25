@@ -125,7 +125,11 @@ The repository will not own:
    authorizes exactly one additional Surface08 run from the untouched base
    using the admitted scale-8000 clean synthetic pool with deterministic
    in-memory transcript-preserving augmentation; it is a data-axis diagnostic,
-   not general scale-8000 or full-encoder authorization.
+   not general scale-8000 or full-encoder authorization. Work Order 0046
+   authorizes one matched Surface08 scale-8000 follow-up that changes only the
+   deterministic OTF augmentation intensity to the bounded StrongAug v1
+   curriculum. It retains the untouched base, 144,000-exposure cap, frozen
+   identity surfaces, and ARTUR controller-dev-only selection.
 7. **Real speech decides checkpoint acceptance.**
    - Synthetic improvement alone is insufficient.
    - Real Slovenian acoustic data is validation-only and must not be used for
