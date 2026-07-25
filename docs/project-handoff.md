@@ -201,6 +201,20 @@
   `SURFACE08_NEW_BEST_DIRECTIONAL_CANDIDATE`. Frontend, tokenizer, prompt
   identity, Surface09, and full-model training remain prohibited. This result
   is diagnostic and does not accept or promote a checkpoint.
+- ADR 0009 Phase 6 and Work Order 0045 authorize one data-axis diagnostic that
+  starts Surface08 again from the untouched base on the admitted 64,000-row
+  scale-8000 clean synthetic pool. Eleven existing transcript-preserving
+  profiles are sampled deterministically and applied in memory by three
+  spawned workers; no augmented WAV bank is rendered. Experiment 0031 selected
+  round 5 with ARTUR controller-dev, stopped at round 9 after 144,000 virtual
+  exposures, and sustained a 0.994036 aggregate OTF fill rate. The selected
+  checkpoint scored 39.353/12.002 on FLEURS-v2 and 39.974/12.251 on ARTUR-J
+  with zero empty hypotheses, improving all four directional real-gate
+  WER/CER metrics versus Surface08 scale-2000. The classification is
+  `SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`. This is stacked on PR #50
+  OTF infrastructure and remains noncanonical, diagnostic-only evidence; it
+  does not authorize Surface09, full-model training, checkpoint acceptance,
+  `TRAINING_ELIGIBLE`, or publication.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

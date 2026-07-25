@@ -13,7 +13,7 @@ import statistics
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Iterable, Iterator, Sequence
 
 from slaif_asr.scale200_corpus import load_augmentation_config
 from slaif_asr.transcript_preserving_augmentation import (
@@ -108,6 +108,7 @@ class PreparedMicrobatch:
     microbatch_index: int
     waveforms: tuple[Any, ...]
     sample_rates: tuple[int, ...]
+    specs: tuple[VirtualAugmentationSpec, ...]
     transcript_preserved: bool
     output_audio_seconds: float
     source_bytes: int
@@ -116,6 +117,16 @@ class PreparedMicrobatch:
     started_at: float
     finished_at: float
     worker_peak_rss_mib: float
+
+
+@dataclass(frozen=True)
+class PrefetchedMicrobatch:
+    task: MicrobatchTask
+    prepared: PreparedMicrobatch
+    consumer_wait_seconds: float
+    ready_without_wait: bool
+    queue_depth_before: int
+    queue_depth_after: int
 
 
 def sha256_file(path: Path) -> str:
@@ -359,6 +370,7 @@ def prepare_virtual_sample(
     virtual_exposure_id: int,
     profiles: Sequence[dict[str, Any]],
     *,
+    corpus_id: str = EXPECTED_CORPUS_ID,
     augmentation_key: str = EXPECTED_AUGMENTATION_KEY,
     algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
 ) -> PreparedSample:
@@ -372,6 +384,7 @@ def prepare_virtual_sample(
         record,
         virtual_exposure_id,
         profiles,
+        corpus_id=corpus_id,
         augmentation_key=augmentation_key,
         algorithm_version=algorithm_version,
     )
@@ -420,6 +433,80 @@ def _fingerprint_exposure(
         waveform_sha256(sample.waveform),
         sample.transcript == record.transcript,
     )
+
+
+def _fingerprint_exposure_for_corpus(
+    task: tuple[CleanAudioRecord, int, list[dict[str, Any]], str, str, str],
+) -> tuple[int, str, str, bool]:
+    record, exposure_id, profiles, corpus_id, augmentation_key, algorithm_version = task
+    sample = prepare_virtual_sample(
+        record,
+        exposure_id,
+        profiles,
+        corpus_id=corpus_id,
+        augmentation_key=augmentation_key,
+        algorithm_version=algorithm_version,
+    )
+    return (
+        exposure_id,
+        canonical_json_sha256(asdict(sample.spec)),
+        waveform_sha256(sample.waveform),
+        sample.transcript == record.transcript,
+    )
+
+
+def run_determinism_checks_for_exposures(
+    exposures: Sequence[tuple[CleanAudioRecord, int]],
+    profiles: list[dict[str, Any]],
+    *,
+    corpus_id: str,
+    augmentation_key: str,
+    algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+    num_workers: int = EXPECTED_WORKERS,
+) -> dict[str, Any]:
+    if not exposures:
+        raise ValueError("determinism exposures are required")
+    if num_workers != EXPECTED_WORKERS:
+        raise ValueError("determinism check requires exactly three workers")
+    tasks = [
+        (
+            record,
+            exposure_id,
+            profiles,
+            corpus_id,
+            augmentation_key,
+            algorithm_version,
+        )
+        for record, exposure_id in exposures
+    ]
+    context = multiprocessing.get_context("spawn")
+
+    def execute(
+        task_rows: list[tuple[CleanAudioRecord, int, list[dict[str, Any]], str, str, str]],
+        workers: int,
+    ) -> dict[int, tuple[str, str, bool]]:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=workers, mp_context=context) as pool:
+            rows = list(pool.map(_fingerprint_exposure_for_corpus, task_rows))
+        return {
+            exposure_id: (spec_hash, wave_hash, preserved)
+            for exposure_id, spec_hash, wave_hash, preserved in rows
+        }
+
+    first = execute(tasks, num_workers)
+    restart = execute(tasks, num_workers)
+    reversed_order = execute(list(reversed(tasks)), num_workers)
+    single_worker = execute(tasks, 1)
+    result = {
+        "same_virtual_exposure_same_worker_count": first == restart,
+        "same_virtual_exposure_after_restart": first == restart,
+        "worker_order_independent": first == reversed_order,
+        "worker_count_independent": first == single_worker,
+        "transcript_preserved": all(value[2] for value in first.values()),
+        "augmentation_key_recorded": bool(augmentation_key),
+    }
+    result["status"] = "PASSED" if all(result.values()) else "FAILED"
+    result["examples"] = len(exposures)
+    return result
 
 
 def run_determinism_checks(
@@ -500,51 +587,145 @@ def _worker_main(
         task = input_queue.get()
         if task is None:
             return
-        started = time.perf_counter()
-        wall_total = 0.0
-        cpu_total = 0.0
-        audio_seconds = 0.0
-        source_bytes = 0
-        waveforms = []
-        sample_rates = []
-        transcript_preserved = True
         try:
-            for record, exposure_id in task.exposures:
-                sample = prepare_virtual_sample(
-                    record,
-                    exposure_id,
-                    profiles,
-                    augmentation_key=augmentation_key,
-                    algorithm_version=algorithm_version,
-                )
-                waveforms.append(sample.waveform)
-                sample_rates.append(sample.sample_rate)
-                audio_seconds += sample.output_duration_seconds
-                source_bytes += sample.source_bytes
-                wall_total += sample.processing_wall_seconds
-                cpu_total += sample.processing_cpu_seconds
-                transcript_preserved = transcript_preserved and sample.transcript == record.transcript
             output_queue.put(
                 (
                     "result",
-                    PreparedMicrobatch(
-                        microbatch_index=task.microbatch_index,
-                        waveforms=tuple(waveforms),
-                        sample_rates=tuple(sample_rates),
-                        transcript_preserved=transcript_preserved,
-                        output_audio_seconds=audio_seconds,
-                        source_bytes=source_bytes,
-                        processing_wall_seconds=wall_total,
-                        processing_cpu_seconds=cpu_total,
-                        started_at=started,
-                        finished_at=time.perf_counter(),
-                        worker_peak_rss_mib=float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0),
+                    prepare_microbatch_task(
+                        task,
+                        profiles,
+                        augmentation_key=augmentation_key,
+                        algorithm_version=algorithm_version,
                     ),
                 )
             )
         except Exception as exc:
             output_queue.put(("error", task.microbatch_index, type(exc).__name__))
             return
+
+
+def prepare_microbatch_task(
+    task: MicrobatchTask,
+    profiles: list[dict[str, Any]],
+    *,
+    corpus_id: str = EXPECTED_CORPUS_ID,
+    augmentation_key: str = EXPECTED_AUGMENTATION_KEY,
+    algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+) -> PreparedMicrobatch:
+    started = time.perf_counter()
+    wall_total = 0.0
+    cpu_total = 0.0
+    audio_seconds = 0.0
+    source_bytes = 0
+    waveforms = []
+    sample_rates = []
+    specs = []
+    transcript_preserved = True
+    for record, exposure_id in task.exposures:
+        sample = prepare_virtual_sample(
+            record,
+            exposure_id,
+            profiles,
+            corpus_id=corpus_id,
+            augmentation_key=augmentation_key,
+            algorithm_version=algorithm_version,
+        )
+        waveforms.append(sample.waveform)
+        sample_rates.append(sample.sample_rate)
+        specs.append(sample.spec)
+        audio_seconds += sample.output_duration_seconds
+        source_bytes += sample.source_bytes
+        wall_total += sample.processing_wall_seconds
+        cpu_total += sample.processing_cpu_seconds
+        transcript_preserved = transcript_preserved and sample.transcript == record.transcript
+    return PreparedMicrobatch(
+        microbatch_index=task.microbatch_index,
+        waveforms=tuple(waveforms),
+        sample_rates=tuple(sample_rates),
+        specs=tuple(specs),
+        transcript_preserved=transcript_preserved,
+        output_audio_seconds=audio_seconds,
+        source_bytes=source_bytes,
+        processing_wall_seconds=wall_total,
+        processing_cpu_seconds=cpu_total,
+        started_at=started,
+        finished_at=time.perf_counter(),
+        worker_peak_rss_mib=float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0),
+    )
+
+
+def iter_prefetched_microbatches(
+    tasks: Iterable[MicrobatchTask],
+    profiles: list[dict[str, Any]],
+    *,
+    num_workers: int,
+    prefetch_microbatches: int,
+    corpus_id: str = EXPECTED_CORPUS_ID,
+    augmentation_key: str,
+    algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+    timeout_seconds: float = 120.0,
+) -> Iterator[PrefetchedMicrobatch]:
+    """Prepare bounded OTF microbatches in spawned workers and yield in task order."""
+    if num_workers != EXPECTED_WORKERS:
+        raise ValueError("on-the-fly pipeline requires exactly three workers")
+    if prefetch_microbatches < 1:
+        raise ValueError("prefetch depth must be positive")
+
+    task_iterator = iter(tasks)
+    context = multiprocessing.get_context("spawn")
+    executor = concurrent.futures.ProcessPoolExecutor(
+        max_workers=num_workers,
+        mp_context=context,
+    )
+    pending: list[tuple[MicrobatchTask, concurrent.futures.Future[PreparedMicrobatch]]] = []
+
+    def submit_one() -> bool:
+        try:
+            task = next(task_iterator)
+        except StopIteration:
+            return False
+        future = executor.submit(
+            prepare_microbatch_task,
+            task,
+            profiles,
+            corpus_id=corpus_id,
+            augmentation_key=augmentation_key,
+            algorithm_version=algorithm_version,
+        )
+        pending.append((task, future))
+        return True
+
+    try:
+        for _index in range(prefetch_microbatches):
+            if not submit_one():
+                break
+        while pending:
+            task, future = pending.pop(0)
+            queue_depth_before = sum(int(item.done()) for _task, item in pending)
+            ready = future.done()
+            wait_started = time.perf_counter()
+            prepared = future.result(timeout=timeout_seconds)
+            wait_seconds = time.perf_counter() - wait_started
+            if prepared.microbatch_index != task.microbatch_index:
+                raise RuntimeError("on-the-fly worker returned an unexpected microbatch")
+            if not prepared.transcript_preserved:
+                raise RuntimeError("on-the-fly augmentation changed a transcript")
+            if any(rate != EXPECTED_SAMPLE_RATE for rate in prepared.sample_rates):
+                raise RuntimeError("on-the-fly output sample rate mismatch")
+            submit_one()
+            queue_depth_after = sum(int(item.done()) for _task, item in pending)
+            yield PrefetchedMicrobatch(
+                task=task,
+                prepared=prepared,
+                consumer_wait_seconds=wait_seconds,
+                ready_without_wait=ready,
+                queue_depth_before=queue_depth_before,
+                queue_depth_after=queue_depth_after,
+            )
+    finally:
+        for _task, future in pending:
+            future.cancel()
+        executor.shutdown(wait=True, cancel_futures=True)
 
 
 def percentile(values: Sequence[float], quantile: float) -> float:
