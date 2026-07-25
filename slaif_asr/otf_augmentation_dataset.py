@@ -321,11 +321,31 @@ def virtual_augmentation_spec(
     corpus_id: str = EXPECTED_CORPUS_ID,
     augmentation_key: str = EXPECTED_AUGMENTATION_KEY,
     algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+    augmentation_policy: dict[str, Any] | None = None,
 ) -> VirtualAugmentationSpec:
     if virtual_exposure_id < 0:
         raise ValueError("virtual exposure ID must be non-negative")
     if len(profiles) != EXPECTED_PROFILE_COUNT:
         raise ValueError("exactly eleven profiles are required")
+    if augmentation_policy is not None:
+        from slaif_asr.strongaug_v1 import spec_payload
+
+        payload = spec_payload(
+            record,
+            virtual_exposure_id,
+            profiles,
+            corpus_id=corpus_id,
+            policy=augmentation_policy,
+        )
+        return VirtualAugmentationSpec(
+            virtual_exposure_id=virtual_exposure_id,
+            profile_id=str(payload["profile_id"]),
+            profile_index=int(payload["profile_index"]),
+            parameters=dict(payload["parameters"]),
+            parameter_seed=str(payload["parameter_seed"]),
+            augmentation_identity_sha256=str(payload["augmentation_identity_sha256"]),
+            profile_space_sha256=str(payload["profile_space_sha256"]),
+        )
     space_sha = profile_space_sha256(profiles)
     identity = _keyed_digest(
         augmentation_key,
@@ -373,6 +393,7 @@ def prepare_virtual_sample(
     corpus_id: str = EXPECTED_CORPUS_ID,
     augmentation_key: str = EXPECTED_AUGMENTATION_KEY,
     algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+    augmentation_policy: dict[str, Any] | None = None,
 ) -> PreparedSample:
     import numpy as np
 
@@ -387,13 +408,23 @@ def prepare_virtual_sample(
         corpus_id=corpus_id,
         augmentation_key=augmentation_key,
         algorithm_version=algorithm_version,
+        augmentation_policy=augmentation_policy,
     )
-    transformed, _details = apply_profile_transform(
-        source,
-        spec.profile_id,
-        spec.parameters,
-        seed_text=spec.parameter_seed,
-    )
+    if augmentation_policy is None:
+        transformed, _details = apply_profile_transform(
+            source,
+            spec.profile_id,
+            spec.parameters,
+            seed_text=spec.parameter_seed,
+        )
+    else:
+        from slaif_asr.strongaug_v1 import apply_policy_transform
+
+        transformed, _details = apply_policy_transform(
+            source,
+            parameters=spec.parameters,
+            seed_text=spec.parameter_seed,
+        )
     waveform = np.ascontiguousarray(transformed, dtype=np.float32)
     if waveform.ndim != 1 or waveform.size == 0 or not np.isfinite(waveform).all():
         raise RuntimeError("on-the-fly augmentation produced an invalid waveform")
@@ -436,9 +467,25 @@ def _fingerprint_exposure(
 
 
 def _fingerprint_exposure_for_corpus(
-    task: tuple[CleanAudioRecord, int, list[dict[str, Any]], str, str, str],
+    task: tuple[
+        CleanAudioRecord,
+        int,
+        list[dict[str, Any]],
+        str,
+        str,
+        str,
+        dict[str, Any] | None,
+    ],
 ) -> tuple[int, str, str, bool]:
-    record, exposure_id, profiles, corpus_id, augmentation_key, algorithm_version = task
+    (
+        record,
+        exposure_id,
+        profiles,
+        corpus_id,
+        augmentation_key,
+        algorithm_version,
+        augmentation_policy,
+    ) = task
     sample = prepare_virtual_sample(
         record,
         exposure_id,
@@ -446,6 +493,7 @@ def _fingerprint_exposure_for_corpus(
         corpus_id=corpus_id,
         augmentation_key=augmentation_key,
         algorithm_version=algorithm_version,
+        augmentation_policy=augmentation_policy,
     )
     return (
         exposure_id,
@@ -463,6 +511,7 @@ def run_determinism_checks_for_exposures(
     augmentation_key: str,
     algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
     num_workers: int = EXPECTED_WORKERS,
+    augmentation_policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if not exposures:
         raise ValueError("determinism exposures are required")
@@ -476,13 +525,24 @@ def run_determinism_checks_for_exposures(
             corpus_id,
             augmentation_key,
             algorithm_version,
+            augmentation_policy,
         )
         for record, exposure_id in exposures
     ]
     context = multiprocessing.get_context("spawn")
 
     def execute(
-        task_rows: list[tuple[CleanAudioRecord, int, list[dict[str, Any]], str, str, str]],
+        task_rows: list[
+            tuple[
+                CleanAudioRecord,
+                int,
+                list[dict[str, Any]],
+                str,
+                str,
+                str,
+                dict[str, Any] | None,
+            ]
+        ],
         workers: int,
     ) -> dict[int, tuple[str, str, bool]]:
         with concurrent.futures.ProcessPoolExecutor(max_workers=workers, mp_context=context) as pool:
@@ -611,6 +671,7 @@ def prepare_microbatch_task(
     corpus_id: str = EXPECTED_CORPUS_ID,
     augmentation_key: str = EXPECTED_AUGMENTATION_KEY,
     algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+    augmentation_policy: dict[str, Any] | None = None,
 ) -> PreparedMicrobatch:
     started = time.perf_counter()
     wall_total = 0.0
@@ -629,6 +690,7 @@ def prepare_microbatch_task(
             corpus_id=corpus_id,
             augmentation_key=augmentation_key,
             algorithm_version=algorithm_version,
+            augmentation_policy=augmentation_policy,
         )
         waveforms.append(sample.waveform)
         sample_rates.append(sample.sample_rate)
@@ -663,6 +725,7 @@ def iter_prefetched_microbatches(
     corpus_id: str = EXPECTED_CORPUS_ID,
     augmentation_key: str,
     algorithm_version: str = EXPECTED_ALGORITHM_VERSION,
+    augmentation_policy: dict[str, Any] | None = None,
     timeout_seconds: float = 120.0,
 ) -> Iterator[PrefetchedMicrobatch]:
     """Prepare bounded OTF microbatches in spawned workers and yield in task order."""
@@ -691,6 +754,7 @@ def iter_prefetched_microbatches(
             corpus_id=corpus_id,
             augmentation_key=augmentation_key,
             algorithm_version=algorithm_version,
+            augmentation_policy=augmentation_policy,
         )
         pending.append((task, future))
         return True

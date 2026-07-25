@@ -215,6 +215,12 @@
   OTF infrastructure and remains noncanonical, diagnostic-only evidence; it
   does not authorize Surface09, full-model training, checkpoint acceptance,
   `TRAINING_ELIGIBLE`, or publication.
+- Work Order 0046 is the active matched augmentation-intensity diagnostic. It
+  repeats the Experiment 0031 Surface08 scale-8000 setup from the untouched
+  base with the same 144,000-exposure cap, changing only deterministic OTF
+  intensity to the bounded StrongAug v1 curriculum. ARTUR controller-dev alone
+  selects the checkpoint; FLEURS-v2 and ARTUR-J remain post-selection
+  directional evidence.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

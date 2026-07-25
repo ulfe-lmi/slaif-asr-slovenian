@@ -84,3 +84,11 @@ directional real-gate WER/CER metrics versus Surface08 scale-2000. Three OTF
 workers sustained a 0.994036 aggregate fill rate. The classification is
 `SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`; it remains noncanonical,
 diagnostic-only evidence and does not accept or promote a checkpoint.
+
+Work Order 0046 authorizes one matched StrongAug v1 follow-up to Experiment
+0031. Surface08, the untouched base, scale-8000 clean reservoir, optimizer,
+effective batch, controller policy, directional suite, and 144,000-exposure
+cap remain fixed. Only deterministic OTF augmentation intensity changes:
+rounds 1-4 use a 70/30 standard/strong mixture and rounds 5-9 use 25/75. This
+is an augmentation-boundary diagnostic, not another surface expansion and not
+general authorization for StrongAug training.
