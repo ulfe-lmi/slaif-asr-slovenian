@@ -167,3 +167,37 @@ These are diagnostic exceptions to the default synthetic-only encoder freeze,
 not general authorization to train encoder parameters. Phase 5 permits one
 named Surface08 run only. Surface09, full-model training, and any later
 full-encoder run require separate governance.
+
+## Phase 6 / Work Order 0045
+
+Work Order 0045 authorizes exactly one data-axis follow-up using the already
+proved Surface08 parameter boundary:
+
+- start from the untouched Nemotron base;
+- train decoder, joint, all 24 encoder layers, and the proven separable
+  `prompt_kernel`;
+- use only the admitted scale-8000 clean synthetic pool;
+- create transcript-preserving augmented waveform views in memory with the
+  deterministic PR #50 OTF implementation;
+- keep the fixed 320,000-exposure hard cap and use ARTUR controller-dev only
+  for aggregate run-control under ADR 0008.
+
+Phase 6 does not change the fixed-data surface-sweep evidence. It is one
+explicitly human-authorized comparison of the linguistic-data axis after the
+surface ladder selected Surface08.
+
+Phase 6 forbids:
+
+- scale-2000, S6TTS, database-extension, or real speech as training sources;
+- pre-rendered augmented WAVs;
+- initialization from Surface08 or any other adapted checkpoint;
+- preprocessor, frontend, subsampling, tokenizer, prompt-identity,
+  language-ID, or target-language machinery changes;
+- Surface09 or full-model training;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- checkpoint acceptance, `TRAINING_ELIGIBLE`, model publication, or accepted
+  parent changes.
+
+This is not general authorization for scale-8000 full-encoder training. Any
+follow-up schedule, surface, initialization, or data change requires separate
+human review and authorization.
