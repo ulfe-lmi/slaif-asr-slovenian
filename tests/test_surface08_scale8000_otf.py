@@ -30,6 +30,7 @@ from slaif_asr.scale8000_otf_surface08 import (
     validate_loader_telemetry,
     validate_public_report,
 )
+from scripts.run_surface08_scale8000_otf_augmented import cumulative_fill_rate
 
 
 CONFIG_PATH = REPO_ROOT / "configs/experiments/surface08-scale8000-otf-augmented.json"
@@ -225,6 +226,13 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
         payload["worker_count"] = 2
         with self.assertRaisesRegex(ValueError, "exactly three"):
             validate_loader_telemetry(payload)
+
+    def test_live_fill_rate_accepts_dictionary_events(self) -> None:
+        events = [
+            {"consumer_wait_seconds": 0.1},
+            {"consumer_wait_seconds": 0.2},
+        ]
+        self.assertAlmostEqual(cumulative_fill_rate(events, 10.0), 0.97)
 
     def test_public_report_rejects_paths_and_raw_fields(self) -> None:
         validate_public_report({"classification": "DIAGNOSTIC_ONLY", "rows": 64_000})

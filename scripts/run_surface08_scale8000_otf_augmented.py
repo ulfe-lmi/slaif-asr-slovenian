@@ -475,6 +475,16 @@ def stage_probe_microbatch(config_path: Path) -> dict[str, Any]:
     return payload
 
 
+def cumulative_fill_rate(
+    events: Sequence[dict[str, Any]],
+    wall_seconds: float,
+) -> float:
+    if wall_seconds <= 0:
+        raise ValueError("wall_seconds must be positive")
+    wait_total = sum(float(row["consumer_wait_seconds"]) for row in events)
+    return max(0.0, 1.0 - wait_total / wall_seconds)
+
+
 def _round_telemetry(
     *,
     round_index: int,
@@ -488,7 +498,7 @@ def _round_telemetry(
     payload = {
         "round": round_index,
         "examples_per_second": round(examples / wall_seconds, 6),
-        "otf_fill_rate": round(max(0.0, 1.0 - wait_total / wall_seconds), 9),
+        "otf_fill_rate": round(cumulative_fill_rate(events, wall_seconds), 9),
         "consumer_wait_percent": round(wait_total / wall_seconds * 100.0, 6),
         "ready_microbatch_rate": round(
             sum(bool(row["ready_without_wait"]) for row in events) / len(events),
@@ -748,12 +758,7 @@ def stage_train(config_path: Path, interval: float) -> dict[str, Any]:
                             6,
                         ),
                         otf_fill_rate=round(
-                            max(
-                                0.0,
-                                1.0
-                                - sum(row.consumer_wait_seconds for row in events)
-                                / elapsed,
-                            ),
+                            cumulative_fill_rate(events, elapsed),
                             6,
                         ),
                         cuda_alloc_mib=round(torch.cuda.memory_allocated(0) / 1024 / 1024, 3),
@@ -1254,6 +1259,20 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
     if selected_round != int(evaluation["selected_round"]):
         raise RuntimeError("post-selection directional evaluation changed selected_round")
     candidate = evaluation["metric_table"]
+    evaluation_suite = evaluation["suite"]
+    public_evaluation_suite = {
+        key: evaluation_suite[key]
+        for key in (
+            "rows",
+            "prediction_count",
+            "audio_duration_seconds",
+            "wall_time_seconds",
+            "real_time_factor",
+            "rows_per_second",
+            "audio_seconds_per_wall_second",
+            "gpu_monitor",
+        )
+    }
     public = {
         "schema_version": "1.0",
         "experiment_id": EXPERIMENT_ID,
@@ -1336,7 +1355,7 @@ def stage_summarize(config_path: Path) -> dict[str, Any]:
         "directional_evaluation": {
             "policy": evaluation["policy"],
             "selected_checkpoint_sha256": evaluation["checkpoint_sha256"],
-            "suite": evaluation["suite"],
+            "suite": public_evaluation_suite,
             "metrics": {
                 "base": BASE_DIRECTIONAL_METRICS,
                 "pr36": PR36_METRICS,
