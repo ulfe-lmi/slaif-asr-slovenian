@@ -7,7 +7,10 @@ import unittest
 import wave
 from pathlib import Path
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError as exc:
+    raise unittest.SkipTest("NumPy is required for on-the-fly augmentation tests") from exc
 
 from slaif_asr.otf_augmentation_dataset import (
     CleanAudioRecord,
