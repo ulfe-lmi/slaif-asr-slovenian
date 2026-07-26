@@ -203,6 +203,18 @@ class DatasetFrequency:
         return sum(self.token_counts.values())
 
 
+@dataclass(frozen=True)
+class TieInclusiveTopKSelection:
+    forms: frozenset[str]
+    requested_k_effective: int
+    cutoff_occurrence_count: int
+    tie_expansion_count: int
+
+    @property
+    def effective_k(self) -> int:
+        return len(self.forms)
+
+
 def dataset_from_texts(
     *,
     key: str,
@@ -493,9 +505,25 @@ def frequency_rank_metrics(
     }
 
 
-def _top_k_forms(counts: Mapping[str, int], requested_k: int) -> set[str]:
-    effective_k = min(requested_k, len(counts))
-    return set(sorted(counts, key=lambda form: (-counts[form], form))[:effective_k])
+def _tie_inclusive_top_k(
+    counts: Mapping[str, int],
+    requested_k: int,
+) -> TieInclusiveTopKSelection:
+    if requested_k <= 0:
+        raise ValueError("requested top-k must be positive")
+    if not counts:
+        raise ValueError("top-k selection requires a nonempty frequency distribution")
+    requested_k_effective = min(requested_k, len(counts))
+    cutoff_occurrence_count = sorted(counts.values(), reverse=True)[requested_k_effective - 1]
+    forms = frozenset(
+        form for form, count in counts.items() if count >= cutoff_occurrence_count
+    )
+    return TieInclusiveTopKSelection(
+        forms=forms,
+        requested_k_effective=requested_k_effective,
+        cutoff_occurrence_count=cutoff_occurrence_count,
+        tie_expansion_count=len(forms) - requested_k_effective,
+    )
 
 
 def top_k_agreement_metrics(
@@ -503,15 +531,19 @@ def top_k_agreement_metrics(
     counts_b: Mapping[str, int],
     requested_k: int,
 ) -> dict[str, int | float]:
-    top_a = _top_k_forms(counts_a, requested_k)
-    top_b = _top_k_forms(counts_b, requested_k)
-    shared = len(top_a & top_b)
-    union = len(top_a | top_b)
-    minimum_effective_k = min(len(top_a), len(top_b))
+    top_a = _tie_inclusive_top_k(counts_a, requested_k)
+    top_b = _tie_inclusive_top_k(counts_b, requested_k)
+    shared = len(top_a.forms & top_b.forms)
+    union = len(top_a.forms | top_b.forms)
+    minimum_effective_k = min(top_a.effective_k, top_b.effective_k)
     return {
         "requested_k": requested_k,
-        "effective_k_in_a": len(top_a),
-        "effective_k_in_b": len(top_b),
+        "effective_k_in_a": top_a.effective_k,
+        "cutoff_occurrence_count_in_a": top_a.cutoff_occurrence_count,
+        "tie_expansion_count_in_a": top_a.tie_expansion_count,
+        "effective_k_in_b": top_b.effective_k,
+        "cutoff_occurrence_count_in_b": top_b.cutoff_occurrence_count,
+        "tie_expansion_count_in_b": top_b.tie_expansion_count,
         "shared_forms": shared,
         "jaccard_similarity": shared / union if union else 0.0,
         "overlap_coefficient": shared / minimum_effective_k if minimum_effective_k else 0.0,
@@ -1126,7 +1158,18 @@ def render_markdown(report: Mapping[str, object]) -> str:
             f"{_decimal(repeated['spearman_rank_correlation'], 4)} |"
         )
 
-    lines.extend(["", "## Top-k vocabulary agreement", ""])
+    lines.extend(
+        [
+            "",
+            "## Top-k vocabulary agreement",
+            "",
+            "Top-k sets are tie-inclusive. For each dataset, the cutoff is the occurrence count at "
+            "`min(requested k, vocabulary size)` in descending frequency order; every form at or "
+            "above that cutoff is included. Effective k can therefore exceed requested k. Only "
+            "aggregate set sizes, cutoffs, expansions, and agreement metrics are emitted.",
+            "",
+        ]
+    )
     for pair_key, _, _ in PAIR_SPECS:
         pair = _mapping(pairwise[pair_key], f"{pair_key} pair")
         top_k = _mapping(pair["top_k_vocabulary_agreement"], f"{pair_key} top-k")
@@ -1134,15 +1177,18 @@ def render_markdown(report: Mapping[str, object]) -> str:
             [
                 f"### {pair_label_by_key[pair_key]}",
                 "",
-                "| Requested k | Effective k in A | Effective k in B | Shared forms | Jaccard | Overlap coefficient |",
-                "|---:|---:|---:|---:|---:|---:|",
+                "| Requested k | Effective k in A | Cutoff in A | Tie expansion in A | Effective k in B | Cutoff in B | Tie expansion in B | Shared forms | Jaccard | Overlap coefficient |",
+                "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
             ]
         )
         for requested_k in TOP_K_VALUES:
             item = _mapping(top_k[f"k_{requested_k}"], f"{pair_key} top {requested_k}")
             lines.append(
-                f"| {requested_k} | {item['effective_k_in_a']} | {item['effective_k_in_b']} | "
-                f"{item['shared_forms']} | {_decimal(item['jaccard_similarity'], 4)} | "
+                f"| {requested_k} | {item['effective_k_in_a']} | "
+                f"{item['cutoff_occurrence_count_in_a']} | {item['tie_expansion_count_in_a']} | "
+                f"{item['effective_k_in_b']} | {item['cutoff_occurrence_count_in_b']} | "
+                f"{item['tie_expansion_count_in_b']} | {item['shared_forms']} | "
+                f"{_decimal(item['jaccard_similarity'], 4)} | "
                 f"{_decimal(item['overlap_coefficient'], 4)} |"
             )
         lines.append("")
@@ -1251,6 +1297,10 @@ def render_markdown(report: Mapping[str, object]) -> str:
             "- Empirical unigram analysis only.",
             "- The small ARTUR-J sample produces wider uncertainty.",
             "- Frequency similarity does not prove acoustic or ASR similarity.",
+            "- Frequency-of-frequency bands, empirical entropy, and observed support depend on corpus "
+            "sample size; they are descriptive and not directly size-matched estimates.",
+            "- The row bootstrap measures resampling stability conditional on these observed corpora. "
+            "It does not correct corpus/domain-selection bias or establish population-level representativeness.",
             "",
         ]
     )

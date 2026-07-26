@@ -111,35 +111,37 @@ Spearman ranks use descending counts, average ranks for ties, and codepoint orde
 
 ## Top-k vocabulary agreement
 
+Top-k sets are tie-inclusive. For each dataset, the cutoff is the occurrence count at `min(requested k, vocabulary size)` in descending frequency order; every form at or above that cutoff is included. Effective k can therefore exceed requested k. Only aggregate set sizes, cutoffs, expansions, and agreement metrics are emitted.
+
 ### scale-8000 vs FLEURS-v2
 
-| Requested k | Effective k in A | Effective k in B | Shared forms | Jaccard | Overlap coefficient |
-|---:|---:|---:|---:|---:|---:|
-| 10 | 10 | 10 | 6 | 0.4286 | 0.6000 |
-| 50 | 50 | 50 | 29 | 0.4085 | 0.5800 |
-| 100 | 100 | 100 | 54 | 0.3699 | 0.5400 |
-| 500 | 500 | 500 | 142 | 0.1655 | 0.2840 |
-| 1000 | 1000 | 1000 | 231 | 0.1306 | 0.2310 |
+| Requested k | Effective k in A | Cutoff in A | Tie expansion in A | Effective k in B | Cutoff in B | Tie expansion in B | Shared forms | Jaccard | Overlap coefficient |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 10 | 10 | 4943 | 0 | 10 | 149 | 0 | 6 | 0.4286 | 0.6000 |
+| 50 | 50 | 955 | 0 | 51 | 27 | 1 | 29 | 0.4028 | 0.5800 |
+| 100 | 100 | 484 | 0 | 114 | 12 | 14 | 55 | 0.3459 | 0.5500 |
+| 500 | 505 | 113 | 5 | 515 | 5 | 15 | 143 | 0.1631 | 0.2832 |
+| 1000 | 1002 | 61 | 2 | 2033 | 3 | 1033 | 303 | 0.1109 | 0.3024 |
 
 ### scale-8000 vs ARTUR-J
 
-| Requested k | Effective k in A | Effective k in B | Shared forms | Jaccard | Overlap coefficient |
-|---:|---:|---:|---:|---:|---:|
-| 10 | 10 | 10 | 6 | 0.4286 | 0.6000 |
-| 50 | 50 | 50 | 27 | 0.3699 | 0.5400 |
-| 100 | 100 | 100 | 49 | 0.3245 | 0.4900 |
-| 500 | 500 | 500 | 116 | 0.1312 | 0.2320 |
-| 1000 | 1000 | 1000 | 231 | 0.1306 | 0.2310 |
+| Requested k | Effective k in A | Cutoff in A | Tie expansion in A | Effective k in B | Cutoff in B | Tie expansion in B | Shared forms | Jaccard | Overlap coefficient |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 10 | 10 | 4943 | 0 | 10 | 23 | 0 | 6 | 0.4286 | 0.6000 |
+| 50 | 50 | 955 | 0 | 52 | 6 | 2 | 27 | 0.3600 | 0.5400 |
+| 100 | 100 | 484 | 0 | 134 | 3 | 34 | 54 | 0.3000 | 0.5400 |
+| 500 | 505 | 113 | 5 | 1166 | 1 | 666 | 173 | 0.1155 | 0.3426 |
+| 1000 | 1002 | 61 | 2 | 1166 | 1 | 166 | 259 | 0.1357 | 0.2585 |
 
 ### FLEURS-v2 vs ARTUR-J
 
-| Requested k | Effective k in A | Effective k in B | Shared forms | Jaccard | Overlap coefficient |
-|---:|---:|---:|---:|---:|---:|
-| 10 | 10 | 10 | 9 | 0.8182 | 0.9000 |
-| 50 | 50 | 50 | 27 | 0.3699 | 0.5400 |
-| 100 | 100 | 100 | 45 | 0.2903 | 0.4500 |
-| 500 | 500 | 500 | 117 | 0.1325 | 0.2340 |
-| 1000 | 1000 | 1000 | 181 | 0.0995 | 0.1810 |
+| Requested k | Effective k in A | Cutoff in A | Tie expansion in A | Effective k in B | Cutoff in B | Tie expansion in B | Shared forms | Jaccard | Overlap coefficient |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 10 | 10 | 149 | 0 | 10 | 23 | 0 | 9 | 0.8182 | 0.9000 |
+| 50 | 51 | 27 | 1 | 52 | 6 | 2 | 27 | 0.3553 | 0.5294 |
+| 100 | 114 | 12 | 14 | 134 | 3 | 34 | 55 | 0.2850 | 0.4825 |
+| 500 | 515 | 5 | 15 | 1166 | 1 | 666 | 166 | 0.1096 | 0.3223 |
+| 1000 | 2033 | 3 | 1033 | 1166 | 1 | 166 | 254 | 0.0862 | 0.2178 |
 
 ## Sampling uncertainty
 
@@ -207,3 +209,5 @@ These labels refer only to the predeclared bootstrap divergence envelope. Statis
 - Empirical unigram analysis only.
 - The small ARTUR-J sample produces wider uncertainty.
 - Frequency similarity does not prove acoustic or ASR similarity.
+- Frequency-of-frequency bands, empirical entropy, and observed support depend on corpus sample size; they are descriptive and not directly size-matched estimates.
+- The row bootstrap measures resampling stability conditional on these observed corpora. It does not correct corpus/domain-selection bias or establish population-level representativeness.

@@ -338,44 +338,64 @@
       },
       "top_k_vocabulary_agreement": {
         "k_10": {
+          "cutoff_occurrence_count_in_a": 149,
+          "cutoff_occurrence_count_in_b": 23,
           "effective_k_in_a": 10,
           "effective_k_in_b": 10,
           "jaccard_similarity": 0.8181818181818182,
           "overlap_coefficient": 0.9,
           "requested_k": 10,
-          "shared_forms": 9
+          "shared_forms": 9,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 0
         },
         "k_100": {
-          "effective_k_in_a": 100,
-          "effective_k_in_b": 100,
-          "jaccard_similarity": 0.2903225806451613,
-          "overlap_coefficient": 0.45,
+          "cutoff_occurrence_count_in_a": 12,
+          "cutoff_occurrence_count_in_b": 3,
+          "effective_k_in_a": 114,
+          "effective_k_in_b": 134,
+          "jaccard_similarity": 0.2849740932642487,
+          "overlap_coefficient": 0.4824561403508772,
           "requested_k": 100,
-          "shared_forms": 45
+          "shared_forms": 55,
+          "tie_expansion_count_in_a": 14,
+          "tie_expansion_count_in_b": 34
         },
         "k_1000": {
-          "effective_k_in_a": 1000,
-          "effective_k_in_b": 1000,
-          "jaccard_similarity": 0.09950522264980759,
-          "overlap_coefficient": 0.181,
+          "cutoff_occurrence_count_in_a": 3,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 2033,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.08624787775891342,
+          "overlap_coefficient": 0.21783876500857632,
           "requested_k": 1000,
-          "shared_forms": 181
+          "shared_forms": 254,
+          "tie_expansion_count_in_a": 1033,
+          "tie_expansion_count_in_b": 166
         },
         "k_50": {
-          "effective_k_in_a": 50,
-          "effective_k_in_b": 50,
-          "jaccard_similarity": 0.3698630136986301,
-          "overlap_coefficient": 0.54,
+          "cutoff_occurrence_count_in_a": 27,
+          "cutoff_occurrence_count_in_b": 6,
+          "effective_k_in_a": 51,
+          "effective_k_in_b": 52,
+          "jaccard_similarity": 0.35526315789473684,
+          "overlap_coefficient": 0.5294117647058824,
           "requested_k": 50,
-          "shared_forms": 27
+          "shared_forms": 27,
+          "tie_expansion_count_in_a": 1,
+          "tie_expansion_count_in_b": 2
         },
         "k_500": {
-          "effective_k_in_a": 500,
-          "effective_k_in_b": 500,
-          "jaccard_similarity": 0.13250283125707815,
-          "overlap_coefficient": 0.234,
+          "cutoff_occurrence_count_in_a": 5,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 515,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.10957095709570958,
+          "overlap_coefficient": 0.32233009708737864,
           "requested_k": 500,
-          "shared_forms": 117
+          "shared_forms": 166,
+          "tie_expansion_count_in_a": 15,
+          "tie_expansion_count_in_b": 666
         }
       }
     },
@@ -450,44 +470,64 @@
       },
       "top_k_vocabulary_agreement": {
         "k_10": {
+          "cutoff_occurrence_count_in_a": 4943,
+          "cutoff_occurrence_count_in_b": 23,
           "effective_k_in_a": 10,
           "effective_k_in_b": 10,
           "jaccard_similarity": 0.42857142857142855,
           "overlap_coefficient": 0.6,
           "requested_k": 10,
-          "shared_forms": 6
+          "shared_forms": 6,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 0
         },
         "k_100": {
+          "cutoff_occurrence_count_in_a": 484,
+          "cutoff_occurrence_count_in_b": 3,
           "effective_k_in_a": 100,
-          "effective_k_in_b": 100,
-          "jaccard_similarity": 0.32450331125827814,
-          "overlap_coefficient": 0.49,
+          "effective_k_in_b": 134,
+          "jaccard_similarity": 0.3,
+          "overlap_coefficient": 0.54,
           "requested_k": 100,
-          "shared_forms": 49
+          "shared_forms": 54,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 34
         },
         "k_1000": {
-          "effective_k_in_a": 1000,
-          "effective_k_in_b": 1000,
-          "jaccard_similarity": 0.13058224985867722,
-          "overlap_coefficient": 0.231,
+          "cutoff_occurrence_count_in_a": 61,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 1002,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.1356731272917758,
+          "overlap_coefficient": 0.25848303393213573,
           "requested_k": 1000,
-          "shared_forms": 231
+          "shared_forms": 259,
+          "tie_expansion_count_in_a": 2,
+          "tie_expansion_count_in_b": 166
         },
         "k_50": {
+          "cutoff_occurrence_count_in_a": 955,
+          "cutoff_occurrence_count_in_b": 6,
           "effective_k_in_a": 50,
-          "effective_k_in_b": 50,
-          "jaccard_similarity": 0.3698630136986301,
+          "effective_k_in_b": 52,
+          "jaccard_similarity": 0.36,
           "overlap_coefficient": 0.54,
           "requested_k": 50,
-          "shared_forms": 27
+          "shared_forms": 27,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 2
         },
         "k_500": {
-          "effective_k_in_a": 500,
-          "effective_k_in_b": 500,
-          "jaccard_similarity": 0.13122171945701358,
-          "overlap_coefficient": 0.232,
+          "cutoff_occurrence_count_in_a": 113,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 505,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.11548731642189586,
+          "overlap_coefficient": 0.3425742574257426,
           "requested_k": 500,
-          "shared_forms": 116
+          "shared_forms": 173,
+          "tie_expansion_count_in_a": 5,
+          "tie_expansion_count_in_b": 666
         }
       }
     },
@@ -562,44 +602,64 @@
       },
       "top_k_vocabulary_agreement": {
         "k_10": {
+          "cutoff_occurrence_count_in_a": 4943,
+          "cutoff_occurrence_count_in_b": 149,
           "effective_k_in_a": 10,
           "effective_k_in_b": 10,
           "jaccard_similarity": 0.42857142857142855,
           "overlap_coefficient": 0.6,
           "requested_k": 10,
-          "shared_forms": 6
+          "shared_forms": 6,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 0
         },
         "k_100": {
+          "cutoff_occurrence_count_in_a": 484,
+          "cutoff_occurrence_count_in_b": 12,
           "effective_k_in_a": 100,
-          "effective_k_in_b": 100,
-          "jaccard_similarity": 0.3698630136986301,
-          "overlap_coefficient": 0.54,
+          "effective_k_in_b": 114,
+          "jaccard_similarity": 0.34591194968553457,
+          "overlap_coefficient": 0.55,
           "requested_k": 100,
-          "shared_forms": 54
+          "shared_forms": 55,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 14
         },
         "k_1000": {
-          "effective_k_in_a": 1000,
-          "effective_k_in_b": 1000,
-          "jaccard_similarity": 0.13058224985867722,
-          "overlap_coefficient": 0.231,
+          "cutoff_occurrence_count_in_a": 61,
+          "cutoff_occurrence_count_in_b": 3,
+          "effective_k_in_a": 1002,
+          "effective_k_in_b": 2033,
+          "jaccard_similarity": 0.11090775988286969,
+          "overlap_coefficient": 0.3023952095808383,
           "requested_k": 1000,
-          "shared_forms": 231
+          "shared_forms": 303,
+          "tie_expansion_count_in_a": 2,
+          "tie_expansion_count_in_b": 1033
         },
         "k_50": {
+          "cutoff_occurrence_count_in_a": 955,
+          "cutoff_occurrence_count_in_b": 27,
           "effective_k_in_a": 50,
-          "effective_k_in_b": 50,
-          "jaccard_similarity": 0.4084507042253521,
+          "effective_k_in_b": 51,
+          "jaccard_similarity": 0.4027777777777778,
           "overlap_coefficient": 0.58,
           "requested_k": 50,
-          "shared_forms": 29
+          "shared_forms": 29,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 1
         },
         "k_500": {
-          "effective_k_in_a": 500,
-          "effective_k_in_b": 500,
-          "jaccard_similarity": 0.1655011655011655,
-          "overlap_coefficient": 0.284,
+          "cutoff_occurrence_count_in_a": 113,
+          "cutoff_occurrence_count_in_b": 5,
+          "effective_k_in_a": 505,
+          "effective_k_in_b": 515,
+          "jaccard_similarity": 0.1630558722919042,
+          "overlap_coefficient": 0.28316831683168314,
           "requested_k": 500,
-          "shared_forms": 142
+          "shared_forms": 143,
+          "tie_expansion_count_in_a": 5,
+          "tie_expansion_count_in_b": 15
         }
       }
     }

@@ -154,7 +154,74 @@ class CorpusWordFrequencyDistributionTests(unittest.TestCase):
         self.assertEqual(first[0], 3)
         self.assertAlmostEqual(first[1], -1.0)
 
-    def test_top_k_overlap_uses_effective_k(self) -> None:
+    def test_top_k_with_no_boundary_tie_preserves_effective_k(self) -> None:
+        metrics = top_k_agreement_metrics(
+            {"a": 5, "b": 4, "c": 3},
+            {"a": 6, "b": 5, "d": 2},
+            2,
+        )
+        self.assertEqual(metrics["effective_k_in_a"], 2)
+        self.assertEqual(metrics["cutoff_occurrence_count_in_a"], 4)
+        self.assertEqual(metrics["tie_expansion_count_in_a"], 0)
+        self.assertEqual(metrics["effective_k_in_b"], 2)
+        self.assertEqual(metrics["cutoff_occurrence_count_in_b"], 5)
+        self.assertEqual(metrics["tie_expansion_count_in_b"], 0)
+
+    def test_top_k_boundary_tie_expands_effective_k(self) -> None:
+        metrics = top_k_agreement_metrics(
+            {"a": 5, "b": 4, "c": 4, "d": 1},
+            {"a": 5, "b": 4, "d": 3},
+            2,
+        )
+        self.assertEqual(metrics["effective_k_in_a"], 3)
+        self.assertEqual(metrics["cutoff_occurrence_count_in_a"], 4)
+        self.assertEqual(metrics["tie_expansion_count_in_a"], 1)
+
+    def test_top_k_is_independent_of_insertion_order_and_lexical_names(self) -> None:
+        first = top_k_agreement_metrics(
+            {"alpha": 5, "beta": 4, "gamma": 4},
+            {"alpha": 5, "beta": 4, "delta": 4},
+            2,
+        )
+        reordered_and_renamed = top_k_agreement_metrics(
+            {"third": 4, "first": 5, "second": 4},
+            {"fourth": 4, "second": 4, "first": 5},
+            2,
+        )
+        self.assertEqual(first, reordered_and_renamed)
+
+    def test_top_k_both_datasets_can_expand_by_different_amounts(self) -> None:
+        metrics = top_k_agreement_metrics(
+            {"shared_high": 5, "shared_tie": 4, "a_extra": 4},
+            {
+                "shared_high": 5,
+                "shared_tie": 4,
+                "b_extra_1": 4,
+                "b_extra_2": 4,
+            },
+            2,
+        )
+        self.assertEqual(metrics["effective_k_in_a"], 3)
+        self.assertEqual(metrics["tie_expansion_count_in_a"], 1)
+        self.assertEqual(metrics["effective_k_in_b"], 4)
+        self.assertEqual(metrics["tie_expansion_count_in_b"], 2)
+
+    def test_top_k_agreement_uses_expanded_effective_sets(self) -> None:
+        metrics = top_k_agreement_metrics(
+            {"shared_high": 5, "shared_tie": 4, "a_extra": 4},
+            {
+                "shared_high": 5,
+                "shared_tie": 4,
+                "b_extra_1": 4,
+                "b_extra_2": 4,
+            },
+            2,
+        )
+        self.assertEqual(metrics["shared_forms"], 2)
+        self.assertAlmostEqual(metrics["jaccard_similarity"], 2 / 5)
+        self.assertAlmostEqual(metrics["overlap_coefficient"], 2 / 3)
+
+    def test_top_k_uses_available_vocabulary_when_smaller_than_requested(self) -> None:
         metrics = top_k_agreement_metrics(
             {"a": 3, "b": 2, "c": 1},
             {"b": 3, "d": 2},
@@ -165,6 +232,15 @@ class CorpusWordFrequencyDistributionTests(unittest.TestCase):
         self.assertEqual(metrics["shared_forms"], 1)
         self.assertAlmostEqual(metrics["jaccard_similarity"], 0.25)
         self.assertAlmostEqual(metrics["overlap_coefficient"], 0.5)
+
+    def test_top_k_reports_do_not_emit_lexical_content(self) -> None:
+        report = fake_report()
+        markdown = render_markdown(report)
+        serialized = json.dumps(report, ensure_ascii=False)
+        for lexical_fixture in ("skupno", "štiri", "pet"):
+            self.assertNotIn(lexical_fixture, markdown)
+            self.assertNotIn(lexical_fixture, serialized)
+        self.assertIn("Top-k sets are tie-inclusive", markdown)
 
     def test_frequency_of_frequency_bands_are_correct(self) -> None:
         counts = {
