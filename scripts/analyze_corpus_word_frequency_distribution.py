@@ -289,8 +289,14 @@ def normalized_probabilities(counts: Mapping[str, int]) -> dict[str, float]:
     total = sum(counts.values())
     if total <= 0:
         raise ValueError("a frequency distribution must contain at least one token")
-    probabilities = {form: count / total for form, count in counts.items() if count > 0}
-    if not math.isclose(sum(probabilities.values()), 1.0, rel_tol=0.0, abs_tol=NUMERICAL_TOLERANCE):
+    forms = tuple(sorted(form for form, count in counts.items() if count > 0))
+    probabilities = {form: counts[form] / total for form in forms}
+    if not math.isclose(
+        math.fsum(probabilities[form] for form in forms),
+        1.0,
+        rel_tol=0.0,
+        abs_tol=NUMERICAL_TOLERANCE,
+    ):
         raise ValueError("normalized probabilities do not sum to one")
     return probabilities
 
@@ -299,22 +305,28 @@ def _distribution_metrics(
     probabilities_a: Mapping[str, float],
     probabilities_b: Mapping[str, float],
 ) -> dict[str, float]:
-    support = set(probabilities_a) | set(probabilities_b)
-    jsd = 0.0
-    squared_hellinger_sum = 0.0
-    absolute_difference_sum = 0.0
-    overlap = 0.0
+    support = tuple(sorted(set(probabilities_a) | set(probabilities_b)))
+    jsd_terms: list[float] = []
+    squared_hellinger_terms: list[float] = []
+    absolute_difference_terms: list[float] = []
+    overlap_terms: list[float] = []
     for form in support:
         probability_a = probabilities_a.get(form, 0.0)
         probability_b = probabilities_b.get(form, 0.0)
         midpoint = 0.5 * (probability_a + probability_b)
         if probability_a:
-            jsd += 0.5 * probability_a * math.log2(probability_a / midpoint)
+            jsd_terms.append(0.5 * probability_a * math.log2(probability_a / midpoint))
         if probability_b:
-            jsd += 0.5 * probability_b * math.log2(probability_b / midpoint)
-        squared_hellinger_sum += (math.sqrt(probability_a) - math.sqrt(probability_b)) ** 2
-        absolute_difference_sum += abs(probability_a - probability_b)
-        overlap += min(probability_a, probability_b)
+            jsd_terms.append(0.5 * probability_b * math.log2(probability_b / midpoint))
+        squared_hellinger_terms.append(
+            (math.sqrt(probability_a) - math.sqrt(probability_b)) ** 2
+        )
+        absolute_difference_terms.append(abs(probability_a - probability_b))
+        overlap_terms.append(min(probability_a, probability_b))
+    jsd = math.fsum(jsd_terms)
+    squared_hellinger_sum = math.fsum(squared_hellinger_terms)
+    absolute_difference_sum = math.fsum(absolute_difference_terms)
+    overlap = math.fsum(overlap_terms)
     hellinger = math.sqrt(0.5 * squared_hellinger_sum)
     total_variation = 0.5 * absolute_difference_sum
     if not math.isclose(overlap, 1.0 - total_variation, rel_tol=0.0, abs_tol=1e-10):
@@ -334,17 +346,23 @@ def full_union_distribution_metrics(
     probabilities_a = normalized_probabilities(counts_a)
     probabilities_b = normalized_probabilities(counts_b)
     result: dict[str, float | str] = dict(_distribution_metrics(probabilities_a, probabilities_b))
-    shared = set(probabilities_a) & set(probabilities_b)
-    support_component = 0.5 * (
-        sum(probabilities_a[form] for form in set(probabilities_a) - shared)
-        + sum(probabilities_b[form] for form in set(probabilities_b) - shared)
+    forms_a = set(probabilities_a)
+    forms_b = set(probabilities_b)
+    shared_forms = tuple(sorted(forms_a & forms_b))
+    forms_only_in_a = tuple(sorted(forms_a - forms_b))
+    forms_only_in_b = tuple(sorted(forms_b - forms_a))
+    support_component = 0.5 * math.fsum(
+        (
+            math.fsum(probabilities_a[form] for form in forms_only_in_a),
+            math.fsum(probabilities_b[form] for form in forms_only_in_b),
+        )
     )
-    shared_frequency_component = 0.5 * sum(
-        abs(probabilities_a[form] - probabilities_b[form]) for form in shared
+    shared_frequency_component = 0.5 * math.fsum(
+        abs(probabilities_a[form] - probabilities_b[form]) for form in shared_forms
     )
     total_variation = float(result["total_variation_distance"])
     if not math.isclose(
-        support_component + shared_frequency_component,
+        math.fsum((support_component, shared_frequency_component)),
         total_variation,
         rel_tol=0.0,
         abs_tol=1e-10,
@@ -370,16 +388,20 @@ def shared_conditional_distribution_metrics(
 ) -> dict[str, int | float]:
     probabilities_a = normalized_probabilities(counts_a)
     probabilities_b = normalized_probabilities(counts_b)
-    shared = set(probabilities_a) & set(probabilities_b)
-    if not shared:
+    shared_forms = tuple(sorted(set(probabilities_a) & set(probabilities_b)))
+    if not shared_forms:
         raise ValueError("shared-vocabulary conditional distribution has empty support")
-    shared_mass_a = sum(probabilities_a[form] for form in shared)
-    shared_mass_b = sum(probabilities_b[form] for form in shared)
-    conditional_a = {form: probabilities_a[form] / shared_mass_a for form in shared}
-    conditional_b = {form: probabilities_b[form] / shared_mass_b for form in shared}
+    shared_mass_a = math.fsum(probabilities_a[form] for form in shared_forms)
+    shared_mass_b = math.fsum(probabilities_b[form] for form in shared_forms)
+    conditional_a = {
+        form: probabilities_a[form] / shared_mass_a for form in shared_forms
+    }
+    conditional_b = {
+        form: probabilities_b[form] / shared_mass_b for form in shared_forms
+    }
     metrics = _distribution_metrics(conditional_a, conditional_b)
     return {
-        "shared_forms": len(shared),
+        "shared_forms": len(shared_forms),
         "shared_form_token_mass_in_a": shared_mass_a,
         "shared_form_token_mass_in_b": shared_mass_b,
         "conditional_jensen_shannon_divergence_base2": metrics["jensen_shannon_divergence_base2"],
@@ -394,7 +416,7 @@ def _weighted_median(items: list[tuple[float, float]]) -> float:
     if not items:
         raise ValueError("weighted median requires at least one item")
     ordered = sorted(items)
-    total_weight = sum(weight for _, weight in ordered)
+    total_weight = math.fsum(weight for _, weight in ordered)
     if total_weight <= 0:
         raise ValueError("weighted median requires positive total weight")
     threshold = 0.5 * total_weight
@@ -412,25 +434,25 @@ def shared_frequency_ratio_metrics(
 ) -> dict[str, int | float | str]:
     probabilities_a = normalized_probabilities(counts_a)
     probabilities_b = normalized_probabilities(counts_b)
-    shared = set(probabilities_a) & set(probabilities_b)
+    shared_forms = tuple(sorted(set(probabilities_a) & set(probabilities_b)))
     weighted_ratios: list[tuple[float, float]] = []
-    for form in shared:
+    for form in shared_forms:
         ratio = abs(math.log2(probabilities_a[form] / probabilities_b[form]))
         weighted_ratios.append((ratio, min(probabilities_a[form], probabilities_b[form])))
-    total_weight = sum(weight for _, weight in weighted_ratios)
+    total_weight = math.fsum(weight for _, weight in weighted_ratios)
     if total_weight <= 0:
         raise ValueError("shared-form ratio weighting has zero mass")
 
     def fraction_within(maximum_log2_ratio: float) -> float:
-        return sum(
+        return math.fsum(
             weight for ratio, weight in weighted_ratios if ratio <= maximum_log2_ratio
         ) / total_weight
 
     return {
-        "shared_forms": len(shared),
+        "shared_forms": len(shared_forms),
         "symmetric_mass_weighting": "minimum_empirical_probability",
         "shared_mass_weight_sum": total_weight,
-        "weighted_mean_absolute_log2_ratio": sum(
+        "weighted_mean_absolute_log2_ratio": math.fsum(
             ratio * weight for ratio, weight in weighted_ratios
         )
         / total_weight,
@@ -441,7 +463,7 @@ def shared_frequency_ratio_metrics(
     }
 
 
-def _average_ranks(counts: Mapping[str, int], forms: set[str]) -> dict[str, float]:
+def _average_ranks(counts: Mapping[str, int], forms: tuple[str, ...]) -> dict[str, float]:
     ordered = sorted(forms, key=lambda form: (-counts[form], form))
     ranks: dict[str, float] = {}
     index = 0
@@ -463,20 +485,24 @@ def spearman_rank_correlation(
     *,
     minimum_count: int = 1,
 ) -> tuple[int, float]:
-    forms = {
-        form
-        for form in set(counts_a) & set(counts_b)
-        if counts_a[form] >= minimum_count and counts_b[form] >= minimum_count
-    }
+    forms = tuple(
+        sorted(
+            form
+            for form in set(counts_a) & set(counts_b)
+            if counts_a[form] >= minimum_count and counts_b[form] >= minimum_count
+        )
+    )
     if len(forms) < 2:
         return len(forms), 0.0
     ranks_a = _average_ranks(counts_a, forms)
     ranks_b = _average_ranks(counts_b, forms)
-    mean_a = sum(ranks_a.values()) / len(forms)
-    mean_b = sum(ranks_b.values()) / len(forms)
-    covariance = sum((ranks_a[form] - mean_a) * (ranks_b[form] - mean_b) for form in forms)
-    variance_a = sum((ranks_a[form] - mean_a) ** 2 for form in forms)
-    variance_b = sum((ranks_b[form] - mean_b) ** 2 for form in forms)
+    mean_a = math.fsum(ranks_a[form] for form in forms) / len(forms)
+    mean_b = math.fsum(ranks_b[form] for form in forms) / len(forms)
+    covariance = math.fsum(
+        (ranks_a[form] - mean_a) * (ranks_b[form] - mean_b) for form in forms
+    )
+    variance_a = math.fsum((ranks_a[form] - mean_a) ** 2 for form in forms)
+    variance_b = math.fsum((ranks_b[form] - mean_b) ** 2 for form in forms)
     if variance_a == 0.0 or variance_b == 0.0:
         return len(forms), 1.0 if ranks_a == ranks_b else 0.0
     return len(forms), covariance / math.sqrt(variance_a * variance_b)
@@ -579,7 +605,10 @@ def frequency_of_frequency_profile(counts: Mapping[str, int]) -> dict[str, dict[
 
 def concentration_metrics(counts: Mapping[str, int]) -> dict[str, object]:
     probabilities = normalized_probabilities(counts)
-    entropy = -sum(probability * math.log2(probability) for probability in probabilities.values())
+    forms = tuple(probabilities)
+    entropy = -math.fsum(
+        probabilities[form] * math.log2(probabilities[form]) for form in forms
+    )
     vocabulary_size = len(probabilities)
     normalized_entropy = entropy / math.log2(vocabulary_size) if vocabulary_size > 1 else 0.0
     total = sum(counts.values())
@@ -596,7 +625,7 @@ def concentration_metrics(counts: Mapping[str, int]) -> dict[str, object]:
         "top_k_token_mass": top_k_mass,
         "shannon_entropy_bits": entropy,
         "normalized_shannon_entropy": normalized_entropy,
-        "simpson_concentration": sum(probability**2 for probability in probabilities.values()),
+        "simpson_concentration": math.fsum(probabilities[form] ** 2 for form in forms),
         "effective_vocabulary_size_shannon": 2.0**entropy,
     }
 
