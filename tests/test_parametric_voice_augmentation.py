@@ -6,7 +6,10 @@ import unittest
 import wave
 from pathlib import Path
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    np = None
 
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.otf_augmentation_dataset import (
@@ -31,6 +34,9 @@ from slaif_asr.scale200_corpus import load_augmentation_config
 
 POLICY_PATH = REPO_ROOT / "configs/augmentation/parametric_voiceaug_v1.json"
 PROFILE_PATH = REPO_ROOT / "configs/augmentation/scale200_transcript_preserving_v1.json"
+requires_numpy = unittest.skipUnless(
+    np is not None, "NumPy is required for ParametricVoiceAug waveform tests"
+)
 
 
 def write_wav(path: Path) -> None:
@@ -76,6 +82,7 @@ class ParametricVoiceAugmentationTests(unittest.TestCase):
             augmentation_policy=self.policy,
         )
 
+    @requires_numpy
     def test_policy_schema_key_and_dependencies_validate(self) -> None:
         self.assertEqual(self.policy["augmentation_key"], AUGMENTATION_KEY)
         self.assertEqual(self.policy["augmentation_family"], "parametric_voiceaug_v1")
@@ -161,6 +168,7 @@ class ParametricVoiceAugmentationTests(unittest.TestCase):
                 ]
             )
 
+    @requires_numpy
     def test_audio_validation_rejects_invalid_waveforms(self) -> None:
         source = np.full(1600, 0.1, dtype=np.float64)
         validate_audio(source, source.copy())
@@ -175,6 +183,7 @@ class ParametricVoiceAugmentationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 validate_audio(source, values)
 
+    @requires_numpy
     def test_all_operation_families_produce_safe_audio(self) -> None:
         source = (
             np.sin(np.linspace(0.0, 100.0, 6400, endpoint=False)) * 0.25
@@ -202,6 +211,7 @@ class ParametricVoiceAugmentationTests(unittest.TestCase):
                 break
         self.assertEqual(len(seen), 9)
 
+    @requires_numpy
     def test_worker_count_order_restart_and_waveform_replay(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

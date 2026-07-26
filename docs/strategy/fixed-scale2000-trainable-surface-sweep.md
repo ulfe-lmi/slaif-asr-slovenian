@@ -62,7 +62,7 @@ hypotheses, yielding `SURFACE08_NEW_BEST_DIRECTIONAL_CANDIDATE`. This result
 remains diagnostic, does not make full-encoder training the default direction,
 and does not authorize Surface09.
 
-## Post-Sweep Data-Axis Diagnostic
+## Post-Sweep Data-Axis Diagnostics
 
 Work Order 0045 is a separate, named data-axis follow-up. It keeps the
 Surface08 boundary, untouched base initialization, exposure cap, controller
@@ -70,10 +70,10 @@ policy, and directional suite fixed while replacing the scale-2000 offline
 training schedule with scale-8000 clean synthetic audio plus deterministic
 in-memory transcript-preserving augmentation.
 
-This follow-up is stacked on the PR #50 OTF infrastructure while that PR
-remains open. It does not alter the completed fixed-scale2000 surface ladder,
-does not authorize Surface09, and does not make scale-8000 full-encoder
-training a general policy.
+The implementation is consolidated with the OTF infrastructure as one
+main-targeting integration. It does not alter the completed fixed-scale2000
+surface ladder, authorize Surface09, or make scale-8000 full-encoder training a
+general policy.
 
 Experiment 0031 completed this diagnostic. ARTUR controller-dev selected round
 5 under the predeclared earliest-within-tolerance rule; the raw-best
@@ -85,7 +85,7 @@ workers sustained a 0.994036 aggregate fill rate. The classification is
 `SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`; it remains noncanonical,
 diagnostic-only evidence and does not accept or promote a checkpoint.
 
-Work Order 0046 authorizes one matched StrongAug v1 follow-up to Experiment
+Work Order 0046 authorized one matched StrongAug v1 follow-up to Experiment
 0031. Surface08, the untouched base, scale-8000 clean reservoir, optimizer,
 effective batch, controller policy, directional suite, and 144,000-exposure
 cap remain fixed. Only deterministic OTF augmentation intensity changes:
@@ -101,7 +101,7 @@ classification is `STRONGAUG_V1_REAL_GATE_REGRESSION`; the standard OTF recipe
 remains the stronger scale-8000 data-axis result. No checkpoint is accepted or
 promoted.
 
-Work Order 0047 authorizes one matched ParametricVoiceAug v1 follow-up to
+Work Order 0047 authorized one matched ParametricVoiceAug v1 follow-up to
 Experiment 0031. It keeps Surface08, untouched-base initialization, scale-8000
 clean data, optimizer, effective batch, controller policy, directional suite,
 and the 144,000-exposure cap fixed. The only scientific variable is a
@@ -120,3 +120,20 @@ both synthetic holdouts versus Experiment 0031, but FLEURS-v2 regressed to
 +0.50 tolerance, so the classification is
 `PARAMETRIC_VOICEAUG_V1_REAL_GATE_REGRESSION`. Standard OTF remains the
 stronger balanced scale-8000 recipe. No checkpoint is accepted or promoted.
+
+## Strategy Conclusion
+
+- Model surface: keep Surface08 fixed for the next controlled data-axis
+  comparison.
+- Augmentation: keep Experiment 0031 standard deterministic OTF fixed.
+- Exposure budget: keep the Experiment 0031 budget fixed.
+- Next changed variable: independently constructed Slovenian text-reservoir
+  composition, with broader lexical support and rebalanced frequency.
+- Broad StrongAug and ParametricVoiceAug escalation: stop.
+- Acoustic mismatch remains a plausible secondary factor. Future acoustic work,
+  if separately authorized, should isolate one low-probability operation family
+  instead of another compound augmentation policy.
+
+The aggregate vocabulary and frequency analyses make corpus composition the
+primary testable hypothesis. They do not prove that lexical or frequency
+mismatch is the sole source of ASR error.

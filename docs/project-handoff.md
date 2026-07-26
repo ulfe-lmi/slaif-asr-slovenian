@@ -211,10 +211,11 @@
   checkpoint scored 39.353/12.002 on FLEURS-v2 and 39.974/12.251 on ARTUR-J
   with zero empty hypotheses, improving all four directional real-gate
   WER/CER metrics versus Surface08 scale-2000. The classification is
-  `SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`. This is stacked on PR #50
-  OTF infrastructure and remains noncanonical, diagnostic-only evidence; it
-  does not authorize Surface09, full-model training, checkpoint acceptance,
-  `TRAINING_ELIGIBLE`, or publication.
+  `SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`. Its implementation is
+  consolidated with the OTF infrastructure in main-targeting PR #54 and has no
+  active side-branch dependency. The evidence remains noncanonical and
+  diagnostic-only; it does not authorize Surface09, full-model training,
+  checkpoint acceptance, `TRAINING_ELIGIBLE`, or publication.
 - Experiment 0032 completed the Work Order 0046 matched
   augmentation-intensity diagnostic. ARTUR controller-dev selected round 6 and
   training stopped at round 9 after 144,000 virtual exposures. StrongAug v1
@@ -233,6 +234,27 @@
   `PARAMETRIC_VOICEAUG_V1_REAL_GATE_REGRESSION`; standard OTF remains the
   stronger balanced scale-8000 recipe. This remains noncanonical,
   diagnostic-only evidence and does not accept or promote a checkpoint.
+- Historical execution provenance is preserved: Experiment 0031 ran under PR
+  #51, Experiment 0032 under PR #52, and Experiment 0033 under PR #54.
+  Experiment 0033's historical final commit is
+  `812a0f7d515f96d1c83d087cf9a7ac1fb8aab7ee`, with tree
+  `e076d92c0f2153451e8ea99b7373e15aeef2a61c`. Integration commits do not replace
+  those execution identities.
+- Work Order 0048 found that scale-8000 covers 60.65% of FLEURS-v2 and 72.81%
+  of ARTUR-J unique normalized word forms, with token-mass coverage of 78.80%
+  and 84.40%. Only aggregate statistics are committed; no gate vocabulary or
+  missing-form list is exposed.
+- Work Order 0049 and PR #56 made the aggregate word-frequency analysis
+  deterministic. Scale-8000 differs from both real gates in support,
+  concentration, shared-form frequency, and rank beyond the declared sampling
+  envelopes. This supports corpus composition as the next controlled
+  hypothesis, but does not prove that corpus mismatch is the sole ASR error
+  source.
+- The broad augmentation sweep is stopped. Standard deterministic OTF from
+  Experiment 0031 remains the best balanced directional recipe. StrongAug v1
+  and ParametricVoiceAug v1 remain negative domain-tradeoff evidence.
+- No checkpoint is accepted, no `TRAINING_ELIGIBLE` status exists, and no
+  checkpoint or model release is authorized.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
@@ -241,8 +263,9 @@
   11 GB each, one GPU used per process.
 - Current A100 development hardware: physical GPU 1 selected with
   `CUDA_VISIBLE_DEVICES=1`; PyTorch sees exactly one logical device, `cuda:0`.
-- Project-owned GPU helpers now accept exactly one visible A100 or RTX 2080 Ti,
-  reject CPU fallback, and reject multiple visible GPUs.
+- Project-owned GPU helpers accept exactly one visible A100, RTX 2080 Ti, or
+  NVIDIA GeForce RTX 3090 with at least 22 GiB VRAM; they reject CPU fallback
+  and multiple visible GPUs.
 - First M3 trainable surface: one additive `sl-SI` prompt-column delta with
   2048 effective trainable scalars, later merged into only the selected first
   prompt-projection column.
@@ -319,40 +342,22 @@ The rendered smoke audio, provenance, manifest, ASR logs, and result files remai
 ignored local evidence. This proves a real TTS-to-ASR vertical slice only; it is
 not a benchmark and does not start training.
 
-## Next recommended task
+## Next Recommended Scientific Axis
 
-ADR 0008 now permits `artur-controller-dev-v1` for aggregate real-acoustic
-run-control and early stopping only when an explicit work order authorizes it.
-Work Order 0032 applies that exception to a scale-2000 decoder+joint RNNT rerun
-with per-round ignored checkpoints. FLEURS-v2, ARTUR-J immutable gate data, and
-any final blind test remain unavailable for early stopping, checkpoint
-selection, hyperparameter selection, prompt construction, or training.
+Keep Surface08, Experiment 0031 standard deterministic OTF, and the exposure
+budget fixed. Change only the independently constructed Slovenian text-reservoir
+composition to test broader lexical support and rebalanced frequency without
+copying or steering from real-gate words, sentences, missing-form lists, or
+per-word statistics.
 
-Do not prepare another prompt-column training rerun from the current
-single-voice corpus as if it were promotion-eligible. The next useful
-development work is governed synthetic-scale data construction followed by
-frozen-encoder emission adaptation, then validation-only real-gate comparison.
-Batch-32 directional evidence can guide iteration, but canonical batch-1
-validation is still required before any acceptance discussion.
+The vocabulary and frequency analyses make this the primary testable
+hypothesis. Acoustic mismatch remains a secondary factor. Any future acoustic
+work must be an explicitly authorized, isolated, low-probability
+operation-family ablation rather than another compound augmentation policy.
 
-Use the rejected Round 1 and residual-adapter aggregate evidence to design the
-next controlled work order. The accepted parent remains the untouched Nemotron
-base checkpoint; do not treat the micro-proof checkpoint, Round 1 checkpoint, or
-residual adapter as an accepted parent.
+All future long-running training must start from an isolated Git worktree before
+worker processes launch. This prevents a different process on the shared NFS
+checkout from changing the code visible to spawned workers.
 
-## Do not do next
-
-- Do not expose real-gate reference text to GaMS.
-- Do not use real Slovenian acoustic samples for training or steering.
-- Do not train the acoustic encoder while the training signal remains
-  synthetic-only.
-- Do not create a service API or UI.
-- Do not publish a checkpoint.
-- Do not add private data to obtain an early score.
-- Do not accept a synthetic-only adapter without real-gate non-regression and a
-  work order that explicitly permits the next controlled step.
-
-## Strategic questions after the next PR
-
-- What is the zero-shot Slovenian baseline on the approved development set?
-- Which exact NeMo revision should become the project pin?
+Surface09, full-model training, checkpoint acceptance, `TRAINING_ELIGIBLE`, and
+publication remain prohibited without new governance and human approval.

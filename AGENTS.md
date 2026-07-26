@@ -8,9 +8,12 @@ This file is the project constitution for autonomous and semi-autonomous coding 
   eventually Slovenian-English, speech recognizer using synthetic-only training
   and validation-only real Slovenian speech.
 - **Active strategy:** ADR 0007 adopts a Slovenian-first synthetic development
-  track: real Slovenian acoustic data is validation-only, the encoder stays
-  frozen while training remains synthetic-only, and broader emission-side
-  adaptation requires explicit work orders.
+  track: real Slovenian acoustic data is validation-only, trainable surfaces
+  remain frozen by default, and every exception requires an explicit ADR and
+  work order. The completed ADR 0009 surface and augmentation diagnostics now
+  hold Surface08 and standard deterministic OTF fixed while the next controlled
+  data-axis question tests independently broadened and rebalanced Slovenian
+  text.
 - **Product shape:** a reproducible adaptation, evaluation, and release pipeline around an open-weight streaming ASR base model.
 - **Initial base model:** `nvidia/nemotron-3.5-asr-streaming-0.6b`.
 - **Training framework:** NVIDIA NeMo, pinned by commit or release in executable work.
@@ -18,29 +21,17 @@ This file is the project constitution for autonomous and semi-autonomous coding 
 - **Control loop:** generate -> synthesize -> evaluate -> select failures -> train bounded update -> run gates -> accept or roll back.
 - **Repository shape:** standalone SLAIF repository. Do not fork or vendor the full NeMo repository.
 - **Distribution shape:** GitHub for code and evidence; Hugging Face for adapters or derived model artifacts.
-- **Current milestone:** M3 prompt-column proof is complete for one
-  micro-experiment. The training-data constitution is adopted, text-stage
-  corpus-validation tooling exists, and the first GaMS corpus-v2 candidate
-  reservoir has reached `TEXT_ACCEPTED` and `AUDIO_ACCEPTED` as a single-voice
-  synthetic candidate pool. A100 real-gate evaluation now has a parity-checked
-  batch-1 policy and a valid untouched-base FLEURS-v2 baseline. An independent
-  synthetic diagnostic holdout has reached `TEXT_ACCEPTED` and
-  `AUDIO_ACCEPTED`, scoring has run on both synthetic partitions, and a
-  selected-training manifest is ready under
-  `SELECTED_TRAINING_MANIFEST_READY`. A named `DIAGNOSTIC_ONLY` corpus-v2
-  prompt-column experiment has run and is synthetic-only: no checkpoint is
-  accepted, and true A100 minibatch training was not scientifically equivalent
-  to the batch-size-1 reference. A follow-up speaker-range resampling
-  diagnostic also remained unsupported: it improved the synthetic holdout but
-  did not mitigate real-gate regression. A frozen-base Slovenian RNNT
-  joint-adapter diagnostic trained only one new adapter, left every pretrained
-  tensor frozen, emitted shared live progress, and also remained synthetic-only.
-  A Supertonic 3 multi-voice diagnostic then trained the same frozen-base joint
-  adapter on eight preset synthetic voice styles and reduced, but did not
-  eliminate, the Piper joint-adapter real-gate regression burden. It remains
-  `DIAGNOSTIC_ONLY`: no adapter or checkpoint is accepted.
-  `TRAINING_ELIGIBLE` certification, promotion-eligible model training, and
-  production ASR work remain incomplete.
+- **Current milestone:** Surface08 scale-2000 is the strongest fixed-data
+  trainable-surface result. Experiment 0031 then established Surface08 plus
+  scale-8000 standard deterministic OTF as the best balanced directional
+  scale-8000 recipe. Experiment 0032 StrongAug v1 and Experiment 0033
+  ParametricVoiceAug v1 both regressed FLEURS-v2 beyond their predeclared
+  tolerance and remain negative domain-tradeoff evidence. The broad
+  augmentation sweep is closed. Aggregate vocabulary-coverage and deterministic
+  frequency-distribution analyses show substantial lexical support and
+  frequency mismatch, without proving that corpus mismatch is the sole source
+  of ASR error. No checkpoint is accepted, no `TRAINING_ELIGIBLE` status exists,
+  and no model publication is authorized.
 
 ## Mission
 
@@ -120,22 +111,13 @@ The repository will not own:
    fusion diagnostic on fixed scale-2000 data. Work Order 0043 authorizes
    exactly one Surface08 boundary diagnostic with all encoder layers and the
    proven `prompt_kernel`, while the frontend and prompt identity remain
-   frozen. It is not general full-encoder authorization and does not authorize
-   prompt identity changes, Surface09, or full-model training. Work Order 0045
-   authorizes exactly one additional Surface08 run from the untouched base
-   using the admitted scale-8000 clean synthetic pool with deterministic
-   in-memory transcript-preserving augmentation; it is a data-axis diagnostic,
-   not general scale-8000 or full-encoder authorization. Work Order 0046
-   authorizes one matched Surface08 scale-8000 follow-up that changes only the
-   deterministic OTF augmentation intensity to the bounded StrongAug v1
-   curriculum. It retains the untouched base, 144,000-exposure cap, frozen
-   identity surfaces, and ARTUR controller-dev-only selection. Work Order 0047
-   authorizes one further matched Surface08 scale-8000 run that replaces the
-   default augmentation family with deterministic, language-agnostic
-   ParametricVoiceAug v1 speech-shape transforms. It retains the same untouched
-   base, data reservoir, budget, frozen identity surfaces, and controller-only
-   selection. It is not authorization for target-speaker conversion, voice
-   cloning, external voice models, or a broader training policy.
+   frozen. It is not general full-encoder authorization. Work Order 0045
+   completed the bounded standard OTF diagnostic. Work Order 0046 completed the
+   bounded StrongAug v1 diagnostic. Work Order 0047 completed the bounded
+   ParametricVoiceAug v1 diagnostic. Their authorizations are consumed. They do
+   not provide continuing scale-8000 or full-encoder authorization and do not
+   authorize prompt identity changes, target-speaker conversion, voice cloning,
+   external voice models, Surface09, or full-model training.
 7. **Real speech decides checkpoint acceptance.**
    - Synthetic improvement alone is insufficient.
    - Real Slovenian acoustic data is validation-only and must not be used for

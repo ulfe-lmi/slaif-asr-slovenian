@@ -7,7 +7,10 @@ import unittest
 import wave
 from pathlib import Path
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    np = None
 
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.otf_augmentation_dataset import (
@@ -30,11 +33,23 @@ from slaif_asr.scale8000_otf_surface08 import (
     validate_loader_telemetry,
     validate_public_report,
 )
-from scripts.run_surface08_scale8000_otf_augmented import cumulative_fill_rate
+try:
+    from scripts.run_surface08_scale8000_otf_augmented import cumulative_fill_rate
+except ModuleNotFoundError as exc:
+    if exc.name != "torch":
+        raise
+    cumulative_fill_rate = None
 
 
 CONFIG_PATH = REPO_ROOT / "configs/experiments/surface08-scale8000-otf-augmented.json"
 PROFILE_PATH = REPO_ROOT / "configs/augmentation/scale200_transcript_preserving_v1.json"
+requires_numpy = unittest.skipUnless(
+    np is not None, "NumPy is required for waveform-backed OTF tests"
+)
+requires_training_runner = unittest.skipUnless(
+    cumulative_fill_rate is not None,
+    "Torch is required to import the scale-8000 training runner",
+)
 
 
 def write_wav(path: Path) -> None:
@@ -112,6 +127,7 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "prior adapted checkpoint"):
             validate_config(changed)
 
+    @requires_numpy
     def test_schedule_visits_every_semantic_row_before_repeating(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pool = fake_pool(Path(directory), rows=16)
@@ -127,6 +143,7 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
             )
         )
 
+    @requires_numpy
     def test_round_tasks_are_deterministic_and_complete(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pool = fake_pool(Path(directory), rows=16)
@@ -151,6 +168,7 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
         self.assertEqual(first_ids, second_ids)
         self.assertEqual(set(first_ids), set(range(16)))
 
+    @requires_numpy
     def test_virtual_spec_binds_scale8000_identity(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pool = fake_pool(Path(directory), rows=1)
@@ -173,6 +191,7 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
             )
         self.assertEqual(first, second)
 
+    @requires_numpy
     def test_waveform_replays_across_workers_and_writes_no_output(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -203,6 +222,7 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
         self.assertEqual(sample.transcript, exposures[0][0].transcript)
         self.assertEqual(before, after)
 
+    @requires_numpy
     def test_diversity_stats_report_unique_first_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pool = fake_pool(Path(directory), rows=16)
@@ -227,6 +247,7 @@ class Surface08Scale8000OtfTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "exactly three"):
             validate_loader_telemetry(payload)
 
+    @requires_training_runner
     def test_live_fill_rate_accepts_dictionary_events(self) -> None:
         events = [
             {"consumer_wait_seconds": 0.1},

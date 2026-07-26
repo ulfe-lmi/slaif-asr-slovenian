@@ -2,9 +2,10 @@
 
 ## Status
 
-Accepted for the bounded diagnostic program defined by Work Orders 0037,
-0038, 0039, 0040, and the one-time Surface08 boundary diagnostic in Work Order
-0043.
+Accepted as the historical authorization for the bounded diagnostic program
+defined by Work Orders 0037, 0038, 0039, 0040, 0043, 0045, 0046, and 0047.
+Every named run is complete. This ADR is not continuing authorization for
+Surface08, scale-8000 training, Surface09, or full-model training.
 
 ## Decision
 
@@ -202,6 +203,12 @@ This is not general authorization for scale-8000 full-encoder training. Any
 follow-up schedule, surface, initialization, or data change requires separate
 human review and authorization.
 
+Phase 6 completed as Experiment 0031 with classification
+`SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`. Its selected checkpoint scored
+39.353/12.002/0 on FLEURS-v2 and 39.974/12.251/0 on ARTUR-J. Standard
+deterministic OTF is the selected balanced augmentation control. The one-run
+Phase 6 authorization is consumed.
+
 ## Phase 7 / Work Order 0046
 
 Work Order 0046 authorizes exactly one matched augmentation-intensity
@@ -238,6 +245,12 @@ Phase 7 forbids:
 
 This is a single augmentation-policy comparison, not general StrongAug or
 scale-8000 full-encoder authorization.
+
+Phase 7 completed as Experiment 0032 with classification
+`STRONGAUG_V1_REAL_GATE_REGRESSION`. Its selected checkpoint scored
+39.904/12.343/0 on FLEURS-v2 and 39.406/12.357/0 on ARTUR-J. StrongAug v1 is
+negative domain-tradeoff evidence and is not selected. The one-run Phase 7
+authorization is consumed.
 
 ## Phase 8 / Work Order 0047
 
@@ -281,3 +294,24 @@ Phase 8 forbids:
 This is a single augmentation-family comparison. StrongAug v1 remains a
 negative diagnostic comparator and is not the default ParametricVoiceAug
 recipe.
+
+Phase 8 completed as Experiment 0033 with classification
+`PARAMETRIC_VOICEAUG_V1_REAL_GATE_REGRESSION`. Its selected checkpoint scored
+40.371/12.186/0 on FLEURS-v2 and 39.318/12.017/0 on ARTUR-J. The selected
+checkpoint SHA256 remains
+`ffe421a671036b0b5bc8a75315c519c50a28da0be17c93e3caca503ce77dd9cd`.
+ParametricVoiceAug v1 is negative domain-tradeoff evidence and is not selected.
+The one-run Phase 8 authorization is consumed.
+
+## Completed Program Disposition
+
+- Selected balanced augmentation control: standard deterministic OTF from
+  Experiment 0031.
+- Broad augmentation sweep: closed.
+- Surface08: fixed only as the model surface for a future explicitly governed
+  data-axis comparison.
+- Surface09: not authorized.
+- Full-model training: not authorized.
+- Accepted checkpoint: none.
+- `TRAINING_ELIGIBLE`: not issued.
+- Model publication: not authorized.

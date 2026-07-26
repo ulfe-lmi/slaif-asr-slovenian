@@ -7,12 +7,21 @@ import unittest
 import wave
 from pathlib import Path
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    np = None
 
-from scripts.run_surface08_scale8000_otf_strongaug_v1 import (
-    STANDARD_OTF_METRICS,
-    classify_result,
-)
+try:
+    from scripts.run_surface08_scale8000_otf_strongaug_v1 import (
+        STANDARD_OTF_METRICS,
+        classify_result,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "torch":
+        raise
+    STANDARD_OTF_METRICS = {}
+    classify_result = None
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.otf_augmentation_dataset import (
     CleanAudioRecord,
@@ -39,6 +48,13 @@ CONFIG_PATH = (
     REPO_ROOT / "configs/experiments/surface08-scale8000-otf-strongaug-v1.json"
 )
 PROFILE_PATH = REPO_ROOT / "configs/augmentation/scale200_transcript_preserving_v1.json"
+requires_numpy = unittest.skipUnless(
+    np is not None, "NumPy is required for waveform-backed StrongAug tests"
+)
+requires_training_runner = unittest.skipUnless(
+    classify_result is not None,
+    "Torch is required to import the StrongAug training runner",
+)
 
 
 def write_wav(path: Path) -> None:
@@ -141,6 +157,7 @@ class Surface08Scale8000StrongAugTests(unittest.TestCase):
                 if operation["family"] == "additive_noise":
                     self.assertGreaterEqual(operation["parameters"]["snr_db"], 8.0)
 
+    @requires_numpy
     def test_waveform_replays_across_worker_order_and_writes_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -202,6 +219,7 @@ class Surface08Scale8000StrongAugTests(unittest.TestCase):
         self.assertEqual(summary["phases"]["robustness"]["strong_fraction"], 0.75)
         self.assertEqual(summary["family_sample_counts"]["additive_noise"], 105)
 
+    @requires_training_runner
     def test_classifier_uses_standard_otf_as_critical_comparator(self) -> None:
         improved = metric_table()
         for split in ("fleurs_v2", "artur_j"):

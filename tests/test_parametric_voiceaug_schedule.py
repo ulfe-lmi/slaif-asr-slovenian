@@ -4,10 +4,16 @@ import copy
 import json
 import unittest
 
-from scripts.run_surface08_scale8000_otf_parametric_voiceaug_v1 import (
-    STANDARD_OTF_METRICS,
-    classify_result,
-)
+try:
+    from scripts.run_surface08_scale8000_otf_parametric_voiceaug_v1 import (
+        STANDARD_OTF_METRICS,
+        classify_result,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "torch":
+        raise
+    STANDARD_OTF_METRICS = {}
+    classify_result = None
 from slaif_asr.config import REPO_ROOT
 from slaif_asr.scale8000_otf_surface08 import validate_public_report
 from slaif_asr.scale8000_parametric_voiceaug_surface08 import (
@@ -20,6 +26,10 @@ from slaif_asr.scale8000_parametric_voiceaug_surface08 import (
 CONFIG_PATH = (
     REPO_ROOT
     / "configs/experiments/surface08-scale8000-otf-parametric-voiceaug-v1.json"
+)
+requires_training_runner = unittest.skipUnless(
+    classify_result is not None,
+    "Torch is required to import the ParametricVoiceAug training runner",
 )
 
 
@@ -105,6 +115,7 @@ class ParametricVoiceAugScheduleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_config(changed)
 
+    @requires_training_runner
     def test_classifier_uses_standard_otf_as_critical_comparator(self) -> None:
         improved = copy.deepcopy(STANDARD_OTF_METRICS)
         for split in ("fleurs_v2", "artur_j"):
