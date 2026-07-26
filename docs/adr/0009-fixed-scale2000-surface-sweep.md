@@ -180,8 +180,10 @@ proved Surface08 parameter boundary:
 - use only the admitted scale-8000 clean synthetic pool;
 - create transcript-preserving augmented waveform views in memory with the
   deterministic PR #50 OTF implementation;
-- keep the fixed 320,000-exposure hard cap and use ARTUR controller-dev only
-  for aggregate run-control under ADR 0008.
+- retain the original Experiment 0031 schedule contract of a 160,000-exposure
+  primary budget and a 320,000-exposure absolute maximum, with ARTUR
+  controller-dev permitted only for aggregate run-control and early stopping
+  under ADR 0008.
 
 Phase 6 does not change the fixed-data surface-sweep evidence. It is one
 explicitly human-authorized comparison of the linguistic-data axis after the
@@ -207,7 +209,10 @@ Phase 6 completed as Experiment 0031 with classification
 `SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL`. Its selected checkpoint scored
 39.353/12.002/0 on FLEURS-v2 and 39.974/12.251/0 on ARTUR-J. Standard
 deterministic OTF is the selected balanced augmentation control. The one-run
-Phase 6 authorization is consumed.
+Phase 6 authorization is consumed. The earliest-within-tolerance rule selected
+round 5 at 80,000 exposures, the raw-best controller result occurred at round 6
+at 96,000 exposures, and the three-post-best-round rule stopped training at
+round 9 after 144,000 actual exposures.
 
 ## Phase 7 / Work Order 0046
 

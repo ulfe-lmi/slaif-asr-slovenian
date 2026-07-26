@@ -344,11 +344,14 @@ not a benchmark and does not start training.
 
 ## Next Recommended Scientific Axis
 
-Keep Surface08, Experiment 0031 standard deterministic OTF, and the exposure
-budget fixed. Change only the independently constructed Slovenian text-reservoir
-composition to test broader lexical support and rebalanced frequency without
-copying or steering from real-gate words, sentences, missing-form lists, or
-per-word statistics.
+Keep Surface08 and Experiment 0031 standard deterministic OTF fixed. Use a
+separately authorized 144,000-exposure comparison cap, matching Experiment
+0031's actual training exposure and the declared comparison cap used for
+Experiment 0032 and Experiment 0033. This strategic recommendation does not
+authorize the future run. Change only the independently constructed Slovenian
+text-reservoir composition to test broader lexical support and rebalanced
+frequency without copying or steering from real-gate words, sentences,
+missing-form lists, or per-word statistics.
 
 The vocabulary and frequency analyses make this the primary testable
 hypothesis. Acoustic mismatch remains a secondary factor. Any future acoustic

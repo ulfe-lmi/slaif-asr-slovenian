@@ -126,7 +126,10 @@ stronger balanced scale-8000 recipe. No checkpoint is accepted or promoted.
 - Model surface: keep Surface08 fixed for the next controlled data-axis
   comparison.
 - Augmentation: keep Experiment 0031 standard deterministic OTF fixed.
-- Exposure budget: keep the Experiment 0031 budget fixed.
+- Exposure budget: use a separately authorized 144,000-exposure comparison cap,
+  matching Experiment 0031's actual training exposure and the declared
+  comparison cap used for Experiment 0032 and Experiment 0033. This
+  recommendation does not authorize the future run.
 - Next changed variable: independently constructed Slovenian text-reservoir
   composition, with broader lexical support and rebalanced frequency.
 - Broad StrongAug and ParametricVoiceAug escalation: stop.

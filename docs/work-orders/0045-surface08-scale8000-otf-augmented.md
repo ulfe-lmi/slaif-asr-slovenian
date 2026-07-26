@@ -24,6 +24,13 @@ in-memory transcript-preserving augmentation.
 - No pre-rendered augmented WAVs.
 - No real speech, S6TTS, scale-2000, or new rows as training sources.
 
+## Configured Schedule
+
+- Primary exposure budget: 160,000.
+- Absolute maximum: 320,000.
+- Controller early stopping: enabled under ADR 0008.
+- Actual stopped exposure count: 144,000.
+
 ## Result
 
 Experiment 0031 selected round 5 and stopped at round 9 after 144,000 virtual
