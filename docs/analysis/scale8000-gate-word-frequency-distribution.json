@@ -270,19 +270,19 @@
     "fleurs_v2_vs_artur_j": {
       "bootstrap": {
         "full_union_jensen_shannon_divergence_base2": {
-          "p2_5": 0.5954829616590113,
-          "p50": 0.6091517143601298,
-          "p97_5": 0.6236131713073559
+          "p2_5": 0.5954829616590185,
+          "p50": 0.6091517143601287,
+          "p97_5": 0.6236131713073575
         },
         "probability_mass_overlap_coefficient": {
-          "p2_5": 0.2918683871268759,
-          "p50": 0.30827127425854783,
-          "p97_5": 0.3236599416021303
+          "p2_5": 0.29186838712687596,
+          "p50": 0.3082712742585475,
+          "p97_5": 0.3236599416021311
         },
         "shared_conditional_jensen_shannon_divergence_base2": {
-          "p2_5": 0.11260033063228361,
+          "p2_5": 0.11260033063228359,
           "p50": 0.1279374720719917,
-          "p97_5": 0.1449295856801048
+          "p97_5": 0.1449295856801046
         },
         "spearman_rank_correlation_count_at_least_2": {
           "p2_5": 0.42068726850989563,
@@ -305,18 +305,18 @@
       },
       "full_union": {
         "dominant_tv_component": "support_mismatch",
-        "hellinger_distance": 0.7526402994653227,
-        "jensen_shannon_divergence_base2": 0.5807266609968392,
-        "probability_mass_overlap_coefficient": 0.335002929413001,
+        "hellinger_distance": 0.7526402994653323,
+        "jensen_shannon_divergence_base2": 0.580726660996854,
+        "probability_mass_overlap_coefficient": 0.3350029294129998,
         "shared_frequency_tv_component": 0.13855135729468993,
         "support_mismatch_tv_component": 0.5264457132923103,
-        "total_variation_distance": 0.6649970705869837
+        "total_variation_distance": 0.6649970705870002
       },
       "sampling_envelope": {
-        "cross_corpus_median_jsd": 0.6091517143601298,
-        "excess_divergence_ratio": 2.4394117437947793,
+        "cross_corpus_median_jsd": 0.6091517143601287,
+        "excess_divergence_ratio": 2.4394117437947713,
         "label": "ABOVE_SAMPLING_ENVELOPE",
-        "maximum_relevant_within_corpus_jsd_p97_5": 0.24971254480087313
+        "maximum_relevant_within_corpus_jsd_p97_5": 0.24971254480087346
       },
       "shared_form_frequency_ratios": {
         "fraction_of_shared_mass_within_factor_10": 0.9917357460574202,
@@ -329,9 +329,9 @@
         "weighted_median_absolute_log2_ratio": 0.4939226635198784
       },
       "shared_vocabulary_conditional": {
-        "conditional_hellinger_distance": 0.28113540215416527,
-        "conditional_jensen_shannon_divergence_base2": 0.10821139205802592,
-        "conditional_probability_mass_overlap_coefficient": 0.7029303593005672,
+        "conditional_hellinger_distance": 0.2811354021541654,
+        "conditional_jensen_shannon_divergence_base2": 0.10821139205802574,
+        "conditional_probability_mass_overlap_coefficient": 0.7029303593005679,
         "shared_form_token_mass_in_a": 0.4219884336163406,
         "shared_form_token_mass_in_b": 0.5251201397990389,
         "shared_forms": 320
@@ -402,19 +402,19 @@
     "scale8000_vs_artur_j": {
       "bootstrap": {
         "full_union_jensen_shannon_divergence_base2": {
-          "p2_5": 0.5686740773793667,
-          "p50": 0.5828503592080192,
-          "p97_5": 0.5981125406181079
+          "p2_5": 0.5686740773793857,
+          "p50": 0.5828503592080642,
+          "p97_5": 0.5981125406181509
         },
         "probability_mass_overlap_coefficient": {
-          "p2_5": 0.2796527421145136,
+          "p2_5": 0.2796527421145135,
           "p50": 0.29537093868647013,
-          "p97_5": 0.3091464688597254
+          "p97_5": 0.3091464688597253
         },
         "shared_conditional_jensen_shannon_divergence_base2": {
-          "p2_5": 0.296830081703249,
-          "p50": 0.31548003784677037,
-          "p97_5": 0.33540882462594657
+          "p2_5": 0.2968300817032497,
+          "p50": 0.3154800378467707,
+          "p97_5": 0.33540882462594634
         },
         "spearman_rank_correlation_count_at_least_2": {
           "p2_5": 0.35959668270654566,
@@ -437,18 +437,18 @@
       },
       "full_union": {
         "dominant_tv_component": "shared_form_frequency_difference",
-        "hellinger_distance": 0.7133687342812596,
-        "jensen_shannon_divergence_base2": 0.5515354423959465,
-        "probability_mass_overlap_coefficient": 0.3183676465461815,
+        "hellinger_distance": 0.7133687342813727,
+        "jensen_shannon_divergence_base2": 0.5515354423961335,
+        "probability_mass_overlap_coefficient": 0.3183676465461805,
         "shared_frequency_tv_component": 0.3462582436252235,
         "support_mismatch_tv_component": 0.33537410982859606,
-        "total_variation_distance": 0.6816323534535782
+        "total_variation_distance": 0.6816323534538196
       },
       "sampling_envelope": {
-        "cross_corpus_median_jsd": 0.5828503592080192,
-        "excess_divergence_ratio": 2.334085216554892,
+        "cross_corpus_median_jsd": 0.5828503592080642,
+        "excess_divergence_ratio": 2.3340852165550694,
         "label": "ABOVE_SAMPLING_ENVELOPE",
-        "maximum_relevant_within_corpus_jsd_p97_5": 0.24971254480087313
+        "maximum_relevant_within_corpus_jsd_p97_5": 0.24971254480087346
       },
       "shared_form_frequency_ratios": {
         "fraction_of_shared_mass_within_factor_10": 0.9580932928052214,
@@ -461,9 +461,9 @@
         "weighted_median_absolute_log2_ratio": 0.8387628946106639
       },
       "shared_vocabulary_conditional": {
-        "conditional_hellinger_distance": 0.4822774413078183,
-        "conditional_jensen_shannon_divergence_base2": 0.29705035962825255,
-        "conditional_probability_mass_overlap_coefficient": 0.4914480279354556,
+        "conditional_hellinger_distance": 0.4822774413078181,
+        "conditional_jensen_shannon_divergence_base2": 0.29705035962825294,
+        "conditional_probability_mass_overlap_coefficient": 0.49144802793545417,
         "shared_form_token_mass_in_a": 0.4852150830951016,
         "shared_form_token_mass_in_b": 0.8440366972477065,
         "shared_forms": 849
@@ -534,19 +534,19 @@
     "scale8000_vs_fleurs_v2": {
       "bootstrap": {
         "full_union_jensen_shannon_divergence_base2": {
-          "p2_5": 0.5110820994893598,
-          "p50": 0.516513877441878,
-          "p97_5": 0.5226424381250536
+          "p2_5": 0.5110820994893226,
+          "p50": 0.5165138774419185,
+          "p97_5": 0.5226424381250327
         },
         "probability_mass_overlap_coefficient": {
-          "p2_5": 0.3406912756875885,
-          "p50": 0.3478638660641641,
-          "p97_5": 0.35455118546808767
+          "p2_5": 0.3406912756875884,
+          "p50": 0.34786386606416175,
+          "p97_5": 0.35455118546808945
         },
         "shared_conditional_jensen_shannon_divergence_base2": {
-          "p2_5": 0.25041873224964933,
-          "p50": 0.2574280826077404,
-          "p97_5": 0.2651229358814088
+          "p2_5": 0.25041873224964994,
+          "p50": 0.25742808260773997,
+          "p97_5": 0.26512293588140884
         },
         "spearman_rank_correlation_count_at_least_2": {
           "p2_5": 0.26299811928769007,
@@ -569,18 +569,18 @@
       },
       "full_union": {
         "dominant_tv_component": "shared_form_frequency_difference",
-        "hellinger_distance": 0.6796882103809659,
-        "jensen_shannon_divergence_base2": 0.502487050304931,
-        "probability_mass_overlap_coefficient": 0.35756959628627866,
+        "hellinger_distance": 0.6796882103810673,
+        "jensen_shannon_divergence_base2": 0.5024870503050846,
+        "probability_mass_overlap_coefficient": 0.3575695962862743,
         "shared_frequency_tv_component": 0.32172056328891724,
         "support_mismatch_tv_component": 0.3207098404248085,
-        "total_variation_distance": 0.6424304037135057
+        "total_variation_distance": 0.6424304037137257
       },
       "sampling_envelope": {
-        "cross_corpus_median_jsd": 0.516513877441878,
-        "excess_divergence_ratio": 4.808690778355885,
+        "cross_corpus_median_jsd": 0.5165138774419185,
+        "excess_divergence_ratio": 4.808690778356227,
         "label": "ABOVE_SAMPLING_ENVELOPE",
-        "maximum_relevant_within_corpus_jsd_p97_5": 0.1074125788596614
+        "maximum_relevant_within_corpus_jsd_p97_5": 0.10741257885966216
       },
       "shared_form_frequency_ratios": {
         "fraction_of_shared_mass_within_factor_10": 0.9721911944834783,
@@ -593,9 +593,9 @@
         "weighted_median_absolute_log2_ratio": 0.6181881455330862
       },
       "shared_vocabulary_conditional": {
-        "conditional_hellinger_distance": 0.44454675069728583,
-        "conditional_jensen_shannon_divergence_base2": 0.2576106252814249,
-        "conditional_probability_mass_overlap_coefficient": 0.5160359048851383,
+        "conditional_hellinger_distance": 0.44454675069728544,
+        "conditional_jensen_shannon_divergence_base2": 0.25761062528142353,
+        "conditional_probability_mass_overlap_coefficient": 0.5160359048851495,
         "shared_form_token_mass_in_a": 0.5705896706946183,
         "shared_form_token_mass_in_b": 0.7879906484557647,
         "shared_forms": 2144
@@ -682,19 +682,19 @@
   "within_corpus_sampling": {
     "artur_j": {
       "full_union_jensen_shannon_divergence_base2": {
-        "p2_5": 0.1789198762515454,
-        "p50": 0.21353301043791303,
-        "p97_5": 0.24971254480087313
+        "p2_5": 0.17891987625154546,
+        "p50": 0.21353301043791223,
+        "p97_5": 0.24971254480087346
       },
       "probability_mass_overlap_coefficient": {
-        "p2_5": 0.6223364383647022,
-        "p50": 0.6619109760790218,
-        "p97_5": 0.6992409320765668
+        "p2_5": 0.622336438364702,
+        "p50": 0.6619109760790222,
+        "p97_5": 0.6992409320765662
       },
       "shared_conditional_jensen_shannon_divergence_base2": {
-        "p2_5": 0.046380653631763955,
-        "p50": 0.05743969808944602,
-        "p97_5": 0.07022082107165749
+        "p2_5": 0.04638065363176388,
+        "p50": 0.057439698089446115,
+        "p97_5": 0.07022082107165759
       },
       "spearman_rank_correlation_count_at_least_2": {
         "p2_5": 0.5030627167958299,
@@ -704,19 +704,19 @@
     },
     "fleurs_v2": {
       "full_union_jensen_shannon_divergence_base2": {
-        "p2_5": 0.07953996038663058,
-        "p50": 0.09239887425674563,
-        "p97_5": 0.1074125788596614
+        "p2_5": 0.07953996038662926,
+        "p50": 0.09239887425674531,
+        "p97_5": 0.10741257885966216
       },
       "probability_mass_overlap_coefficient": {
-        "p2_5": 0.7634823576128241,
-        "p50": 0.7820752762400426,
-        "p97_5": 0.8011313458501367
+        "p2_5": 0.7634823576128087,
+        "p50": 0.7820752762400446,
+        "p97_5": 0.8011313458501497
       },
       "shared_conditional_jensen_shannon_divergence_base2": {
-        "p2_5": 0.04481729690735537,
-        "p50": 0.05176074933612172,
-        "p97_5": 0.059575361068548154
+        "p2_5": 0.04481729690735558,
+        "p50": 0.051760749336122194,
+        "p97_5": 0.05957536106854762
       },
       "spearman_rank_correlation_count_at_least_2": {
         "p2_5": 0.34502233836890417,
@@ -726,19 +726,19 @@
     },
     "scale8000": {
       "full_union_jensen_shannon_divergence_base2": {
-        "p2_5": 0.021857948607044327,
-        "p50": 0.022278105720985493,
-        "p97_5": 0.022711745618061715
+        "p2_5": 0.021857948607042932,
+        "p50": 0.022278105720986513,
+        "p97_5": 0.022711745618061573
       },
       "probability_mass_overlap_coefficient": {
-        "p2_5": 0.9267485744883448,
-        "p50": 0.9281747768544437,
-        "p97_5": 0.9294599186906051
+        "p2_5": 0.9267485744883688,
+        "p50": 0.9281747768544553,
+        "p97_5": 0.9294599186906596
       },
       "shared_conditional_jensen_shannon_divergence_base2": {
-        "p2_5": 0.010501448379719544,
-        "p50": 0.01076145002355734,
-        "p97_5": 0.01102605846872102
+        "p2_5": 0.010501448379720505,
+        "p50": 0.010761450023558147,
+        "p97_5": 0.011026058468721109
       },
       "spearman_rank_correlation_count_at_least_2": {
         "p2_5": 0.8549972503861198,

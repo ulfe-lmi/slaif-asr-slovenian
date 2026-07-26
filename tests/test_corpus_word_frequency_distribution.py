@@ -4,8 +4,12 @@ import copy
 import io
 import json
 import math
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
+from collections import Counter
 from contextlib import redirect_stderr
 from pathlib import Path
 from unittest import mock
@@ -25,6 +29,7 @@ from scripts.analyze_corpus_word_frequency_distribution import (
     frequency_of_frequency_profile,
     full_union_distribution_metrics,
     normalized_probabilities,
+    pairwise_point_metrics,
     render_markdown,
     run_bootstrap_analysis,
     shared_conditional_distribution_metrics,
@@ -81,6 +86,18 @@ def fake_report() -> dict[str, object]:
         datasets["fleurs_v2"],
         datasets["artur_j"],
         bootstrap_replicates=20,
+    )
+
+
+def reverse_counter_insertion_order(
+    dataset: frequency.DatasetFrequency,
+) -> frequency.DatasetFrequency:
+    return frequency.DatasetFrequency(
+        binding=dataset.binding,
+        token_counts=Counter(dict(reversed(tuple(dataset.token_counts.items())))),
+        row_token_counts=tuple(
+            Counter(dict(reversed(tuple(row.items())))) for row in dataset.row_token_counts
+        ),
     )
 
 
@@ -153,6 +170,16 @@ class CorpusWordFrequencyDistributionTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first[0], 3)
         self.assertAlmostEqual(first[1], -1.0)
+
+    def test_point_metrics_are_identical_across_dictionary_insertion_orders(self) -> None:
+        counts_a = {"z": 7, "a": 5, "č": 3, "m": 2, "x": 1}
+        counts_b = {"m": 8, "č": 4, "a": 3, "q": 2, "z": 1}
+        expected = pairwise_point_metrics(counts_a, counts_b)
+        reordered = pairwise_point_metrics(
+            dict(reversed(tuple(counts_a.items()))),
+            dict(reversed(tuple(counts_b.items()))),
+        )
+        self.assertEqual(expected, reordered)
 
     def test_top_k_with_no_boundary_tie_preserves_effective_k(self) -> None:
         metrics = top_k_agreement_metrics(
@@ -242,6 +269,33 @@ class CorpusWordFrequencyDistributionTests(unittest.TestCase):
             self.assertNotIn(lexical_fixture, serialized)
         self.assertIn("Top-k sets are tie-inclusive", markdown)
 
+    def test_tie_inclusive_top_k_is_unchanged_by_deterministic_reductions(self) -> None:
+        metrics = top_k_agreement_metrics(
+            {"shared_high": 5, "shared_tie": 4, "a_extra": 4},
+            {
+                "shared_high": 5,
+                "shared_tie": 4,
+                "b_extra_1": 4,
+                "b_extra_2": 4,
+            },
+            2,
+        )
+        self.assertEqual(
+            metrics,
+            {
+                "requested_k": 2,
+                "effective_k_in_a": 3,
+                "cutoff_occurrence_count_in_a": 4,
+                "tie_expansion_count_in_a": 1,
+                "effective_k_in_b": 4,
+                "cutoff_occurrence_count_in_b": 4,
+                "tie_expansion_count_in_b": 2,
+                "shared_forms": 2,
+                "jaccard_similarity": 0.4,
+                "overlap_coefficient": 2 / 3,
+            },
+        )
+
     def test_frequency_of_frequency_bands_are_correct(self) -> None:
         counts = {
             "a": 1,
@@ -277,6 +331,83 @@ class CorpusWordFrequencyDistributionTests(unittest.TestCase):
         first = run_bootstrap_analysis(datasets, replicates=12, seed=480049)
         second = run_bootstrap_analysis(datasets, replicates=12, seed=480049)
         self.assertEqual(first, second)
+
+    def test_bootstrap_is_identical_across_dictionary_insertion_orders(self) -> None:
+        datasets = fake_datasets()
+        reversed_datasets = {
+            key: reverse_counter_insertion_order(datasets[key])
+            for key in reversed(tuple(datasets))
+        }
+        expected = run_bootstrap_analysis(datasets, replicates=12, seed=480049)
+        reordered = run_bootstrap_analysis(
+            reversed_datasets,
+            replicates=12,
+            seed=480049,
+        )
+        self.assertEqual(expected, reordered)
+
+    def test_serialized_fixture_is_identical_across_python_hash_seeds(self) -> None:
+        script = """
+import json
+from scripts.analyze_corpus_word_frequency_distribution import (
+    ARTUR_J_DATASET_ID,
+    FLEURS_V2_DATASET_ID,
+    SCALE8000_DATASET_ID,
+    build_aggregate_report,
+    dataset_from_texts,
+)
+
+def dataset(key, dataset_id, role, marker, texts):
+    return dataset_from_texts(
+        key=key,
+        dataset_id=dataset_id,
+        source_role=role,
+        source_sha256=marker * 64,
+        texts=texts,
+    )
+
+report = build_aggregate_report(
+    dataset(
+        "scale8000",
+        SCALE8000_DATASET_ID,
+        "synthetic_training_text",
+        "a",
+        ["skupno ena ena", "skupno dve", "skupno tri", "skupno ena"],
+    ),
+    dataset(
+        "fleurs_v2",
+        FLEURS_V2_DATASET_ID,
+        "immutable_real_gate",
+        "b",
+        ["skupno ena", "skupno štiri štiri", "skupno dve", "skupno štiri"],
+    ),
+    dataset(
+        "artur_j",
+        ARTUR_J_DATASET_ID,
+        "immutable_real_gate",
+        "c",
+        ["skupno pet", "skupno ena", "skupno pet pet", "skupno dve"],
+    ),
+    bootstrap_replicates=20,
+)
+print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+"""
+        outputs: list[bytes] = []
+        repository_root = Path(__file__).resolve().parents[1]
+        for hash_seed in ("1", "2", "123456"):
+            environment = os.environ.copy()
+            environment["PYTHONHASHSEED"] = hash_seed
+            completed = subprocess.run(
+                [sys.executable, "-c", script],
+                cwd=repository_root,
+                env=environment,
+                check=True,
+                capture_output=True,
+            )
+            self.assertEqual(completed.stderr, b"")
+            outputs.append(completed.stdout)
+        self.assertEqual(outputs[0], outputs[1])
+        self.assertEqual(outputs[0], outputs[2])
 
     def test_bootstrap_confidence_intervals_are_ordered_and_finite(self) -> None:
         interval = confidence_interval([0.4, 0.1, 0.9, 0.2, 0.6])
@@ -434,6 +565,12 @@ class CorpusWordFrequencyDistributionTests(unittest.TestCase):
                     walk(child)
 
         walk(report)
+
+    def test_deterministic_report_preserves_aggregate_privacy_validation(self) -> None:
+        report = fake_report()
+        assert_aggregate_only_report(report)
+        markdown = render_markdown(report)
+        assert_markdown_aggregate_only(markdown)
 
     def test_non_finite_numbers_are_rejected(self) -> None:
         report = fake_report()
