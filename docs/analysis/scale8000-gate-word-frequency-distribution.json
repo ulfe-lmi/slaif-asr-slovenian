@@ -1,0 +1,751 @@
+{
+  "analysis_role": "read_only_aggregate_corpus_diagnostic",
+  "bootstrap_policy": {
+    "lower_percentile": 2.5,
+    "median_percentile": 50.0,
+    "pretokenization": "fixed_policy_applied_once_then_sampled_row_counters_reused_exactly",
+    "random_seed": 480049,
+    "replicates": 1000,
+    "sampling": "independent_rows_with_replacement_preserving_original_row_count",
+    "unit": "row_utterance",
+    "upper_percentile": 97.5
+  },
+  "classification": "WORD_FREQUENCY_DISTRIBUTION_ANALYSIS_COMPLETE",
+  "datasets": {
+    "artur_j": {
+      "concentration": {
+        "effective_vocabulary_size_shannon": 583.5174538832692,
+        "normalized_shannon_entropy": 0.9019647042237808,
+        "shannon_entropy_bits": 9.188631999527807,
+        "simpson_concentration": 0.005464812527710071,
+        "top_k_token_mass": {
+          "k_10": {
+            "effective_k": 10,
+            "requested_k": 10,
+            "token_mass": 0.18610747051114024
+          },
+          "k_100": {
+            "effective_k": 100,
+            "requested_k": 100,
+            "token_mass": 0.4434250764525994
+          },
+          "k_50": {
+            "effective_k": 50,
+            "requested_k": 50,
+            "token_mass": 0.3521188291830494
+          },
+          "k_500": {
+            "effective_k": 500,
+            "requested_k": 500,
+            "token_mass": 0.709043250327654
+          }
+        }
+      },
+      "frequency_of_frequency": {
+        "11_to_50": {
+          "fraction_of_tokens": 0.17212756662297946,
+          "fraction_of_unique_forms": 0.016295025728987993,
+          "tokens_contributed": 394,
+          "unique_forms": 19
+        },
+        "3_to_5": {
+          "fraction_of_tokens": 0.13062472695500219,
+          "fraction_of_unique_forms": 0.07032590051457976,
+          "tokens_contributed": 299,
+          "unique_forms": 82
+        },
+        "6_to_10": {
+          "fraction_of_tokens": 0.09523809523809523,
+          "fraction_of_unique_forms": 0.025728987993138937,
+          "tokens_contributed": 218,
+          "unique_forms": 30
+        },
+        "exactly_1": {
+          "fraction_of_tokens": 0.38968982088248144,
+          "fraction_of_unique_forms": 0.7650085763293311,
+          "tokens_contributed": 892,
+          "unique_forms": 892
+        },
+        "exactly_2": {
+          "fraction_of_tokens": 0.12232415902140673,
+          "fraction_of_unique_forms": 0.12006861063464837,
+          "tokens_contributed": 280,
+          "unique_forms": 140
+        },
+        "more_than_50": {
+          "fraction_of_tokens": 0.08999563128003495,
+          "fraction_of_unique_forms": 0.002572898799313894,
+          "tokens_contributed": 206,
+          "unique_forms": 3
+        }
+      },
+      "row_count": 256,
+      "total_word_tokens": 2289,
+      "unique_word_forms": 1166
+    },
+    "fleurs_v2": {
+      "concentration": {
+        "effective_vocabulary_size_shannon": 1203.1429463845766,
+        "normalized_shannon_entropy": 0.8680888330751669,
+        "shannon_entropy_bits": 10.23259234512171,
+        "simpson_concentration": 0.005386534113630986,
+        "top_k_token_mass": {
+          "k_10": {
+            "effective_k": 10,
+            "requested_k": 10,
+            "token_mass": 0.1967515688445921
+          },
+          "k_100": {
+            "effective_k": 100,
+            "requested_k": 100,
+            "token_mass": 0.3836594069152209
+          },
+          "k_50": {
+            "effective_k": 50,
+            "requested_k": 50,
+            "token_mass": 0.3306878306878307
+          },
+          "k_500": {
+            "effective_k": 500,
+            "requested_k": 500,
+            "token_mass": 0.5510643533899348
+          }
+        }
+      },
+      "frequency_of_frequency": {
+        "11_to_50": {
+          "fraction_of_tokens": 0.12766088347483695,
+          "fraction_of_unique_forms": 0.0297029702970297,
+          "tokens_contributed": 2075,
+          "unique_forms": 105
+        },
+        "3_to_5": {
+          "fraction_of_tokens": 0.330072597514458,
+          "fraction_of_unique_forms": 0.46874115983026876,
+          "tokens_contributed": 5365,
+          "unique_forms": 1657
+        },
+        "6_to_10": {
+          "fraction_of_tokens": 0.10741971207087486,
+          "fraction_of_unique_forms": 0.06930693069306931,
+          "tokens_contributed": 1746,
+          "unique_forms": 245
+        },
+        "exactly_1": {
+          "fraction_of_tokens": 0.027808539436446414,
+          "fraction_of_unique_forms": 0.12786421499292785,
+          "tokens_contributed": 452,
+          "unique_forms": 452
+        },
+        "exactly_2": {
+          "fraction_of_tokens": 0.12919896640826872,
+          "fraction_of_unique_forms": 0.297029702970297,
+          "tokens_contributed": 2100,
+          "unique_forms": 1050
+        },
+        "more_than_50": {
+          "fraction_of_tokens": 0.27783930109511507,
+          "fraction_of_unique_forms": 0.007355021216407355,
+          "tokens_contributed": 4516,
+          "unique_forms": 26
+        }
+      },
+      "row_count": 834,
+      "total_word_tokens": 16254,
+      "unique_word_forms": 3535
+    },
+    "scale8000": {
+      "concentration": {
+        "effective_vocabulary_size_shannon": 1368.7663705933255,
+        "normalized_shannon_entropy": 0.7060011324521792,
+        "shannon_entropy_bits": 10.418660504267274,
+        "simpson_concentration": 0.00861971374231331,
+        "top_k_token_mass": {
+          "k_10": {
+            "effective_k": 10,
+            "requested_k": 10,
+            "token_mass": 0.24485528537220694
+          },
+          "k_100": {
+            "effective_k": 100,
+            "requested_k": 100,
+            "token_mass": 0.45933329497818715
+          },
+          "k_50": {
+            "effective_k": 50,
+            "requested_k": 50,
+            "token_mass": 0.3946387441202553
+          },
+          "k_500": {
+            "effective_k": 500,
+            "requested_k": 500,
+            "token_mass": 0.6289853807376489
+          }
+        }
+      },
+      "frequency_of_frequency": {
+        "11_to_50": {
+          "fraction_of_tokens": 0.15368576422298094,
+          "fraction_of_unique_forms": 0.12634505669098,
+          "tokens_contributed": 77467,
+          "unique_forms": 3499
+        },
+        "3_to_5": {
+          "fraction_of_tokens": 0.03401572428733824,
+          "fraction_of_unique_forms": 0.16527045569437424,
+          "tokens_contributed": 17146,
+          "unique_forms": 4577
+        },
+        "6_to_10": {
+          "fraction_of_tokens": 0.040264967930468736,
+          "fraction_of_unique_forms": 0.09633855708817794,
+          "tokens_contributed": 20296,
+          "unique_forms": 2668
+        },
+        "exactly_1": {
+          "fraction_of_tokens": 0.023013087701686898,
+          "fraction_of_unique_forms": 0.4188632916877302,
+          "tokens_contributed": 11600,
+          "unique_forms": 11600
+        },
+        "exactly_2": {
+          "fraction_of_tokens": 0.016466261027931143,
+          "fraction_of_unique_forms": 0.14985195349173105,
+          "tokens_contributed": 8300,
+          "unique_forms": 4150
+        },
+        "more_than_50": {
+          "fraction_of_tokens": 0.732554194829594,
+          "fraction_of_unique_forms": 0.04333068534700657,
+          "tokens_contributed": 369252,
+          "unique_forms": 1200
+        }
+      },
+      "row_count": 64000,
+      "total_word_tokens": 504061,
+      "unique_word_forms": 27694
+    }
+  },
+  "input_bindings": {
+    "artur_j": {
+      "dataset_id": "artur-j-public-gate-v1",
+      "row_count": 256,
+      "source_role": "immutable_real_gate",
+      "source_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763"
+    },
+    "fleurs_v2": {
+      "dataset_id": "fleurs-sl-si-test-full-v2",
+      "row_count": 834,
+      "source_role": "immutable_real_gate",
+      "source_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513"
+    },
+    "scale8000": {
+      "dataset_id": "sl-corpus-v5-scale8000-training-v1",
+      "row_count": 64000,
+      "source_role": "synthetic_training_text",
+      "source_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd"
+    }
+  },
+  "interpretation_policy": {
+    "effect_sizes_and_sampling_envelopes_required": true,
+    "representativeness_claim": false,
+    "sampling_labels_only": "WITHIN_SAMPLING_ENVELOPE_or_ABOVE_SAMPLING_ENVELOPE",
+    "single_metric_equivalence_claim": false
+  },
+  "normalization": {
+    "analysis_units": "normalized_surface_word_forms_not_lemmas_morphemes_or_tokenizer_units",
+    "case_handling": "casefold_lowercase",
+    "lemmatization": "none",
+    "mixed_letter_number_tokens": "retained",
+    "mode": "normalized_word_forms",
+    "normalizer": "sl-asr-normalization-v1",
+    "numeric_only_tokens": "excluded",
+    "punctuation": "split",
+    "slovenian_diacritics": "preserved",
+    "stemming": "none",
+    "token_policy": "unicode_alnum_tokens_requiring_letter_casefold_nfc_no_lemmatization",
+    "unicode_normalization": "NFC"
+  },
+  "pairwise": {
+    "fleurs_v2_vs_artur_j": {
+      "bootstrap": {
+        "full_union_jensen_shannon_divergence_base2": {
+          "p2_5": 0.5954829616590113,
+          "p50": 0.6091517143601298,
+          "p97_5": 0.6236131713073559
+        },
+        "probability_mass_overlap_coefficient": {
+          "p2_5": 0.2918683871268759,
+          "p50": 0.30827127425854783,
+          "p97_5": 0.3236599416021303
+        },
+        "shared_conditional_jensen_shannon_divergence_base2": {
+          "p2_5": 0.11260033063228361,
+          "p50": 0.1279374720719917,
+          "p97_5": 0.1449295856801048
+        },
+        "spearman_rank_correlation_count_at_least_2": {
+          "p2_5": 0.42068726850989563,
+          "p50": 0.5177141631949644,
+          "p97_5": 0.6099956066174543
+        }
+      },
+      "dataset_a": "fleurs_v2",
+      "dataset_b": "artur_j",
+      "frequency_rank_similarity": {
+        "all_shared_forms": {
+          "eligible_forms": 320,
+          "spearman_rank_correlation": 0.4887913652347427
+        },
+        "count_at_least_2_in_both": {
+          "eligible_forms": 143,
+          "spearman_rank_correlation": 0.5275122057483684
+        },
+        "tie_policy": "average_ranks_count_descending_codepoint_tiebreak"
+      },
+      "full_union": {
+        "dominant_tv_component": "support_mismatch",
+        "hellinger_distance": 0.7526402994653227,
+        "jensen_shannon_divergence_base2": 0.5807266609968392,
+        "probability_mass_overlap_coefficient": 0.335002929413001,
+        "shared_frequency_tv_component": 0.13855135729468993,
+        "support_mismatch_tv_component": 0.5264457132923103,
+        "total_variation_distance": 0.6649970705869837
+      },
+      "sampling_envelope": {
+        "cross_corpus_median_jsd": 0.6091517143601298,
+        "excess_divergence_ratio": 2.4394117437947793,
+        "label": "ABOVE_SAMPLING_ENVELOPE",
+        "maximum_relevant_within_corpus_jsd_p97_5": 0.24971254480087313
+      },
+      "shared_form_frequency_ratios": {
+        "fraction_of_shared_mass_within_factor_10": 0.9917357460574202,
+        "fraction_of_shared_mass_within_factor_2": 0.7499309206092465,
+        "fraction_of_shared_mass_within_factor_4": 0.9615429977085861,
+        "shared_forms": 320,
+        "shared_mass_weight_sum": 0.3350029294129998,
+        "symmetric_mass_weighting": "minimum_empirical_probability",
+        "weighted_mean_absolute_log2_ratio": 0.6557580358624655,
+        "weighted_median_absolute_log2_ratio": 0.4939226635198784
+      },
+      "shared_vocabulary_conditional": {
+        "conditional_hellinger_distance": 0.28113540215416527,
+        "conditional_jensen_shannon_divergence_base2": 0.10821139205802592,
+        "conditional_probability_mass_overlap_coefficient": 0.7029303593005672,
+        "shared_form_token_mass_in_a": 0.4219884336163406,
+        "shared_form_token_mass_in_b": 0.5251201397990389,
+        "shared_forms": 320
+      },
+      "top_k_vocabulary_agreement": {
+        "k_10": {
+          "cutoff_occurrence_count_in_a": 149,
+          "cutoff_occurrence_count_in_b": 23,
+          "effective_k_in_a": 10,
+          "effective_k_in_b": 10,
+          "jaccard_similarity": 0.8181818181818182,
+          "overlap_coefficient": 0.9,
+          "requested_k": 10,
+          "shared_forms": 9,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 0
+        },
+        "k_100": {
+          "cutoff_occurrence_count_in_a": 12,
+          "cutoff_occurrence_count_in_b": 3,
+          "effective_k_in_a": 114,
+          "effective_k_in_b": 134,
+          "jaccard_similarity": 0.2849740932642487,
+          "overlap_coefficient": 0.4824561403508772,
+          "requested_k": 100,
+          "shared_forms": 55,
+          "tie_expansion_count_in_a": 14,
+          "tie_expansion_count_in_b": 34
+        },
+        "k_1000": {
+          "cutoff_occurrence_count_in_a": 3,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 2033,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.08624787775891342,
+          "overlap_coefficient": 0.21783876500857632,
+          "requested_k": 1000,
+          "shared_forms": 254,
+          "tie_expansion_count_in_a": 1033,
+          "tie_expansion_count_in_b": 166
+        },
+        "k_50": {
+          "cutoff_occurrence_count_in_a": 27,
+          "cutoff_occurrence_count_in_b": 6,
+          "effective_k_in_a": 51,
+          "effective_k_in_b": 52,
+          "jaccard_similarity": 0.35526315789473684,
+          "overlap_coefficient": 0.5294117647058824,
+          "requested_k": 50,
+          "shared_forms": 27,
+          "tie_expansion_count_in_a": 1,
+          "tie_expansion_count_in_b": 2
+        },
+        "k_500": {
+          "cutoff_occurrence_count_in_a": 5,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 515,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.10957095709570958,
+          "overlap_coefficient": 0.32233009708737864,
+          "requested_k": 500,
+          "shared_forms": 166,
+          "tie_expansion_count_in_a": 15,
+          "tie_expansion_count_in_b": 666
+        }
+      }
+    },
+    "scale8000_vs_artur_j": {
+      "bootstrap": {
+        "full_union_jensen_shannon_divergence_base2": {
+          "p2_5": 0.5686740773793667,
+          "p50": 0.5828503592080192,
+          "p97_5": 0.5981125406181079
+        },
+        "probability_mass_overlap_coefficient": {
+          "p2_5": 0.2796527421145136,
+          "p50": 0.29537093868647013,
+          "p97_5": 0.3091464688597254
+        },
+        "shared_conditional_jensen_shannon_divergence_base2": {
+          "p2_5": 0.296830081703249,
+          "p50": 0.31548003784677037,
+          "p97_5": 0.33540882462594657
+        },
+        "spearman_rank_correlation_count_at_least_2": {
+          "p2_5": 0.35959668270654566,
+          "p50": 0.4379306513331033,
+          "p97_5": 0.5131147807480678
+        }
+      },
+      "dataset_a": "scale8000",
+      "dataset_b": "artur_j",
+      "frequency_rank_similarity": {
+        "all_shared_forms": {
+          "eligible_forms": 849,
+          "spearman_rank_correlation": 0.3852654989367427
+        },
+        "count_at_least_2_in_both": {
+          "eligible_forms": 236,
+          "spearman_rank_correlation": 0.5404138561342566
+        },
+        "tie_policy": "average_ranks_count_descending_codepoint_tiebreak"
+      },
+      "full_union": {
+        "dominant_tv_component": "shared_form_frequency_difference",
+        "hellinger_distance": 0.7133687342812596,
+        "jensen_shannon_divergence_base2": 0.5515354423959465,
+        "probability_mass_overlap_coefficient": 0.3183676465461815,
+        "shared_frequency_tv_component": 0.3462582436252235,
+        "support_mismatch_tv_component": 0.33537410982859606,
+        "total_variation_distance": 0.6816323534535782
+      },
+      "sampling_envelope": {
+        "cross_corpus_median_jsd": 0.5828503592080192,
+        "excess_divergence_ratio": 2.334085216554892,
+        "label": "ABOVE_SAMPLING_ENVELOPE",
+        "maximum_relevant_within_corpus_jsd_p97_5": 0.24971254480087313
+      },
+      "shared_form_frequency_ratios": {
+        "fraction_of_shared_mass_within_factor_10": 0.9580932928052214,
+        "fraction_of_shared_mass_within_factor_2": 0.6366023458845923,
+        "fraction_of_shared_mass_within_factor_4": 0.8831491958296741,
+        "shared_forms": 849,
+        "shared_mass_weight_sum": 0.3183676465461805,
+        "symmetric_mass_weighting": "minimum_empirical_probability",
+        "weighted_mean_absolute_log2_ratio": 1.0319579550203202,
+        "weighted_median_absolute_log2_ratio": 0.8387628946106639
+      },
+      "shared_vocabulary_conditional": {
+        "conditional_hellinger_distance": 0.4822774413078183,
+        "conditional_jensen_shannon_divergence_base2": 0.29705035962825255,
+        "conditional_probability_mass_overlap_coefficient": 0.4914480279354556,
+        "shared_form_token_mass_in_a": 0.4852150830951016,
+        "shared_form_token_mass_in_b": 0.8440366972477065,
+        "shared_forms": 849
+      },
+      "top_k_vocabulary_agreement": {
+        "k_10": {
+          "cutoff_occurrence_count_in_a": 4943,
+          "cutoff_occurrence_count_in_b": 23,
+          "effective_k_in_a": 10,
+          "effective_k_in_b": 10,
+          "jaccard_similarity": 0.42857142857142855,
+          "overlap_coefficient": 0.6,
+          "requested_k": 10,
+          "shared_forms": 6,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 0
+        },
+        "k_100": {
+          "cutoff_occurrence_count_in_a": 484,
+          "cutoff_occurrence_count_in_b": 3,
+          "effective_k_in_a": 100,
+          "effective_k_in_b": 134,
+          "jaccard_similarity": 0.3,
+          "overlap_coefficient": 0.54,
+          "requested_k": 100,
+          "shared_forms": 54,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 34
+        },
+        "k_1000": {
+          "cutoff_occurrence_count_in_a": 61,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 1002,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.1356731272917758,
+          "overlap_coefficient": 0.25848303393213573,
+          "requested_k": 1000,
+          "shared_forms": 259,
+          "tie_expansion_count_in_a": 2,
+          "tie_expansion_count_in_b": 166
+        },
+        "k_50": {
+          "cutoff_occurrence_count_in_a": 955,
+          "cutoff_occurrence_count_in_b": 6,
+          "effective_k_in_a": 50,
+          "effective_k_in_b": 52,
+          "jaccard_similarity": 0.36,
+          "overlap_coefficient": 0.54,
+          "requested_k": 50,
+          "shared_forms": 27,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 2
+        },
+        "k_500": {
+          "cutoff_occurrence_count_in_a": 113,
+          "cutoff_occurrence_count_in_b": 1,
+          "effective_k_in_a": 505,
+          "effective_k_in_b": 1166,
+          "jaccard_similarity": 0.11548731642189586,
+          "overlap_coefficient": 0.3425742574257426,
+          "requested_k": 500,
+          "shared_forms": 173,
+          "tie_expansion_count_in_a": 5,
+          "tie_expansion_count_in_b": 666
+        }
+      }
+    },
+    "scale8000_vs_fleurs_v2": {
+      "bootstrap": {
+        "full_union_jensen_shannon_divergence_base2": {
+          "p2_5": 0.5110820994893598,
+          "p50": 0.516513877441878,
+          "p97_5": 0.5226424381250536
+        },
+        "probability_mass_overlap_coefficient": {
+          "p2_5": 0.3406912756875885,
+          "p50": 0.3478638660641641,
+          "p97_5": 0.35455118546808767
+        },
+        "shared_conditional_jensen_shannon_divergence_base2": {
+          "p2_5": 0.25041873224964933,
+          "p50": 0.2574280826077404,
+          "p97_5": 0.2651229358814088
+        },
+        "spearman_rank_correlation_count_at_least_2": {
+          "p2_5": 0.26299811928769007,
+          "p50": 0.30151367334916485,
+          "p97_5": 0.3426687059610946
+        }
+      },
+      "dataset_a": "scale8000",
+      "dataset_b": "fleurs_v2",
+      "frequency_rank_similarity": {
+        "all_shared_forms": {
+          "eligible_forms": 2144,
+          "spearman_rank_correlation": 0.28155283740305703
+        },
+        "count_at_least_2_in_both": {
+          "eligible_forms": 1631,
+          "spearman_rank_correlation": 0.30756512659442986
+        },
+        "tie_policy": "average_ranks_count_descending_codepoint_tiebreak"
+      },
+      "full_union": {
+        "dominant_tv_component": "shared_form_frequency_difference",
+        "hellinger_distance": 0.6796882103809659,
+        "jensen_shannon_divergence_base2": 0.502487050304931,
+        "probability_mass_overlap_coefficient": 0.35756959628627866,
+        "shared_frequency_tv_component": 0.32172056328891724,
+        "support_mismatch_tv_component": 0.3207098404248085,
+        "total_variation_distance": 0.6424304037135057
+      },
+      "sampling_envelope": {
+        "cross_corpus_median_jsd": 0.516513877441878,
+        "excess_divergence_ratio": 4.808690778355885,
+        "label": "ABOVE_SAMPLING_ENVELOPE",
+        "maximum_relevant_within_corpus_jsd_p97_5": 0.1074125788596614
+      },
+      "shared_form_frequency_ratios": {
+        "fraction_of_shared_mass_within_factor_10": 0.9721911944834783,
+        "fraction_of_shared_mass_within_factor_2": 0.6386803834774706,
+        "fraction_of_shared_mass_within_factor_4": 0.8540303371349417,
+        "shared_forms": 2144,
+        "shared_mass_weight_sum": 0.3575695962862743,
+        "symmetric_mass_weighting": "minimum_empirical_probability",
+        "weighted_mean_absolute_log2_ratio": 0.990382619295148,
+        "weighted_median_absolute_log2_ratio": 0.6181881455330862
+      },
+      "shared_vocabulary_conditional": {
+        "conditional_hellinger_distance": 0.44454675069728583,
+        "conditional_jensen_shannon_divergence_base2": 0.2576106252814249,
+        "conditional_probability_mass_overlap_coefficient": 0.5160359048851383,
+        "shared_form_token_mass_in_a": 0.5705896706946183,
+        "shared_form_token_mass_in_b": 0.7879906484557647,
+        "shared_forms": 2144
+      },
+      "top_k_vocabulary_agreement": {
+        "k_10": {
+          "cutoff_occurrence_count_in_a": 4943,
+          "cutoff_occurrence_count_in_b": 149,
+          "effective_k_in_a": 10,
+          "effective_k_in_b": 10,
+          "jaccard_similarity": 0.42857142857142855,
+          "overlap_coefficient": 0.6,
+          "requested_k": 10,
+          "shared_forms": 6,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 0
+        },
+        "k_100": {
+          "cutoff_occurrence_count_in_a": 484,
+          "cutoff_occurrence_count_in_b": 12,
+          "effective_k_in_a": 100,
+          "effective_k_in_b": 114,
+          "jaccard_similarity": 0.34591194968553457,
+          "overlap_coefficient": 0.55,
+          "requested_k": 100,
+          "shared_forms": 55,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 14
+        },
+        "k_1000": {
+          "cutoff_occurrence_count_in_a": 61,
+          "cutoff_occurrence_count_in_b": 3,
+          "effective_k_in_a": 1002,
+          "effective_k_in_b": 2033,
+          "jaccard_similarity": 0.11090775988286969,
+          "overlap_coefficient": 0.3023952095808383,
+          "requested_k": 1000,
+          "shared_forms": 303,
+          "tie_expansion_count_in_a": 2,
+          "tie_expansion_count_in_b": 1033
+        },
+        "k_50": {
+          "cutoff_occurrence_count_in_a": 955,
+          "cutoff_occurrence_count_in_b": 27,
+          "effective_k_in_a": 50,
+          "effective_k_in_b": 51,
+          "jaccard_similarity": 0.4027777777777778,
+          "overlap_coefficient": 0.58,
+          "requested_k": 50,
+          "shared_forms": 29,
+          "tie_expansion_count_in_a": 0,
+          "tie_expansion_count_in_b": 1
+        },
+        "k_500": {
+          "cutoff_occurrence_count_in_a": 113,
+          "cutoff_occurrence_count_in_b": 5,
+          "effective_k_in_a": 505,
+          "effective_k_in_b": 515,
+          "jaccard_similarity": 0.1630558722919042,
+          "overlap_coefficient": 0.28316831683168314,
+          "requested_k": 500,
+          "shared_forms": 143,
+          "tie_expansion_count_in_a": 5,
+          "tie_expansion_count_in_b": 15
+        }
+      }
+    }
+  },
+  "safety": {
+    "asr_evaluation_run": false,
+    "corpus_modified": false,
+    "full_gate_wordlists_committed": false,
+    "individual_gate_statistics_committed": false,
+    "local_paths_or_manifests_committed": false,
+    "missing_gate_wordlists_committed": false,
+    "new_text_generated": false,
+    "raw_references_committed": false,
+    "top_or_ranked_gate_wordlists_committed": false,
+    "training_run": false,
+    "used_for_generation_prompting": false,
+    "used_for_training_selection": false
+  },
+  "schema_version": "1.0",
+  "within_corpus_sampling": {
+    "artur_j": {
+      "full_union_jensen_shannon_divergence_base2": {
+        "p2_5": 0.1789198762515454,
+        "p50": 0.21353301043791303,
+        "p97_5": 0.24971254480087313
+      },
+      "probability_mass_overlap_coefficient": {
+        "p2_5": 0.6223364383647022,
+        "p50": 0.6619109760790218,
+        "p97_5": 0.6992409320765668
+      },
+      "shared_conditional_jensen_shannon_divergence_base2": {
+        "p2_5": 0.046380653631763955,
+        "p50": 0.05743969808944602,
+        "p97_5": 0.07022082107165749
+      },
+      "spearman_rank_correlation_count_at_least_2": {
+        "p2_5": 0.5030627167958299,
+        "p50": 0.6176570471372181,
+        "p97_5": 0.7062520745433603
+      }
+    },
+    "fleurs_v2": {
+      "full_union_jensen_shannon_divergence_base2": {
+        "p2_5": 0.07953996038663058,
+        "p50": 0.09239887425674563,
+        "p97_5": 0.1074125788596614
+      },
+      "probability_mass_overlap_coefficient": {
+        "p2_5": 0.7634823576128241,
+        "p50": 0.7820752762400426,
+        "p97_5": 0.8011313458501367
+      },
+      "shared_conditional_jensen_shannon_divergence_base2": {
+        "p2_5": 0.04481729690735537,
+        "p50": 0.05176074933612172,
+        "p97_5": 0.059575361068548154
+      },
+      "spearman_rank_correlation_count_at_least_2": {
+        "p2_5": 0.34502233836890417,
+        "p50": 0.4341892018126948,
+        "p97_5": 0.5197043449481576
+      }
+    },
+    "scale8000": {
+      "full_union_jensen_shannon_divergence_base2": {
+        "p2_5": 0.021857948607044327,
+        "p50": 0.022278105720985493,
+        "p97_5": 0.022711745618061715
+      },
+      "probability_mass_overlap_coefficient": {
+        "p2_5": 0.9267485744883448,
+        "p50": 0.9281747768544437,
+        "p97_5": 0.9294599186906051
+      },
+      "shared_conditional_jensen_shannon_divergence_base2": {
+        "p2_5": 0.010501448379719544,
+        "p50": 0.01076145002355734,
+        "p97_5": 0.01102605846872102
+      },
+      "spearman_rank_correlation_count_at_least_2": {
+        "p2_5": 0.8549972503861198,
+        "p50": 0.8597442823850985,
+        "p97_5": 0.8636947030554747
+      }
+    }
+  },
+  "work_order_id": "0049"
+}
