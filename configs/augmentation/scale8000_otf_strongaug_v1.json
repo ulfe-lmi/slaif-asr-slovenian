@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "scale8000-otf-strongaug-v1",
+  "augmentation_key": "scale8000-otf-strongaug-v1",
+  "algorithm_version": "otf-strongaug-v1",
+  "round_size_exposures": 16000,
+  "max_rounds": 9,
+  "max_operations_per_sample": 3,
+  "disk_output": false,
+  "transcript_preserved": true,
+  "phases": {
+    "coverage": {
+      "rounds": [1, 2, 3, 4],
+      "standard_fraction": 0.7,
+      "strong_fraction": 0.3
+    },
+    "robustness": {
+      "rounds": [5, 6, 7, 8, 9],
+      "standard_fraction": 0.25,
+      "strong_fraction": 0.75
+    }
+  },
+  "chain_templates": [
+    ["additive_noise", "channel_filter"],
+    ["additive_noise", "reverb"],
+    ["reverb", "gain_compression"],
+    ["codec_companding", "channel_filter"],
+    ["speed", "additive_noise"],
+    ["additive_noise", "channel_filter", "gain_compression"],
+    ["reverb", "channel_filter", "gain_compression"]
+  ],
+  "parameter_ranges": {
+    "standard_otf": {
+      "description": "Existing eleven transcript-preserving profile families"
+    },
+    "additive_noise": {
+      "noise_types": ["white", "pink", "brown", "hum", "fan_hvac"],
+      "snr_db": [8.0, 25.0],
+      "usual_snr_db": [10.0, 25.0]
+    },
+    "channel_filter": {
+      "filters": [
+        "mild_low_pass",
+        "mild_high_pass",
+        "band_pass",
+        "telephone_like",
+        "broad_eq_tilt"
+      ],
+      "telephone_probability": 0.08
+    },
+    "reverb": {
+      "rt60_seconds": [0.12, 0.45]
+    },
+    "gain_compression": {
+      "gain_db": [-6.0, 6.0],
+      "compression_ratio": [1.5, 3.0],
+      "soft_clip_probability": 0.08
+    },
+    "codec_companding": {
+      "codecs": [
+        "g711_mulaw",
+        "g711_alaw",
+        "downsample_12k_return_16k",
+        "ogg_opus_moderate"
+      ]
+    },
+    "speed": {
+      "rate": [0.94, 1.06]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "accepted_parent": "none",
+  "augmentation_key": "scale8000-otf-transcript-preserving-v1",
+  "augmentation_profile_config_sha256": "ee93dce63a0b5f47b4bc2426d932fe04ccc4a161e13d40349578afabe4fdce40",
+  "base_checkpoint_sha256": "210214ed94039bf6bfbb9a047c7fa289628db75b103e2bf6381fa78285436a74",
+  "certificate_id": "sl-corpus-v5-scale8000-otf-surface08-diagnostic-v1",
+  "checkpoint_accepted": false,
+  "checkpoint_committed": false,
+  "classification": "SCALE8000_OTF_SURFACE08_NEW_BEST_DIRECTIONAL",
+  "combined_text_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+  "corpus_id": "sl-corpus-v5-scale8000-training-v1",
+  "generated_audio_committed": false,
+  "local_manifest_committed": false,
+  "model_published": false,
+  "otf_determinism_passed": true,
+  "otf_loader_fill_rate": 0.994035937,
+  "parameter_integrity_passed": true,
+  "pre_rendered_augmented_audio_used": false,
+  "prohibited_statuses": [
+    "TRAINING_ELIGIBLE"
+  ],
+  "promotion_eligible": false,
+  "schema_version": "1.0",
+  "selected_checkpoint_sha256": "106b114d4f975b939b34027aa403810db81ca777d1f0568ba039da0744dae46a",
+  "selected_round": 5,
+  "semantic_rows_available": 64000,
+  "status": "DIAGNOSTIC_ONLY",
+  "surface_id": "SURFACE_08_FULL_ENCODER",
+  "training_eligible": false,
+  "unique_semantic_rows_seen": 64000,
+  "virtual_exposures_seen": 144000
+}
