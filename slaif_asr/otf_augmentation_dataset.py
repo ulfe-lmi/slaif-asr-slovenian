@@ -313,6 +313,51 @@ def _keyed_digest(key: str, *parts: str) -> str:
     return hmac.new(key.encode("utf-8"), message, hashlib.sha256).hexdigest()
 
 
+def _policy_spec_payload(
+    policy: dict[str, Any],
+    record: CleanAudioRecord,
+    virtual_exposure_id: int,
+    profiles: Sequence[dict[str, Any]],
+    *,
+    corpus_id: str,
+) -> dict[str, Any]:
+    family = policy.get("augmentation_family")
+    if family == "parametric_voiceaug_v1":
+        from slaif_asr.parametric_voice_augmentation import spec_payload
+    elif family in (None, "strongaug_v1"):
+        from slaif_asr.strongaug_v1 import spec_payload
+    else:
+        raise ValueError(f"unsupported OTF augmentation policy family {family!r}")
+    return spec_payload(
+        record,
+        virtual_exposure_id,
+        profiles,
+        corpus_id=corpus_id,
+        policy=policy,
+    )
+
+
+def _apply_policy_transform(
+    policy: dict[str, Any],
+    samples: Any,
+    *,
+    parameters: dict[str, Any],
+    seed_text: str,
+) -> tuple[Any, dict[str, Any]]:
+    family = policy.get("augmentation_family")
+    if family == "parametric_voiceaug_v1":
+        from slaif_asr.parametric_voice_augmentation import apply_policy_transform
+    elif family in (None, "strongaug_v1"):
+        from slaif_asr.strongaug_v1 import apply_policy_transform
+    else:
+        raise ValueError(f"unsupported OTF augmentation policy family {family!r}")
+    return apply_policy_transform(
+        samples,
+        parameters=parameters,
+        seed_text=seed_text,
+    )
+
+
 def virtual_augmentation_spec(
     record: CleanAudioRecord,
     virtual_exposure_id: int,
@@ -328,14 +373,12 @@ def virtual_augmentation_spec(
     if len(profiles) != EXPECTED_PROFILE_COUNT:
         raise ValueError("exactly eleven profiles are required")
     if augmentation_policy is not None:
-        from slaif_asr.strongaug_v1 import spec_payload
-
-        payload = spec_payload(
+        payload = _policy_spec_payload(
+            augmentation_policy,
             record,
             virtual_exposure_id,
             profiles,
             corpus_id=corpus_id,
-            policy=augmentation_policy,
         )
         return VirtualAugmentationSpec(
             virtual_exposure_id=virtual_exposure_id,
@@ -418,9 +461,8 @@ def prepare_virtual_sample(
             seed_text=spec.parameter_seed,
         )
     else:
-        from slaif_asr.strongaug_v1 import apply_policy_transform
-
-        transformed, _details = apply_policy_transform(
+        transformed, _details = _apply_policy_transform(
+            augmentation_policy,
             source,
             parameters=spec.parameters,
             seed_text=spec.parameter_seed,

@@ -100,3 +100,14 @@ outside the predeclared tolerance from Experiment 0031 standard OTF. Its
 classification is `STRONGAUG_V1_REAL_GATE_REGRESSION`; the standard OTF recipe
 remains the stronger scale-8000 data-axis result. No checkpoint is accepted or
 promoted.
+
+Work Order 0047 authorizes one matched ParametricVoiceAug v1 follow-up to
+Experiment 0031. It keeps Surface08, untouched-base initialization, scale-8000
+clean data, optimizer, effective batch, controller policy, directional suite,
+and the 144,000-exposure cap fixed. The only scientific variable is a
+deterministic language-agnostic speech-shape augmentation family covering
+bounded pitch, tempo, spectral-envelope, aperiodicity, channel, companding,
+room, procedural-noise, and dynamics transforms. Rounds 1-4 use a 50/50
+standard/parametric mixture; rounds 5-9 use 10/90. Experiment 0031 standard OTF
+is the control. Experiment 0032 StrongAug v1 is a negative comparator, not the
+starting recipe or default.

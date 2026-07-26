@@ -129,7 +129,13 @@ The repository will not own:
    authorizes one matched Surface08 scale-8000 follow-up that changes only the
    deterministic OTF augmentation intensity to the bounded StrongAug v1
    curriculum. It retains the untouched base, 144,000-exposure cap, frozen
-   identity surfaces, and ARTUR controller-dev-only selection.
+   identity surfaces, and ARTUR controller-dev-only selection. Work Order 0047
+   authorizes one further matched Surface08 scale-8000 run that replaces the
+   default augmentation family with deterministic, language-agnostic
+   ParametricVoiceAug v1 speech-shape transforms. It retains the same untouched
+   base, data reservoir, budget, frozen identity surfaces, and controller-only
+   selection. It is not authorization for target-speaker conversion, voice
+   cloning, external voice models, or a broader training policy.
 7. **Real speech decides checkpoint acceptance.**
    - Synthetic improvement alone is insufficient.
    - Real Slovenian acoustic data is validation-only and must not be used for

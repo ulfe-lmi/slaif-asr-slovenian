@@ -238,3 +238,46 @@ Phase 7 forbids:
 
 This is a single augmentation-policy comparison, not general StrongAug or
 scale-8000 full-encoder authorization.
+
+## Phase 8 / Work Order 0047
+
+Work Order 0047 authorizes exactly one matched ParametricVoiceAug v1
+diagnostic against Experiment 0031:
+
+- retain `SURFACE_08_FULL_ENCODER`, including decoder, joint, all 24 encoder
+  layers, and the proven separable `prompt_kernel`;
+- start again from the untouched Nemotron base;
+- use only the admitted scale-8000 clean synthetic pool;
+- retain FP32, TF32-disabled, effective-batch-8 training and the 144,000
+  virtual-exposure cap;
+- use deterministic, language-agnostic, in-memory speech-shape transforms with
+  key `scale8000-otf-parametric-voiceaug-v1`;
+- use a 50/50 standard/parametric mixture in rounds 1-4 and a 10/90 mixture in
+  rounds 5-9;
+- use ARTUR controller-dev only for aggregate run-control under ADR 0008.
+
+ParametricVoiceAug v1 may perturb F0, tempo, spectral envelope, aperiodicity,
+channel, companding, room response, procedural noise, and dynamics. It may not
+use target identities, Slovenian-specific speech models, downloaded voice
+models, voice conversion, voice cloning, or pre-rendered augmented WAVs.
+
+Phase 8 forbids:
+
+- changing the model surface, base checkpoint, NeMo revision, scale-8000 text,
+  clean audio reservoir, effective batch, optimizer, or learning-rate groups;
+- scale-2000, S6TTS, scale-32000, database-extension, or real speech as
+  training sources;
+- initialization from Experiment 0031, Experiment 0032, or any adapted
+  checkpoint;
+- preprocessor, frontend, subsampling, tokenizer, prompt-identity,
+  language-ID, or target-language machinery changes;
+- target-speaker conversion or external person, celebrity, character, or
+  community voice models;
+- Surface09 or full-model training;
+- FLEURS-v2 or ARTUR-J checkpoint selection;
+- checkpoint acceptance, `TRAINING_ELIGIBLE`, model publication, or accepted
+  parent changes.
+
+This is a single augmentation-family comparison. StrongAug v1 remains a
+negative diagnostic comparator and is not the default ParametricVoiceAug
+recipe.

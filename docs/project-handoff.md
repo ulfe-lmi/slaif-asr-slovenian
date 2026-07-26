@@ -223,6 +223,16 @@
   predeclared tolerance versus Experiment 0031 standard OTF, yielding
   `STRONGAUG_V1_REAL_GATE_REGRESSION`. Standard OTF remains the stronger
   scale-8000 recipe. This remains noncanonical, diagnostic-only evidence.
+- ADR 0009 Phase 8 and Work Order 0047 authorize one matched Surface08
+  scale-8000 ParametricVoiceAug v1 diagnostic from the untouched base. The
+  experiment holds Experiment 0031's data reservoir, 144,000-exposure budget,
+  optimizer, effective batch, controller policy, and directional suite fixed.
+  Its only scientific change is deterministic language-agnostic speech-shape
+  augmentation: rounds 1-4 use 50/50 standard/parametric OTF and rounds 5-9 use
+  10/90. Target-speaker conversion, downloaded voice models, S6TTS,
+  scale-32000, real-speech training, and pre-rendered augmented WAVs remain
+  forbidden. Experiment 0031 is the control; StrongAug v1 is a negative
+  comparator only.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.
