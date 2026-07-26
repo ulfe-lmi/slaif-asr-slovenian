@@ -223,16 +223,16 @@
   predeclared tolerance versus Experiment 0031 standard OTF, yielding
   `STRONGAUG_V1_REAL_GATE_REGRESSION`. Standard OTF remains the stronger
   scale-8000 recipe. This remains noncanonical, diagnostic-only evidence.
-- ADR 0009 Phase 8 and Work Order 0047 authorize one matched Surface08
-  scale-8000 ParametricVoiceAug v1 diagnostic from the untouched base. The
-  experiment holds Experiment 0031's data reservoir, 144,000-exposure budget,
-  optimizer, effective batch, controller policy, and directional suite fixed.
-  Its only scientific change is deterministic language-agnostic speech-shape
-  augmentation: rounds 1-4 use 50/50 standard/parametric OTF and rounds 5-9 use
-  10/90. Target-speaker conversion, downloaded voice models, S6TTS,
-  scale-32000, real-speech training, and pre-rendered augmented WAVs remain
-  forbidden. Experiment 0031 is the control; StrongAug v1 is a negative
-  comparator only.
+- Experiment 0033 completed the ADR 0009 Phase 8 / Work Order 0047 matched
+  ParametricVoiceAug v1 diagnostic. ARTUR controller-dev selected round 5, and
+  training stopped at round 8 after 128,000 virtual exposures. The selected
+  checkpoint scored 40.371/12.186 on FLEURS-v2 and 39.318/12.017 on ARTUR-J
+  with zero empty hypotheses. ARTUR-J and both synthetic holdouts improved
+  versus Experiment 0031 standard OTF, but the +1.018 FLEURS-v2 WER regression
+  exceeded the predeclared +0.50 tolerance. Its classification is
+  `PARAMETRIC_VOICEAUG_V1_REAL_GATE_REGRESSION`; standard OTF remains the
+  stronger balanced scale-8000 recipe. This remains noncanonical,
+  diagnostic-only evidence and does not accept or promote a checkpoint.
 - GitHub is for method and evidence; Hugging Face will be used for model artifacts.
 - Pinned model revision: `3fc30f3e2ae5d78d462441f3ce89dda694f89bd7`.
 - Pinned NeMo revision for the baseline interface: `8044a3924bfcfe8ef71d792bb73bf274fe853575`.

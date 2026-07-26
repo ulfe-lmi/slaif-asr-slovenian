@@ -463,6 +463,24 @@ def _markdown_report(public: dict[str, Any]) -> str:
         f"- Selected checkpoint SHA256: `{public['directional_evaluation']['selected_checkpoint_sha256']}`.",
         "- `accepted_parent` remains `none`; this is noncanonical diagnostic evidence.",
         "",
+        "## Training",
+        "",
+        f"- GPU: {training['runtime']['gpu']}; CUDA {training['runtime']['cuda_runtime']}; PyTorch {training['runtime']['pytorch']}.",
+        f"- Precision: {training['runtime']['precision']}; TF32: {str(training['runtime']['tf32']).lower()}; visible GPUs: {training['runtime']['visible_gpu_count']}.",
+        f"- Physical microbatch: {training['physical_microbatch']}; accumulation: {training['gradient_accumulation_steps']}; effective batch: {training['effective_batch_size']}.",
+        f"- Learning rates: decoder {training['learning_rates']['decoder']}; joint {training['learning_rates']['joint']}; encoder {training['learning_rates']['encoder_all_layers']}; prompt_kernel {training['learning_rates']['fusion_bridge']}.",
+        f"- Trainable parameters: {public['surface']['trainable_parameter_count']:,}; frozen parameters: {public['surface']['frozen_parameter_count']:,}.",
+        f"- Total stage wall time across {training['attempt_count']} attempt(s): {training['wall_time_seconds']:.3f} seconds; training compute: {training['training_compute_wall_seconds']:.3f} seconds.",
+        f"- Peak GPU memory: {training['peak_allocated_mib']:.3f} MiB allocated / {training['peak_reserved_mib']:.3f} MiB reserved.",
+        f"- Parameter integrity: {training['parameter_integrity']['changed_tensor_count']} authorized tensors changed; {len(training['parameter_integrity']['unauthorized_changed_tensors'])} unauthorized tensors changed.",
+        *(
+            [
+                "- One attempt was interrupted after round 6 because another process switched the shared Git checkout. The complete round-6 checkpoint and optimizer state were hash-verified and resumed from an isolated worktree.",
+                "",
+            ]
+            if training["interrupted_attempt_count"]
+            else []
+        ),
         "## Augmentation Families",
         "",
         "| Family | Fraction | Parameter range | Tool/backend | License/provenance | Notes |",
@@ -572,6 +590,23 @@ def _markdown_report(public: dict[str, Any]) -> str:
             "",
             "Values are normalized WER / CER / empty hypotheses.",
             "",
+            "## Interpretation",
+            "",
+            "- ParametricVoiceAug v1 improved ARTUR-J over standard scale-8000 OTF by 0.656 WER and 0.234 CER absolute.",
+            "- It regressed FLEURS-v2 versus standard scale-8000 OTF by 1.018 WER and 0.184 CER absolute. The WER regression exceeds the declared +0.50 tolerance.",
+            "- Piper improved by 0.156 WER and 0.112 CER, and Supertonic improved by 0.698 WER and 0.309 CER, versus standard scale-8000 OTF.",
+            "- Zero empty hypotheses, stable controller behavior, and valid audio audits rule out label destruction. The result is a domain tradeoff, not a generally better recipe.",
+            "- Standard scale-8000 OTF remains the stronger balanced recipe. ParametricVoiceAug should not replace it without a smaller, isolated probability or operation-family follow-up.",
+            "",
+            "## Known Limitations",
+            "",
+            "- Directional batch-32 evaluation is noncanonical.",
+            "- Human listening of local audit audio was `NOT_RUN`; automated waveform validation passed.",
+            "- The experiment evaluates the combined ParametricVoiceAug family and does not isolate individual operation contributions.",
+            "- ARTUR controller-dev is spent development data and cannot provide checkpoint acceptance evidence.",
+            "- Training stopped at 128,000 exposures under the declared three-post-best-round rule, below the 144,000 hard cap.",
+            "- The run resumed once from a complete round-6 checkpoint after an external shared-worktree switch interrupted worker startup.",
+            "",
             "## Boundaries",
             "",
             "- No real speech, S6TTS, scale-2000 audio, scale-32000, or immutable gate was used for training.",
@@ -588,6 +623,34 @@ def _markdown_report(public: dict[str, Any]) -> str:
 def stage_summarize(config_path: Path) -> dict[str, Any]:
     public = _BASE.stage_summarize(config_path)
     config = load_config(config_path)
+    progress_path = _BASE.run_dir(config) / "progress" / "train.local.ndjson"
+    attempt_terminal_events: list[dict[str, Any]] = []
+    if progress_path.exists():
+        for line in progress_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            event = json.loads(line)
+            if (
+                event.get("stage") == "train"
+                and event.get("event") in {"stage_complete", "stage_failed"}
+            ):
+                attempt_terminal_events.append(event)
+    if attempt_terminal_events:
+        public["training"]["attempt_count"] = len(attempt_terminal_events)
+        public["training"]["interrupted_attempt_count"] = sum(
+            event["event"] == "stage_failed" for event in attempt_terminal_events
+        )
+        public["training"]["wall_time_seconds"] = round(
+            sum(float(event["elapsed_seconds"]) for event in attempt_terminal_events),
+            6,
+        )
+    else:
+        public["training"]["attempt_count"] = 1
+        public["training"]["interrupted_attempt_count"] = 0
+    if public["training"]["interrupted_attempt_count"]:
+        public["limitations"].append(
+            "Worker startup was interrupted once after an external shared-worktree switch; training resumed from the complete hash-verified round-6 checkpoint and optimizer state."
+        )
     audit_local = json.loads(
         (_BASE.run_dir(config) / "audit" / "audit-summary.local.json").read_text(
             encoding="utf-8"

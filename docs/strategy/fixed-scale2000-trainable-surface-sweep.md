@@ -111,3 +111,12 @@ room, procedural-noise, and dynamics transforms. Rounds 1-4 use a 50/50
 standard/parametric mixture; rounds 5-9 use 10/90. Experiment 0031 standard OTF
 is the control. Experiment 0032 StrongAug v1 is a negative comparator, not the
 starting recipe or default.
+
+Experiment 0033 completed this follow-up. ARTUR controller-dev selected round
+5, and the declared stop rule ended training at round 8 after 128,000 virtual
+exposures. ParametricVoiceAug v1 improved ARTUR-J to 39.318/12.017 and improved
+both synthetic holdouts versus Experiment 0031, but FLEURS-v2 regressed to
+40.371/12.186. The +1.018 FLEURS-v2 WER regression exceeds the predeclared
++0.50 tolerance, so the classification is
+`PARAMETRIC_VOICEAUG_V1_REAL_GATE_REGRESSION`. Standard OTF remains the
+stronger balanced scale-8000 recipe. No checkpoint is accepted or promoted.
