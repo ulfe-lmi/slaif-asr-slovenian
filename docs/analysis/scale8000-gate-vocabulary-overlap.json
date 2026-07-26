@@ -59,7 +59,7 @@
     "percentile_method": "nearest_rank",
     "secondary_mode": "normalized_alnum_tokens",
     "secondary_token_policy": "unicode_alnum_tokens_casefold_nfc_numeric_only_included_no_lemmatization",
-    "token_policy": "unicode_letter_tokens_casefold_nfc_no_lemmatization"
+    "token_policy": "unicode_alnum_tokens_requiring_letter_casefold_nfc_no_lemmatization"
   },
   "overlap": {
     "all_three_shared_unique_word_forms": 312,

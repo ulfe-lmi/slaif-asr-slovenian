@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import copy
+import io
 import json
 import tempfile
 import unittest
+from contextlib import redirect_stderr
 from pathlib import Path
+from unittest import mock
 
+import scripts.analyze_corpus_vocabulary_overlap as vocabulary_overlap
 from scripts.analyze_corpus_vocabulary_overlap import (
     ARTUR_J_DATASET_ID,
     CLASSIFICATION_COMPLETE,
@@ -18,6 +22,7 @@ from scripts.analyze_corpus_vocabulary_overlap import (
     extract_normalized_tokens,
     overlap_metrics,
     render_markdown,
+    sha256_file,
     summarize_texts,
 )
 
@@ -142,6 +147,94 @@ class CorpusVocabularyOverlapTests(unittest.TestCase):
         self.assertIn("## Vocabulary overlap", markdown)
         self.assertIn("No missing form is included", markdown)
         self.assertNotIn("source_path", markdown)
+
+    def _assert_gate_hash_mismatch_is_invalid(self, mismatched_gate: str) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            scale_path = root / "scale.jsonl"
+            fleurs_path = root / "fleurs.jsonl"
+            artur_path = root / "artur.jsonl"
+            json_output = root / "report.json"
+            markdown_output = root / "report.md"
+            scale_path.write_text(
+                json.dumps({"target_text": "Sintetični preizkus."}, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+            fleurs_path.write_text(
+                json.dumps(
+                    {"dataset": FLEURS_V2_DATASET_ID, "text": "Fleurs preizkus."},
+                    ensure_ascii=False,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            artur_path.write_text(
+                json.dumps(
+                    {"dataset": ARTUR_J_DATASET_ID, "text": "Artur preizkus."},
+                    ensure_ascii=False,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            expected_fleurs_sha = sha256_file(fleurs_path)
+            expected_artur_sha = sha256_file(artur_path)
+            if mismatched_gate == "fleurs_v2":
+                expected_fleurs_sha = "0" * 64
+            elif mismatched_gate == "artur_j":
+                expected_artur_sha = "0" * 64
+            else:
+                self.fail(f"unsupported mismatch fixture: {mismatched_gate}")
+
+            stderr = io.StringIO()
+            with (
+                mock.patch.object(vocabulary_overlap, "EXPECTED_SCALE8000_ROWS", 1),
+                mock.patch.object(vocabulary_overlap, "EXPECTED_FLEURS_V2_ROWS", 1),
+                mock.patch.object(vocabulary_overlap, "EXPECTED_ARTUR_J_ROWS", 1),
+                mock.patch.object(
+                    vocabulary_overlap,
+                    "EXPECTED_SCALE8000_SHA256",
+                    sha256_file(scale_path),
+                ),
+                mock.patch.object(
+                    vocabulary_overlap,
+                    "EXPECTED_FLEURS_V2_SHA256",
+                    expected_fleurs_sha,
+                ),
+                mock.patch.object(
+                    vocabulary_overlap,
+                    "EXPECTED_ARTUR_J_SHA256",
+                    expected_artur_sha,
+                ),
+                redirect_stderr(stderr),
+            ):
+                result = vocabulary_overlap.main(
+                    [
+                        "--scale8000-text",
+                        str(scale_path),
+                        "--fleurs-v2-manifest",
+                        str(fleurs_path),
+                        "--artur-j-manifest",
+                        str(artur_path),
+                        "--output-json",
+                        str(json_output),
+                        "--output-markdown",
+                        str(markdown_output),
+                    ]
+                )
+
+            self.assertEqual(result, 1)
+            self.assertIn("EXPERIMENT_INVALID", stderr.getvalue())
+            self.assertIn("source SHA256 does not match", stderr.getvalue())
+            expected_dataset_id = FLEURS_V2_DATASET_ID if mismatched_gate == "fleurs_v2" else ARTUR_J_DATASET_ID
+            self.assertIn(expected_dataset_id, stderr.getvalue())
+            self.assertFalse(json_output.exists())
+            self.assertFalse(markdown_output.exists())
+
+    def test_fleurs_hash_mismatch_is_invalid_and_writes_no_report(self) -> None:
+        self._assert_gate_hash_mismatch_is_invalid("fleurs_v2")
+
+    def test_artur_hash_mismatch_is_invalid_and_writes_no_report(self) -> None:
+        self._assert_gate_hash_mismatch_is_invalid("artur_j")
 
 
 if __name__ == "__main__":

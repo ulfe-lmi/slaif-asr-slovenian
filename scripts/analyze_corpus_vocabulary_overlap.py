@@ -24,6 +24,8 @@ EXPECTED_SCALE8000_ROWS = 64_000
 EXPECTED_FLEURS_V2_ROWS = 834
 EXPECTED_ARTUR_J_ROWS = 256
 EXPECTED_SCALE8000_SHA256 = "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd"
+EXPECTED_FLEURS_V2_SHA256 = "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513"
+EXPECTED_ARTUR_J_SHA256 = "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763"
 LOW_GATE_COVERAGE_WARNING_THRESHOLD = 0.80
 
 CLASSIFICATION_COMPLETE = "VOCAB_COVERAGE_ANALYSIS_COMPLETE"
@@ -38,7 +40,7 @@ BLOCKED_ARTUR = "BLOCKED_ARTUR_J_REFERENCES_UNAVAILABLE"
 
 PRIMARY_MODE = "normalized_word_forms"
 SECONDARY_MODE = "normalized_alnum_tokens"
-PRIMARY_TOKEN_POLICY = "unicode_letter_tokens_casefold_nfc_no_lemmatization"
+PRIMARY_TOKEN_POLICY = "unicode_alnum_tokens_requiring_letter_casefold_nfc_no_lemmatization"
 SECONDARY_TOKEN_POLICY = "unicode_alnum_tokens_casefold_nfc_numeric_only_included_no_lemmatization"
 
 DEFAULT_SCALE8000_PATH = Path(
@@ -693,6 +695,7 @@ def run_analysis(args: argparse.Namespace) -> dict[str, object]:
         text_field="text",
         expected_rows=EXPECTED_FLEURS_V2_ROWS,
         expected_dataset_field=FLEURS_V2_DATASET_ID,
+        expected_sha256=EXPECTED_FLEURS_V2_SHA256,
     )
     artur_j = load_dataset_vocabulary(
         args.artur_j_manifest,
@@ -702,6 +705,7 @@ def run_analysis(args: argparse.Namespace) -> dict[str, object]:
         text_field="text",
         expected_rows=EXPECTED_ARTUR_J_ROWS,
         expected_dataset_field=ARTUR_J_DATASET_ID,
+        expected_sha256=EXPECTED_ARTUR_J_SHA256,
     )
     report = build_aggregate_report(scale8000, fleurs_v2, artur_j)
     atomic_write_json(args.output_json, report)
