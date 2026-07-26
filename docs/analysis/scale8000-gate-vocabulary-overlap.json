@@ -1,0 +1,195 @@
+{
+  "analysis_role": "read_only_aggregate_corpus_diagnostic",
+  "classification": "VOCAB_COVERAGE_ANALYSIS_COMPLETE_LOW_GATE_COVERAGE",
+  "datasets": {
+    "artur_j": {
+      "dataset_id": "artur-j-public-gate-v1",
+      "mean_word_tokens_per_row": 8.94140625,
+      "p50_word_tokens_per_row": 8,
+      "p95_word_tokens_per_row": 17,
+      "row_count": 256,
+      "source_role": "immutable_real_gate",
+      "source_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+      "total_word_tokens": 2289,
+      "type_token_ratio": 0.509392747924858,
+      "unique_word_forms": 1166
+    },
+    "fleurs_v2": {
+      "dataset_id": "fleurs-sl-si-test-full-v2",
+      "mean_word_tokens_per_row": 19.489208633093526,
+      "p50_word_tokens_per_row": 18,
+      "p95_word_tokens_per_row": 34,
+      "row_count": 834,
+      "source_role": "immutable_real_gate",
+      "source_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+      "total_word_tokens": 16254,
+      "type_token_ratio": 0.21748492678725237,
+      "unique_word_forms": 3535
+    },
+    "scale8000": {
+      "dataset_id": "sl-corpus-v5-scale8000-training-v1",
+      "mean_word_tokens_per_row": 7.875953125,
+      "p50_word_tokens_per_row": 7,
+      "p95_word_tokens_per_row": 14,
+      "row_count": 64000,
+      "source_role": "synthetic_training_text",
+      "source_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+      "total_word_tokens": 504061,
+      "type_token_ratio": 0.054941763000906634,
+      "unique_word_forms": 27694
+    }
+  },
+  "missing_aggregate": {
+    "artur_j": {
+      "absent_form_rate": 0.2718696397941681,
+      "absent_token_mass_rate": 0.1559633027522936,
+      "right_tokens_using_absent_forms": 357,
+      "right_unique_forms_absent": 317
+    },
+    "fleurs_v2": {
+      "absent_form_rate": 0.3934936350777935,
+      "absent_token_mass_rate": 0.21200935154423525,
+      "right_tokens_using_absent_forms": 3446,
+      "right_unique_forms_absent": 1391
+    }
+  },
+  "normalization": {
+    "mode": "normalized_word_forms",
+    "normalizer": "sl-asr-normalization-v1",
+    "percentile_method": "nearest_rank",
+    "secondary_mode": "normalized_alnum_tokens",
+    "secondary_token_policy": "unicode_alnum_tokens_casefold_nfc_numeric_only_included_no_lemmatization",
+    "token_policy": "unicode_alnum_tokens_requiring_letter_casefold_nfc_no_lemmatization"
+  },
+  "overlap": {
+    "all_three_shared_unique_word_forms": 312,
+    "fleurs_v2_to_artur_j": {
+      "absent_form_rate": 0.725557461406518,
+      "absent_token_mass_rate": 0.4748798602009611,
+      "coverage_of_right_unique_vocab": 0.274442538593482,
+      "right_tokens_covered": 1202,
+      "right_tokens_using_absent_forms": 1087,
+      "right_unique_forms_absent": 846,
+      "right_unique_word_forms": 1166,
+      "right_word_tokens": 2289,
+      "shared_unique_word_forms": 320,
+      "token_mass_coverage_of_right_tokens": 0.5251201397990389
+    },
+    "scale8000_to_artur_j": {
+      "absent_form_rate": 0.2718696397941681,
+      "absent_token_mass_rate": 0.1559633027522936,
+      "coverage_of_right_unique_vocab": 0.7281303602058319,
+      "right_tokens_covered": 1932,
+      "right_tokens_using_absent_forms": 357,
+      "right_unique_forms_absent": 317,
+      "right_unique_word_forms": 1166,
+      "right_word_tokens": 2289,
+      "shared_unique_word_forms": 849,
+      "token_mass_coverage_of_right_tokens": 0.8440366972477065
+    },
+    "scale8000_to_fleurs_v2": {
+      "absent_form_rate": 0.3934936350777935,
+      "absent_token_mass_rate": 0.21200935154423525,
+      "coverage_of_right_unique_vocab": 0.6065063649222066,
+      "right_tokens_covered": 12808,
+      "right_tokens_using_absent_forms": 3446,
+      "right_unique_forms_absent": 1391,
+      "right_unique_word_forms": 3535,
+      "right_word_tokens": 16254,
+      "shared_unique_word_forms": 2144,
+      "token_mass_coverage_of_right_tokens": 0.7879906484557647
+    }
+  },
+  "safety": {
+    "asr_evaluation_run": false,
+    "full_gate_wordlists_committed": false,
+    "local_paths_committed": false,
+    "missing_gate_wordlists_committed": false,
+    "new_text_generated": false,
+    "raw_references_committed": false,
+    "training_run": false,
+    "used_for_generation_prompting": false,
+    "used_for_training_selection": false
+  },
+  "schema_version": "1.0",
+  "secondary_normalized_alnum_tokens": {
+    "datasets": {
+      "artur_j": {
+        "dataset_id": "artur-j-public-gate-v1",
+        "mean_word_tokens_per_row": 8.94140625,
+        "p50_word_tokens_per_row": 8,
+        "p95_word_tokens_per_row": 17,
+        "row_count": 256,
+        "source_role": "immutable_real_gate",
+        "source_sha256": "66691acd85107cc095ce648acca1f14b5cf0fd25ce1c355399283d3e7ab9a763",
+        "total_word_tokens": 2289,
+        "type_token_ratio": 0.509392747924858,
+        "unique_word_forms": 1166
+      },
+      "fleurs_v2": {
+        "dataset_id": "fleurs-sl-si-test-full-v2",
+        "mean_word_tokens_per_row": 19.804556354916066,
+        "p50_word_tokens_per_row": 19,
+        "p95_word_tokens_per_row": 34,
+        "row_count": 834,
+        "source_role": "immutable_real_gate",
+        "source_sha256": "8e1a17bc8269b22e05699a9e7ee9f6a5e3ce3018b39a61af2f87f06372877513",
+        "total_word_tokens": 16517,
+        "type_token_ratio": 0.21807834352485317,
+        "unique_word_forms": 3602
+      },
+      "scale8000": {
+        "dataset_id": "sl-corpus-v5-scale8000-training-v1",
+        "mean_word_tokens_per_row": 7.936890625,
+        "p50_word_tokens_per_row": 7,
+        "p95_word_tokens_per_row": 14,
+        "row_count": 64000,
+        "source_role": "synthetic_training_text",
+        "source_sha256": "e76e55ffd12cfa0000a27579566f0a0604a49376a993027663c082cbefd1aadd",
+        "total_word_tokens": 507961,
+        "type_token_ratio": 0.05484476170414658,
+        "unique_word_forms": 27859
+      }
+    },
+    "overlap": {
+      "all_three_shared_unique_word_forms": 312,
+      "fleurs_v2_to_artur_j": {
+        "absent_form_rate": 0.725557461406518,
+        "absent_token_mass_rate": 0.4748798602009611,
+        "coverage_of_right_unique_vocab": 0.274442538593482,
+        "right_tokens_covered": 1202,
+        "right_tokens_using_absent_forms": 1087,
+        "right_unique_forms_absent": 846,
+        "right_unique_word_forms": 1166,
+        "right_word_tokens": 2289,
+        "shared_unique_word_forms": 320,
+        "token_mass_coverage_of_right_tokens": 0.5251201397990389
+      },
+      "scale8000_to_artur_j": {
+        "absent_form_rate": 0.2718696397941681,
+        "absent_token_mass_rate": 0.1559633027522936,
+        "coverage_of_right_unique_vocab": 0.7281303602058319,
+        "right_tokens_covered": 1932,
+        "right_tokens_using_absent_forms": 357,
+        "right_unique_forms_absent": 317,
+        "right_unique_word_forms": 1166,
+        "right_word_tokens": 2289,
+        "shared_unique_word_forms": 849,
+        "token_mass_coverage_of_right_tokens": 0.8440366972477065
+      },
+      "scale8000_to_fleurs_v2": {
+        "absent_form_rate": 0.392282065519156,
+        "absent_token_mass_rate": 0.21293213053217896,
+        "coverage_of_right_unique_vocab": 0.607717934480844,
+        "right_tokens_covered": 13000,
+        "right_tokens_using_absent_forms": 3517,
+        "right_unique_forms_absent": 1413,
+        "right_unique_word_forms": 3602,
+        "right_word_tokens": 16517,
+        "shared_unique_word_forms": 2189,
+        "token_mass_coverage_of_right_tokens": 0.787067869467821
+      }
+    }
+  },
+  "work_order_id": "0048"
+}
