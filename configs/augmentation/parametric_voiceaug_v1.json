@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "scale8000-otf-parametric-voiceaug-v1",
+  "augmentation_family": "parametric_voiceaug_v1",
+  "augmentation_key": "scale8000-otf-parametric-voiceaug-v1",
+  "algorithm_version": "otf-parametric-voiceaug-v1",
+  "round_size_exposures": 16000,
+  "max_rounds": 9,
+  "max_operations_per_sample": 3,
+  "disk_output": false,
+  "transcript_preserved": true,
+  "language_agnostic": true,
+  "target_identity_models": false,
+  "phases": {
+    "coverage": {
+      "rounds": [1, 2, 3, 4],
+      "standard_fraction": 0.5,
+      "parametric_fraction": 0.5
+    },
+    "robustness": {
+      "rounds": [5, 6, 7, 8, 9],
+      "standard_fraction": 0.1,
+      "parametric_fraction": 0.9
+    }
+  },
+  "chain_templates": [
+    ["formant_warp", "pitch_shift"],
+    ["formant_warp", "pitch_shift"],
+    ["formant_warp", "aperiodicity"],
+    ["formant_warp", "aperiodicity"],
+    ["formant_warp", "channel_filter"],
+    ["formant_warp", "pitch_shift", "aperiodicity"],
+    ["formant_warp", "pitch_shift", "aperiodicity"],
+    ["pitch_shift", "aperiodicity"],
+    ["speed", "additive_noise"],
+    ["channel_filter", "codec_companding"],
+    ["reverb", "gain_compression"],
+    ["pitch_shift", "reverb", "additive_noise"],
+    ["formant_warp", "channel_filter", "codec_companding"]
+  ],
+  "parameter_ranges": {
+    "standard_otf": {
+      "description": "Existing eleven transcript-preserving profile families"
+    },
+    "pitch_shift": {
+      "common_semitones": [-2.0, 2.0],
+      "rare_semitones": [-3.0, 3.0],
+      "rare_probability": 0.15
+    },
+    "speed": {
+      "common_rate": [0.92, 1.08],
+      "rare_rate": [0.9, 1.1],
+      "rare_probability": 0.15
+    },
+    "formant_warp": {
+      "common_factor": [0.88, 1.12],
+      "rare_factor": [0.84, 1.16],
+      "rare_probability": 0.12,
+      "method": "stft_log_spectral_envelope_warp"
+    },
+    "aperiodicity": {
+      "breathiness_snr_db": [20.0, 32.0],
+      "highpass_hz": [2500.0, 5000.0]
+    },
+    "channel_filter": {
+      "filters": [
+        "mild_low_pass",
+        "mild_high_pass",
+        "band_pass",
+        "telephone_like",
+        "broad_eq_tilt"
+      ],
+      "telephone_probability": 0.12
+    },
+    "codec_companding": {
+      "codecs": [
+        "g711_mulaw",
+        "g711_alaw",
+        "downsample_12k_return_16k",
+        "ogg_opus_moderate"
+      ]
+    },
+    "reverb": {
+      "rt60_seconds": [0.15, 0.8]
+    },
+    "additive_noise": {
+      "noise_types": ["white", "pink", "brown", "hum", "fan_hvac"],
+      "common_snr_db": [12.0, 25.0],
+      "strong_snr_db": [8.0, 12.0],
+      "strong_probability": 0.15
+    },
+    "gain_compression": {
+      "gain_db": [-6.0, 6.0],
+      "compression_ratio": [1.5, 3.0],
+      "soft_clip_probability": 0.06
+    }
+  },
+  "audio_safety": {
+    "sample_rate": 16000,
+    "minimum_rms": 1e-05,
+    "maximum_peak": 0.98,
+    "maximum_clipped_fraction": 0.01,
+    "duration_ratio": [0.88, 1.12],
+    "reject_nan_inf": true,
+    "reject_silence": true
+  },
+  "dependencies": [
+    {
+      "name": "numpy",
+      "version": "2.2.6",
+      "license": "BSD-3-Clause",
+      "used_for": "array, FFT, and deterministic waveform operations",
+      "installation": "pinned project training environment",
+      "vendored": false
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.0",
+      "license": "BSD-3-Clause",
+      "used_for": "filtering, convolution, resampling, STFT, and spectral-envelope warping",
+      "installation": "Python wheel in the pinned project training environment",
+      "vendored": false
+    },
+    {
+      "name": "librosa",
+      "version": "0.11.0",
+      "license": "ISC",
+      "used_for": "duration-preserving pitch perturbation",
+      "installation": "Python wheel in the pinned project training environment",
+      "vendored": false
+    },
+    {
+      "name": "soxr",
+      "version": "1.1.0",
+      "license": "LGPL-2.1-or-later",
+      "used_for": "librosa pitch-shift resampling backend",
+      "installation": "Python wheel dependency of librosa",
+      "vendored": false
+    },
+    {
+      "name": "CPython audioop",
+      "version": "3.12 stdlib",
+      "license": "PSF-2.0",
+      "used_for": "existing repository G.711 mu-law and A-law companding",
+      "installation": "CPython standard library",
+      "vendored": false
+    }
+  ]
+}
